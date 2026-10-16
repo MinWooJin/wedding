@@ -10,8 +10,8 @@ const ROWS = [
   'KKKKKKKKKKK',
   'KDDDDDDDDDK',
   'KDDDDDDDDDK',
-  'KDDDDRRRDDK',
-  'KDDDDRRRDDK',
+  'KDDDLLLLDDK',
+  'KDDDLLLLDDK',
   'KDDDDDDDDDK',
   'KDDDDDDDDDK',
   'KKKKKDKKKKK',
@@ -58,16 +58,16 @@ export function createInfo(game) {
     entrances: [{ tx: 5, ty: 7, to: 'hub', spawn: HUB_DOORS.info.back }],
     objects: [
       { id: 'door', sprite: 'door', floor: true, tx: 5, ty: 7 },
-      { id: 'board', sprite: 'board', tx: 1, ty: 0, interact: () => showOverlay(game, {
+      { id: 'board', sprite: 'board', tx: 1, ty: -1, interact: () => showOverlay(game, {
         title: '오시는 길', html: kv([['지하철', w.transport.subway], ['버스', w.transport.bus], ['주차', w.transport.parking]]) || '<p class="muted">준비 중</p>' }) },
-      { id: 'map', sprite: 'mapframe', tx: 3, ty: 0, interact: () => showOverlay(game, {
+      { id: 'map', sprite: 'mapframe', tx: 4, ty: -1, interact: () => showOverlay(game, {
         title: '지도', html: `<p>${esc(w.address)}</p><div class="row">${mapButtons}</div>`,
         buttons: [{ label: '주소 복사', onClick: async () => { toast((await copyText(w.address)) ? '주소를 복사했어요' : '복사에 실패했어요'); return true; } }, { label: '닫기' }] }) },
-      { id: 'calendar', sprite: 'calendar', tx: 7, ty: 0, interact: () => showOverlay(game, {
+      { id: 'calendar', sprite: 'calendar', tx: 7, ty: -1, interact: () => showOverlay(game, {
         title: '캘린더에 저장', html: `<p>${esc(formatDate(w.date))}</p>`,
         buttons: [{ label: '.ics 다운로드', primary: true, onClick: () => { downloadIcs(cfg); } }, { label: '닫기' }] }) },
-      { id: 'desk', sprite: 'desk', tx: 4, ty: 1, interact: () => showOverlay(game, { title: '예식 안내', html: infoHtml(cfg) }) },
-      { id: 'phone', sprite: 'phone', tx: 8, ty: 1, interact: () => showOverlay(game, { title: '연락하기', html: contactsHtml(cfg) }) },
+      { id: 'desk', sprite: 'desk', tx: 2, ty: 1, interact: () => showOverlay(game, { title: '예식 안내', html: infoHtml(cfg) }) },
+      { id: 'phone', sprite: 'phone', tx: 7, ty: 1, interact: () => showOverlay(game, { title: '연락하기', html: contactsHtml(cfg) }) },
     ],
     onEnter: (g) => { if (!shownOnce) { shownOnce = true; showOverlay(g, { title: '예식 안내', html: infoHtml(cfg) }); } },
   });

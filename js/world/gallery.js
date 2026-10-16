@@ -5,8 +5,8 @@ import { openViewer } from '../ui/viewer.js';
 import { toast } from '../ui/toast.js';
 import { TILE } from '../renderer.js';
 
-// frame 스프라이트(32×32) 안쪽 사진 영역: (6,6)부터 20×16
-const THUMB_X = 6, THUMB_Y = 6, THUMB_W = 20, THUMB_H = 16;
+// frame 스프라이트(64×64) 안쪽 사진 영역(액자 PNG의 테두리 안쪽)
+const THUMB_X = 18, THUMB_Y = 19, THUMB_W = 30, THUMB_H = 28;
 
 /** 이미지를 썸네일 캔버스로(cover 크롭) */
 function makeThumb(img) {

@@ -11,10 +11,10 @@ import { displayName } from '../config.js';
 export function createStory(game) {
   const cfg = game.config;
   const L = storyLayout(cfg.timeline.length);
-  // 벤치(6..7, h-4)와 같은 타일 행에 세우면 y정렬상 벤치가 나중에 그려져 다리를 가린다 → 앉은 것처럼 보임.
+  // 벤치(128×64, 6~9열 × bench.ty~+1행)의 아래 행에 세우면 y정렬상 벤치가 나중에 그려져 다리를 가린다 → 앉은 것처럼 보임.
   // NPC는 충돌 검사를 하지 않으므로 solid 타일 위에 둘 수 있다.
-  const groom = new Character({ sprites: characterSet(game.assets, 'groom', GROOM), name: displayName(cfg.groom), ...standPos(6, L.bench.ty) });
-  const bride = new Character({ sprites: characterSet(game.assets, 'bride', BRIDE), name: displayName(cfg.bride), ...standPos(7, L.bench.ty) });
+  const groom = new Character({ sprites: characterSet(game.assets, 'groom', GROOM), name: displayName(cfg.groom), ...standPos(7, L.bench.ty + 1) });
+  const bride = new Character({ sprites: characterSet(game.assets, 'bride', BRIDE), name: displayName(cfg.bride), ...standPos(8, L.bench.ty + 1) });
   const thanks = (c) => () => c.say('여기까지 와줘서 고마워요 💕');
 
   return new Scene({

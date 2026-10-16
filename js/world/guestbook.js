@@ -8,22 +8,22 @@ import { validateEntry, postMessage, MESSAGE_MAX } from '../api.js';
 
 const ROWS = [
   'HHHHHHHHHHH',
-  'HWGGGGGGGWH',
-  'HGGGGGGGGGH',
-  'HGGGGGGGGGH',
-  'HGGGGGGGGGH',
-  'HGWGGGGGWGH',
-  'HGGGGGGGGGH',
-  'HGGGGGGGGGH',
-  'HWGGGGGGGWH',
-  'HGGGGPGGGGH',
-  'HGGGGPGGGGH',
+  'HEEEEEEEEEH',
+  'HEEEEEEEEEH',
+  'HEEEEEEEEEH',
+  'HEEEEEEEEEH',
+  'HEEEEEEEEEH',
+  'HEEEEEEEEEH',
+  'HEEEEEEEEEH',
+  'HEEEEEEEEEH',
+  'HEEEEAEEEEH',
+  'HEEEEAEEEEH',
   'HHHHHPHHHHH',
 ];
-const MAILBOX = { tx: 5, ty: 3 };
+const MAILBOX = { tx: 4, ty: 2 }; // 64×64: 4~5열, 2~3행
 const EXIT = { tx: 5, ty: 11 };
 const SPAWN = { tx: 5, ty: 10 };
-const RESERVED = new Set(['5,3', '5,4', '5,2', '4,3', '6,3', '5,9', '5,10', '4,10', '6,10']); // 우체통 주변, 입구 근처
+const RESERVED = new Set(['4,2', '5,2', '4,3', '5,3', '4,4', '5,4', '3,3', '6,3', '5,9', '5,10', '4,10', '6,10']); // 우체통 주변, 입구 근처
 const POST_COOLDOWN_MS = 60_000;
 let lastPostAt = 0;
 

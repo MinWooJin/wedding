@@ -34,10 +34,10 @@ CHARACTERS = [f"preset-{i}" for i in range(10)] + ["groom", "bride"]
 TILES = list("GWPHFDKRS")
 # 웨딩 타일: raw/tiles/wedding/<이름>.png → assets/tiles/<ID>.png
 WEDDING_TILES = {"A": "aisle-ivory", "B": "aisle-petals", "C": "aisle-entrance", "E": "rose-petal-grass", "M": "ivory-marble", "L": "blush-carpet"}
-OBJECT_SIZES = {
-    "arch": (96, 64), "tree": (64, 64), "bench": (64, 32), "desk": (64, 32),
-    "sign": (32, 32), "mailbox": (32, 32), "frame": (32, 32), "chest": (32, 32), "board": (32, 32),
-    "phone": (32, 32), "calendar": (32, 32), "mapframe": (32, 32), "flower": (32, 32), "stone": (32, 32), "door": (32, 32),
+OBJECT_SIZES = {  # 캐릭터 64×96에 맞춘 비율
+    "arch": (160, 128), "tree": (64, 64), "bench": (128, 64), "desk": (128, 64),
+    "sign": (64, 64), "mailbox": (64, 64), "frame": (64, 64), "chest": (64, 64), "board": (64, 64),
+    "phone": (64, 64), "calendar": (64, 64), "mapframe": (64, 64), "stone": (64, 64), "flower": (32, 32), "door": (32, 32),
 }
 # 고정 크기 씬(갤러리·이야기 길은 사진/타임라인 수에 따라 길이가 변해 배경 이미지를 쓰지 않는다)
 MAP_SIZES = {"hub": (352, 1024), "info": (352, 256), "guestbook": (352, 384), "gifts": (352, 256)}

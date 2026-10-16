@@ -7,23 +7,29 @@ import { freeTiles, pickTiles } from './guest-layout.js';
 import { displayName } from '../config.js';
 
 // 11열 × 32행(352×1024px). 위쪽 19행은 아치까지 이어지는 긴 정원, 아래는 방 입구가 있는 교차로.
-const GARDEN = ['HGGGGPGGGGH', 'HGWGGPGGWGH', 'HGGGGPGGGGH', 'HWGGGPGGGWH', 'HGGGGPGGGGH', 'HGGWGPGWGGH'];
-/** 1~18행 가운데는 버진로드(A, 4행마다 꽃잎 B), 19행은 입구 마감 C로 흙길과 잇는다 */
-const aisleRow = (i) => { const base = GARDEN[i % GARDEN.length]; const mid = i === 18 ? 'C' : (i % 4 === 1 ? 'B' : 'A'); return base.slice(0, 5) + mid + base.slice(6); };
+// 타일: H 산울타리, G 잔디, W 꽃잔디, E 장미꽃잎 잔디, M 아이보리 대리석(무대·산책로), A/B 버진로드, C 입구 마감
+const STAGE = 'HEMMM?MMMEH';                                   // 1~4행: 아치 주변 대리석 무대
+const GARDEN = ['HEEEE?EEEEH']; // 5~19행: 장미 꽃잎 잔디로 통일(초록 톤을 누그러뜨림)
+/** 가운데(5열)는 버진로드 A, 4행마다 꽃잎 B, 19행은 입구 마감 C */
+const aisleRow = (i) => {
+  const base = i <= 3 ? STAGE : GARDEN[(i - 4) % GARDEN.length];
+  const mid = i === 18 ? 'C' : (i % 4 === 1 ? 'B' : 'A');
+  return base.replace('?', mid);
+};
 export const HUB_ROWS = [
   'HHHHHHHHHHH',
   ...Array.from({ length: 19 }, (_, i) => aisleRow(i)), // rows 1..19
-  'HPPPPPPPPPH', // 20 교차로 · 시작 위치
-  'HPGGGPGGGPH', // 21 문: 안내소(1,21), 갤러리(9,21)
-  'HPGWGPGWGPH',
-  'HPGGGPGGGPH',
-  'HPPPPPPPPPH', // 24
-  'HPGGGPGGGPH', // 25 문: 이야기 길(1,25), 방명록(9,25)
-  'HPWGGPGGWPH',
-  'HPGGGPGGGPH',
-  'HPPPPPPPPPH', // 28
-  'HPGGGPGGGPH',
-  'HPWGGPGGWPH', // 30 문: 마음 전하기(5,30)
+  'HMMMMMMMMMH', // 20 교차로(대리석) · 시작 위치
+  'HMEEEMEEEMH', // 21 문: 안내소(1,21), 갤러리(9,21)
+  'HMEEEMEEEMH',
+  'HMEEEMEEEMH',
+  'HMMMMMMMMMH', // 24
+  'HMEEEMEEEMH', // 25 문: 이야기 길(1,25), 방명록(9,25)
+  'HMEEEMEEEMH',
+  'HMEEEMEEEMH',
+  'HMMMMMMMMMH', // 28
+  'HMEEEMEEEMH',
+  'HMEEEMEEEMH', // 30 문: 마음 전하기(5,30)
   'HHHHHHHHHHH',
 ];
 
@@ -31,11 +37,12 @@ export const HUB_SPAWN = { tx: 5, ty: 20 };
 
 /** 각 방으로 가는 문 위치와, 그 방에서 돌아올 때 설 자리 */
 export const HUB_DOORS = {
+  // sign은 64×64(2×2칸)라 문 옆 두 칸을 차지한다
   info:      { door: { tx: 1, ty: 21 }, sign: { tx: 2, ty: 21 }, back: { tx: 1, ty: 20 }, label: '예식 안내소' },
-  gallery:   { door: { tx: 9, ty: 21 }, sign: { tx: 8, ty: 21 }, back: { tx: 9, ty: 20 }, label: '갤러리관' },
+  gallery:   { door: { tx: 9, ty: 21 }, sign: { tx: 7, ty: 21 }, back: { tx: 9, ty: 20 }, label: '갤러리관' },
   story:     { door: { tx: 1, ty: 25 }, sign: { tx: 2, ty: 25 }, back: { tx: 1, ty: 24 }, label: '우리 이야기 길' },
-  guestbook: { door: { tx: 9, ty: 25 }, sign: { tx: 8, ty: 25 }, back: { tx: 9, ty: 24 }, label: '방명록 정원' },
-  gifts:     { door: { tx: 5, ty: 30 }, sign: { tx: 4, ty: 30 }, back: { tx: 5, ty: 29 }, label: '마음 전하는 곳' },
+  guestbook: { door: { tx: 9, ty: 25 }, sign: { tx: 7, ty: 25 }, back: { tx: 9, ty: 24 }, label: '방명록 정원' },
+  gifts:     { door: { tx: 5, ty: 30 }, sign: { tx: 3, ty: 29 }, back: { tx: 5, ty: 29 }, label: '마음 전하는 곳' },
 };
 
 // 나무는 64×64(2칸 폭)라 왼쪽은 1~3열, 오른쪽은 7~8열에 둔다(5열 버진로드를 피함)
@@ -64,13 +71,13 @@ const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
 export class HubScene extends Scene {
   constructor(game) {
     const cfg = game.config;
-    // 64px 폭 캐릭터가 겹치지 않도록 길(5열) 양옆 3·7열에 세운다
-    const groom = new Character({ sprites: characterSet(game.assets, 'groom', GROOM), name: displayName(cfg.groom), ...standPos(3, 3) });
-    const bride = new Character({ sprites: characterSet(game.assets, 'bride', BRIDE), name: displayName(cfg.bride), ...standPos(7, 3) });
+    // 아치(160×128, 0~3행)보다 아래인 4행에, 길(5열) 양옆 3·7열에 세운다
+    const groom = new Character({ sprites: characterSet(game.assets, 'groom', GROOM), name: displayName(cfg.groom), ...standPos(3, 4) });
+    const bride = new Character({ sprites: characterSet(game.assets, 'bride', BRIDE), name: displayName(cfg.bride), ...standPos(7, 4) });
     const greet = (c) => () => c.say(pick(cfg.greetings));
 
     const objects = [
-      { id: 'arch', sprite: 'arch', tx: 4, ty: 1, solid: false },
+      { id: 'arch', sprite: 'arch', tx: 3, ty: 0, solid: false },
       ...TREES.map(([tx, ty], i) => ({ id: `tree${i}`, sprite: 'tree', tx, ty })),
     ];
     const entrances = [];

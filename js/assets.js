@@ -3,7 +3,7 @@
  *
  *  assets/characters/<name>.png  정면 1장(가로:세로 ≈ 2:3, 64×96으로 맞춰짐) 또는 3열×4행 시트(열: idle/걷기A/걷기B, 행: down/left/right/up)
  *  assets/tiles/<ID>.png         32×32
- *  assets/objects/<id>.png       32의 배수 크기(아치 96×64, 나무 64×64, 벤치·책상 64×32, 나머지 32×32)
+ *  assets/objects/<id>.png       32의 배수 크기(아치 160×128, 벤치·책상 128×64, 꽃·문 32×32, 나머지 64×64)
  *  assets/maps/<sceneId>.png     씬 전체 배경(맵 픽셀 크기와 같게; 다르면 늘려 맞춤)
  */
 import { TILE } from './renderer.js';

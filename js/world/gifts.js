@@ -6,12 +6,12 @@ import { esc, copyText } from '../ui/dom.js';
 
 const ROWS = [
   'HHHHHHHHHHH',
-  'HSSSSSSSSSH',
-  'HSSSSSSSSSH',
-  'HSSSSSSSSSH',
-  'HSSSSSSSSSH',
-  'HSSSSSSSSSH',
-  'HSSSSSSSSSH',
+  'HMMMMMMMMMH',
+  'HMMMLLLMMMH',
+  'HMMMLLLMMMH',
+  'HMMMMMMMMMH',
+  'HMMMMMMMMMH',
+  'HMMMMMMMMMH',
   'HHHHHPHHHHH',
 ];
 const EXIT = { tx: 5, ty: 7 };
@@ -75,9 +75,9 @@ export function createGifts(game) {
     entrances: [{ ...EXIT, to: 'hub', spawn: HUB_DOORS.gifts.back }],
     objects: [
       { id: 'door', sprite: 'door', floor: true, ...EXIT },
-      { id: 'groom-chest', sprite: 'chest', tx: 3, ty: 2, interact: () => showAccounts(game, '신랑', cfg.groom) },
+      { id: 'groom-chest', sprite: 'chest', tx: 2, ty: 2, interact: () => showAccounts(game, '신랑', cfg.groom) },
       { id: 'bride-chest', sprite: 'chest', tx: 7, ty: 2, interact: () => showAccounts(game, '신부', cfg.bride) },
-      { id: 'share', sprite: 'stone', tx: 5, ty: 4, interact: () => showShare(game) },
+      { id: 'share', sprite: 'stone', tx: 4, ty: 4, interact: () => showShare(game) },
     ],
   });
 }

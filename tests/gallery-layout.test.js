@@ -13,12 +13,12 @@ test('사진 0장: 최소 복도, 액자 없음', () => {
   assert.deepEqual(L.spawn, { tx: 5, ty: 4 });
 });
 
-test('사진 5장: 2장씩 3줄, 왼쪽은 tx1/stand tx2, 오른쪽은 tx9/stand tx8', () => {
+test('사진 5장: 2장씩 3줄(3행 간격), 왼쪽은 tx1/stand tx3, 오른쪽은 tx8/stand tx7', () => {
   const L = galleryLayout(5);
-  assert.equal(L.rows.length, 10);
+  assert.equal(L.rows.length, 12);
   assert.equal(L.frames.length, 5);
-  assert.deepEqual(L.frames[0], { index: 0, tx: 1, ty: 2, stand: { tx: 2, ty: 2 } });
-  assert.deepEqual(L.frames[1], { index: 1, tx: 9, ty: 2, stand: { tx: 8, ty: 2 } });
-  assert.deepEqual(L.frames[4], { index: 4, tx: 1, ty: 6, stand: { tx: 2, ty: 6 } });
-  assert.deepEqual(L.exit, { tx: 5, ty: 9 });
+  assert.deepEqual(L.frames[0], { index: 0, tx: 1, ty: 1, stand: { tx: 3, ty: 2 } });
+  assert.deepEqual(L.frames[1], { index: 1, tx: 8, ty: 1, stand: { tx: 7, ty: 2 } });
+  assert.deepEqual(L.frames[4], { index: 4, tx: 1, ty: 7, stand: { tx: 3, ty: 8 } });
+  assert.deepEqual(L.exit, { tx: 5, ty: 11 });
 });
