@@ -7,9 +7,9 @@ import { freeTiles, pickTiles } from './guest-layout.js';
 import { displayName } from '../config.js';
 
 // 11열 × 32행(352×1024px). 위쪽 19행은 아치까지 이어지는 긴 정원, 아래는 방 입구가 있는 교차로.
-// 타일: H 산울타리, G 잔디, W 꽃잔디, E 장미꽃잎 잔디, M 아이보리 대리석(무대·산책로), A/B 버진로드, C 입구 마감
-const STAGE = 'HMMMM?MMMMH';                                   // 1~4행: 아치 주변 대리석 무대
-const GARDEN = ['HMEEE?EEEMH']; // 5~19행: 양옆 대리석 산책로(1·9열) + 꽃잎 잔디(W 꽃잔디는 톤이 달라 얼룩처럼 보여 제외)
+// 타일: Z 장미 산울타리(막힘), M 대리석(무대), Q 분홍 꽃밭, E 장미꽃잎 잔디, A/B 버진로드, C 입구 마감, V 흰 자갈길
+const STAGE = 'ZMMMM?MMMMZ';   // 1~4행: 아치 주변 대리석 무대
+const GARDEN = ['ZQEEE?EEEQZ']; // 5~19행: 양옆 꽃밭(1·9열), 2~4·6~8열 잔디(하객·의자)
 /** 가운데(5열)는 버진로드 A, 4행마다 꽃잎 B, 19행은 입구 마감 C */
 const aisleRow = (i) => {
   const base = i <= 3 ? STAGE : GARDEN[(i - 4) % GARDEN.length];
@@ -17,20 +17,20 @@ const aisleRow = (i) => {
   return base.replace('?', mid);
 };
 export const HUB_ROWS = [
-  'HHHHHHHHHHH',
+  'ZZZZZZZZZZZ',
   ...Array.from({ length: 19 }, (_, i) => aisleRow(i)), // rows 1..19
-  'HMMMMMMMMMH', // 20 교차로(대리석) · 시작 위치
-  'HMEEEMEEEMH', // 21 문: 안내소(1,21), 갤러리(9,21)
-  'HMEEEMEEEMH',
-  'HMEEEMEEEMH',
-  'HMMMMMMMMMH', // 24
-  'HMEEEMEEEMH', // 25 문: 이야기 길(1,25), 방명록(9,25)
-  'HMEEEMEEEMH',
-  'HMEEEMEEEMH',
-  'HMMMMMMMMMH', // 28
-  'HMEEEMEEEMH',
-  'HMEEEMEEEMH', // 30 문: 마음 전하기(5,30)
-  'HHHHHHHHHHH',
+  'ZVVVVVVVVVZ', // 20 교차로(흰 자갈길)
+  'ZVQEQVQEQVZ', // 21 문: 안내소(1,21), 갤러리(9,21)
+  'ZVEEEVEEEVZ',
+  'ZVQEQVQEQVZ',
+  'ZVVVVVVVVVZ', // 24
+  'ZVQEQVQEQVZ', // 25 문: 이야기 길(1,25), 방명록(9,25)
+  'ZVEEEVEEEVZ',
+  'ZVQEQVQEQVZ',
+  'ZVVVVVVVVVZ', // 28
+  'ZVQEQVQEQVZ',
+  'ZVEEEVEEEVZ', // 30 문: 마음 전하기(5,30)
+  'ZZZZZZZZZZZ',
 ];
 
 export const HUB_SPAWN = { tx: 5, ty: 9 }; // 버진로드 중간에서 시작: 위로 신랑신부, 아래로 하객들이 보인다
@@ -45,11 +45,22 @@ export const HUB_DOORS = {
   gifts:     { door: { tx: 5, ty: 30 }, sign: { tx: 3, ty: 29 }, back: { tx: 5, ty: 29 }, label: '마음 전하는 곳' },
 };
 
-// 나무는 96×96(3칸 폭). 왼쪽은 2~4열, 오른쪽은 6~8열에 두고 5열 버진로드와 1·9열 산책로는 비운다
-const TREES = [[2, 6], [6, 10], [2, 14], [6, 18]];
+/** 하객용 흰 의자(32×48): 버진로드 바로 옆 4·6열, 3행 간격 */
+const CHAIR_ROWS = [5, 8, 11, 14, 17];
+/** 장식: 무대 모서리 덤불·랜턴, 잔디 위 꽃잎, 입구 환영판, 교차로 블록의 덤불·랜턴 */
+const DECOR = [
+  { sprite: 'bush', tx: 1, ty: 1 }, { sprite: 'bush', tx: 8, ty: 1 },
+  { sprite: 'lantern', tx: 2, ty: 3 }, { sprite: 'lantern', tx: 8, ty: 3 },
+  { sprite: 'petal-pile', tx: 3, ty: 7, floor: true }, { sprite: 'petal-pile', tx: 7, ty: 10, floor: true },
+  { sprite: 'petal-pile', tx: 2, ty: 13, floor: true }, { sprite: 'petal-pile', tx: 8, ty: 16, floor: true },
+  { sprite: 'welcome-board', tx: 7, ty: 18 },
+  { sprite: 'bush', tx: 3, ty: 22 }, { sprite: 'bush', tx: 6, ty: 22 },
+  { sprite: 'bush', tx: 3, ty: 26 }, { sprite: 'bush', tx: 6, ty: 26 },
+  { sprite: 'lantern', tx: 2, ty: 29 }, { sprite: 'lantern', tx: 8, ty: 29 },
+];
 
-/** 하객이 서는 구역: 버진로드(5열) 양옆 2~4열·6~8열, 아치 아래 5행부터 입구 직전 19행까지 */
-export const GUEST_ZONE = { cols: [2, 3, 4, 6, 7, 8], rowMin: 5, rowMax: 19 };
+/** 하객이 서는 구역: 의자 줄 바깥쪽 2~3열·7~8열, 아치 아래 5행부터 입구 직전 19행까지 */
+export const GUEST_ZONE = { cols: [2, 3, 7, 8], rowMin: 6, rowMax: 19 }; // 6행부터: 5행에 서면 무대(1~4행) 위로 겹쳐 보인다
 
 export const MAX_GUESTS = 30;
 
@@ -83,7 +94,8 @@ export class HubScene extends Scene {
 
     const objects = [
       { id: 'arch', sprite: 'arch', tx: 3, ty: 0, solid: false },
-      ...TREES.map(([tx, ty], i) => ({ id: `tree${i}`, sprite: 'tree', tx, ty })),
+      ...CHAIR_ROWS.flatMap((ty) => [{ id: `chairL${ty}`, sprite: 'chair', tx: 4, ty }, { id: `chairR${ty}`, sprite: 'chair', tx: 6, ty }]),
+      ...DECOR.map((d, i) => ({ id: `decor${i}`, ...d })),
     ];
     const entrances = [];
     for (const [id, d] of Object.entries(HUB_DOORS)) {
@@ -123,11 +135,17 @@ export class HubScene extends Scene {
     }
     const me = this.game?.profile?.nickname;
     const others = entries.filter((e) => e.n !== me); // 본인은 플레이어로 이미 있으므로 제외
+    const inZone = (tx, ty) => GUEST_ZONE.cols.includes(tx) && ty >= GUEST_ZONE.rowMin && ty <= GUEST_ZONE.rowMax && !reserved.has(`${tx},${ty}`);
+    const faceAisle = (tx) => (tx < 5 ? 'right' : 'left');
     const guests = guestPlacements(others, reserved).map(({ tx, ty, entry }) => {
       const id = ((entry.c % PRESET_COUNT) + PRESET_COUNT) % PRESET_COUNT;
       const c = new Character({ sprites: characterSet(this.assets, `preset-${id}`, presetSprites(id)), name: entry.n, ...standPos(tx, ty) });
-      c.dir = tx < 5 ? 'right' : 'left'; // 버진로드 쪽을 바라본다
-      return { character: c, interact: () => c.say(entry.m || '결혼 축하해요! 🎉', 4) };
+      c.dir = faceAisle(tx); // 버진로드 쪽을 바라본다
+      return {
+        character: c, solid: false, // 돌아다니므로 플레이어가 지나갈 수 있다
+        wander: { home: { tx, ty }, radius: 2, allow: inZone, faceDir: faceAisle, timer: 1 + Math.random() * 6 },
+        interact: () => { c.stop(); c.say(entry.m || '결혼 축하해요! 🎉', 4); },
+      };
     });
     this.npcs = [...this.baseNpcs, ...guests];
     this.rebuildSolid();

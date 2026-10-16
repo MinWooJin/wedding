@@ -7,18 +7,18 @@ import { esc } from '../ui/dom.js';
 import { validateEntry, postMessage, MESSAGE_MAX } from '../api.js';
 
 const ROWS = [
-  'HHHHHHHHHHH',
-  'HMMMMMMMMMH',
-  'HMEEEEEEEMH',
-  'HMEEEEEEEMH',
-  'HMEEEEEEEMH',
-  'HMEEEEEEEMH',
-  'HMEEEEEEEMH',
-  'HMEEEEEEEMH',
-  'HMEEEEEEEMH',
-  'HMEEEAEEEMH',
-  'HMMMMAMMMMH',
-  'HHHHHPHHHHH',
+  'ZZZZZZZZZZZ',
+  'ZQQQQQQQQQZ',
+  'ZQEEEEEEEQZ',
+  'ZQEEEEEEEQZ',
+  'ZQEEEEEEEQZ',
+  'ZQEEEEEEEQZ',
+  'ZQEEEEEEEQZ',
+  'ZQEEEEEEEQZ',
+  'ZQEEEEEEEQZ',
+  'ZQEEEAEEEQZ',
+  'ZQQQQAQQQQZ',
+  'ZZZZZAZZZZZ',
 ];
 const MAILBOX = { tx: 4, ty: 2 }; // 64×64: 4~5열, 2~3행
 const EXIT = { tx: 5, ty: 11 };

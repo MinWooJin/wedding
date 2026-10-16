@@ -127,6 +127,21 @@ test('NPC는 solid이며 탭하면 interact가 호출된다', () => {
   assert.equal(hit, 1);
 });
 
+test('wander NPC는 시간이 지나면 home 주변으로 이동하고, solid:false면 플레이어를 막지 않는다', () => {
+  const npc = new Character({ sprites: GROOM, name: '손님', x: standPos(3, 3).x, y: standPos(3, 3).y });
+  const s = makeScene({ npcs: [{ character: npc, solid: false, wander: { home: { tx: 3, ty: 3 }, radius: 1, timer: 0.5, faceDir: 'left' } }] });
+  assert.ok(!s.extraSolid.has('3,3'), '비충돌 NPC');
+  const p = player(); s.enter(p, { tx: 1, ty: 1 });
+  const game = { player: p, goTo: () => {} };
+  const start = [npc.x, npc.y];
+  for (let i = 0; i < 40; i++) s.update(0.1, game); // 4초: 타이머 만료 → 이동 → 도착
+  const moved = npc.x !== start[0] || npc.y !== start[1];
+  assert.ok(moved, '자리를 옮겼다');
+  const t = s.tileOf(npc.x, npc.y);
+  assert.ok(Math.abs(t.tx - 3) <= 1 && Math.abs(t.ty - 3) <= 1, 'home 반경 1칸 안');
+  assert.ok(!s.isSolidTile(t.tx, t.ty), '막힌 칸이 아님');
+});
+
 test('draw는 타일 → y정렬 드로어블 → 말풍선 순으로 renderer를 호출한다', () => {
   const s = makeScene({ objects: [{ id: 'm', sprite: 'mailbox', tx: 3, ty: 1 }] });
   const p = player(); s.enter(p); p.say('hi');

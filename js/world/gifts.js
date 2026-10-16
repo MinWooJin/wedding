@@ -78,6 +78,7 @@ export function createGifts(game) {
       { id: 'groom-chest', sprite: 'chest', tx: 2, ty: 2, interact: () => showAccounts(game, '신랑', cfg.groom) },
       { id: 'bride-chest', sprite: 'chest', tx: 7, ty: 2, interact: () => showAccounts(game, '신부', cfg.bride) },
       { id: 'share', sprite: 'stone', tx: 4, ty: 4, interact: () => showShare(game) },
+      { id: 'lanternL', sprite: 'lantern', tx: 1, ty: 1 }, { id: 'lanternR', sprite: 'lantern', tx: 9, ty: 1 },
     ],
   });
 }

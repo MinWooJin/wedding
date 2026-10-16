@@ -11,8 +11,13 @@ import { PRESET_COUNT } from './sprites/characters.js';
 
 export const CHAR_W = 48, CHAR_H = 72; // 화면(352px 폭 기준)에서 캐릭터가 폭 48px, 높이 72px로 보인다(타일 1.5칸 폭)
 export const CHARACTER_NAMES = [...Array.from({ length: PRESET_COUNT }, (_, i) => `preset-${i}`), 'groom', 'bride'];
-export const TILE_IDS = ['G', 'W', 'P', 'H', 'F', 'D', 'K', 'R', 'S', 'A', 'B', 'C', 'E', 'M', 'L']; // A/B/C 버진로드·입구, E 꽃잎잔디, M 대리석, L 블러시 카펫
-export const OBJECT_IDS = ['arch', 'tree', 'sign', 'mailbox', 'frame', 'bench', 'chest', 'desk', 'board', 'phone', 'calendar', 'mapframe', 'flower', 'stone', 'door'];
+export const TILE_IDS = ['G', 'W', 'P', 'H', 'F', 'D', 'K', 'R', 'S', 'A', 'B', 'C', 'E', 'M', 'L', 'Q', 'Y', 'V', 'Z'];
+// 맵 문자열은 한 글자가 한 칸이므로, 두 글자 파일명(X1~X4)은 한 글자 코드로 쓴다.
+// Q 분홍 꽃밭(X1), Y 흰 꽃밭(X2), V 흰 자갈길(X3), Z 장미 산울타리(X4, 막힘)
+export const TILE_FILES = { Q: 'X1', Y: 'X2', V: 'X3', Z: 'X4' };
+const FILE_TO_TILE = Object.fromEntries(Object.entries(TILE_FILES).map(([k, v]) => [v, k]));
+export const OBJECT_IDS = ['arch', 'tree', 'sign', 'mailbox', 'frame', 'bench', 'chest', 'desk', 'board', 'phone', 'calendar', 'mapframe', 'flower', 'stone', 'door',
+  'chair', 'bush', 'lantern', 'petal-pile', 'welcome-board'];
 export const SCENE_IDS = ['hub', 'info', 'gallery', 'story', 'guestbook', 'gifts'];
 
 function loadImage(src) {
@@ -73,10 +78,15 @@ export async function loadAssets(base = 'assets') {
   const pick = (list, allowed) => (Array.isArray(list) ? list.filter((n) => allowed.includes(n)) : []);
   const jobs = [];
   for (const n of pick(manifest.characters, CHARACTER_NAMES)) jobs.push(loadImage(`${base}/characters/${n}.png`).then((img) => { if (img) out.characters[n] = characterSetFromImage(img); }));
-  for (const id of pick(manifest.tiles, TILE_IDS)) jobs.push(loadImage(`${base}/tiles/${id}.png`).then((img) => { if (img) out.tiles[id] = imgSprite(toCanvas(img, 0, 0, img.width, img.height, TILE, TILE)); }));
+  const tileNames = Array.isArray(manifest.tiles) ? manifest.tiles.map((n) => FILE_TO_TILE[n] ?? n) : [];
+  for (const id of pick(tileNames, TILE_IDS)) {
+    const file = TILE_FILES[id] ?? id;
+    jobs.push(loadImage(`${base}/tiles/${file}.png`).then((img) => { if (img) out.tiles[id] = imgSprite(toCanvas(img, 0, 0, img.width, img.height, TILE, TILE)); }));
+  }
   for (const id of pick(manifest.objects, OBJECT_IDS)) jobs.push(loadImage(`${base}/objects/${id}.png`).then((img) => {
     if (!img) return;
-    const w = Math.max(TILE, Math.round(img.width / TILE) * TILE), h = Math.max(TILE, Math.round(img.height / TILE) * TILE);
+    // 폭은 타일 배수로 맞추고, 높이는 원본을 유지한다(의자 48px 등). Scene이 발자국 행 바닥에 맞춰 그린다.
+    const w = Math.max(TILE, Math.round(img.width / TILE) * TILE), h = Math.max(TILE, img.height);
     out.objects[id] = imgSprite(toCanvas(img, 0, 0, img.width, img.height, w, h));
   }));
   for (const id of pick(manifest.maps, SCENE_IDS)) jobs.push(loadImage(`${base}/maps/${id}.png`).then((img) => { if (img) out.maps[id] = img; }));
