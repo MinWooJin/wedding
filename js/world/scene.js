@@ -22,7 +22,8 @@ export class Scene {
     this.id = id;
     this.map = parseMap(rows);
     this.spawn = spawn;
-    this.objects = objects.map((o) => ({ solid: !o.floor, ...o, spr: assets.objects?.[o.sprite] ?? objectSprite(o.sprite) }));
+    this.assets = assets;
+    this.objects = objects.map((o) => this.makeObject(o));
     this.entrances = entrances;
     this.npcs = npcs;
     this.bg = bg;
@@ -31,6 +32,11 @@ export class Scene {
     this.pending = null;      // 도착 후 실행할 상호작용
     this.onEntrance = false;  // 입구 재발동 방지
     this.rebuildSolid();
+  }
+
+  /** 오브젝트 정의에 스프라이트(PNG 우선, 없으면 코드 그림)를 붙인다. 동적으로 추가할 때도 사용. */
+  makeObject(o) {
+    return { solid: !o.floor, ...o, spr: this.assets.objects?.[o.sprite] ?? objectSprite(o.sprite) };
   }
 
   rebuildSolid() {
