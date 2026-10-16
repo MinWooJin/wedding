@@ -1,44 +1,86 @@
 {
   "groom": {
-    "name": "신랑이름",
+    "name": "진민우",
     "phone": "010-0000-0000",
     "parents": [
-      { "role": "아버지", "name": "신랑아버지", "phone": "" },
-      { "role": "어머니", "name": "신랑어머니", "phone": "" }
+      {
+        "role": "아버지",
+        "name": "",
+        "phone": ""
+      },
+      {
+        "role": "어머니",
+        "name": "",
+        "phone": ""
+      }
     ],
-    "account": { "bank": "카카오뱅크", "number": "3333-00-0000000", "holder": "신랑이름", "kakaopay": "" }
+    "account": {
+      "bank": "카카오뱅크",
+      "number": "3333-00-0000000",
+      "holder": "진민우",
+      "kakaopay": ""
+    }
   },
   "bride": {
-    "name": "신부이름",
+    "name": "한새암",
     "phone": "010-0000-0000",
     "parents": [
-      { "role": "아버지", "name": "신부아버지", "phone": "" },
-      { "role": "어머니", "name": "신부어머니", "phone": "" }
+      {
+        "role": "아버지",
+        "name": "",
+        "phone": ""
+      },
+      {
+        "role": "어머니",
+        "name": "",
+        "phone": ""
+      }
     ],
-    "account": { "bank": "국민은행", "number": "000000-00-000000", "holder": "신부이름", "kakaopay": "" }
+    "account": {
+      "bank": "국민은행",
+      "number": "000000-00-000000",
+      "holder": "한새암",
+      "kakaopay": ""
+    }
   },
   "wedding": {
-    "date": "2027-03-13T12:30:00+09:00",
-    "venue": "○○웨딩홀",
-    "hall": "3층 그랜드홀",
-    "address": "서울특별시 ○○구 ○○로 00",
+    "date": "2027-01-09T11:30:00+09:00",
+    "venue": "더그랜드롯데 서울",
+    "hall": "38층 무궁화",
+    "address": "서울특별시 중구 을지로 30 (을지로1가)",
     "map": {
-      "kakao": "https://map.kakao.com/",
-      "naver": "https://map.naver.com/",
+      "kakao": "https://map.kakao.com/?q=%EB%8D%94%EA%B7%B8%EB%9E%9C%EB%93%9C%EB%A1%AF%EB%8D%B0%20%EC%84%9C%EC%9A%B8",
+      "naver": "https://map.naver.com/p/search/%EB%8D%94%EA%B7%B8%EB%9E%9C%EB%93%9C%EB%A1%AF%EB%8D%B0%20%EC%84%9C%EC%9A%B8",
       "tmap": ""
     },
     "transport": {
-      "subway": "2호선 ○○역 3번 출구 도보 5분",
-      "bus": "간선 000, 지선 0000 ○○정류장 하차",
-      "parking": "건물 지하 주차장 2시간 무료"
+      "subway": "2호선 을지로입구역 (롯데호텔 방면 출구)",
+      "bus": "을지로입구·롯데백화점 정류장 하차",
+      "parking": "호텔 주차장 이용 (예식 당일 안내 데스크에서 주차 등록)"
     }
   },
-  "greetings": ["와주셔서 감사해요!", "오늘 꼭 뵈어요 🌸", "천천히 둘러보세요~", "갤러리도 구경해 주세요!"],
+  "greetings": [
+    "와주셔서 감사해요!",
+    "오늘 꼭 뵈어요 🌸",
+    "천천히 둘러보세요~",
+    "갤러리도 구경해 주세요!"
+  ],
   "timeline": [
-    { "year": "2019", "icon": "☕", "text": "처음 만난 날" },
-    { "year": "2021", "icon": "✈️", "text": "첫 여행" },
-    { "year": "2025", "icon": "💍", "text": "프러포즈" },
-    { "year": "2027", "icon": "💒", "text": "결혼합니다" }
+    {
+      "year": "",
+      "icon": "☕",
+      "text": "처음 만난 날"
+    },
+    {
+      "year": "",
+      "icon": "💍",
+      "text": "프러포즈"
+    },
+    {
+      "year": "2027",
+      "icon": "💒",
+      "text": "1월 9일, 결혼합니다"
+    }
   ],
   "guestbookApi": "",
   "kakaoJsKey": "",

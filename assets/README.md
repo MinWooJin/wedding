@@ -24,6 +24,38 @@ python tools/prepare_assets.py --pixel  # 또렷한 도트 느낌
 
 ## 캐릭터 생성 프롬프트
 
+### OpenAI API로 자동 생성
+
+`tools/generate_assets.py`는 `gpt-image-1`, high 품질, 투명 배경 PNG로 생성합니다.
+Python 환경에 의존성을 설치하고 `OPENAI_API_KEY`를 환경변수로 설정하세요. 키는 저장소에 넣지 마세요.
+
+```powershell
+python -m pip install -r tools/requirements-assets.txt
+python tools/generate_assets.py --only characters --test --dry-run
+python tools/generate_assets.py --only characters --test
+python tools/generate_assets.py --only characters --skip-existing
+python tools/prepare_assets.py
+npm run serve
+```
+
+테스트 캐릭터를 확인한 뒤 나머지를 생성하세요. `--test`는 하객 `preset-0` 한 장만 생성하며,
+`--dry-run`은 API 호출 없이 파일명과 실제 프롬프트를 보여줍니다. `--skip-existing`을 생략하면
+선택한 원본을 덮어씁니다. 캐릭터는 1024×1536, 타일과 오브젝트는 1024×1024로 생성합니다.
+일시적인 실패는 이미지당 최대 3회 시도하며, 인증·권한 오류는 즉시 중단합니다.
+다시 실행할 때는 `--skip-existing`으로 이미 생성한 파일의 중복 비용을 피할 수 있습니다.
+
+캐릭터를 게임에서 확인한 뒤 다음을 실행합니다.
+
+```powershell
+python tools/generate_assets.py --only tiles --skip-existing
+python tools/generate_assets.py --only objects --skip-existing
+python tools/prepare_assets.py
+```
+
+옵션 없이 실행하면 36종 전체를 생성하므로 API 비용이 발생합니다. 타일은 변환 후 반복 배치해
+경계를 확인하고, 이음새가 보이는 원본만 제거하거나 별도로 보관한 뒤 해당 그룹을
+`--skip-existing`으로 다시 생성하세요.
+
 생성 해상도는 클수록 좋습니다(예: 1024×1536). 스크립트가 64×96으로 줄이면서 자연스럽게 도트화됩니다. 캐릭터가 화면에서 폭 64px·높이 96px(길 2칸 폭)로 크게 보이므로 얼굴 표정이 살아 있는 그림을 고르세요. (ComfyUI / ChatGPT 이미지 / Midjourney 공통)
 
 레퍼런스(@dding_one)와 같은 톤을 내기 위한 영문 프롬프트입니다. `[...]` 부분만 바꿔서 12장을 뽑으세요.
