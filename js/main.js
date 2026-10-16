@@ -1,5 +1,6 @@
 import { Game } from './game.js';
 import { createHub } from './world/hub.js';
+import { createInfo } from './world/info.js';
 import { loadConfig } from './config.js';
 import { loadProfile, saveProfile } from './state.js';
 import { showIntro } from './ui/intro.js';
@@ -16,7 +17,7 @@ if (!profile) {
   saveProfile(profile);
 }
 
-const game = new Game({ canvas, frame, config, profile, scenes: { hub: createHub }, ui: {} });
+const game = new Game({ canvas, frame, config, profile, scenes: { hub: createHub, info: createInfo }, ui: {} });
 game.ui.hud = createHud(document.getElementById('hud'), config, game);
 game.start('hub');
 
