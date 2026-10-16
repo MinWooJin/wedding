@@ -38,12 +38,11 @@ export const HUB_DOORS = {
 };
 
 /** 가장자리 장식: 울타리 안쪽을 따라 큰 나무(96×96)와 꽃덤불(64×64)을 번갈아 둔다. 레퍼런스처럼 나무가 양옆 경계를 만든다. */
-const DECOR = [
-  { sprite: 'tree', tx: 1, ty: 1 }, { sprite: 'tree', tx: 7, ty: 1 },
-  { sprite: 'bush', tx: 1, ty: 5 }, { sprite: 'bush', tx: 8, ty: 5 },
-  { sprite: 'tree', tx: 1, ty: 8 }, { sprite: 'tree', tx: 7, ty: 8 },
-  { sprite: 'bush', tx: 1, ty: 12 }, { sprite: 'bush', tx: 8, ty: 12 },
-  { sprite: 'tree', tx: 1, ty: 15 }, { sprite: 'tree', tx: 7, ty: 15 },
+const DECOR = [ // 0~4행은 큰 아치(최대 7칸 폭) 자리라 비워 둔다
+  { sprite: 'tree', tx: 1, ty: 5 }, { sprite: 'tree', tx: 7, ty: 5 },
+  { sprite: 'bush', tx: 1, ty: 9 }, { sprite: 'bush', tx: 8, ty: 9 },
+  { sprite: 'tree', tx: 1, ty: 12 }, { sprite: 'tree', tx: 7, ty: 12 },
+  { sprite: 'bush', tx: 1, ty: 16 }, { sprite: 'bush', tx: 8, ty: 16 },
   { sprite: 'bush', tx: 3, ty: 22 }, { sprite: 'bush', tx: 6, ty: 22 },
   { sprite: 'bush', tx: 3, ty: 26 }, { sprite: 'bush', tx: 6, ty: 26 },
 ];
@@ -81,8 +80,10 @@ export class HubScene extends Scene {
     groom.dir = 'down'; bride.dir = 'down';
     const greet = (c) => () => c.say(pick(cfg.greetings));
 
+    // 아치는 PNG 폭(160=5칸, 224=7칸 …)에 맞춰 돌길 중앙(5열)에 가운데 정렬한다
+    const archTiles = Math.round((game.assets?.objects?.arch?.w ?? 160) / 32);
     const objects = [
-      { id: 'arch', sprite: 'arch', tx: 3, ty: 0, solid: false },
+      { id: 'arch', sprite: 'arch', tx: 5 - Math.floor(archTiles / 2), ty: 0, solid: false },
       ...DECOR.map((d, i) => ({ id: `decor${i}`, ...d })),
     ];
     const entrances = [];

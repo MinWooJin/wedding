@@ -40,13 +40,15 @@ WEDDING_TILES = {
     "E": "rose-petal-grass", "M": "ivory-marble", "L": "blush-carpet",
     "X1": "flower-bed-pink", "X2": "flower-bed-white",
     "X3": "white-gravel", "X4": "hedge-rose",
+    "J": "grass-flowers-a", "U": "grass-flowers-b", "N": "sand-path",
 }
 OBJECT_SIZES = {  # 오브젝트별 원본 비율과 요청 규격. 의자는 높이 48px를 유지한다.
-    "arch": (160, 128), "tree": (96, 96), "bench": (128, 64), "desk": (128, 64),
+    "arch": (160, 128), "tree": (96, 128), "bench": (128, 64), "desk": (128, 64),
     "sign": (64, 64), "mailbox": (64, 64), "frame": (64, 64), "chest": (64, 64), "board": (64, 64),
     "phone": (64, 64), "calendar": (64, 64), "mapframe": (64, 64), "stone": (64, 64), "flower": (32, 32), "door": (32, 32),
     "chair": (32, 48), "bush": (64, 64), "lantern": (32, 64),
     "petal-pile": (32, 32), "welcome-board": (64, 64),
+    "bush-white": (64, 64),
 }
 # 고정 크기 씬(갤러리·이야기 길은 사진/타임라인 수에 따라 길이가 변해 배경 이미지를 쓰지 않는다)
 MAP_SIZES = {"hub": (352, 1024), "info": (352, 256), "guestbook": (352, 384), "gifts": (352, 256)}

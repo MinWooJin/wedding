@@ -214,8 +214,10 @@ js/ 는 수정하지 마라. 완료 후 이 문서 하단에 결과 크기·bbox
 오브젝트(투명 배경, 아래 가운데 정렬)
   - raw/objects/tree.png   (교체) 96×128 크고 둥근 짙은 녹색 나무, 갈색 줄기, 레퍼런스의 가장자리 나무 느낌
   - raw/objects/bush-white.png (신규, ID bush-white) 64×64 흰 꽃이 핀 둥근 덤불
-  - raw/objects/arch.png   (교체) 160×128 흰 장미와 연분홍 장미, 초록 잎의 결혼식 아치. 가운데 비어 있음. 기둥 두 개
+  - raw/objects/arch.png   (교체) 224×160 흰 장미와 연분홍 장미, 초록 잎의 결혼식 아치. 레퍼런스처럼 화면 폭의 2/3를 차지하는 큰 아치.
+                           가운데는 완전히 비어 있고(투명) 기둥 두 개가 양옆에. 신랑신부(48×72 두 명, 폭 약 100px)가 아치 안쪽 아래에 들어간다.
+                           아치 윗부분 꽃 띠는 위쪽 70px 안에 그려서 그 아래 90px는 기둥만 있게(캐릭터 머리가 꽃에 가리지 않도록).
 
 prepare_assets.py 반영: TILES에 G/W/H는 이미 있음, WEDDING_TILES에 {"J":"grass-flowers-a","U":"grass-flowers-b","N":"sand-path"},
-OBJECT_SIZES에 "tree": (96, 128), "bush-white": (64, 64). 기존 캐릭터 PNG(48×72, 수정된 신랑신부 얼굴)는 절대 다시 변환하지 마라.
+OBJECT_SIZES에 "tree": (96, 128), "bush-white": (64, 64), "arch": (224, 160). 기존 캐릭터 PNG(48×72, 수정된 신랑신부 얼굴)는 절대 다시 변환하지 마라.
 ```
