@@ -1,0 +1,75 @@
+{
+  "generation_mode": "Codex built-in image generation; no OPENAI_API_KEY",
+  "date": "2026-10-16",
+  "direction": "Round 4 natural garden; round 3 platform suspended",
+  "grass_master": {
+    "source": "raw/round4-source/G.png",
+    "prompt": "ONE opaque square grass ground tile for a top-down 16-bit pixel RPG garden. Deep vivid warm green grass, dominant flat EXACT sRGB #5e9a3c (RGB 94,154,60), approximately 85 percent of the tile this same base color, sparse tiny restrained grass flecks in only two nearby shades. Calm understated lawn, NOT flowered grass, no flowers, no leaves or clumps, no stones, no soil. Strict low-resolution logical 32x32 pixel look enlarged to a square; crisp chunky square pixels, limited palette, quiet subtle texture. Entire square filled edge-to-edge with opaque grass. Seamless in both directions, matching opposite edges, uniform lighting, absolutely no border, no margin, no vignette, no perspective, no cast shadow, no gradients, no text or watermark. This is the MASTER BASE tile for matching floral variants: prioritize a large uniform field of #5e9a3c with minimal sparse flecks."
+  },
+  "sources": [
+    {
+      "name": "J",
+      "type": "grass-overlay",
+      "file": "grass-flowers-a-layer",
+      "detail": "A tile DECORATION LAYER with exactly THREE TINY WHITE five-petal flowers with tiny pale yellow centers and minimal green stems, separated and scattered at approximately (25%,30%), (68%,66%), (78%,22%) of the full square canvas. Each flower must be only 8-10% of canvas width. Leave the vast majority of the canvas EMPTY and transparent. No grass, NO green backdrop, no ground, no large leaves, no cluster filling the image.",
+      "prompt": "Create ONE production pixel art asset for a natural garden wedding RPG, based on this direction: dark green lawn, light sandy stone paths, large round dark green edge trees, white rose arch. A tile DECORATION LAYER with exactly THREE TINY WHITE five-petal flowers with tiny pale yellow centers and minimal green stems, separated and scattered at approximately (25%,30%), (68%,66%), (78%,22%) of the full square canvas. Each flower must be only 8-10% of canvas width. Leave the vast majority of the canvas EMPTY and transparent. No grass, NO green backdrop, no ground, no large leaves, no cluster filling the image. Cozy 16-bit RPG sprite art, warm natural palette, thick dark pixel outlines only where appropriate on objects, soft cel shading, simple chunky pixel clusters readable at tiny final game scale. No realistic rendering, no perspective distortion, no text, no watermark. Genuinely transparent background, no drop shadow or glow, no scene, complete subject. IMPORTANT: preserve the full empty square canvas and requested small size/positions of flowers. This layer will be composited over an existing grass tile, so do NOT paint any background."
+    },
+    {
+      "name": "U",
+      "type": "grass-overlay",
+      "file": "grass-flowers-b-layer",
+      "detail": "A tile DECORATION LAYER with exactly THREE TINY wildflowers: one blush pink, one pale yellow, one pink-white, separated at roughly (22%,65%), (57%,28%), (80%,72%) of the full square canvas. Each flower only 8-10% of canvas width. Minimal short green stems, almost all canvas transparent empty space. No grass, no green backdrop, no ground, no large leaves, no image-filling bouquet.",
+      "prompt": "Create ONE production pixel art asset for a natural garden wedding RPG, based on this direction: dark green lawn, light sandy stone paths, large round dark green edge trees, white rose arch. A tile DECORATION LAYER with exactly THREE TINY wildflowers: one blush pink, one pale yellow, one pink-white, separated at roughly (22%,65%), (57%,28%), (80%,72%) of the full square canvas. Each flower only 8-10% of canvas width. Minimal short green stems, almost all canvas transparent empty space. No grass, no green backdrop, no ground, no large leaves, no image-filling bouquet. Cozy 16-bit RPG sprite art, warm natural palette, thick dark pixel outlines only where appropriate on objects, soft cel shading, simple chunky pixel clusters readable at tiny final game scale. No realistic rendering, no perspective distortion, no text, no watermark. Genuinely transparent background, no drop shadow or glow, no scene, complete subject. IMPORTANT: preserve the full empty square canvas and requested small size/positions of flowers. This layer will be composited over an existing grass tile, so do NOT paint any background."
+    },
+    {
+      "name": "W",
+      "type": "grass-overlay",
+      "file": "grass-white-cluster-layer",
+      "detail": "A tile DECORATION LAYER containing ONE SMALL loose cluster of three tiny ivory-white daisy flowers with pale yellow centers at the lower-left third of a FULL square canvas. The whole cluster only 20% of canvas width. Some tiny short green stems, no large leaves, NO grass, NO backdrop, no ground. The vast majority of the full canvas must remain transparent empty space. Do not enlarge the cluster to fill the canvas.",
+      "prompt": "Create ONE production pixel art asset for a natural garden wedding RPG, based on this direction: dark green lawn, light sandy stone paths, large round dark green edge trees, white rose arch. A tile DECORATION LAYER containing ONE SMALL loose cluster of three tiny ivory-white daisy flowers with pale yellow centers at the lower-left third of a FULL square canvas. The whole cluster only 20% of canvas width. Some tiny short green stems, no large leaves, NO grass, NO backdrop, no ground. The vast majority of the full canvas must remain transparent empty space. Do not enlarge the cluster to fill the canvas. Cozy 16-bit RPG sprite art, warm natural palette, thick dark pixel outlines only where appropriate on objects, soft cel shading, simple chunky pixel clusters readable at tiny final game scale. No realistic rendering, no perspective distortion, no text, no watermark. Genuinely transparent background, no drop shadow or glow, no scene, complete subject. IMPORTANT: preserve the full empty square canvas and requested small size/positions of flowers. This layer will be composited over an existing grass tile, so do NOT paint any background."
+    },
+    {
+      "name": "N",
+      "type": "tile",
+      "file": "sand-path",
+      "detail": "Light warm beige sandy gravel and smooth small pale stones ground path. Soft sand color approximately #dfcf9e, a few restrained cream and warm light grey pebble specks. No brown dirt, no grass, no large rocks, no geometric paving slabs, NO grid or grout lines. Fully opaque seamless square ground tile, uniform lighting, no margins or border.",
+      "prompt": "ONE seamless square PALE BEIGE SAND AND LIGHT GRAVEL TEXTURE TILE, top-down 16-bit pixel game floor. Entire image is dry warm ivory-beige sand (#dfcf9e) with scattered very small cream, off-white and pale warm-grey pebble dots. STRICT PALETTE: beige, cream, ivory, pale grey ONLY. Absolutely ZERO green pixels, ZERO plants, ZERO foliage, ZERO bushes, ZERO moss, ZERO grass, ZERO leaves. No dirt brown patches, no path edges, no landscape scene, no large rocks, no individual objects, no paving slabs, NO grid or grout lines. Calm almost uniform LIGHT BEIGE ground with gentle scattered pale gravel texture. Flat overhead view, all edges fully covered, same texture across entire square, seamless horizontally and vertically, uniform lighting. Simple chunky low-resolution 32x32 pixel art tile enlarged as a square. No border, no frame, no vignette, no shadow, no text, no watermark. Fully opaque image."
+    },
+    {
+      "name": "H",
+      "type": "tile",
+      "file": "hedge-white",
+      "detail": "Thick dense rounded clipped garden hedge viewed directly from above, dark rich warm green foliage with only a FEW tiny white flowers. Green palette harmonizes with a #5e9a3c grass lawn but hedge is darker, deeper and dense. Impassable substantial hedge, no visible dirt, no fence wood, no pink roses. Fully opaque continuous seamless hedge foliage texture covering every edge, no separate isolated bush, no margin, no border.",
+      "prompt": "Create ONE production pixel art asset for a natural garden wedding RPG, based on this direction: dark green lawn, light sandy stone paths, large round dark green edge trees, white rose arch. Thick dense rounded clipped garden hedge viewed directly from above, dark rich warm green foliage with only a FEW tiny white flowers. Green palette harmonizes with a #5e9a3c grass lawn but hedge is darker, deeper and dense. Impassable substantial hedge, no visible dirt, no fence wood, no pink roses. Fully opaque continuous seamless hedge foliage texture covering every edge, no separate isolated bush, no margin, no border. Cozy 16-bit RPG sprite art, warm natural palette, thick dark pixel outlines only where appropriate on objects, soft cel shading, simple chunky pixel clusters readable at tiny final game scale. No realistic rendering, no perspective distortion, no text, no watermark. Fully opaque, seamless tileable texture, flat, uniform lighting, no border or vignette, fill all edges, final 32x32. "
+    },
+    {
+      "name": "tree",
+      "type": "object",
+      "file": "tree",
+      "detail": "ONE LARGE ROUND mature garden tree, dense rounded dome canopy in deep rich warm forest green and mid-green pixel leaf clusters, visible sturdy warm brown trunk and small roots below. Darker more uniform green than the old yellow-green tree. Friendly natural pixel garden tree lining the inside of a fence. Slightly overhead 16-bit RPG view with visible trunk. Tall silhouette to fit 96x128 pixels. Full crown and trunk visible, no grass patch, no ground, no cast shadow.",
+      "prompt": "Create ONE production pixel art asset for a natural garden wedding RPG, based on this direction: dark green lawn, light sandy stone paths, large round dark green edge trees, white rose arch. ONE LARGE ROUND mature garden tree, dense rounded dome canopy in deep rich warm forest green and mid-green pixel leaf clusters, visible sturdy warm brown trunk and small roots below. Darker more uniform green than the old yellow-green tree. Friendly natural pixel garden tree lining the inside of a fence. Slightly overhead 16-bit RPG view with visible trunk. Tall silhouette to fit 96x128 pixels. Full crown and trunk visible, no grass patch, no ground, no cast shadow. Cozy 16-bit RPG sprite art, warm natural palette, thick dark pixel outlines only where appropriate on objects, soft cel shading, simple chunky pixel clusters readable at tiny final game scale. No realistic rendering, no perspective distortion, no text, no watermark. Genuinely transparent background, no drop shadow or glow, no scene, complete subject. "
+    },
+    {
+      "name": "bush-white",
+      "type": "object",
+      "file": "bush-white",
+      "detail": "ONE rounded natural dark green shrub covered with scattered IVORY WHITE flowers and small pale yellow centers, broad round dome silhouette, no pink flowers, no pot, no grass patch, no ground. Slightly overhead 16-bit RPG garden style. Final size 64x64 pixels, clean readable chunky leaves and flowers.",
+      "prompt": "Create ONE production pixel art asset for a natural garden wedding RPG, based on this direction: dark green lawn, light sandy stone paths, large round dark green edge trees, white rose arch. ONE rounded natural dark green shrub covered with scattered IVORY WHITE flowers and small pale yellow centers, broad round dome silhouette, no pink flowers, no pot, no grass patch, no ground. Slightly overhead 16-bit RPG garden style. Final size 64x64 pixels, clean readable chunky leaves and flowers. Cozy 16-bit RPG sprite art, warm natural palette, thick dark pixel outlines only where appropriate on objects, soft cel shading, simple chunky pixel clusters readable at tiny final game scale. No realistic rendering, no perspective distortion, no text, no watermark. Genuinely transparent background, no drop shadow or glow, no scene, complete subject. "
+    },
+    {
+      "name": "arch",
+      "type": "object",
+      "file": "arch",
+      "detail": "Wide 224x160 white/pale-pink rose arch, two pillars, crown in upper 70px, fully transparent lower-middle 120x90 character opening. Final revision supersedes the first 160x128 candidate.",
+      "prompt": "EDIT this natural garden wedding arch into a WIDER, SHALLOWER arch for a final 224x160 pixel sprite. Preserve the white and very pale blush rose / deep green leaf pixel-art materials and two-pillar design. Critical geometry in FINAL sprite coordinates: canvas aspect ratio 224 wide by 160 high; the rounded floral CROSSBAR/CROWN is confined to the TOP 70 pixels. From y=70 to y=159 there must be ONLY the LEFT pillar and RIGHT pillar with a COMPLETELY TRANSPARENT EMPTY middle opening, at least 120 pixels wide. Reserve the entire central rectangle x=52..171, y=70..159 as transparent, so two 48x72 characters fit below the crown without their heads hidden by flowers. Left pillar near x=8..42, right pillar near x=182..216. Broad rounded arch, not a tall narrow inverted U. Complete full arch and both pillar bases visible, only small transparent outer padding. Primarily white roses with a little pale pink, green leaves. Cozy polished 16-bit RPG pixel art, thick natural dark outline, soft cel shading, crisp chunky clusters. NO scenery, NO ground, NO shadow, NO glow, NO curtains or hanging fabric, NO text or watermark. Genuinely transparent background, especially the full middle opening."
+    }
+  ],
+  "preparation": {
+    "command": "python tools/prepare_natural_garden.py",
+    "shared_grass": "G/J/U/W use one 32x32 resized master. AI-generated transparent flowers are alpha-composited over it. Pixels outside flower coverage remain exactly equal to G.",
+    "alpha_cleanup": "Flower layer alpha below 16 is cleared to avoid faint matte artifacts.",
+    "hedge_flowers": "H uses the generated hedge base plus the same small white-flower layer as J so flowers stay visible at 32x32.",
+    "arch_geometry": "Final arch is 224x160. The explicit character-clearance rectangle (52,70,172,160) is made fully transparent in prepare_assets.process_object; crown stays above the lower 90px opening.",
+    "character_processing": "None. prepare_assets.py is run in an isolated output directory with an empty character list and skip-existing disabled."
+  }
+}

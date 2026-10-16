@@ -43,7 +43,7 @@ WEDDING_TILES = {
     "J": "grass-flowers-a", "U": "grass-flowers-b", "N": "sand-path",
 }
 OBJECT_SIZES = {  # 오브젝트별 원본 비율과 요청 규격. 의자는 높이 48px를 유지한다.
-    "arch": (160, 128), "tree": (96, 128), "bench": (128, 64), "desk": (128, 64),
+    "arch": (224, 160), "tree": (96, 128), "bench": (128, 64), "desk": (128, 64),
     "sign": (64, 64), "mailbox": (64, 64), "frame": (64, 64), "chest": (64, 64), "board": (64, 64),
     "phone": (64, 64), "calendar": (64, 64), "mapframe": (64, 64), "stone": (64, 64), "flower": (32, 32), "door": (32, 32),
     "chair": (32, 48), "bush": (64, 64), "lantern": (32, 64),
@@ -118,6 +118,9 @@ def process_object(src: Path, w: int, h: int) -> Image.Image:
     visible = trim(fitted)
     canvas = Image.new("RGBA", (w, h), (0, 0, 0, 0))
     canvas.alpha_composite(visible, ((w - visible.width) // 2, h - visible.height))
+    if src.stem == "arch" and (w, h) == (224, 160):
+        # 4차 명시 규격: 상단 70px 아래에는 두 인물이 설 120px 폭의 빈 공간을 보장.
+        canvas.paste((0, 0, 0, 0), (52, 70, 172, 160))
     return canvas
 
 

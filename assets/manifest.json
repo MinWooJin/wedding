@@ -32,7 +32,10 @@
     "X1",
     "X2",
     "X3",
-    "X4"
+    "X4",
+    "J",
+    "U",
+    "N"
   ],
   "objects": [
     "arch",
@@ -54,7 +57,8 @@
     "bush",
     "lantern",
     "petal-pile",
-    "welcome-board"
+    "welcome-board",
+    "bush-white"
   ],
   "maps": []
 }

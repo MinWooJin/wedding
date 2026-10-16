@@ -82,6 +82,25 @@ centered, plain white background, no shadow on ground, no text, 16-bit game spri
 
 ## 타일 · 오브젝트 프롬프트
 
+### 4차 자연 정원 세트 (현재 배경 방향)
+
+G/J/U/W는 하나의 생성 잔디 베이스를 공유하고 J/U/W에만 생성한 작은 꽃 레이어를 합성합니다.
+꽃을 덮지 않는 배경 픽셀은 G와 정확히 같습니다. N은 밝은 베이지 모래·자갈길,
+H는 작은 흰 꽃이 있는 짙은 산울타리입니다. 여섯 타일은 32×32 불투명 RGBA입니다.
+tree는 96×128, arch는 224×160으로 교체했고 bush-white 64×64를 추가했습니다.
+아치의 (52,70,172,160) 부분은 인물을 가리지 않도록 완전히 투명하게 유지합니다.
+
+```powershell
+python tools/prepare_natural_garden.py
+```
+
+`raw/round4-source/`의 생성 원본·꽃 레이어를 사용해 요청한 9종만 격리된 출력 폴더에서
+`prepare_assets.py`로 새로 변환합니다. 캐릭터는 변환하지 않습니다.
+기존 백업은 `raw/round4-backup/`, 프롬프트는 `assets/round4-prompts.json`,
+크기·알파 bbox·배경 일치 검증은 `assets/round4-report.json`을 참고하세요.
+미리보기는 `assets/round4-preview.png`, 혼합 배치는 `assets/round4-grass-mix.png`입니다.
+원본 폴더가 없는 체크아웃에서는 최종 PNG를 사용하세요. 3차 단상 생성은 보류했습니다.
+
 ### 2차 꽃밭·웨딩 장식 에셋
 
 `raw/tiles/wedding/flower-bed-pink.png`, `flower-bed-white.png`, `white-gravel.png`,

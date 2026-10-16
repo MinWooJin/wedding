@@ -1,5 +1,8 @@
 # 에셋 작업 인수인계 프롬프트 (Codex / Claude)
 
+> 최신 배경 방향은 **4차 자연 정원 세트**다. 문서 하단의 4차 완료 기록을 우선한다.
+> 3차 단상은 보류됐으며 생성하지 않았다. 기존 애즈펌·올림머리 캐릭터 PNG는 그대로 유지했다.
+
 > 신랑·신부 최신 디자인은 **애즈펌·올림머리 재작화**다. `assets/couple-hairstyle-prompts.json`을 우선한다.
 > 과거의 “얼굴 표정만 수정하고 헤어 유지” 프롬프트는 재사용하지 않는다.
 
@@ -221,3 +224,46 @@ js/ 는 수정하지 마라. 완료 후 이 문서 하단에 결과 크기·bbox
 prepare_assets.py 반영: TILES에 G/W/H는 이미 있음, WEDDING_TILES에 {"J":"grass-flowers-a","U":"grass-flowers-b","N":"sand-path"},
 OBJECT_SIZES에 "tree": (96, 128), "bush-white": (64, 64), "arch": (224, 160). 기존 캐릭터 PNG(48×72, 수정된 신랑신부 얼굴)는 절대 다시 변환하지 마라.
 ```
+
+## 4차 자연 정원 에셋 작업 기록 (2026-10-16, 완료)
+
+내장 이미지 생성 도구로 자연 정원 원본을 생성하고 아래 9종을 교체·추가했다.
+작업 중 갱신된 아치 224×160 규격을 반영했다. 3차 단상과 선택 계단은 만들지 않았다.
+JS·CSS·HTML은 이 작업에서 수정하지 않았다.
+
+| ID / 이름 | 최종 파일 | 크기 | 알파 bbox (left, top, right, bottom) |
+|---|---|---|---|
+| G | assets/tiles/G.png | 32×32 | (0, 0, 32, 32) |
+| J | assets/tiles/J.png | 32×32 | (0, 0, 32, 32) |
+| U | assets/tiles/U.png | 32×32 | (0, 0, 32, 32) |
+| W | assets/tiles/W.png | 32×32 | (0, 0, 32, 32) |
+| N | assets/tiles/N.png | 32×32 | (0, 0, 32, 32) |
+| H | assets/tiles/H.png | 32×32 | (0, 0, 32, 32) |
+| tree | assets/objects/tree.png | 96×128 | (0, 6, 96, 128) |
+| arch | assets/objects/arch.png | 224×160 | (2, 14, 222, 160) |
+| bush-white | assets/objects/bush-white.png | 64×64 | (2, 12, 61, 64) |
+
+- 모두 RGBA다. 타일 6종은 불투명, 오브젝트 3종은 투명 배경·아래 가운데 정렬이다.
+- G/J/U/W는 하나의 생성 잔디 베이스를 공유한다. 꽃은 내장 도구로 생성한 투명 레이어를 합성했다.
+  꽃을 덮지 않는 J 990px / U 979px / W 985px는 G의 같은 위치와 RGBA 값이 정확히 같다.
+  꽃 레이어의 알파 16 미만은 투명하게 정리해 미세한 배경 매트가 잔디를 바꾸지 않게 했다.
+  H는 별도의 짙은 산울타리 베이스에 J의 흰 꽃 레이어를 얹어 32px에서도 작은 흰 꽃이 보이게 했다.
+- N은 녹색 식생 없이 밝은 베이지·크림 자갈만 사용한다. 초기 후보는 제외했고 최종 재생성 프롬프트를 기록했다.
+- 아치는 224×160이고, 캐릭터를 위한 (52,70,172,160) 영역의 알파를 0으로 보장한다.
+  상단 꽃 띠 아래 90px 높이의 가운데 120px 폭에는 늘어진 잎이나 꽃이 인물을 가리지 않는다.
+  이 명시 규격은 `prepare_assets.py`의 `process_object()`에 반영했다.
+- 생성 원본·꽃 레이어: `raw/round4-source/`. 요청한 raw 입력 경로에 변환용 원본을 준비했다.
+  기존 원본·결과 백업은 `raw/round4-backup/`에 있다.
+- `prepare_assets.py`의 WEDDING_TILES에 J/U/N, OBJECT_SIZES에 bush-white를 추가했고
+  tree는 96×128, arch는 224×160으로 변경했다.
+- 전용 명령: `python tools/prepare_natural_garden.py`.
+  공통 잔디를 만든 뒤 `prepare_assets.py`를 임시 출력 폴더에서 **skip-existing 없이** 실행한다.
+  캐릭터 목록은 비우고 요청한 9종만 선택하므로 캐릭터는 디코딩·재축소하지 않는다.
+  검증한 결과만 복사하고 기존 manifest에 새 항목을 병합한다. 전체 변환 명령을 대신 실행하지 마라.
+  생성 원본 폴더가 없는 체크아웃에서는 이 명령을 실행하지 말고 저장된 최종 PNG를 사용한다.
+- 캐릭터 변환은 0건, 관련 없는 기존 PNG 46종은 SHA-256이 동일하다.
+  캐릭터 12종 / 타일 22종 / 오브젝트 21종, 총 55종이 런타임 manifest에 등록되어 있다.
+- 실제 생성 프롬프트: `assets/round4-prompts.json`. 검증 보고서: `assets/round4-report.json`.
+  전체 미리보기: `assets/round4-preview.png`. 혼합 잔디 미리보기: `assets/round4-grass-mix.png`.
+- 브라우저에서 새 잔디·모래길·나무·아치의 표시를 확인했다.
+  추가 흰 꽃 덤불의 허용 목록/배치, 나무·아치 크기에 따른 동선과 겹침 처리는 클로드가 확인한다.

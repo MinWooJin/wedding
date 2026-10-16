@@ -1,0 +1,185 @@
+{
+  "assets": [
+    {
+      "group": "tiles",
+      "name": "G",
+      "size": [
+        32,
+        32
+      ],
+      "alpha_bbox": [
+        0,
+        0,
+        32,
+        32
+      ],
+      "alpha_extrema": [
+        255,
+        255
+      ]
+    },
+    {
+      "group": "tiles",
+      "name": "J",
+      "size": [
+        32,
+        32
+      ],
+      "alpha_bbox": [
+        0,
+        0,
+        32,
+        32
+      ],
+      "alpha_extrema": [
+        255,
+        255
+      ]
+    },
+    {
+      "group": "tiles",
+      "name": "U",
+      "size": [
+        32,
+        32
+      ],
+      "alpha_bbox": [
+        0,
+        0,
+        32,
+        32
+      ],
+      "alpha_extrema": [
+        255,
+        255
+      ]
+    },
+    {
+      "group": "tiles",
+      "name": "W",
+      "size": [
+        32,
+        32
+      ],
+      "alpha_bbox": [
+        0,
+        0,
+        32,
+        32
+      ],
+      "alpha_extrema": [
+        255,
+        255
+      ]
+    },
+    {
+      "group": "tiles",
+      "name": "N",
+      "size": [
+        32,
+        32
+      ],
+      "alpha_bbox": [
+        0,
+        0,
+        32,
+        32
+      ],
+      "alpha_extrema": [
+        255,
+        255
+      ]
+    },
+    {
+      "group": "tiles",
+      "name": "H",
+      "size": [
+        32,
+        32
+      ],
+      "alpha_bbox": [
+        0,
+        0,
+        32,
+        32
+      ],
+      "alpha_extrema": [
+        255,
+        255
+      ]
+    },
+    {
+      "group": "objects",
+      "name": "tree",
+      "size": [
+        96,
+        128
+      ],
+      "alpha_bbox": [
+        0,
+        6,
+        96,
+        128
+      ],
+      "alpha_extrema": [
+        0,
+        255
+      ]
+    },
+    {
+      "group": "objects",
+      "name": "arch",
+      "size": [
+        224,
+        160
+      ],
+      "alpha_bbox": [
+        2,
+        14,
+        222,
+        160
+      ],
+      "alpha_extrema": [
+        0,
+        255
+      ]
+    },
+    {
+      "group": "objects",
+      "name": "bush-white",
+      "size": [
+        64,
+        64
+      ],
+      "alpha_bbox": [
+        2,
+        12,
+        61,
+        64
+      ],
+      "alpha_extrema": [
+        0,
+        255
+      ]
+    }
+  ],
+  "grass_background_checks": {
+    "J": {
+      "flower_pixels": 34,
+      "identical_background_pixels": 990,
+      "background_matches_G_exactly": true
+    },
+    "U": {
+      "flower_pixels": 45,
+      "identical_background_pixels": 979,
+      "background_matches_G_exactly": true
+    },
+    "W": {
+      "flower_pixels": 39,
+      "identical_background_pixels": 985,
+      "background_matches_G_exactly": true
+    }
+  },
+  "untouched_asset_count": 46,
+  "characters_processed": 0
+}

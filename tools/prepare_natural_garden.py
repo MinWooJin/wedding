@@ -25,7 +25,7 @@ JOBS = [
     ("tiles", "G", (32, 32)), ("tiles", "J", (32, 32)),
     ("tiles", "U", (32, 32)), ("tiles", "W", (32, 32)),
     ("tiles", "N", (32, 32)), ("tiles", "H", (32, 32)),
-    ("objects", "tree", (96, 128)), ("objects", "arch", (160, 128)),
+    ("objects", "tree", (96, 128)), ("objects", "arch", (224, 160)),
     ("objects", "bush-white", (64, 64)),
 ]
 
@@ -49,8 +49,9 @@ def make_raw():
         raise ValueError("Grass master must be opaque")
     raw_g = ROOT / "raw" / "tiles" / "G.png"
     backup(raw_g)
+    raw_g.parent.mkdir(parents=True, exist_ok=True)
     base.save(raw_g)
-    checks = {}
+    checks, layers = {}, {}
     for tile_id, (name, layer_name) in GRASS.items():
         with Image.open(SOURCE / f"{layer_name}.png") as source:
             layer = source.convert("RGBA").resize((32, 32), Image.Resampling.LANCZOS)
@@ -61,6 +62,7 @@ def make_raw():
         if not 0 < coverage <= 256:
             raise ValueError(f"{tile_id}: flowers must occupy at most 25% of the tile ({coverage}/1024)")
         layer.putalpha(alpha)
+        layers[tile_id] = layer
         final = Image.alpha_composite(base, layer)
         pixels, originals = final.tobytes(), base.tobytes()
         equal = all(a != 0 or pixels[i * 4:i * 4 + 4] == originals[i * 4:i * 4 + 4]
@@ -73,8 +75,15 @@ def make_raw():
         final.save(target)
         checks[tile_id] = {"flower_pixels": coverage, "identical_background_pixels": 1024 - coverage,
                            "background_matches_G_exactly": equal}
+    with Image.open(SOURCE / "hedge-white.png") as source:
+        hedge = source.convert("RGBA").resize((32, 32), Image.Resampling.LANCZOS)
+    # Use the generated small white flowers so they remain visible at game scale.
+    hedge = Image.alpha_composite(hedge, layers["J"])
+    raw_h = ROOT / "raw" / "tiles" / "H.png"
+    backup(raw_h)
+    hedge.save(raw_h)
     for source_name, target_name in [
-        ("sand-path", "tiles/wedding/sand-path"), ("hedge-white", "tiles/H"),
+        ("sand-path", "tiles/wedding/sand-path"),
         ("tree", "objects/tree"), ("arch", "objects/arch"), ("bush-white", "objects/bush-white"),
     ]:
         target = ROOT / "raw" / f"{target_name}.png"
@@ -97,7 +106,7 @@ def preview():
                 for col in range(2):
                     sheet.paste(tile, (x + 48 + col * 64, y + 12 + row * 64))
         else:
-            sheet.paste(image, (x + (224 - image.width) // 2, y + 150 - image.height), image)
+            sheet.paste(image, (x + (224 - image.width) // 2, y + 166 - image.height), image)
         draw.text((x + 18, y + 171), name, fill="#352b34")
         draw.text((x + 18, y + 190), f"{size[0]}x{size[1]}", fill="#6a5956")
     sheet.save(ASSETS / "round4-preview.png")
@@ -139,8 +148,15 @@ def main():
                 alpha = image.getchannel("A")
                 if group == "tiles" and alpha.getextrema() != (255, 255):
                     raise ValueError(f"Transparent floor: {name}")
+                if name == "N":
+                    colors = image.convert("RGB").tobytes()
+                    if any(colors[i + 1] > colors[i] + 8 and colors[i + 1] > colors[i + 2] + 8
+                           for i in range(0, len(colors), 3)):
+                        raise ValueError("Sand path must not contain green vegetation")
                 if group == "objects" and (alpha.getextrema()[0] != 0 or not alpha.getbbox()):
                     raise ValueError(f"Missing transparent object: {name}")
+                if name == "arch" and alpha.crop((52, 70, 172, 160)).getextrema() != (0, 0):
+                    raise ValueError("Arch lower character opening must be completely transparent")
                 report.append({"group": group, "name": name, "size": list(image.size),
                                "alpha_bbox": list(alpha.getbbox()), "alpha_extrema": list(alpha.getextrema())})
         for group, name, _ in JOBS:
@@ -150,9 +166,7 @@ def main():
     for path, old_digest in untouched.items():
         if digest(path) != old_digest:
             raise ValueError(f"Unrelated asset changed: {path}")
-    temporary_manifest = manifest_path.with_suffix(".round4.tmp")
-    temporary_manifest.write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-    temporary_manifest.replace(manifest_path)
+    manifest_path.write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     result = {"assets": report, "grass_background_checks": checks,
               "untouched_asset_count": len(untouched), "characters_processed": 0}
     (ASSETS / "round4-report.json").write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
