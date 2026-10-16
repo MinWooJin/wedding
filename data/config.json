@@ -5,12 +5,12 @@
     "parents": [
       {
         "role": "아버지",
-        "name": "",
+        "name": "진영근",
         "phone": ""
       },
       {
         "role": "어머니",
-        "name": "",
+        "name": "박순이",
         "phone": ""
       }
     ],
@@ -27,12 +27,12 @@
     "parents": [
       {
         "role": "아버지",
-        "name": "",
+        "name": "한성훈",
         "phone": ""
       },
       {
         "role": "어머니",
-        "name": "",
+        "name": "이주영",
         "phone": ""
       }
     ],
