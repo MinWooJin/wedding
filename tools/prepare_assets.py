@@ -28,7 +28,7 @@ ROOT = Path(__file__).resolve().parent.parent
 RAW = ROOT / "raw"
 OUT = ROOT / "assets"
 TILE = 32
-CHAR_W, CHAR_H = 48, 72
+CHAR_W, CHAR_H = 64, 96
 
 CHARACTERS = [f"preset-{i}" for i in range(10)] + ["groom", "bride"]
 TILES = list("GWPHFDKRS")

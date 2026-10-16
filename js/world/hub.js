@@ -47,11 +47,20 @@ const TREES = [[1, 1], [9, 1], [1, 5], [9, 5], [3, 7], [7, 7], [1, 9], [9, 9]];
 
 export const MAX_GUESTS = 30;
 
-/** 방명록 항목 → 광장 잔디 위 하객 자리. reserved: "tx,ty" 제외 집합. 같은 입력이면 같은 배치. */
+/**
+ * 방명록 항목 → 광장 잔디 위 하객 자리. reserved: "tx,ty" 제외 집합. 같은 입력이면 같은 배치.
+ * 캐릭터가 2칸 폭이라 서로 인접(8방향)하지 않게 간격을 둔다. 자리가 모자라면 남는 항목은 생략.
+ */
 export function guestPlacements(entries, reserved) {
   const list = entries.slice(0, MAX_GUESTS);
-  const tiles = pickTiles(freeTiles(HUB_ROWS, reserved), list.length, 2026);
-  return tiles.map((t, i) => ({ tx: t.tx, ty: t.ty, entry: list[i] }));
+  const shuffled = pickTiles(freeTiles(HUB_ROWS, reserved), Infinity, 2026);
+  const chosen = [];
+  for (const t of shuffled) {
+    if (chosen.length >= list.length) break;
+    if (chosen.some((c) => Math.abs(c.tx - t.tx) <= 1 && Math.abs(c.ty - t.ty) <= 1)) continue;
+    chosen.push(t);
+  }
+  return chosen.map((t, i) => ({ tx: t.tx, ty: t.ty, entry: list[i] }));
 }
 
 const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
@@ -59,8 +68,9 @@ const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
 export class HubScene extends Scene {
   constructor(game) {
     const cfg = game.config;
-    const groom = new Character({ sprites: characterSet(game.assets, 'groom', GROOM), name: cfg.groom.name, ...standPos(4, 3) });
-    const bride = new Character({ sprites: characterSet(game.assets, 'bride', BRIDE), name: cfg.bride.name, ...standPos(6, 3) });
+    // 64px 폭 캐릭터가 겹치지 않도록 길(5열) 양옆 3·7열에 세운다
+    const groom = new Character({ sprites: characterSet(game.assets, 'groom', GROOM), name: cfg.groom.name, ...standPos(3, 3) });
+    const bride = new Character({ sprites: characterSet(game.assets, 'bride', BRIDE), name: cfg.bride.name, ...standPos(7, 3) });
     const greet = (c) => () => c.say(pick(cfg.greetings));
 
     const objects = [

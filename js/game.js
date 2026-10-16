@@ -4,13 +4,20 @@ import { Character } from './entities/character.js';
 import { presetSprites } from './sprites/characters.js';
 import { characterSet } from './assets.js';
 
-/** 카메라: 뷰보다 큰 축은 플레이어 중심 + 클램프, 작은 축은 가운데 정렬(음수) */
-export function computeCamera(view, scene, player) {
-  const axis = (viewLen, mapLen, p) => {
-    if (mapLen <= viewLen) return 0 - Math.floor((viewLen - mapLen) / 2); // 0 - 0 → +0
-    return Math.max(0, Math.min(mapLen - viewLen, Math.round(p - viewLen / 2)));
+/** HUD(상단 이름·날짜)가 맵 위쪽을 가리지 않도록 비워 두는 높이(내부 px) */
+export const HUD_PAD = 56;
+
+/**
+ * 카메라: 뷰보다 큰 축은 플레이어 중심 + 클램프, 작은 축은 가운데 정렬(음수).
+ * topPad만큼은 화면 위를 비워 둔다(세로축 전용).
+ */
+export function computeCamera(view, scene, player, topPad = 0) {
+  const axis = (viewLen, mapLen, p, pad) => {
+    const avail = viewLen - pad;
+    if (mapLen <= avail) return 0 - pad - Math.floor((avail - mapLen) / 2); // 0 - 0 → +0
+    return Math.max(0, Math.min(mapLen - avail, Math.round(p - avail / 2))) - pad;
   };
-  return { x: axis(view.width, scene.pixelW, player.x), y: axis(view.height, scene.pixelH, player.y) };
+  return { x: axis(view.width, scene.pixelW, player.x, 0), y: axis(view.height, scene.pixelH, player.y, topPad) };
 }
 
 const FADE_TIME = 0.3;
@@ -101,7 +108,7 @@ export class Game {
 
   draw() {
     const r = this.renderer;
-    r.cam = computeCamera(r.view, this.scene, this.player);
+    r.cam = computeCamera(r.view, this.scene, this.player, HUD_PAD);
     r.begin(this.scene.bg);
     this.scene.draw(r, this.player);
     r.drawFade(this.fade.alpha);
