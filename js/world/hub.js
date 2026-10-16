@@ -101,9 +101,9 @@ export class HubScene extends Scene {
     this.npcs = this.baseNpcs;
     this.rebuildSolid(); // 오브젝트 발자국 + 신랑신부 자리
     const reserved = new Set(this.extraSolid);
-    for (const o of this.objects) { // 나무 꼭대기 등 오브젝트가 덮는 모든 타일
+    for (const o of this.objects) { // 오브젝트가 덮는 타일 + 주변 1칸(64px 폭 캐릭터가 겹치지 않게)
       const w = Math.ceil(o.spr.w / 32), h = Math.ceil(o.spr.h / 32);
-      for (let dy = 0; dy < h; dy++) for (let dx = 0; dx < w; dx++) reserved.add(`${o.tx + dx},${o.ty + dy}`);
+      for (let dy = -1; dy <= h; dy++) for (let dx = -1; dx <= w; dx++) reserved.add(`${o.tx + dx},${o.ty + dy}`);
     }
     reserved.add(`${HUB_SPAWN.tx},${HUB_SPAWN.ty}`);
     for (const d of Object.values(HUB_DOORS)) {
