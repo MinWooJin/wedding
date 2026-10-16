@@ -25,6 +25,13 @@ export class Character {
     this.onArrive = onArrive;
   }
 
+  /** 경유점 목록을 차례로 지나 마지막 점에 도착하면 onArrive 호출 */
+  followPath(points, onArrive = null) {
+    if (points.length === 0) { if (onArrive) onArrive(); return; }
+    const [head, ...rest] = points;
+    this.moveTo(head.x, head.y, rest.length ? () => this.followPath(rest, onArrive) : onArrive);
+  }
+
   stop() { this.target = null; this.onArrive = null; this.frame = 0; }
 
   say(text, seconds = 3) { this.bubble = text; this.bubbleT = seconds; }

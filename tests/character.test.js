@@ -44,6 +44,17 @@ test('걷는 동안 프레임이 0/1을 오간다', () => {
   assert.deepEqual([...seen].sort(), [0, 1]);
 });
 
+test('followPath는 경유점을 차례로 지나 마지막에 onArrive를 호출한다', () => {
+  const c = mk();
+  let done = 0;
+  c.followPath([{ x: 100, y: 110 }, { x: 110, y: 110 }], () => done++);
+  assert.deepEqual(c.target, { x: 100, y: 110 });
+  for (let i = 0; i < 60; i++) c.update(1 / 60, () => false);
+  assert.deepEqual([Math.round(c.x), Math.round(c.y)], [110, 110]);
+  assert.equal(done, 1);
+  assert.equal(c.target, null);
+});
+
 test('say는 말풍선을 설정하고 시간이 지나면 사라진다', () => {
   const c = mk();
   c.say('축하해요', 1);

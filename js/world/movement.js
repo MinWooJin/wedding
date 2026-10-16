@@ -1,3 +1,34 @@
+/**
+ * 타일 격자 BFS(4방향). blocked(tx,ty)가 true면 통과 불가.
+ * @returns {{tx:number,ty:number}[]|null} from 다음 칸부터 to까지의 타일 목록. from===to면 []. 경로 없으면 null.
+ */
+export function findPath(w, h, blocked, from, to) {
+  const key = (t) => t.ty * w + t.tx;
+  if (from.tx === to.tx && from.ty === to.ty) return [];
+  if (to.tx < 0 || to.ty < 0 || to.tx >= w || to.ty >= h || blocked(to.tx, to.ty)) return null;
+  const prev = new Map([[key(from), -1]]);
+  const queue = [from];
+  const dirs = [[0, 1], [0, -1], [-1, 0], [1, 0]];
+  while (queue.length) {
+    const cur = queue.shift();
+    for (const [dx, dy] of dirs) {
+      const n = { tx: cur.tx + dx, ty: cur.ty + dy };
+      if (n.tx < 0 || n.ty < 0 || n.tx >= w || n.ty >= h) continue;
+      const k = key(n);
+      if (prev.has(k) || blocked(n.tx, n.ty)) continue;
+      prev.set(k, key(cur));
+      if (n.tx === to.tx && n.ty === to.ty) {
+        const path = [];
+        let at = k;
+        while (at !== key(from)) { path.push({ tx: at % w, ty: Math.floor(at / w) }); at = prev.get(at); }
+        return path.reverse();
+      }
+      queue.push(n);
+    }
+  }
+  return null;
+}
+
 export function dirOf(dx, dy) {
   if (Math.abs(dx) > Math.abs(dy)) return dx > 0 ? 'right' : 'left';
   return dy > 0 ? 'down' : 'up';
@@ -19,8 +50,8 @@ export function stepToward(pos, target, dist, blocked) {
   const ny = pos.y + (dy / len) * step;
 
   let x = pos.x, y = pos.y, moved = false;
-  if (!blocked(nx, y)) { x = nx; moved = true; }
-  if (!blocked(x, ny)) { y = ny; moved = true; }
+  if (nx !== x && !blocked(nx, y)) { x = nx; moved = true; }
+  if (ny !== y && !blocked(x, ny)) { y = ny; moved = true; }
 
   const remaining = Math.hypot(target.x - x, target.y - y);
   const arrived = !moved || remaining < 0.5;

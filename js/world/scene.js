@@ -1,5 +1,6 @@
 import { TILE } from '../renderer.js';
 import { parseMap, tileAt, rectBlocked, tileKey } from './tilemap.js';
+import { findPath } from './movement.js';
 import { objectSprite } from '../sprites/objects.js';
 
 const INTERACT_DIST = 26; // px: 이 거리 안이면 이동 없이 바로 상호작용
@@ -66,16 +67,42 @@ export class Scene {
     return this.entrances.find((e) => e.tx === tx && e.ty === ty) ?? null;
   }
 
-  /** 오브젝트/NPC 앞에 설 타일: 바로 아래가 비어 있으면 아래, 아니면 위 */
-  standTileFor(tx, footY, wTiles = 1) {
+  /**
+   * 오브젝트/NPC 앞에 설 타일. 아래·위·왼쪽·오른쪽 이웃 중 비어 있고 from(플레이어 발 위치)에 가장 가까운 타일.
+   * 모두 막혀 있으면 아래 타일.
+   */
+  standTileFor(tx, footY, wTiles = 1, from = null) {
     const cx = tx + Math.floor((wTiles - 1) / 2);
-    const below = { tx: cx, ty: footY + 1 };
-    if (!this.isSolidTile(below.tx, below.ty)) return below;
-    return { tx: cx, ty: footY - 1 };
+    const candidates = [
+      { tx: cx, ty: footY + 1 },
+      { tx: cx, ty: footY - 1 },
+      { tx: tx - 1, ty: footY },
+      { tx: tx + wTiles, ty: footY },
+    ].filter((t) => !this.isSolidTile(t.tx, t.ty));
+    if (candidates.length === 0) return { tx: cx, ty: footY + 1 };
+    if (!from) return candidates[0];
+    const dist = (t) => { const p = standPos(t.tx, t.ty); return Math.hypot(p.x - from.x, p.y - from.y); };
+    return candidates.reduce((a, b) => (dist(b) < dist(a) ? b : a));
   }
 
   isSolidTile(tx, ty) {
     return rectBlocked(this.map, tx * TILE, ty * TILE, TILE, TILE, this.extraSolid);
+  }
+
+  tileOf(x, y) { return { tx: Math.floor(x / TILE), ty: Math.floor((y - 1) / TILE) }; }
+
+  /**
+   * (x,y)까지 타일 BFS 경로를 따라 걷는다. 경로가 없으면 직선 이동으로 폴백.
+   * 마지막 경유점은 정확히 (x,y).
+   */
+  walkTo(player, x, y, onArrive = null) {
+    const from = this.tileOf(player.x, player.y);
+    const to = this.tileOf(x, y);
+    const path = findPath(this.map.w, this.map.h, (tx, ty) => this.isSolidTile(tx, ty), from, to);
+    if (!path) { player.moveTo(x, y, onArrive); return; }
+    const points = path.slice(0, -1).map((t) => standPos(t.tx, t.ty));
+    points.push({ x, y });
+    player.followPath(points, onArrive);
   }
 
   hitObject(wx, wy) {
@@ -104,7 +131,7 @@ export class Scene {
       const tx = c ? Math.floor(c.x / TILE) : obj.tx;
       const footY = c ? Math.floor((c.y - 1) / TILE) : obj.ty + obj.spr.h / TILE - 1;
       const wTiles = c ? 1 : obj.spr.w / TILE;
-      const st = (obj && obj.stand) ? obj.stand : this.standTileFor(tx, footY, wTiles);
+      const st = (obj && obj.stand) ? obj.stand : this.standTileFor(tx, footY, wTiles, player);
       const stand = standPos(st.tx, st.ty);
       const faceX = c ? c.x : obj.tx * TILE + obj.spr.w / 2;
       const faceY = c ? c.y : footY * TILE + 8;
@@ -115,7 +142,7 @@ export class Scene {
         return;
       }
       this.pending = target;
-      player.moveTo(stand.x, stand.y, () => {
+      this.walkTo(player, stand.x, stand.y, () => {
         if (this.pending !== target) return;
         this.pending = null;
         this.face(player, faceX, faceY);
@@ -126,7 +153,7 @@ export class Scene {
     this.pending = null;
     const x = Math.max(8, Math.min(this.pixelW - 8, wx));
     const y = Math.max(16, Math.min(this.pixelH - 2, wy));
-    player.moveTo(x, y);
+    this.walkTo(player, x, y);
   }
 
   face(player, x, y) {

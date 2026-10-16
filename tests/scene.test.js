@@ -48,7 +48,20 @@ test('빈 곳을 탭하면 플레이어가 그쪽으로 이동 목표를 잡는�
   const s = makeScene(); const p = player(); s.enter(p);
   const game = { player: p, goTo: () => {} };
   s.onTap(40, 60, game);
-  assert.deepEqual(p.target, { x: 40, y: 60 });
+  assert.ok(p.target, '이동 시작');
+  for (let i = 0; i < 60; i++) s.update(0.1, game);
+  assert.deepEqual([Math.round(p.x), Math.round(p.y)], [40, 60]);
+  assert.equal(p.target, null);
+});
+
+test('장애물이 가로막아도 돌아가서 도착한다(BFS)', () => {
+  // (3,3)에 표지판: (3,4)→(3,2) 직선은 막힘
+  const s = makeScene({ objects: [{ id: 'w', sprite: 'sign', tx: 3, ty: 3 }] });
+  const p = player(); s.enter(p, { tx: 3, ty: 4 });
+  const game = { player: p, goTo: () => {} };
+  s.onTap(56, 2 * 16 + 14, game);
+  for (let i = 0; i < 100; i++) s.update(0.1, game);
+  assert.deepEqual([Math.round(p.x), Math.round(p.y)], [56, 46]);
 });
 
 test('오브젝트를 탭하면 앞 타일로 이동한 뒤 interact(game)가 호출된다', () => {
@@ -57,17 +70,29 @@ test('오브젝트를 탭하면 앞 타일로 이동한 뒤 interact(game)가 �
   const p = player(); s.enter(p, { tx: 3, ty: 4 });
   const game = { player: p, goTo: () => {} };
   s.onTap(3 * 16 + 8, 1 * 16 + 8, game);
-  assert.deepEqual(p.target, { x: 56, y: 2 * 16 + 14 });
+  assert.ok(p.target, '이동 시작');
   assert.equal(hit, 0, '도착 전에는 호출되지 않음');
   for (let i = 0; i < 20; i++) s.update(0.1, game);
+  assert.deepEqual([Math.round(p.x), Math.round(p.y)], [56, 2 * 16 + 14], '바로 아래 타일 (3,2)에 섬');
   assert.equal(hit, 1);
+});
+
+test('위에서 접근하면 오브젝트 위쪽 타일에 선다(가장 가까운 빈 이웃)', () => {
+  const s = makeScene({ objects: [{ id: 'm', sprite: 'sign', tx: 3, ty: 4, interact: () => {} }] });
+  const p = player(); s.enter(p, { tx: 3, ty: 1 });
+  const game = { player: p, goTo: () => {} };
+  s.onTap(3 * 16 + 8, 4 * 16 + 8, game);
+  for (let i = 0; i < 20; i++) s.update(0.1, game);
+  assert.deepEqual([Math.round(p.x), Math.round(p.y)], [56, 3 * 16 + 14]);
 });
 
 test('stand를 지정한 오브젝트는 그 타일로 이동한다(갤러리 액자용)', () => {
   const s = makeScene({ objects: [{ id: 'f', sprite: 'frame', tx: 1, ty: 2, stand: { tx: 2, ty: 2 }, interact: () => {} }] });
   const p = player(); s.enter(p, { tx: 5, ty: 4 });
-  s.onTap(1 * 16 + 8, 2 * 16 + 8, { player: p, goTo: () => {} });
-  assert.deepEqual(p.target, { x: 2 * 16 + 8, y: 2 * 16 + 14 });
+  const game = { player: p, goTo: () => {} };
+  s.onTap(1 * 16 + 8, 2 * 16 + 8, game);
+  for (let i = 0; i < 30; i++) s.update(0.1, game);
+  assert.deepEqual([Math.round(p.x), Math.round(p.y)], [2 * 16 + 8, 2 * 16 + 14]);
 });
 
 test('floor 오브젝트는 solid가 아니고 캐릭터보다 먼저 그려진다', () => {
