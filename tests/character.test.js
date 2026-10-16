@@ -72,3 +72,39 @@ test('say는 말풍선을 설정하고 시간이 지나면 사라진다', () => 
   c.update(0.6, () => false);
   assert.equal(c.bubble, null);
 });
+
+test('정지 호흡은 1px 이내이며 좌표·충돌·탭 영역을 움직이지 않는다', () => {
+  const c = mk(), box = c.box(), pos = c.drawPos(), first = c.motion();
+  c.update(1, () => true);
+  assert.notDeepEqual(c.motion(), first);
+  assert.ok(c.motion().scaleY >= 1 - 1 / c.sprite().h && c.motion().scaleY <= 1);
+  assert.deepEqual(c.box(), box);
+  assert.deepEqual(c.drawPos(), pos);
+  assert.deepEqual([c.x, c.y], [100, 100]);
+});
+
+test('단일 PNG도 걸을 때 흔들리고 막히거나 도착하면 정지 모션으로 돌아온다', () => {
+  const spr = { w: 48, h: 72 };
+  const c = new Character({ sprites: { down: [spr], right: [spr] }, name: '하객', x: 100, y: 100 });
+  c.moveTo(1000, 100);
+  c.update(0.09, () => false);
+  assert.equal(c.sprite(), spr);
+  assert.ok(c.motion().lean > 0);
+  assert.equal(c.motion().lift, 1.5);
+  assert.equal(c.motion(true), null);
+  c.update(0.1, () => true);
+  assert.equal(c.moving, false);
+  assert.equal(c.motion().lean, 0);
+  assert.equal(c.motion().lift, 0);
+});
+
+test('경유점에서도 보행 위상과 남은 프레임 시간을 유지한다', () => {
+  const c = mk();
+  c.followPath([{ x: 112, y: 100 }, { x: 200, y: 100 }]);
+  c.update(0.1, () => false);
+  assert.equal(c.moving, true);
+  c.update(0.1, () => false);
+  assert.equal(c.frame, 1);
+  assert.ok(Math.abs(c.animT - 0.02) < 1e-9);
+  assert.equal(c.sprite(true), c.sprites.right[0]);
+});

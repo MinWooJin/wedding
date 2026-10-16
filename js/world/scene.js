@@ -249,7 +249,7 @@ export class Scene {
     const chars = [player, ...this.npcs.map((n) => n.character)];
     for (const c of chars) {
       const p = c.drawPos();
-      items.push({ y: c.y, draw: () => { r.drawSprite(c.sprite(), p.x, p.y); r.drawNameTag(c.name, p.x + p.w / 2, p.y - 2); } });
+      items.push({ y: c.y, draw: () => { r.drawSprite(c.sprite(r.reducedMotion), p.x, p.y, c.motion(r.reducedMotion)); r.drawNameTag(c.name, p.x + p.w / 2, p.y - 2); } });
     }
     items.sort((a, b) => a.y - b.y);
     for (const it of items) it.draw();

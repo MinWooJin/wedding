@@ -45,7 +45,10 @@ export class Renderer {
     this.cam = { x: 0, y: 0 };
     this.view = { scale: 1, width: VIEW_W, height: 600 };
     this.tiles = {}; // id → 이미지 스프라이트(있으면 코드 타일 대신 사용)
+    this.motionPreference = globalThis.matchMedia?.('(prefers-reduced-motion: reduce)');
   }
+
+  get reducedMotion() { return this.motionPreference?.matches ?? false; }
 
   resize(cssW, cssH) {
     this.view = computeViewport(cssW, cssH);
@@ -64,10 +67,19 @@ export class Renderer {
 
   drawTile(id, x, y) { this.drawSprite(this.tiles[id] ?? tileSprite(id), x, y); }
 
-  drawSprite(spr, x, y) {
+  drawSprite(spr, x, y, motion = null) {
     const sx = Math.round(x - this.cam.x), sy = Math.round(y - this.cam.y);
     if (sx + spr.w < 0 || sy + spr.h < 0 || sx > this.view.width || sy > this.view.height) return;
-    this.ctx.drawImage(spriteCanvas(spr), sx, sy);
+    if (motion && !this.reducedMotion) {
+      const ctx = this.ctx;
+      ctx.save();
+      ctx.translate(sx + spr.w / 2, sy + spr.h - motion.lift);
+      ctx.transform(1, 0, motion.lean, motion.scaleY, 0, 0);
+      ctx.drawImage(spriteCanvas(spr), -spr.w / 2, -spr.h);
+      ctx.restore();
+    } else {
+      this.ctx.drawImage(spriteCanvas(spr), sx, sy);
+    }
   }
 
   /** 미리 그려둔 캔버스/이미지(썸네일, 맵 배경 등)를 월드 좌표에 그린다 */

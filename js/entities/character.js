@@ -17,6 +17,10 @@ export class Character {
     this.dir = 'down';
     this.frame = 0;
     this.animT = 0;
+    this.motionT = 0;
+    // 같은 줄에 서 있는 하객들도 각자 다른 호흡 리듬을 갖는다.
+    this.motionPhase = [...name].reduce((sum, ch) => sum + ch.codePointAt(0), x + y) % 31 / 31 * Math.PI * 2;
+    this.moving = false;
     this.target = null;
     this.onArrive = null;
     this.bubble = null;
@@ -37,41 +41,58 @@ export class Character {
     this.moveTo(head.x, head.y, rest.length ? () => this.followPath(rest, onArrive) : onArrive);
   }
 
-  stop() { this.target = null; this.onArrive = null; this.frame = 0; }
+  stop() { this.target = null; this.onArrive = null; this.frame = 0; this.animT = 0; this.moving = false; }
 
   say(text, seconds = 3) { this.bubble = text; this.bubbleT = seconds; }
 
   /** blockedAt(x,y): 발 위치가 (x,y)일 때 충돌 박스가 막히는지 */
   update(dt, blockedAt) {
+    this.motionT = (this.motionT + dt) % 60;
+    this.moving = false;
     if (this.bubble) { this.bubbleT -= dt; if (this.bubbleT <= 0) this.bubble = null; }
     if (!this.target) return;
     const r = stepToward(this, this.target, SPEED * dt, blockedAt);
     this.x = r.x; this.y = r.y; this.dir = r.dir;
     if (r.moved) {
+      this.moving = true;
       this.animT += dt;
-      if (this.animT >= FRAME_TIME) { this.animT = 0; this.frame++; }
+      const steps = Math.floor(this.animT / FRAME_TIME);
+      this.frame += steps;
+      this.animT -= steps * FRAME_TIME;
     }
     if (r.arrived) {
       const cb = this.onArrive;
-      this.stop();
+      this.target = null; this.onArrive = null;
       if (cb) cb();
+      // 경유점을 넘어갈 때 보행 리듬을 끊지 않는다.
+      if (!this.target) this.stop();
     }
   }
 
   get walking() { return this.target !== null; }
 
-  sprite() {
+  sprite(reducedMotion = false) {
     const frames = this.sprites[this.dir];
-    if (!this.walking || frames.length < 2) return frames[0];
+    if (reducedMotion || !this.moving || frames.length < 2) return frames[0];
     const cycle = frames.length - 1;
     return frames[1 + (this.frame % cycle)];
   }
 
-  /** 스프라이트 좌상단. 걷는 동안 홀수 프레임에 1px 들썩임(정면 1장짜리 이미지도 살아 보이게) */
+  /** 발을 기준으로 한 시각 효과만 반환한다. 월드 좌표·충돌·탭 영역에는 영향을 주지 않는다. */
+  motion(reducedMotion = false) {
+    if (reducedMotion) return null;
+    if (this.moving) {
+      const phase = (this.frame + this.animT / FRAME_TIME) * Math.PI;
+      return { lean: Math.sin(phase) * 0.018, scaleY: 1, lift: Math.abs(Math.sin(phase)) * 1.5 };
+    }
+    const breath = (1 - Math.cos(this.motionT * Math.PI * 2 / 4 + this.motionPhase)) / 2;
+    return { lean: 0, scaleY: 1 - breath / this.sprite().h, lift: 0 };
+  }
+
+  /** 안정된 스프라이트 영역. 이름표와 말풍선은 호흡에 따라 흔들리지 않는다. */
   drawPos() {
     const s = this.sprite();
-    const bob = this.walking && this.frame % 2 === 1 ? -2 : 0;
-    return { x: Math.round(this.x) - Math.floor(s.w / 2), y: Math.round(this.y) - s.h + bob, w: s.w, h: s.h };
+    return { x: Math.round(this.x) - Math.floor(s.w / 2), y: Math.round(this.y) - s.h, w: s.w, h: s.h };
   }
 }
 
