@@ -1,0 +1,46 @@
+{
+  "groom": {
+    "name": "신랑이름",
+    "phone": "010-0000-0000",
+    "parents": [
+      { "role": "아버지", "name": "신랑아버지", "phone": "" },
+      { "role": "어머니", "name": "신랑어머니", "phone": "" }
+    ],
+    "account": { "bank": "카카오뱅크", "number": "3333-00-0000000", "holder": "신랑이름", "kakaopay": "" }
+  },
+  "bride": {
+    "name": "신부이름",
+    "phone": "010-0000-0000",
+    "parents": [
+      { "role": "아버지", "name": "신부아버지", "phone": "" },
+      { "role": "어머니", "name": "신부어머니", "phone": "" }
+    ],
+    "account": { "bank": "국민은행", "number": "000000-00-000000", "holder": "신부이름", "kakaopay": "" }
+  },
+  "wedding": {
+    "date": "2027-03-13T12:30:00+09:00",
+    "venue": "○○웨딩홀",
+    "hall": "3층 그랜드홀",
+    "address": "서울특별시 ○○구 ○○로 00",
+    "map": {
+      "kakao": "https://map.kakao.com/",
+      "naver": "https://map.naver.com/",
+      "tmap": ""
+    },
+    "transport": {
+      "subway": "2호선 ○○역 3번 출구 도보 5분",
+      "bus": "간선 000, 지선 0000 ○○정류장 하차",
+      "parking": "건물 지하 주차장 2시간 무료"
+    }
+  },
+  "greetings": ["와주셔서 감사해요!", "오늘 꼭 뵈어요 🌸", "천천히 둘러보세요~", "갤러리도 구경해 주세요!"],
+  "timeline": [
+    { "year": "2019", "icon": "☕", "text": "처음 만난 날" },
+    { "year": "2021", "icon": "✈️", "text": "첫 여행" },
+    { "year": "2025", "icon": "💍", "text": "프러포즈" },
+    { "year": "2027", "icon": "💒", "text": "결혼합니다" }
+  ],
+  "guestbookApi": "",
+  "kakaoJsKey": "",
+  "siteUrl": ""
+}
