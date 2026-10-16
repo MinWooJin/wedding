@@ -1,44 +1,83 @@
-# Codex에게 전달할 프롬프트 (복사해서 그대로 붙여넣기)
+# 에셋 작업 인수인계 프롬프트 (Codex / Claude)
 
-```
-작업 폴더: C:\Users\alsdn\wedding (git 저장소, 원격 없음. git push/remote 추가 금지. 커밋은 해도 됨)
+2026-10-16 작업 결과를 반영한 최신 프롬프트다. 예전의 “API 키를 설정하고 전체 에셋을
+처음부터 생성”하는 지시는 완료된 작업이며 현재 작업 지시로 사용하지 않는다.
 
-이 프로젝트는 바닐라 JS 캔버스로 만든 "픽셀 게임형 모바일 청첩장"이다. 엔진과 UI는 완성되어 있고,
-그래픽만 PNG로 교체하면 된다. 네 임무는 **OpenAI 이미지 API(gpt-image-1)로 에셋 이미지를 생성해서
-규격에 맞게 넣는 것**이다. js/ 아래 엔진 코드는 수정하지 마라. 필요한 모든 규격과 프롬프트는
-assets/README.md 에 있다. 먼저 그 파일과 README.md, tools/prepare_assets.py 를 읽어라.
+```text
+작업 폴더: C:\Users\alsdn\wedding
+Git 저장소이며 원격 없음. git push 또는 remote 추가 금지. 로컬 커밋은 가능.
 
-해야 할 일:
-1. tools/generate_assets.py 를 새로 작성한다.
-   - OpenAI Python SDK 사용, 모델 gpt-image-1, size 1024x1536(세로) 또는 1024x1024, quality high,
-     background "transparent", output_format png. API 키는 환경변수 OPENAI_API_KEY.
-   - assets/README.md 의 프롬프트를 바탕으로 아래 파일을 raw/ 에 생성한다(이미 있으면 건너뛰기 옵션 --skip-existing).
-     raw/characters/preset-0.png … preset-9.png  (하객 10종: 머리모양/머리색 5종 × 피부톤 2종, 옷 색 모두 다르게)
-     raw/characters/groom.png, bride.png
-     raw/tiles/G.png W.png P.png H.png F.png D.png K.png R.png S.png  (정사각, 1024x1024, seamless)
-     raw/objects/arch.png tree.png sign.png mailbox.png frame.png bench.png chest.png desk.png board.png phone.png calendar.png mapframe.png flower.png stone.png door.png
-   - 스타일 통일을 위해 모든 프롬프트 앞에 같은 스타일 문구를 붙여라:
-     "cute chibi pixel art, 4-head-tall proportions, big head with expressive face, thick dark outline,
-      soft cel shading, pastel warm palette, 16-bit RPG sprite style, centered, no text, no watermark"
-     캐릭터는 "full body, front view, standing, arms at sides, wedding guest outfit",
-     타일은 "top-down seamless tileable texture, flat, no border",
-     오브젝트는 "top-down RPG object sprite, no ground shadow".
-   - 각 캐릭터 프롬프트 예: "short black hair, red hoodie, blue jeans" / "long brown hair, yellow cardigan, skirt" /
-     "curly blonde hair, green sweater" / "bob cut dark hair, pink blouse" / "baseball cap, navy jacket" …
-     피부톤 2종(light / tan)으로 나눠서 10개. 신랑: "black hair, black tuxedo, bow tie". 신부: "brown updo with small veil, white wedding dress, tiny bouquet".
-   - 실패한 요청은 3회까지 재시도. 생성 로그를 출력. 비용 절감을 위해 --only characters|tiles|objects 옵션 제공.
-2. pip install pillow openai 후 python tools/generate_assets.py --only characters 를 먼저 실행해
-   캐릭터 12장을 만들고, python tools/prepare_assets.py 를 실행한다.
-   결과 assets/characters/*.png 가 64x96 RGBA 이고 assets/manifest.json 에 이름이 적혔는지 확인한다.
-3. npm run serve (포트 5173) 로 띄우고 브라우저로 http://localhost:5173 을 열어 캐릭터가 교체됐는지 확인한다.
-   (localStorage 에 프로필이 없으면 닉네임 입력 화면이 먼저 나온다.)
-4. 캐릭터가 만족스러우면 --only tiles, --only objects 도 실행하고 다시 prepare_assets.py 를 돌린다.
-   타일은 이어붙였을 때 경계가 티 나지 않아야 한다. 티가 나면 프롬프트에 "seamless, tileable, uniform lighting" 을 강조해 재생성.
-5. 완료 후 변경 사항을 커밋한다. raw/ 는 .gitignore 에 있으니 커밋되지 않는다(정상).
-   커밋 메시지 끝에 Co-Authored-By 줄은 넣지 않아도 된다.
+이 프로젝트는 바닐라 JS 캔버스로 만든 픽셀 게임형 모바일 청첩장이다.
+먼저 README.md, assets/README.md, 이 문서와 관련 생성 프롬프트 JSON을 읽어라.
+완료된 에셋을 다시 생성하거나 신랑·신부 얼굴을 하객 얼굴로 되돌리지 마라.
 
-주의:
-- js/, css/, index.html 은 건드리지 마라. 문제가 있으면 수정하지 말고 보고만 해라.
-- 캐릭터 PNG 는 배경이 투명해야 한다. 투명이 아니면 prepare_assets.py 가 모서리 색으로 배경을 지우긴 하지만 품질이 떨어진다.
-- 한 번에 많은 이미지를 생성하면 비용이 든다. 먼저 캐릭터 1장만 생성해 스타일을 확인하는 --test 옵션도 넣어라.
+현재 게임에 적용 완료:
+- assets/characters/: 하객 preset-0..9, groom, bride 총 12종, 64x96 RGBA.
+- assets/tiles/: G W P H F D K R S 총 9종, 32x32 RGBA.
+- assets/objects/: arch 등 15종. 크기는 tools/prepare_assets.py의 OBJECT_SIZES 참고.
+- assets/manifest.json에 위 36종이 등록되어 있다.
+- Codex 내장 이미지 생성 도구로 생성했다. OPENAI_API_KEY는 사용하지 않았다.
+- tools/generate_assets.py는 선택적 OpenAI API 재생성 도구다. 이미 작성되어 있으므로
+  새로 만들거나 키 설정을 선행 조건으로 요구하지 마라. API 호출은 별도 요청 때만 한다.
+
+신랑·신부 얼굴 수정 (사용자 요청, 반영 완료):
+- 하객과 같은 얼굴을 예복만 바꿔 사용하지 않는다.
+- 신랑: 조금 길고 갸름한 얼굴, 살짝 각진 턱, 작은 아몬드형 눈, 또렷한 일자 눈썹,
+  입을 다문 편안한 미소. 기존 검은 머리와 턱시도 유지.
+- 신부: 볼이 부드러운 하트형 얼굴, 웃는 반달 눈, 가는 아치형 눈썹, 보조개가 있는
+  다문 입 미소. 기존 갈색 올림머리, 베일, 흰 드레스, 작은 부케 유지.
+- 실제 편집 프롬프트: assets/couple-face-prompts.json.
+- 공통 스타일과 원본 프롬프트: assets/generation-prompts.json.
+- 기존 타일·오브젝트의 실제 생성 프롬프트: assets/tile-object-prompts.json.
+- API 스크립트의 캐릭터 프롬프트는 최초 생성 기준이므로 위 얼굴 수정 JSON을 우선한다.
+
+추가 준비한 웨딩 타일 6종 (아직 게임에 연결하지 않은 라이브러리):
+- raw/tiles/wedding/에 생성 원본, assets/tiles/wedding/에 최종 PNG.
+- 최종 파일명과 제안 ID (아직 등록된 ID가 아님):
+  A = aisle-ivory.png        아이보리 버진로드 기본형
+  B = aisle-petals.png       꽃잎 버진로드 변형
+  C = aisle-entrance.png     버진로드 입구 마감
+  E = rose-petal-grass.png   장미 꽃잎 잔디
+  M = ivory-marble.png       아이보리 대리석 바닥
+  L = blush-carpet.png       블러시 핑크 카펫
+- 모두 32x32 RGBA, 완전히 불투명한 바닥이다. 캐릭터/오브젝트와 달리 투명하게 만들지 않는다.
+- A/B는 세로 방향으로 반복하며 좌우 골드 라인은 의도한 테두리다.
+- C는 반복 타일이 아니라 입구 마감이다. 위쪽은 A/B, 아래쪽은 잔디와 연결한다.
+- E/M/L은 가로·세로 반복용이다.
+- assets/tiles/wedding/manifest.json은 별도 에셋 목록이며 런타임 manifest가 아니다.
+- 실제 생성 프롬프트: assets/tiles/wedding/prompts.json.
+- 반복·입구 연결 미리보기: assets/tiles/wedding/preview.png.
+- python tools/prepare_wedding_tiles.py로 이 6종만 다시 변환할 수 있다.
+  이 명령은 기존 assets/manifest.json과 게임 적용 에셋을 수정하지 않는다.
+  raw가 없는 새 체크아웃에서도 기존 최종 PNG를 검증하고 목록/미리보기를 재생성한다.
+
+사용자가 향후 맵 적용을 요청할 때 참고할 연결 지점:
+1. js/assets.js의 TILE_IDS는 현재 G W P H F D K R S만 허용한다.
+   추가 PNG를 하위 폴더에 저장하는 것만으로는 게임에 표시되지 않는다.
+2. 새 ID를 사용하려면 로더 경로·허용 목록, js/sprites/tiles.js의 폴백 타일,
+   런타임 manifest 생성 방식까지 함께 연결해야 한다.
+3. js/world/hub.js의 HUB_ROWS에서 가운데 길은 5열(tx=5)이다.
+   위쪽 1..19행이 아치로 가는 길이고 20행은 시작 교차로다.
+   우선 이 세로 구간에 A/B를 쓰는 방향을 검토하고, 교차로·문·귀환 위치를 보존한다.
+   입구 C는 위로 버진로드가 이어지는 방향에 놓는다.
+4. 새 바닥 ID는 보행 가능하게 유지한다. SOLID_TILES에 넣지 않는다.
+   E로 잔디를 교체하면 js/world/guest-layout.js의 하객 배치 조건도 확인한다.
+   현재 하객 배치는 G/W만 잔디로 인식한다.
+5. A/B/C 연결부와 반복 이음새는 실제 32x32 크기 및 게임에서 확인한다.
+   미리보기는 검토용이며 맵 통합 및 이동 검증을 완료했다는 뜻은 아니다.
+6. 관련 테스트를 갱신하고 npm test, 브라우저에서 길 이동·출입·NPC 배치를 검증한다.
+
+작업 범위와 주의:
+- 이번 에셋 준비 작업에서는 js/, css/, index.html을 수정하지 않았다.
+  이후 해당 파일 수정은 사용자가 맵/엔진 적용을 요청한 범위에서 진행한다.
+- 기존 P(흙길)나 R(카펫)을 일괄 덮어쓰지 마라. 다른 방까지 의도치 않게 바뀐다.
+- raw/는 .gitignore 대상이다. 원본은 이 컴퓨터에 있고 Git 복제본에는 없을 수 있다.
+- raw가 없는 체크아웃에서 tools/prepare_assets.py를 무작정 실행하면 런타임 manifest가
+  비어 버릴 수 있다. 기존 36종 전체 원본이 있는지 먼저 확인한다.
+- 내장 이미지 생성 도구가 없는 환경에서는 기존 최종 PNG를 사용해 작업을 진행한다.
+  API 키를 요구하거나 다른 생성 수단으로 자동 전환하지 마라.
+- 스타일은 따뜻한 파스텔 16-bit RPG 픽셀 아트. 새 바닥은 실제 32x32에서 읽히는 단순한
+  큰 픽셀 덩어리와 적은 색을 사용한다. 세밀한 사진 질감, 텍스트, 워터마크는 넣지 않는다.
+- npm run serve로 http://localhost:5173에서 확인한다. 저장된 프로필이 없으면 입장 화면이 나온다.
+- 완료 후 검증한 변경분만 로컬 커밋하고 원격 추가나 push는 하지 마라.
 ```

@@ -1,0 +1,68 @@
+{
+  "generation_mode": "Codex built-in image generation; no OPENAI_API_KEY",
+  "date": "2026-10-16",
+  "registered_in_game": false,
+  "tiles": [
+    {
+      "name": "aisle-ivory",
+      "id": "A",
+      "label": "아이보리 버진로드",
+      "axes": [
+        "y"
+      ],
+      "detail": "A vertical wedding aisle runner. Ivory satin-like matte carpet occupies the full width, a thin elegant muted champagne-gold stripe at x=2/32 and x=29/32. Wide EMPTY ivory walking area. The left and right edges are ivory, not green. Absolutely no horizontal border at top or bottom, no medallions, no flowers. Top and bottom must seamlessly connect in a continuous straight vertical aisle.",
+      "prompt": "Create ONE square production-ready top-down pixel art floor tile for a cozy garden wedding RPG. A vertical wedding aisle runner. Ivory satin-like matte carpet occupies the full width, a thin elegant muted champagne-gold stripe at x=2/32 and x=29/32. Wide EMPTY ivory walking area. The left and right edges are ivory, not green. Absolutely no horizontal border at top or bottom, no medallions, no flowers. Top and bottom must seamlessly connect in a continuous straight vertical aisle. Use a strict logical 32x32 pixel grid enlarged to a high-resolution square: exactly 32 big pixel units across, crisp large square color clusters, simple readable low-resolution game art, small palette of about 8-12 warm pastel colors. NO dense micro texture, no realism, no perspective, no 3D, no cast shadows, no lighting gradient, no vignette. Tile fills every edge with FULLY OPAQUE color. No padding, no frame except the specified aisle stripes. No text, lettering, numbers, hearts or watermark. Must remain clear at an actual final size of 32x32 pixels."
+    },
+    {
+      "name": "aisle-petals",
+      "id": "B",
+      "label": "꽃잎 버진로드",
+      "axes": [
+        "y"
+      ],
+      "detail": "A vertical ivory wedding aisle runner with sparse blush pink rose petals, same ivory matte base and thin muted champagne-gold stripes at x=2/32 and x=29/32 as aisle-ivory. A few clear large pixel petals near sides only, keep center walkable and empty. No horizontal top/bottom border. Seamless vertically.",
+      "prompt": "Create ONE square production-ready top-down pixel art floor tile for a cozy garden wedding RPG. A vertical ivory wedding aisle runner with sparse blush pink rose petals, same ivory matte base and thin muted champagne-gold stripes at x=2/32 and x=29/32 as aisle-ivory. A few clear large pixel petals near sides only, keep center walkable and empty. No horizontal top/bottom border. Seamless vertically. Use a strict logical 32x32 pixel grid enlarged to a high-resolution square: exactly 32 big pixel units across, crisp large square color clusters, simple readable low-resolution game art, small palette of about 8-12 warm pastel colors. NO dense micro texture, no realism, no perspective, no 3D, no cast shadows, no lighting gradient, no vignette. Tile fills every edge with FULLY OPAQUE color. No padding, no frame except the specified aisle stripes. No text, lettering, numbers, hearts or watermark. Must remain clear at an actual final size of 32x32 pixels."
+    },
+    {
+      "name": "aisle-entrance",
+      "id": "C",
+      "label": "버진로드 입구",
+      "axes": [],
+      "detail": "A single wedding aisle entrance cap. Upper 3/4 is ivory matte carpet with thin champagne-gold vertical stripes at x=2/32 and x=29/32 continuing out through the top edge to connect to a straight ivory aisle. Lower 1/4 is soft sage lawn; one thin champagne-gold horizontal threshold at y=24/32, small blush pink petals near bottom corners. Symmetric entrance floor tile only, no arch, no standing objects. Top connects to an ivory aisle; bottom connects to garden grass. Not a repeating motif.",
+      "prompt": "Create ONE square production-ready top-down pixel art floor tile for a cozy garden wedding RPG. A single wedding aisle entrance cap. Upper 3/4 is ivory matte carpet with thin champagne-gold vertical stripes at x=2/32 and x=29/32 continuing out through the top edge to connect to a straight ivory aisle. Lower 1/4 is soft sage lawn; one thin champagne-gold horizontal threshold at y=24/32, small blush pink petals near bottom corners. Symmetric entrance floor tile only, no arch, no standing objects. Top connects to an ivory aisle; bottom connects to garden grass. Not a repeating motif. Use a strict logical 32x32 pixel grid enlarged to a high-resolution square: exactly 32 big pixel units across, crisp large square color clusters, simple readable low-resolution game art, small palette of about 8-12 warm pastel colors. NO dense micro texture, no realism, no perspective, no 3D, no cast shadows, no lighting gradient, no vignette. Tile fills every edge with FULLY OPAQUE color. No padding, no frame except the specified aisle stripes. No text, lettering, numbers, hearts or watermark. Must remain clear at an actual final size of 32x32 pixels."
+    },
+    {
+      "name": "rose-petal-grass",
+      "id": "E",
+      "label": "장미 꽃잎 잔디",
+      "axes": [
+        "x",
+        "y"
+      ],
+      "detail": "Soft sage green garden lawn with a small number of clearly legible blush pink and ivory rose petals scattered naturally. Flat fully opaque grass fills the entire tile. No large flowers, no bushes, no stones, no paths. Sparse decoration, calm background, seamless in both axes.",
+      "prompt": "Create ONE square production-ready top-down pixel art floor tile for a cozy garden wedding RPG. Soft sage green garden lawn with a small number of clearly legible blush pink and ivory rose petals scattered naturally. Flat fully opaque grass fills the entire tile. No large flowers, no bushes, no stones, no paths. Sparse decoration, calm background, seamless in both axes. Use a strict logical 32x32 pixel grid enlarged to a high-resolution square: exactly 32 big pixel units across, crisp large square color clusters, simple readable low-resolution game art, small palette of about 8-12 warm pastel colors. NO dense micro texture, no realism, no perspective, no 3D, no cast shadows, no lighting gradient, no vignette. Tile fills every edge with FULLY OPAQUE color. No padding, no frame except the specified aisle stripes. No text, lettering, numbers, hearts or watermark. Must remain clear at an actual final size of 32x32 pixels."
+    },
+    {
+      "name": "ivory-marble",
+      "id": "M",
+      "label": "아이보리 대리석",
+      "axes": [
+        "x",
+        "y"
+      ],
+      "detail": "Elegant warm ivory marble wedding pavilion floor, almost uniform cream with just two or three subtle pale champagne veins as chunky pixel clusters. No separate slabs with thick outlines. No gold borders, no flowers, no objects. Seamless in both axes, quiet floor texture, uniform lighting.",
+      "prompt": "Create ONE square production-ready top-down pixel art floor tile for a cozy garden wedding RPG. Elegant warm ivory marble wedding pavilion floor, almost uniform cream with just two or three subtle pale champagne veins as chunky pixel clusters. No separate slabs with thick outlines. No gold borders, no flowers, no objects. Seamless in both axes, quiet floor texture, uniform lighting. Use a strict logical 32x32 pixel grid enlarged to a high-resolution square: exactly 32 big pixel units across, crisp large square color clusters, simple readable low-resolution game art, small palette of about 8-12 warm pastel colors. NO dense micro texture, no realism, no perspective, no 3D, no cast shadows, no lighting gradient, no vignette. Tile fills every edge with FULLY OPAQUE color. No padding, no frame except the specified aisle stripes. No text, lettering, numbers, hearts or watermark. Must remain clear at an actual final size of 32x32 pixels."
+    },
+    {
+      "name": "blush-carpet",
+      "id": "L",
+      "label": "블러시 핑크 카펫",
+      "axes": [
+        "x",
+        "y"
+      ],
+      "detail": "Soft dusty blush pink wedding reception carpet, nearly uniform matte textile with sparse tiny lighter pink stitches. Warm restrained pastel, no ornate patterns, no central motif, no borders, no flowers, no objects. Seamless in both axes, flat uniform lighting.",
+      "prompt": "Create ONE square production-ready top-down pixel art floor tile for a cozy garden wedding RPG. Soft dusty blush pink wedding reception carpet, nearly uniform matte textile with sparse tiny lighter pink stitches. Warm restrained pastel, no ornate patterns, no central motif, no borders, no flowers, no objects. Seamless in both axes, flat uniform lighting. Use a strict logical 32x32 pixel grid enlarged to a high-resolution square: exactly 32 big pixel units across, crisp large square color clusters, simple readable low-resolution game art, small palette of about 8-12 warm pastel colors. NO dense micro texture, no realism, no perspective, no 3D, no cast shadows, no lighting gradient, no vignette. Tile fills every edge with FULLY OPAQUE color. No padding, no frame except the specified aisle stripes. No text, lettering, numbers, hearts or watermark. Must remain clear at an actual final size of 32x32 pixels."
+    }
+  ]
+}

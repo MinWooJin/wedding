@@ -81,6 +81,26 @@ centered, plain white background, no shadow on ground, no text, 16-bit game spri
 
 ## 타일 · 오브젝트 프롬프트
 
+### 추가 웨딩 타일 라이브러리
+
+`assets/tiles/wedding/`에 버진로드 기본형·꽃잎형·입구, 장미 꽃잎 잔디,
+아이보리 대리석, 블러시 핑크 카펫 6종을 준비했습니다. 모두 32×32 RGBA이며
+완전히 불투명한 바닥입니다. 원본은 `raw/tiles/wedding/`입니다.
+
+이 타일들은 **아직 게임에 등록하지 않은 추가 에셋**입니다. 기존 9종과 런타임
+`assets/manifest.json`은 유지됩니다. 별도 `manifest.json`의 제안 ID·반복 방향,
+`prompts.json`의 실제 생성 프롬프트, `preview.png`의 배치 예시를 참고하세요.
+버진로드 A/B는 세로 반복용이고 C는 위쪽을 길, 아래쪽을 잔디에 잇는 입구 마감입니다.
+다른 바닥 E/M/L은 두 방향으로 반복할 수 있습니다.
+
+```powershell
+python tools/prepare_wedding_tiles.py
+```
+
+위 명령은 웨딩 타일만 변환하며 게임 manifest는 건드리지 않습니다. raw가 없으면
+이미 저장된 최종 PNG를 사용합니다. 맵 적용 시 필요한 로더·타일·보행 처리 변경은
+최신 `docs/CODEX_PROMPT.md`에 정리했습니다.
+
 ```
 pixel art game tile, top-down view, seamless tileable [lush green grass] texture,
 32x32 style, flat colors with subtle dots, no border, no text

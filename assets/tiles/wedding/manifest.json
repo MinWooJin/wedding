@@ -1,0 +1,64 @@
+{
+  "schema_version": 1,
+  "tile_size": 32,
+  "registered_in_game": false,
+  "note": "Prepared asset library only. Current JS does not register these IDs.",
+  "prompts": "prompts.json",
+  "tiles": [
+    {
+      "suggested_id": "A",
+      "name": "aisle-ivory",
+      "label": "아이보리 버진로드",
+      "file": "aisle-ivory.png",
+      "repeat_axes": [
+        "y"
+      ]
+    },
+    {
+      "suggested_id": "B",
+      "name": "aisle-petals",
+      "label": "꽃잎 버진로드",
+      "file": "aisle-petals.png",
+      "repeat_axes": [
+        "y"
+      ]
+    },
+    {
+      "suggested_id": "C",
+      "name": "aisle-entrance",
+      "label": "버진로드 입구",
+      "file": "aisle-entrance.png",
+      "repeat_axes": []
+    },
+    {
+      "suggested_id": "E",
+      "name": "rose-petal-grass",
+      "label": "장미 꽃잎 잔디",
+      "file": "rose-petal-grass.png",
+      "repeat_axes": [
+        "x",
+        "y"
+      ]
+    },
+    {
+      "suggested_id": "M",
+      "name": "ivory-marble",
+      "label": "아이보리 대리석",
+      "file": "ivory-marble.png",
+      "repeat_axes": [
+        "x",
+        "y"
+      ]
+    },
+    {
+      "suggested_id": "L",
+      "name": "blush-carpet",
+      "label": "블러시 핑크 카펫",
+      "file": "blush-carpet.png",
+      "repeat_axes": [
+        "x",
+        "y"
+      ]
+    }
+  ]
+}
