@@ -40,15 +40,15 @@ export const HUB_DOORS = {
 /** 가장자리 장식: 울타리 안쪽을 따라 큰 나무(96×96)와 꽃덤불(64×64)을 번갈아 둔다. 레퍼런스처럼 나무가 양옆 경계를 만든다. */
 const DECOR = [ // 0~4행은 큰 아치(최대 7칸 폭) 자리라 비워 둔다
   { sprite: 'tree', tx: 1, ty: 5 }, { sprite: 'tree', tx: 7, ty: 5 },
-  { sprite: 'bush', tx: 1, ty: 9 }, { sprite: 'bush', tx: 8, ty: 9 },
+  { sprite: 'bush-white', tx: 1, ty: 9 }, { sprite: 'bush-white', tx: 8, ty: 9 },
   { sprite: 'tree', tx: 1, ty: 12 }, { sprite: 'tree', tx: 7, ty: 12 },
-  { sprite: 'bush', tx: 1, ty: 16 }, { sprite: 'bush', tx: 8, ty: 16 },
+  { sprite: 'bush', tx: 1, ty: 16 }, { sprite: 'bush-white', tx: 8, ty: 16 },
   { sprite: 'bush', tx: 3, ty: 22 }, { sprite: 'bush', tx: 6, ty: 22 },
   { sprite: 'bush', tx: 3, ty: 26 }, { sprite: 'bush', tx: 6, ty: 26 },
 ];
 
 /** 하객이 서는 구역: 아치 아래 5행부터 입구 직전 19행까지, 돌길 위를 포함한 정원 전체(1~9열) */
-export const GUEST_ZONE = { cols: [1, 2, 3, 4, 5, 6, 7, 8, 9], rowMin: 5, rowMax: 19 };
+export const GUEST_ZONE = { cols: [1, 2, 3, 4, 5, 6, 7, 8, 9], rowMin: 6, rowMax: 19 }; // 5행은 신랑신부
 
 export const MAX_GUESTS = 30;
 
@@ -74,9 +74,9 @@ const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
 export class HubScene extends Scene {
   constructor(game) {
     const cfg = game.config;
-    // 아치(160×128, 0~3행) 아래 돌길 한가운데(x=176)에 어깨를 맞대고 나란히. 예식이 진행 중인 장면.
-    const groom = new Character({ sprites: characterSet(game.assets, 'groom', GROOM), name: displayName(cfg.groom), x: 176 - 24, y: standPos(5, 4).y });
-    const bride = new Character({ sprites: characterSet(game.assets, 'bride', BRIDE), name: displayName(cfg.bride), x: 176 + 24, y: standPos(5, 4).y });
+    // 아치(224×160, 0~4행) 바로 앞 5행, 돌길 한가운데(x=176)에 어깨를 맞대고 나란히. 예식이 진행 중인 장면.
+    const groom = new Character({ sprites: characterSet(game.assets, 'groom', GROOM), name: displayName(cfg.groom), x: 176 - 24, y: standPos(5, 5).y });
+    const bride = new Character({ sprites: characterSet(game.assets, 'bride', BRIDE), name: displayName(cfg.bride), x: 176 + 24, y: standPos(5, 5).y });
     groom.dir = 'down'; bride.dir = 'down';
     const greet = (c) => () => c.say(pick(cfg.greetings));
 
