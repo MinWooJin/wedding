@@ -8,9 +8,11 @@ import { displayName } from '../config.js';
 
 // 11열 × 32행(352×1024px). 위쪽 19행은 아치까지 이어지는 긴 정원, 아래는 방 입구가 있는 교차로.
 const GARDEN = ['HGGGGPGGGGH', 'HGWGGPGGWGH', 'HGGGGPGGGGH', 'HWGGGPGGGWH', 'HGGGGPGGGGH', 'HGGWGPGWGGH'];
+/** 1~18행 가운데는 버진로드(A, 4행마다 꽃잎 B), 19행은 입구 마감 C로 흙길과 잇는다 */
+const aisleRow = (i) => { const base = GARDEN[i % GARDEN.length]; const mid = i === 18 ? 'C' : (i % 4 === 1 ? 'B' : 'A'); return base.slice(0, 5) + mid + base.slice(6); };
 export const HUB_ROWS = [
   'HHHHHHHHHHH',
-  ...Array.from({ length: 19 }, (_, i) => GARDEN[i % GARDEN.length]), // rows 1..19
+  ...Array.from({ length: 19 }, (_, i) => aisleRow(i)), // rows 1..19
   'HPPPPPPPPPH', // 20 교차로 · 시작 위치
   'HPGGGPGGGPH', // 21 문: 안내소(1,21), 갤러리(9,21)
   'HPGWGPGWGPH',
@@ -36,7 +38,8 @@ export const HUB_DOORS = {
   gifts:     { door: { tx: 5, ty: 30 }, sign: { tx: 4, ty: 30 }, back: { tx: 5, ty: 29 }, label: '마음 전하는 곳' },
 };
 
-const TREES = [[1, 1], [9, 1], [1, 5], [9, 5], [3, 7], [7, 7], [1, 9], [9, 9], [3, 12], [7, 12], [1, 15], [9, 15], [2, 18], [8, 18]];
+// 나무는 64×64(2칸 폭)라 왼쪽은 1~3열, 오른쪽은 7~8열에 둔다(5열 버진로드를 피함)
+const TREES = [[1, 1], [8, 1], [1, 5], [8, 5], [3, 7], [7, 7], [1, 9], [8, 9], [3, 12], [7, 12], [1, 15], [8, 15], [2, 18], [7, 18]];
 
 export const MAX_GUESTS = 30;
 

@@ -32,8 +32,10 @@ CHAR_W, CHAR_H = 64, 96
 
 CHARACTERS = [f"preset-{i}" for i in range(10)] + ["groom", "bride"]
 TILES = list("GWPHFDKRS")
+# 웨딩 타일: raw/tiles/wedding/<이름>.png → assets/tiles/<ID>.png
+WEDDING_TILES = {"A": "aisle-ivory", "B": "aisle-petals", "C": "aisle-entrance", "E": "rose-petal-grass", "M": "ivory-marble", "L": "blush-carpet"}
 OBJECT_SIZES = {
-    "arch": (96, 64), "tree": (32, 64), "bench": (64, 32), "desk": (64, 32),
+    "arch": (96, 64), "tree": (64, 64), "bench": (64, 32), "desk": (64, 32),
     "sign": (32, 32), "mailbox": (32, 32), "frame": (32, 32), "chest": (32, 32), "board": (32, 32),
     "phone": (32, 32), "calendar": (32, 32), "mapframe": (32, 32), "flower": (32, 32), "stone": (32, 32), "door": (32, 32),
 }
@@ -107,6 +109,14 @@ def main():
         Image.open(src).convert("RGBA").resize((TILE, TILE), RESAMPLE_DOWN).save(OUT / "tiles" / f"{tid}.png")
         manifest["tiles"].append(tid)
         print("tile", tid)
+
+    for tid, name in WEDDING_TILES.items():
+        src = RAW / "tiles" / "wedding" / f"{name}.png"
+        if not src.exists():
+            continue
+        Image.open(src).convert("RGBA").resize((TILE, TILE), RESAMPLE_DOWN).save(OUT / "tiles" / f"{tid}.png")
+        manifest["tiles"].append(tid)
+        print("tile", tid, name)
 
     for oid, (w, h) in OBJECT_SIZES.items():
         src = RAW / "objects" / f"{oid}.png"

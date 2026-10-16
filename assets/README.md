@@ -17,7 +17,8 @@ python tools/prepare_assets.py --pixel  # 또렷한 도트 느낌
 | 신랑·신부 | `raw/characters/groom.png`, `bride.png` | 64×96 | 광장 아치 아래, 이야기 길 벤치에 등장 |
 | 걷기 시트(선택) | `raw/characters/<name>-sheet.png` | 192×384 | 3열(idle/걷기A/걷기B) × 4행(앞/왼쪽/오른쪽/뒤) |
 | 타일 | `raw/tiles/G W P H F D K R S.png` | 32×32 | G 잔디, W 꽃잔디, P 흙길, H 산울타리, F 울타리, D 마루, K 벽, R 카펫, S 돌바닥 |
-| 오브젝트 | `raw/objects/<id>.png` | 32의 배수 | arch 96×64, tree 32×64, bench·desk 64×32, 나머지 32×32 |
+| 오브젝트 | `raw/objects/<id>.png` | 32의 배수 | arch 96×64, tree 64×64, bench·desk 64×32, 나머지 32×32 |
+| 웨딩 타일 | `raw/tiles/wedding/aisle-ivory.png` 등 6종 | 32×32 | A 버진로드, B 꽃잎 버진로드, C 입구 마감, E 꽃잎 잔디, M 대리석, L 블러시 카펫 (광장 5열 1~19행에 A/B/C 사용) |
 | 씬 배경(선택) | `raw/maps/hub.png info.png guestbook.png gifts.png` | hub 352×1024, info 352×256, guestbook 352×384, gifts 352×256 | 타일 대신 한 장으로 그림. 길·벽 위치는 아래 레이아웃을 따라야 함 |
 
 배경은 단색(흰색 등)이나 투명이면 됩니다. 스크립트가 모서리 색을 기준으로 배경을 지우고, 여백을 잘라내고, 크기를 맞춥니다.
