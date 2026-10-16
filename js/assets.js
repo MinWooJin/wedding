@@ -11,13 +11,14 @@ import { PRESET_COUNT } from './sprites/characters.js';
 
 export const CHAR_W = 48, CHAR_H = 72; // 화면(352px 폭 기준)에서 캐릭터가 폭 48px, 높이 72px로 보인다(타일 1.5칸 폭)
 export const CHARACTER_NAMES = [...Array.from({ length: PRESET_COUNT }, (_, i) => `preset-${i}`), 'groom', 'bride'];
-export const TILE_IDS = ['G', 'W', 'P', 'H', 'F', 'D', 'K', 'R', 'S', 'A', 'B', 'C', 'E', 'M', 'L', 'Q', 'Y', 'V', 'Z'];
+export const TILE_IDS = ['G', 'W', 'P', 'H', 'F', 'D', 'K', 'R', 'S', 'A', 'B', 'C', 'E', 'M', 'L', 'Q', 'Y', 'V', 'Z', 'N', 'J', 'U'];
+// N 모래빛 돌길(버진로드), J/U 꽃이 드문드문 섞인 잔디(G와 같은 베이스색) — 레퍼런스 톤
 // 맵 문자열은 한 글자가 한 칸이므로, 두 글자 파일명(X1~X4)은 한 글자 코드로 쓴다.
 // Q 분홍 꽃밭(X1), Y 흰 꽃밭(X2), V 흰 자갈길(X3), Z 장미 산울타리(X4, 막힘)
 export const TILE_FILES = { Q: 'X1', Y: 'X2', V: 'X3', Z: 'X4' };
 const FILE_TO_TILE = Object.fromEntries(Object.entries(TILE_FILES).map(([k, v]) => [v, k]));
 export const OBJECT_IDS = ['arch', 'tree', 'sign', 'mailbox', 'frame', 'bench', 'chest', 'desk', 'board', 'phone', 'calendar', 'mapframe', 'flower', 'stone', 'door',
-  'chair', 'bush', 'lantern', 'petal-pile', 'welcome-board'];
+  'chair', 'bush', 'lantern', 'petal-pile', 'welcome-board', 'bush-white'];
 export const SCENE_IDS = ['hub', 'info', 'gallery', 'story', 'guestbook', 'gifts'];
 
 function loadImage(src) {

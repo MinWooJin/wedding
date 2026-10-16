@@ -187,3 +187,35 @@ js/ 는 수정하지 마라. 연결은 Claude가 한다. 스타일은 기존 에
 
 완료 후 결과 PNG 크기와 알파 bbox를 출력해 보고하고, 이 문서 하단에 완료 기록을 남겨라.
 ```
+
+# 4차 요청: 레퍼런스(@dding_one) 톤의 자연 정원 세트 (Claude가 2026-10-16 작성) — 3차 단상 요청은 보류
+
+```text
+작업 폴더: C:\Users\alsdn\wedding (원격 없음, push 금지, 로컬 커밋 가능)
+
+방향 수정: 꽃밭·대리석·의자 같은 격식 장식이 아니라, 레퍼런스(인스타 @dding_one 픽셀 게스트북 첫 장면)처럼
+"울타리 안 짙은 잔디 정원 + 가운데 밝은 모래빛 돌길 + 가장자리 큰 나무 + 흰 꽃 아치" 톤으로 간다.
+참고 장면: 위쪽에 흰·분홍 장미 아치, 그 아래 길 한가운데 신랑신부, 좌우 잔디에 흰 꽃이 드문드문,
+울타리 안쪽을 따라 둥근 나무들, 가운데 길은 연한 베이지색 자갈/돌 느낌(갈색 흙길 아님).
+3차 "단상" 요청은 레퍼런스에 없으므로 만들지 않는다.
+
+내장 이미지 생성 도구로 아래를 만들고 raw/에 넣은 뒤 tools/prepare_assets.py의 TILES/WEDDING_TILES/OBJECT_SIZES에
+추가·수정하고 --skip-existing 없이(아래 파일만 교체되도록 해당 raw만 두거나, 기존 결과를 백업 후) 변환해라.
+js/ 는 수정하지 마라. 완료 후 이 문서 하단에 결과 크기·bbox를 기록해라.
+
+타일(32×32, 불투명, 이음새 없음). 아래 4종은 **베이스 잔디 색이 완전히 같아야** 섞어 깔아도 얼룩이 안 생긴다.
+  - raw/tiles/G.png        (ID G, 교체) 짙고 선명한 잔디. 레퍼런스의 녹색(#5e9a3c 근방), 잔잔한 결 텍스처
+  - raw/tiles/wedding/grass-flowers-a.png (ID J) 같은 잔디 + 흰 꽃 2~3송이
+  - raw/tiles/wedding/grass-flowers-b.png (ID U) 같은 잔디 + 분홍·노랑 꽃 2~3송이
+  - raw/tiles/W.png        (ID W, 교체) 같은 잔디 + 작은 흰 꽃 다발(기존 W는 톤이 달라 얼룩져 보였음)
+  - raw/tiles/wedding/sand-path.png (ID N) 연한 베이지 모래/자갈 돌길. 격자 없이 부드러운 질감, 4방향 이음새 없음
+  - raw/tiles/H.png        (ID H, 교체) 짙은 녹색 산울타리에 작은 흰 꽃. 위에서 본 두툼한 울타리
+
+오브젝트(투명 배경, 아래 가운데 정렬)
+  - raw/objects/tree.png   (교체) 96×128 크고 둥근 짙은 녹색 나무, 갈색 줄기, 레퍼런스의 가장자리 나무 느낌
+  - raw/objects/bush-white.png (신규, ID bush-white) 64×64 흰 꽃이 핀 둥근 덤불
+  - raw/objects/arch.png   (교체) 160×128 흰 장미와 연분홍 장미, 초록 잎의 결혼식 아치. 가운데 비어 있음. 기둥 두 개
+
+prepare_assets.py 반영: TILES에 G/W/H는 이미 있음, WEDDING_TILES에 {"J":"grass-flowers-a","U":"grass-flowers-b","N":"sand-path"},
+OBJECT_SIZES에 "tree": (96, 128), "bush-white": (64, 64). 기존 캐릭터 PNG(48×72, 수정된 신랑신부 얼굴)는 절대 다시 변환하지 마라.
+```

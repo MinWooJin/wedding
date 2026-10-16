@@ -10,12 +10,12 @@ test('guestPlacements: 제외 타일 회피, 잔디 위, 서로 인접하지 않
   assert.deepEqual(a, guestPlacements(entries, reserved));
   for (const g of a) {
     assert.ok(!reserved.has(`${g.tx},${g.ty}`));
-    assert.ok('GWE'.includes(HUB_ROWS[g.ty][g.tx]), '잔디/꽃잔디/꽃잎잔디 위');
+    assert.ok('GWEJUN'.includes(HUB_ROWS[g.ty][g.tx]), '잔디 또는 돌길 위');
     assert.ok(GUEST_ZONE.cols.includes(g.tx) && g.ty >= GUEST_ZONE.rowMin && g.ty <= GUEST_ZONE.rowMax, '버진로드 양옆 구역 안');
     assert.ok(g.entry.n.startsWith('손님'));
   }
   for (let i = 0; i < a.length; i++) for (let j = i + 1; j < a.length; j++) {
-    assert.ok(Math.abs(a[i].tx - a[j].tx) > 1 || Math.abs(a[i].ty - a[j].ty) > 1, '인접 금지');
+    assert.ok(a[i].tx !== a[j].tx || Math.abs(a[i].ty - a[j].ty) > 1, '같은 열 바로 위아래 금지');
   }
 });
 

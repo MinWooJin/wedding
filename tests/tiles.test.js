@@ -11,10 +11,10 @@ test('모든 타일은 32×32(코드 그림 2배 확대)', () => {
 });
 
 test('필수 타일 ID 존재', () => {
-  for (const id of ['G', 'W', 'P', 'H', 'F', 'D', 'K', 'R', 'S', 'X', 'A', 'B', 'C', 'E', 'M', 'L', 'Q', 'Y', 'V', 'Z']) assert.ok(TILES[id], id);
+  for (const id of ['G', 'W', 'P', 'H', 'F', 'D', 'K', 'R', 'S', 'X', 'A', 'B', 'C', 'E', 'M', 'L', 'Q', 'Y', 'V', 'Z', 'N', 'J', 'U']) assert.ok(TILES[id], id);
 });
 
 test('울타리/벽/산울타리/공백은 solid', () => {
   for (const id of ['H', 'F', 'K', 'X', 'Z']) assert.ok(SOLID_TILES.has(id), id);
-  for (const id of ['G', 'W', 'P', 'D', 'R', 'S', 'A', 'B', 'C', 'E', 'M', 'L', 'Q', 'Y', 'V']) assert.ok(!SOLID_TILES.has(id), id);
+  for (const id of ['G', 'W', 'P', 'D', 'R', 'S', 'A', 'B', 'C', 'E', 'M', 'L', 'Q', 'Y', 'V', 'N', 'J', 'U']) assert.ok(!SOLID_TILES.has(id), id);
 });

@@ -1,8 +1,8 @@
-/** rows에서 잔디 계열('G','W','E') 타일 중 exclude("tx,ty")에 없는 타일 목록(행 우선) */
+/** rows에서 하객이 설 수 있는 타일(잔디 G/W/E/J/U, 돌길 N) 중 exclude("tx,ty")에 없는 것(행 우선) */
 export function freeTiles(rows, exclude = new Set()) {
   const out = [];
   rows.forEach((row, ty) => [...row].forEach((ch, tx) => {
-    if ((ch === 'G' || ch === 'W' || ch === 'E') && !exclude.has(`${tx},${ty}`)) out.push({ tx, ty });
+    if ('GWEJUN'.includes(ch) && !exclude.has(`${tx},${ty}`)) out.push({ tx, ty });
   }));
   return out;
 }
