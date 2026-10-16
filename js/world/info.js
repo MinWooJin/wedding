@@ -21,7 +21,11 @@ let shownOnce = false;
 
 function infoHtml(cfg) {
   const w = cfg.wedding;
-  return kv([['일시', formatDate(w.date)], ['장소', [w.venue, w.hall].filter(Boolean).join(' ')], ['주소', w.address]]);
+  const notice = w.notice
+    ? `<p class="notice">${esc(w.notice).replace(/
+/g, '<br>')}</p>`
+    : '';
+  return kv([['일시', formatDate(w.date)], ['장소', [w.venue, w.hall].filter(Boolean).join(' ')], ['주소', w.address]]) + notice;
 }
 
 function contactsHtml(cfg) {

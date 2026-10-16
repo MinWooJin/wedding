@@ -35,6 +35,7 @@ html, body {
 .card p { margin: 4px 0; }
 .card .row { display: flex; gap: 8px; margin-top: 8px; flex-wrap: wrap; }
 .card .muted { color: #7a6a5a; font-size: 12px; }
+.card .notice { margin-top: 12px; padding: 10px 12px; border-left: 3px solid var(--accent); background: #fff1f6; color: #5a3f47; font-size: 13px; line-height: 1.7; }
 .btn {
   font-family: var(--font); font-size: 14px; padding: 8px 12px; cursor: pointer;
   background: #fff; color: var(--ink); border: 2px solid var(--ink); box-shadow: 2px 2px 0 var(--ink);

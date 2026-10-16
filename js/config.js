@@ -4,6 +4,7 @@ export const DEFAULT_CONFIG = {
   wedding: {
     date: '2027-01-01T12:00:00+09:00',
     venue: '', hall: '', address: '',
+    notice: '', // 장소 안내와 함께 보여줄 양해 문구(선택)
     map: { kakao: '', naver: '', tmap: '' },
     transport: { subway: '', bus: '', parking: '' },
   },
