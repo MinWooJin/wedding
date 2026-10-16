@@ -1,0 +1,232 @@
+{
+  "generation_mode": "Codex built-in image generation; no OPENAI_API_KEY",
+  "date": "2026-10-16",
+  "style": "cute chibi pixel art, 4-head-tall proportions, big head with expressive face, thick dark outline, soft cel shading, pastel warm palette, 16-bit RPG sprite style, centered, no text, no watermark",
+  "character_reference": "raw/characters/preset-0.png",
+  "prompt_notes": {
+    "characters": "Use preset-0 only as style reference. Single character, entire head and feet visible, genuinely transparent background, no ground shadow or glow. Match reference scale, proportions, thick outline and chunky pixel clusters, readable at 64x96. Bride holds a tiny bouquet low at waist.",
+    "tiles": "Top-down seamless tileable texture, flat, no border, no frame, no perspective, no gradients or vignette. Uniform lighting, opaque texture covers the whole square edge to edge. Match opposite edges for horizontal and vertical repetition. No separate centered object.",
+    "objects": "Single production game object sprite, slightly overhead cozy 16-bit RPG view. Complete silhouette centered with transparent padding. No environment, no ground, no shadow or glow. Readable at the final game size."
+  },
+  "source_prompt_set": [
+    {
+      "category": "characters",
+      "name": "preset-0",
+      "requested_size": "1024x1536",
+      "prompt": "cute chibi pixel art, 4-head-tall proportions, big head with expressive face, thick dark outline, soft cel shading, pastel warm palette, 16-bit RPG sprite style, centered, no text, no watermark, full body, front view, standing, arms at sides, wedding guest outfit, one character only, entire head and feet visible, transparent background, no shadow on ground, short black hair, light skin tone, red hoodie, blue jeans"
+    },
+    {
+      "category": "characters",
+      "name": "preset-1",
+      "requested_size": "1024x1536",
+      "prompt": "cute chibi pixel art, 4-head-tall proportions, big head with expressive face, thick dark outline, soft cel shading, pastel warm palette, 16-bit RPG sprite style, centered, no text, no watermark, full body, front view, standing, arms at sides, wedding guest outfit, one character only, entire head and feet visible, transparent background, no shadow on ground, long brown hair, light skin tone, yellow cardigan, brown skirt"
+    },
+    {
+      "category": "characters",
+      "name": "preset-2",
+      "requested_size": "1024x1536",
+      "prompt": "cute chibi pixel art, 4-head-tall proportions, big head with expressive face, thick dark outline, soft cel shading, pastel warm palette, 16-bit RPG sprite style, centered, no text, no watermark, full body, front view, standing, arms at sides, wedding guest outfit, one character only, entire head and feet visible, transparent background, no shadow on ground, curly blonde hair, light skin tone, green sweater, cream trousers"
+    },
+    {
+      "category": "characters",
+      "name": "preset-3",
+      "requested_size": "1024x1536",
+      "prompt": "cute chibi pixel art, 4-head-tall proportions, big head with expressive face, thick dark outline, soft cel shading, pastel warm palette, 16-bit RPG sprite style, centered, no text, no watermark, full body, front view, standing, arms at sides, wedding guest outfit, one character only, entire head and feet visible, transparent background, no shadow on ground, bob cut dark hair, light skin tone, pink blouse, charcoal skirt"
+    },
+    {
+      "category": "characters",
+      "name": "preset-4",
+      "requested_size": "1024x1536",
+      "prompt": "cute chibi pixel art, 4-head-tall proportions, big head with expressive face, thick dark outline, soft cel shading, pastel warm palette, 16-bit RPG sprite style, centered, no text, no watermark, full body, front view, standing, arms at sides, wedding guest outfit, one character only, entire head and feet visible, transparent background, no shadow on ground, baseball cap over short auburn hair, light skin tone, navy jacket, beige trousers"
+    },
+    {
+      "category": "characters",
+      "name": "preset-5",
+      "requested_size": "1024x1536",
+      "prompt": "cute chibi pixel art, 4-head-tall proportions, big head with expressive face, thick dark outline, soft cel shading, pastel warm palette, 16-bit RPG sprite style, centered, no text, no watermark, full body, front view, standing, arms at sides, wedding guest outfit, one character only, entire head and feet visible, transparent background, no shadow on ground, short black hair, tan skin tone, orange blazer, grey trousers"
+    },
+    {
+      "category": "characters",
+      "name": "preset-6",
+      "requested_size": "1024x1536",
+      "prompt": "cute chibi pixel art, 4-head-tall proportions, big head with expressive face, thick dark outline, soft cel shading, pastel warm palette, 16-bit RPG sprite style, centered, no text, no watermark, full body, front view, standing, arms at sides, wedding guest outfit, one character only, entire head and feet visible, transparent background, no shadow on ground, long brown hair, tan skin tone, purple cardigan, ivory skirt"
+    },
+    {
+      "category": "characters",
+      "name": "preset-7",
+      "requested_size": "1024x1536",
+      "prompt": "cute chibi pixel art, 4-head-tall proportions, big head with expressive face, thick dark outline, soft cel shading, pastel warm palette, 16-bit RPG sprite style, centered, no text, no watermark, full body, front view, standing, arms at sides, wedding guest outfit, one character only, entire head and feet visible, transparent background, no shadow on ground, curly blonde hair, tan skin tone, teal sweater, dark trousers"
+    },
+    {
+      "category": "characters",
+      "name": "preset-8",
+      "requested_size": "1024x1536",
+      "prompt": "cute chibi pixel art, 4-head-tall proportions, big head with expressive face, thick dark outline, soft cel shading, pastel warm palette, 16-bit RPG sprite style, centered, no text, no watermark, full body, front view, standing, arms at sides, wedding guest outfit, one character only, entire head and feet visible, transparent background, no shadow on ground, bob cut dark hair, tan skin tone, coral blouse, white skirt"
+    },
+    {
+      "category": "characters",
+      "name": "preset-9",
+      "requested_size": "1024x1536",
+      "prompt": "cute chibi pixel art, 4-head-tall proportions, big head with expressive face, thick dark outline, soft cel shading, pastel warm palette, 16-bit RPG sprite style, centered, no text, no watermark, full body, front view, standing, arms at sides, wedding guest outfit, one character only, entire head and feet visible, transparent background, no shadow on ground, baseball cap over short auburn hair, tan skin tone, sky blue jacket, brown trousers"
+    },
+    {
+      "category": "characters",
+      "name": "groom",
+      "requested_size": "1024x1536",
+      "prompt": "cute chibi pixel art, 4-head-tall proportions, big head with expressive face, thick dark outline, soft cel shading, pastel warm palette, 16-bit RPG sprite style, centered, no text, no watermark, full body, front view, standing, arms at sides, wedding guest outfit, one character only, entire head and feet visible, transparent background, no shadow on ground, black hair, black tuxedo, bow tie, white shirt"
+    },
+    {
+      "category": "characters",
+      "name": "bride",
+      "requested_size": "1024x1536",
+      "prompt": "cute chibi pixel art, 4-head-tall proportions, big head with expressive face, thick dark outline, soft cel shading, pastel warm palette, 16-bit RPG sprite style, centered, no text, no watermark, full body, front view, standing, arms at sides, wedding guest outfit, one character only, entire head and feet visible, transparent background, no shadow on ground, brown updo with small veil, white wedding dress, tiny bouquet"
+    },
+    {
+      "category": "tiles",
+      "name": "G",
+      "requested_size": "1024x1024",
+      "prompt": "cute chibi pixel art, 4-head-tall proportions, big head with expressive face, thick dark outline, soft cel shading, pastel warm palette, 16-bit RPG sprite style, centered, no text, no watermark, top-down seamless tileable texture, flat, no border, lush green grass, 32x32 style, subtle pixel details, seamless, tileable, uniform lighting, texture fills every edge, opaque texture coverage"
+    },
+    {
+      "category": "tiles",
+      "name": "W",
+      "requested_size": "1024x1024",
+      "prompt": "cute chibi pixel art, 4-head-tall proportions, big head with expressive face, thick dark outline, soft cel shading, pastel warm palette, 16-bit RPG sprite style, centered, no text, no watermark, top-down seamless tileable texture, flat, no border, grass with tiny pink and yellow flowers, 32x32 style, subtle pixel details, seamless, tileable, uniform lighting, texture fills every edge, opaque texture coverage"
+    },
+    {
+      "category": "tiles",
+      "name": "P",
+      "requested_size": "1024x1024",
+      "prompt": "cute chibi pixel art, 4-head-tall proportions, big head with expressive face, thick dark outline, soft cel shading, pastel warm palette, 16-bit RPG sprite style, centered, no text, no watermark, top-down seamless tileable texture, flat, no border, dirt path, 32x32 style, subtle pixel details, seamless, tileable, uniform lighting, texture fills every edge, opaque texture coverage"
+    },
+    {
+      "category": "tiles",
+      "name": "H",
+      "requested_size": "1024x1024",
+      "prompt": "cute chibi pixel art, 4-head-tall proportions, big head with expressive face, thick dark outline, soft cel shading, pastel warm palette, 16-bit RPG sprite style, centered, no text, no watermark, top-down seamless tileable texture, flat, no border, dense green hedge, 32x32 style, subtle pixel details, seamless, tileable, uniform lighting, texture fills every edge, opaque texture coverage"
+    },
+    {
+      "category": "tiles",
+      "name": "F",
+      "requested_size": "1024x1024",
+      "prompt": "cute chibi pixel art, 4-head-tall proportions, big head with expressive face, thick dark outline, soft cel shading, pastel warm palette, 16-bit RPG sprite style, centered, no text, no watermark, top-down seamless tileable texture, flat, no border, wooden picket fence on grass, 32x32 style, subtle pixel details, seamless, tileable, uniform lighting, texture fills every edge, opaque texture coverage"
+    },
+    {
+      "category": "tiles",
+      "name": "D",
+      "requested_size": "1024x1024",
+      "prompt": "cute chibi pixel art, 4-head-tall proportions, big head with expressive face, thick dark outline, soft cel shading, pastel warm palette, 16-bit RPG sprite style, centered, no text, no watermark, top-down seamless tileable texture, flat, no border, warm wooden plank floor, 32x32 style, subtle pixel details, seamless, tileable, uniform lighting, texture fills every edge, opaque texture coverage"
+    },
+    {
+      "category": "tiles",
+      "name": "K",
+      "requested_size": "1024x1024",
+      "prompt": "cute chibi pixel art, 4-head-tall proportions, big head with expressive face, thick dark outline, soft cel shading, pastel warm palette, 16-bit RPG sprite style, centered, no text, no watermark, top-down seamless tileable texture, flat, no border, cream wallpaper wall with wooden baseboard, 32x32 style, subtle pixel details, seamless, tileable, uniform lighting, texture fills every edge, opaque texture coverage"
+    },
+    {
+      "category": "tiles",
+      "name": "R",
+      "requested_size": "1024x1024",
+      "prompt": "cute chibi pixel art, 4-head-tall proportions, big head with expressive face, thick dark outline, soft cel shading, pastel warm palette, 16-bit RPG sprite style, centered, no text, no watermark, top-down seamless tileable texture, flat, no border, red carpet with gold center, 32x32 style, subtle pixel details, seamless, tileable, uniform lighting, texture fills every edge, opaque texture coverage"
+    },
+    {
+      "category": "tiles",
+      "name": "S",
+      "requested_size": "1024x1024",
+      "prompt": "cute chibi pixel art, 4-head-tall proportions, big head with expressive face, thick dark outline, soft cel shading, pastel warm palette, 16-bit RPG sprite style, centered, no text, no watermark, top-down seamless tileable texture, flat, no border, grey stone floor, 32x32 style, subtle pixel details, seamless, tileable, uniform lighting, texture fills every edge, opaque texture coverage"
+    },
+    {
+      "category": "objects",
+      "name": "arch",
+      "requested_size": "1024x1024",
+      "prompt": "cute chibi pixel art, 4-head-tall proportions, big head with expressive face, thick dark outline, soft cel shading, pastel warm palette, 16-bit RPG sprite style, centered, no text, no watermark, top-down RPG object sprite, no ground shadow, flower arch with pink roses and green leaves, wide horizontal silhouette, one object only, complete silhouette, transparent background"
+    },
+    {
+      "category": "objects",
+      "name": "tree",
+      "requested_size": "1024x1024",
+      "prompt": "cute chibi pixel art, 4-head-tall proportions, big head with expressive face, thick dark outline, soft cel shading, pastel warm palette, 16-bit RPG sprite style, centered, no text, no watermark, top-down RPG object sprite, no ground shadow, round green tree with brown trunk, tall vertical silhouette, one object only, complete silhouette, transparent background"
+    },
+    {
+      "category": "objects",
+      "name": "sign",
+      "requested_size": "1024x1024",
+      "prompt": "cute chibi pixel art, 4-head-tall proportions, big head with expressive face, thick dark outline, soft cel shading, pastel warm palette, 16-bit RPG sprite style, centered, no text, no watermark, top-down RPG object sprite, no ground shadow, wooden signpost with a blank sign, one object only, complete silhouette, transparent background"
+    },
+    {
+      "category": "objects",
+      "name": "mailbox",
+      "requested_size": "1024x1024",
+      "prompt": "cute chibi pixel art, 4-head-tall proportions, big head with expressive face, thick dark outline, soft cel shading, pastel warm palette, 16-bit RPG sprite style, centered, no text, no watermark, top-down RPG object sprite, no ground shadow, red mailbox on a post, one object only, complete silhouette, transparent background"
+    },
+    {
+      "category": "objects",
+      "name": "frame",
+      "requested_size": "1024x1024",
+      "prompt": "cute chibi pixel art, 4-head-tall proportions, big head with expressive face, thick dark outline, soft cel shading, pastel warm palette, 16-bit RPG sprite style, centered, no text, no watermark, top-down RPG object sprite, no ground shadow, small wooden picture frame, one object only, complete silhouette, transparent background"
+    },
+    {
+      "category": "objects",
+      "name": "bench",
+      "requested_size": "1024x1024",
+      "prompt": "cute chibi pixel art, 4-head-tall proportions, big head with expressive face, thick dark outline, soft cel shading, pastel warm palette, 16-bit RPG sprite style, centered, no text, no watermark, top-down RPG object sprite, no ground shadow, wooden park bench, wide horizontal silhouette, one object only, complete silhouette, transparent background"
+    },
+    {
+      "category": "objects",
+      "name": "chest",
+      "requested_size": "1024x1024",
+      "prompt": "cute chibi pixel art, 4-head-tall proportions, big head with expressive face, thick dark outline, soft cel shading, pastel warm palette, 16-bit RPG sprite style, centered, no text, no watermark, top-down RPG object sprite, no ground shadow, wooden treasure chest with gold lock, one object only, complete silhouette, transparent background"
+    },
+    {
+      "category": "objects",
+      "name": "desk",
+      "requested_size": "1024x1024",
+      "prompt": "cute chibi pixel art, 4-head-tall proportions, big head with expressive face, thick dark outline, soft cel shading, pastel warm palette, 16-bit RPG sprite style, centered, no text, no watermark, top-down RPG object sprite, no ground shadow, wooden reception desk, wide horizontal silhouette, one object only, complete silhouette, transparent background"
+    },
+    {
+      "category": "objects",
+      "name": "board",
+      "requested_size": "1024x1024",
+      "prompt": "cute chibi pixel art, 4-head-tall proportions, big head with expressive face, thick dark outline, soft cel shading, pastel warm palette, 16-bit RPG sprite style, centered, no text, no watermark, top-down RPG object sprite, no ground shadow, cork notice board with blank notes, one object only, complete silhouette, transparent background"
+    },
+    {
+      "category": "objects",
+      "name": "phone",
+      "requested_size": "1024x1024",
+      "prompt": "cute chibi pixel art, 4-head-tall proportions, big head with expressive face, thick dark outline, soft cel shading, pastel warm palette, 16-bit RPG sprite style, centered, no text, no watermark, top-down RPG object sprite, no ground shadow, grey telephone, one object only, complete silhouette, transparent background"
+    },
+    {
+      "category": "objects",
+      "name": "calendar",
+      "requested_size": "1024x1024",
+      "prompt": "cute chibi pixel art, 4-head-tall proportions, big head with expressive face, thick dark outline, soft cel shading, pastel warm palette, 16-bit RPG sprite style, centered, no text, no watermark, top-down RPG object sprite, no ground shadow, wall calendar with red header, blank grid without numbers, one object only, complete silhouette, transparent background"
+    },
+    {
+      "category": "objects",
+      "name": "mapframe",
+      "requested_size": "1024x1024",
+      "prompt": "cute chibi pixel art, 4-head-tall proportions, big head with expressive face, thick dark outline, soft cel shading, pastel warm palette, 16-bit RPG sprite style, centered, no text, no watermark, top-down RPG object sprite, no ground shadow, framed pictorial map without labels, one object only, complete silhouette, transparent background"
+    },
+    {
+      "category": "objects",
+      "name": "flower",
+      "requested_size": "1024x1024",
+      "prompt": "cute chibi pixel art, 4-head-tall proportions, big head with expressive face, thick dark outline, soft cel shading, pastel warm palette, 16-bit RPG sprite style, centered, no text, no watermark, top-down RPG object sprite, no ground shadow, single pink flower, one object only, complete silhouette, transparent background"
+    },
+    {
+      "category": "objects",
+      "name": "stone",
+      "requested_size": "1024x1024",
+      "prompt": "cute chibi pixel art, 4-head-tall proportions, big head with expressive face, thick dark outline, soft cel shading, pastel warm palette, 16-bit RPG sprite style, centered, no text, no watermark, top-down RPG object sprite, no ground shadow, grey stone monument, one object only, complete silhouette, transparent background"
+    },
+    {
+      "category": "objects",
+      "name": "door",
+      "requested_size": "1024x1024",
+      "prompt": "cute chibi pixel art, 4-head-tall proportions, big head with expressive face, thick dark outline, soft cel shading, pastel warm palette, 16-bit RPG sprite style, centered, no text, no watermark, top-down RPG object sprite, no ground shadow, yellow-bordered doormat, flat floor marker, one object only, complete silhouette, transparent background"
+    }
+  ],
+  "conversion": "python tools/prepare_assets.py",
+  "raw_outputs": "raw/ (ignored by Git)",
+  "final_outputs": "assets/characters, assets/tiles, assets/objects"
+}

@@ -26,6 +26,12 @@ python tools/prepare_assets.py --pixel  # 또렷한 도트 느낌
 
 ### OpenAI API로 자동 생성
 
+현재 PNG 에셋은 Codex 내장 이미지 생성 도구로 만들었습니다. 이 방식은
+`OPENAI_API_KEY` 없이도 사용할 수 있습니다. 프롬프트 구성은
+`assets/generation-prompts.json`에 기록합니다. 생성된 원본을 `raw/`의 해당 경로에
+복사한 뒤 `tools/prepare_assets.py`로 변환하는 과정은 같습니다.
+아래 Python 스크립트는 별도로 API를 사용해 생성할 때 쓰는 선택 사항입니다.
+
 `tools/generate_assets.py`는 `gpt-image-1`, high 품질, 투명 배경 PNG로 생성합니다.
 Python 환경에 의존성을 설치하고 `OPENAI_API_KEY`를 환경변수로 설정하세요. 키는 저장소에 넣지 마세요.
 

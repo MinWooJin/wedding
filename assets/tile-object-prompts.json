@@ -1,0 +1,98 @@
+[
+  {
+    "name": "G",
+    "prompt": "cute chibi pixel art, 4-head-tall proportions, big head with expressive face, thick dark outline, soft cel shading, pastel warm palette, 16-bit RPG sprite style, centered, no text, no watermark. Asset type: a SINGLE top-down seamless tileable texture for a cozy wedding RPG, lush green grass. Flat 16-bit pixel art, chunky clusters designed for 32x32 output. Seamless, tileable, uniform lighting, no border, no frame, no perspective, no gradients or vignette. Texture must fill entire square edge to edge with opaque coverage, matching opposite edges for perfect repetition horizontally and vertically. No separate centered object, no text, no watermark. Warm pastel garden palette. Square 1024x1024."
+  },
+  {
+    "name": "W",
+    "prompt": "cute chibi pixel art, 4-head-tall proportions, big head with expressive face, thick dark outline, soft cel shading, pastel warm palette, 16-bit RPG sprite style, centered, no text, no watermark. Asset type: a SINGLE top-down seamless tileable texture for a cozy wedding RPG, grass with tiny pink and yellow flowers. Flat 16-bit pixel art, chunky clusters designed for 32x32 output. Seamless, tileable, uniform lighting, no border, no frame, no perspective, no gradients or vignette. Texture must fill entire square edge to edge with opaque coverage, matching opposite edges for perfect repetition horizontally and vertically. No separate centered object, no text, no watermark. Warm pastel garden palette. Square 1024x1024."
+  },
+  {
+    "name": "P",
+    "prompt": "cute chibi pixel art, 4-head-tall proportions, big head with expressive face, thick dark outline, soft cel shading, pastel warm palette, 16-bit RPG sprite style, centered, no text, no watermark. Asset type: a SINGLE top-down seamless tileable texture for a cozy wedding RPG, warm light brown dirt path. Flat 16-bit pixel art, chunky clusters designed for 32x32 output. Seamless, tileable, uniform lighting, no border, no frame, no perspective, no gradients or vignette. Texture must fill entire square edge to edge with opaque coverage, matching opposite edges for perfect repetition horizontally and vertically. No separate centered object, no text, no watermark. Warm pastel garden palette. Square 1024x1024."
+  },
+  {
+    "name": "H",
+    "prompt": "cute chibi pixel art, 4-head-tall proportions, big head with expressive face, thick dark outline, soft cel shading, pastel warm palette, 16-bit RPG sprite style, centered, no text, no watermark. Asset type: a SINGLE top-down seamless tileable texture for a cozy wedding RPG, dense green hedge foliage. Flat 16-bit pixel art, chunky clusters designed for 32x32 output. Seamless, tileable, uniform lighting, no border, no frame, no perspective, no gradients or vignette. Texture must fill entire square edge to edge with opaque coverage, matching opposite edges for perfect repetition horizontally and vertically. No separate centered object, no text, no watermark. Warm pastel garden palette. Square 1024x1024."
+  },
+  {
+    "name": "F",
+    "prompt": "cute chibi pixel art, 4-head-tall proportions, big head with expressive face, thick dark outline, soft cel shading, pastel warm palette, 16-bit RPG sprite style, centered, no text, no watermark. Asset type: a SINGLE top-down seamless tileable texture for a cozy wedding RPG, wooden picket fence on grass, repeating horizontal fence segment. Flat 16-bit pixel art, chunky clusters designed for 32x32 output. Seamless, tileable, uniform lighting, no border, no frame, no perspective, no gradients or vignette. Texture must fill entire square edge to edge with opaque coverage, matching opposite edges for perfect repetition horizontally and vertically. No separate centered object, no text, no watermark. Warm pastel garden palette. Square 1024x1024."
+  },
+  {
+    "name": "D",
+    "prompt": "cute chibi pixel art, 4-head-tall proportions, big head with expressive face, thick dark outline, soft cel shading, pastel warm palette, 16-bit RPG sprite style, centered, no text, no watermark. Asset type: a SINGLE top-down seamless tileable texture for a cozy wedding RPG, warm wooden plank floor. Flat 16-bit pixel art, chunky clusters designed for 32x32 output. Seamless, tileable, uniform lighting, no border, no frame, no perspective, no gradients or vignette. Texture must fill entire square edge to edge with opaque coverage, matching opposite edges for perfect repetition horizontally and vertically. No separate centered object, no text, no watermark. Warm pastel garden palette. Square 1024x1024."
+  },
+  {
+    "name": "K",
+    "prompt": "cute chibi pixel art, 4-head-tall proportions, big head with expressive face, thick dark outline, soft cel shading, pastel warm palette, 16-bit RPG sprite style, centered, no text, no watermark. Asset type: a SINGLE top-down seamless tileable texture for a cozy wedding RPG, cream wallpaper wall with wooden baseboard, repeating horizontal wall segment. Flat 16-bit pixel art, chunky clusters designed for 32x32 output. Seamless, tileable, uniform lighting, no border, no frame, no perspective, no gradients or vignette. Texture must fill entire square edge to edge with opaque coverage, matching opposite edges for perfect repetition horizontally and vertically. No separate centered object, no text, no watermark. Warm pastel garden palette. Square 1024x1024."
+  },
+  {
+    "name": "R",
+    "prompt": "cute chibi pixel art, 4-head-tall proportions, big head with expressive face, thick dark outline, soft cel shading, pastel warm palette, 16-bit RPG sprite style, centered, no text, no watermark. Asset type: a SINGLE top-down seamless tileable texture for a cozy wedding RPG, muted red carpet with subtle gold flecks, uniform pattern without border. Flat 16-bit pixel art, chunky clusters designed for 32x32 output. Seamless, tileable, uniform lighting, no border, no frame, no perspective, no gradients or vignette. Texture must fill entire square edge to edge with opaque coverage, matching opposite edges for perfect repetition horizontally and vertically. No separate centered object, no text, no watermark. Warm pastel garden palette. Square 1024x1024."
+  },
+  {
+    "name": "S",
+    "prompt": "cute chibi pixel art, 4-head-tall proportions, big head with expressive face, thick dark outline, soft cel shading, pastel warm palette, 16-bit RPG sprite style, centered, no text, no watermark. Asset type: a SINGLE top-down seamless tileable texture for a cozy wedding RPG, grey stone floor. Flat 16-bit pixel art, chunky clusters designed for 32x32 output. Seamless, tileable, uniform lighting, no border, no frame, no perspective, no gradients or vignette. Texture must fill entire square edge to edge with opaque coverage, matching opposite edges for perfect repetition horizontally and vertically. No separate centered object, no text, no watermark. Warm pastel garden palette. Square 1024x1024."
+  },
+  {
+    "name": "arch",
+    "prompt": "cute chibi pixel art, 4-head-tall proportions, big head with expressive face, thick dark outline, soft cel shading, pastel warm palette, 16-bit RPG sprite style, centered, no text, no watermark. Create a SINGLE production game object sprite: flower arch with pink roses and green leaves, wide horizontal arch silhouette, open transparent space under the arch. Top-down RPG object sprite, no ground shadow, slightly overhead cozy 16-bit game view, thick dark outline and simple chunky pixel clusters with soft cel shading. Warm pastel garden wedding palette, complete silhouette centered with transparent padding. No environment, no ground, no glow, no text or watermark, no labels. Genuinely transparent background. Readable at 32x32 pixels (arch 96x64; tree 32x64; bench/desk 64x32). Square image."
+  },
+  {
+    "name": "tree",
+    "prompt": "cute chibi pixel art, 4-head-tall proportions, big head with expressive face, thick dark outline, soft cel shading, pastel warm palette, 16-bit RPG sprite style, centered, no text, no watermark. Create a SINGLE production game object sprite: round green tree with brown trunk, tall vertical silhouette. Top-down RPG object sprite, no ground shadow, slightly overhead cozy 16-bit game view, thick dark outline and simple chunky pixel clusters with soft cel shading. Warm pastel garden wedding palette, complete silhouette centered with transparent padding. No environment, no ground, no glow, no text or watermark, no labels. Genuinely transparent background. Readable at 32x32 pixels (arch 96x64; tree 32x64; bench/desk 64x32). Square image."
+  },
+  {
+    "name": "sign",
+    "prompt": "cute chibi pixel art, 4-head-tall proportions, big head with expressive face, thick dark outline, soft cel shading, pastel warm palette, 16-bit RPG sprite style, centered, no text, no watermark. Create a SINGLE production game object sprite: wooden signpost, blank sign. Top-down RPG object sprite, no ground shadow, slightly overhead cozy 16-bit game view, thick dark outline and simple chunky pixel clusters with soft cel shading. Warm pastel garden wedding palette, complete silhouette centered with transparent padding. No environment, no ground, no glow, no text or watermark, no labels. Genuinely transparent background. Readable at 32x32 pixels (arch 96x64; tree 32x64; bench/desk 64x32). Square image."
+  },
+  {
+    "name": "mailbox",
+    "prompt": "cute chibi pixel art, 4-head-tall proportions, big head with expressive face, thick dark outline, soft cel shading, pastel warm palette, 16-bit RPG sprite style, centered, no text, no watermark. Create a SINGLE production game object sprite: red mailbox on a post. Top-down RPG object sprite, no ground shadow, slightly overhead cozy 16-bit game view, thick dark outline and simple chunky pixel clusters with soft cel shading. Warm pastel garden wedding palette, complete silhouette centered with transparent padding. No environment, no ground, no glow, no text or watermark, no labels. Genuinely transparent background. Readable at 32x32 pixels (arch 96x64; tree 32x64; bench/desk 64x32). Square image."
+  },
+  {
+    "name": "frame",
+    "prompt": "cute chibi pixel art, 4-head-tall proportions, big head with expressive face, thick dark outline, soft cel shading, pastel warm palette, 16-bit RPG sprite style, centered, no text, no watermark. Create a SINGLE production game object sprite: small wooden picture frame, empty transparent opening. Top-down RPG object sprite, no ground shadow, slightly overhead cozy 16-bit game view, thick dark outline and simple chunky pixel clusters with soft cel shading. Warm pastel garden wedding palette, complete silhouette centered with transparent padding. No environment, no ground, no glow, no text or watermark, no labels. Genuinely transparent background. Readable at 32x32 pixels (arch 96x64; tree 32x64; bench/desk 64x32). Square image."
+  },
+  {
+    "name": "bench",
+    "prompt": "cute chibi pixel art, 4-head-tall proportions, big head with expressive face, thick dark outline, soft cel shading, pastel warm palette, 16-bit RPG sprite style, centered, no text, no watermark. Create a SINGLE production game object sprite: wooden park bench, wide horizontal silhouette. Top-down RPG object sprite, no ground shadow, slightly overhead cozy 16-bit game view, thick dark outline and simple chunky pixel clusters with soft cel shading. Warm pastel garden wedding palette, complete silhouette centered with transparent padding. No environment, no ground, no glow, no text or watermark, no labels. Genuinely transparent background. Readable at 32x32 pixels (arch 96x64; tree 32x64; bench/desk 64x32). Square image."
+  },
+  {
+    "name": "chest",
+    "prompt": "cute chibi pixel art, 4-head-tall proportions, big head with expressive face, thick dark outline, soft cel shading, pastel warm palette, 16-bit RPG sprite style, centered, no text, no watermark. Create a SINGLE production game object sprite: wooden treasure chest with gold lock. Top-down RPG object sprite, no ground shadow, slightly overhead cozy 16-bit game view, thick dark outline and simple chunky pixel clusters with soft cel shading. Warm pastel garden wedding palette, complete silhouette centered with transparent padding. No environment, no ground, no glow, no text or watermark, no labels. Genuinely transparent background. Readable at 32x32 pixels (arch 96x64; tree 32x64; bench/desk 64x32). Square image."
+  },
+  {
+    "name": "desk",
+    "prompt": "cute chibi pixel art, 4-head-tall proportions, big head with expressive face, thick dark outline, soft cel shading, pastel warm palette, 16-bit RPG sprite style, centered, no text, no watermark. Create a SINGLE production game object sprite: wooden reception desk, wide horizontal silhouette. Top-down RPG object sprite, no ground shadow, slightly overhead cozy 16-bit game view, thick dark outline and simple chunky pixel clusters with soft cel shading. Warm pastel garden wedding palette, complete silhouette centered with transparent padding. No environment, no ground, no glow, no text or watermark, no labels. Genuinely transparent background. Readable at 32x32 pixels (arch 96x64; tree 32x64; bench/desk 64x32). Square image."
+  },
+  {
+    "name": "board",
+    "prompt": "cute chibi pixel art, 4-head-tall proportions, big head with expressive face, thick dark outline, soft cel shading, pastel warm palette, 16-bit RPG sprite style, centered, no text, no watermark. Create a SINGLE production game object sprite: cork notice board with blank notes. Top-down RPG object sprite, no ground shadow, slightly overhead cozy 16-bit game view, thick dark outline and simple chunky pixel clusters with soft cel shading. Warm pastel garden wedding palette, complete silhouette centered with transparent padding. No environment, no ground, no glow, no text or watermark, no labels. Genuinely transparent background. Readable at 32x32 pixels (arch 96x64; tree 32x64; bench/desk 64x32). Square image."
+  },
+  {
+    "name": "phone",
+    "prompt": "cute chibi pixel art, 4-head-tall proportions, big head with expressive face, thick dark outline, soft cel shading, pastel warm palette, 16-bit RPG sprite style, centered, no text, no watermark. Create a SINGLE production game object sprite: grey telephone. Top-down RPG object sprite, no ground shadow, slightly overhead cozy 16-bit game view, thick dark outline and simple chunky pixel clusters with soft cel shading. Warm pastel garden wedding palette, complete silhouette centered with transparent padding. No environment, no ground, no glow, no text or watermark, no labels. Genuinely transparent background. Readable at 32x32 pixels (arch 96x64; tree 32x64; bench/desk 64x32). Square image."
+  },
+  {
+    "name": "calendar",
+    "prompt": "cute chibi pixel art, 4-head-tall proportions, big head with expressive face, thick dark outline, soft cel shading, pastel warm palette, 16-bit RPG sprite style, centered, no text, no watermark. Create a SINGLE production game object sprite: wall calendar with red header and blank grid without numbers. Top-down RPG object sprite, no ground shadow, slightly overhead cozy 16-bit game view, thick dark outline and simple chunky pixel clusters with soft cel shading. Warm pastel garden wedding palette, complete silhouette centered with transparent padding. No environment, no ground, no glow, no text or watermark, no labels. Genuinely transparent background. Readable at 32x32 pixels (arch 96x64; tree 32x64; bench/desk 64x32). Square image."
+  },
+  {
+    "name": "mapframe",
+    "prompt": "cute chibi pixel art, 4-head-tall proportions, big head with expressive face, thick dark outline, soft cel shading, pastel warm palette, 16-bit RPG sprite style, centered, no text, no watermark. Create a SINGLE production game object sprite: framed pictorial map without labels. Top-down RPG object sprite, no ground shadow, slightly overhead cozy 16-bit game view, thick dark outline and simple chunky pixel clusters with soft cel shading. Warm pastel garden wedding palette, complete silhouette centered with transparent padding. No environment, no ground, no glow, no text or watermark, no labels. Genuinely transparent background. Readable at 32x32 pixels (arch 96x64; tree 32x64; bench/desk 64x32). Square image."
+  },
+  {
+    "name": "flower",
+    "prompt": "cute chibi pixel art, 4-head-tall proportions, big head with expressive face, thick dark outline, soft cel shading, pastel warm palette, 16-bit RPG sprite style, centered, no text, no watermark. Create a SINGLE production game object sprite: single pink flower with short green stem and leaves. Top-down RPG object sprite, no ground shadow, slightly overhead cozy 16-bit game view, thick dark outline and simple chunky pixel clusters with soft cel shading. Warm pastel garden wedding palette, complete silhouette centered with transparent padding. No environment, no ground, no glow, no text or watermark, no labels. Genuinely transparent background. Readable at 32x32 pixels (arch 96x64; tree 32x64; bench/desk 64x32). Square image."
+  },
+  {
+    "name": "stone",
+    "prompt": "cute chibi pixel art, 4-head-tall proportions, big head with expressive face, thick dark outline, soft cel shading, pastel warm palette, 16-bit RPG sprite style, centered, no text, no watermark. Create a SINGLE production game object sprite: grey stone monument. Top-down RPG object sprite, no ground shadow, slightly overhead cozy 16-bit game view, thick dark outline and simple chunky pixel clusters with soft cel shading. Warm pastel garden wedding palette, complete silhouette centered with transparent padding. No environment, no ground, no glow, no text or watermark, no labels. Genuinely transparent background. Readable at 32x32 pixels (arch 96x64; tree 32x64; bench/desk 64x32). Square image."
+  },
+  {
+    "name": "door",
+    "prompt": "cute chibi pixel art, 4-head-tall proportions, big head with expressive face, thick dark outline, soft cel shading, pastel warm palette, 16-bit RPG sprite style, centered, no text, no watermark. Create a SINGLE production game object sprite: yellow-bordered doormat, flat floor marker. Top-down RPG object sprite, no ground shadow, slightly overhead cozy 16-bit game view, thick dark outline and simple chunky pixel clusters with soft cel shading. Warm pastel garden wedding palette, complete silhouette centered with transparent padding. No environment, no ground, no glow, no text or watermark, no labels. Genuinely transparent background. Readable at 32x32 pixels (arch 96x64; tree 32x64; bench/desk 64x32). Square image."
+  }
+]
