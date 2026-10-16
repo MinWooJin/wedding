@@ -228,5 +228,7 @@
   ],
   "conversion": "python tools/prepare_assets.py",
   "raw_outputs": "raw/ (ignored by Git)",
-  "final_outputs": "assets/characters, assets/tiles, assets/objects"
+  "final_outputs": "assets/characters, assets/tiles, assets/objects",
+  "couple_face_revision": "assets/couple-face-prompts.json",
+  "character_reference_scope": "preset-0 is a style reference for guests; groom and bride use their own facial designs from couple-face-prompts.json."
 }
