@@ -82,6 +82,30 @@ centered, plain white background, no shadow on ground, no text, 16-bit game spri
 
 ## 타일 · 오브젝트 프롬프트
 
+### 2차 꽃밭·웨딩 장식 에셋
+
+`raw/tiles/wedding/flower-bed-pink.png`, `flower-bed-white.png`, `white-gravel.png`,
+`hedge-rose.png`는 `tools/prepare_assets.py`의 `WEDDING_TILES`를 통해
+각각 `assets/tiles/X1.png`~`X4.png`로 변환합니다. 네 타일 모두 32×32 불투명 RGBA입니다.
+`X4`는 맵 연결 시 막힘 타일로 다룹니다.
+
+새 오브젝트는 `chair` 32×48, `bush` 64×64, `lantern` 32×64,
+`petal-pile` 32×32, `welcome-board` 64×64입니다. 원본은 `raw/objects/`,
+결과는 `assets/objects/`이며 투명 배경·비율 유지·아래 가운데 정렬을 사용합니다.
+
+```powershell
+python tools/prepare_assets.py --skip-existing
+```
+
+`--skip-existing`은 이미 있는 최종 PNG를 다시 축소하지 않고 manifest에는 계속 포함합니다.
+원본이 없는 기존 에셋도 이 옵션으로 유지할 수 있습니다. 기존 PNG를 재생성하려면
+해당 최종 파일을 별도로 보관해 제거한 뒤 실행하거나, 전체 원본을 갖춘 상태에서 옵션을 생략하세요.
+기존 캐릭터 크기 48×72와 조정된 오브젝트 크기는 유지합니다.
+
+실제 생성 프롬프트는 `assets/round2-prompts.json`, 미리보기는 `assets/round2-preview.png`입니다.
+manifest 등록과 JS 연결은 별도입니다. 새 ID 허용 목록, 두 글자 `X1`~`X4`의 맵 표현,
+의자 높이 48px 보존, `petal-pile`의 비충돌 바닥 처리는 클로드의 연결 작업에서 반영해야 합니다.
+
 ### 추가 웨딩 타일 라이브러리
 
 `assets/tiles/wedding/`에 버진로드 기본형·꽃잎형·입구, 장미 꽃잎 잔디,

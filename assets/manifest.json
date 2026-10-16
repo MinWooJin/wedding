@@ -14,21 +14,25 @@
     "bride"
   ],
   "tiles": [
+    "G",
+    "W",
+    "P",
+    "H",
+    "F",
+    "D",
+    "K",
+    "R",
+    "S",
     "A",
     "B",
     "C",
-    "D",
     "E",
-    "F",
-    "G",
-    "H",
-    "K",
-    "L",
     "M",
-    "P",
-    "R",
-    "S",
-    "W"
+    "L",
+    "X1",
+    "X2",
+    "X3",
+    "X4"
   ],
   "objects": [
     "arch",
@@ -43,9 +47,14 @@
     "phone",
     "calendar",
     "mapframe",
-    "flower",
     "stone",
-    "door"
+    "flower",
+    "door",
+    "chair",
+    "bush",
+    "lantern",
+    "petal-pile",
+    "welcome-board"
   ],
   "maps": []
 }

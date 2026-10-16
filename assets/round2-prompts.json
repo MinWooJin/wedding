@@ -1,0 +1,137 @@
+{
+  "generation_mode": "Codex built-in image generation; no OPENAI_API_KEY",
+  "date": "2026-10-16",
+  "scope": "Round 2 decor assets; manifest registration only, JS integration left to Claude",
+  "integration": {
+    "solid_tile": "X4",
+    "non_colliding_floor_object": "petal-pile",
+    "chair_size": [
+      32,
+      48
+    ],
+    "notes": [
+      "X1-X4 are two-character manifest IDs; current string maps use one character per cell.",
+      "Add new tile/object IDs to the JS loader allowlists before use.",
+      "Preserve chair height 48 instead of rounding it to 64 pixels."
+    ]
+  },
+  "assets": [
+    {
+      "group": "tiles",
+      "id": "X1",
+      "name": "flower-bed-pink",
+      "size": [
+        32,
+        32
+      ],
+      "detail": "Dense lush garden wedding flower bed consisting overwhelmingly of soft pink and ivory white rose blossoms. Fill almost the entire tile with blossoms, with only small dark sage leaves between. Almost no exposed grass. No paths, no pots, no border. Flat top-down seamless pattern, equal flower density at every edge.",
+      "prompt": "cute chibi pixel art, 4-head-tall proportions, big head with expressive face, thick dark outline, soft cel shading, pastel warm palette, 16-bit RPG sprite style, centered, no text, no watermark. Asset: ONE production-ready square opaque game floor/hedge TILE, no characters. Dense lush garden wedding flower bed consisting overwhelmingly of soft pink and ivory white rose blossoms. Fill almost the entire tile with blossoms, with only small dark sage leaves between. Almost no exposed grass. No paths, no pots, no border. Flat top-down seamless pattern, equal flower density at every edge. Use simple chunky low-resolution pixel clusters with restrained shading that remain clear at final 32x32 pixels. Seamless, tileable, uniform lighting, match opposite edges horizontally and vertically. FULLY OPAQUE color fills every edge; no margins, no transparency, no perspective, no cast shadow, no vignette, no text, no watermark. Sparse color palette, no photorealistic micro detail.",
+      "raw": "raw/tiles/wedding/flower-bed-pink.png",
+      "output": "assets/tiles/X1.png"
+    },
+    {
+      "group": "tiles",
+      "id": "X2",
+      "name": "flower-bed-white",
+      "size": [
+        32,
+        32
+      ],
+      "detail": "Dense wedding flower bed consisting overwhelmingly of ivory white and soft pale yellow flowers, a few sage green leaves between blossoms. Almost no exposed grass. Flat top-down seamless pattern filling all edges with equal flower density. No paths, no pots, no border.",
+      "prompt": "cute chibi pixel art, 4-head-tall proportions, big head with expressive face, thick dark outline, soft cel shading, pastel warm palette, 16-bit RPG sprite style, centered, no text, no watermark. Asset: ONE production-ready square opaque game floor/hedge TILE, no characters. Dense wedding flower bed consisting overwhelmingly of ivory white and soft pale yellow flowers, a few sage green leaves between blossoms. Almost no exposed grass. Flat top-down seamless pattern filling all edges with equal flower density. No paths, no pots, no border. Use simple chunky low-resolution pixel clusters with restrained shading that remain clear at final 32x32 pixels. Seamless, tileable, uniform lighting, match opposite edges horizontally and vertically. FULLY OPAQUE color fills every edge; no margins, no transparency, no perspective, no cast shadow, no vignette, no text, no watermark. Sparse color palette, no photorealistic micro detail.",
+      "raw": "raw/tiles/wedding/flower-bed-white.png",
+      "output": "assets/tiles/X2.png"
+    },
+    {
+      "group": "tiles",
+      "id": "X3",
+      "name": "white-gravel",
+      "size": [
+        32,
+        32
+      ],
+      "detail": "Bright warm white gravel wedding garden walkway, ivory and very pale grey rounded small stones covering the whole surface. More visibly pebbled than marble but restrained contrast. Flat top-down seamless ground texture, uniform scale, no grass, no flowers, no border, no separate objects.",
+      "prompt": "cute chibi pixel art, 4-head-tall proportions, big head with expressive face, thick dark outline, soft cel shading, pastel warm palette, 16-bit RPG sprite style, centered, no text, no watermark. Asset: ONE production-ready square opaque game floor/hedge TILE, no characters. Bright warm white gravel wedding garden walkway, ivory and very pale grey rounded small stones covering the whole surface. More visibly pebbled than marble but restrained contrast. Flat top-down seamless ground texture, uniform scale, no grass, no flowers, no border, no separate objects. Use simple chunky low-resolution pixel clusters with restrained shading that remain clear at final 32x32 pixels. Seamless, tileable, uniform lighting, match opposite edges horizontally and vertically. FULLY OPAQUE color fills every edge; no margins, no transparency, no perspective, no cast shadow, no vignette, no text, no watermark. Sparse color palette, no photorealistic micro detail.",
+      "raw": "raw/tiles/wedding/white-gravel.png",
+      "output": "assets/tiles/X3.png"
+    },
+    {
+      "group": "tiles",
+      "id": "X4",
+      "name": "hedge-rose",
+      "size": [
+        32,
+        32
+      ],
+      "detail": "Dense dark sage and warm forest-green trimmed hedge foliage with clearly visible soft pink rose blossoms. This is an impassable garden boundary hedge surface, similar green tone to a cozy RPG hedge, not lawn. Flat overhead seamless foliage texture filling the entire tile. No soil, no pots, no isolated shrub, no border.",
+      "prompt": "cute chibi pixel art, 4-head-tall proportions, big head with expressive face, thick dark outline, soft cel shading, pastel warm palette, 16-bit RPG sprite style, centered, no text, no watermark. Asset: ONE production-ready square opaque game floor/hedge TILE, no characters. Dense dark sage and warm forest-green trimmed hedge foliage with clearly visible soft pink rose blossoms. This is an impassable garden boundary hedge surface, similar green tone to a cozy RPG hedge, not lawn. Flat overhead seamless foliage texture filling the entire tile. No soil, no pots, no isolated shrub, no border. Use simple chunky low-resolution pixel clusters with restrained shading that remain clear at final 32x32 pixels. Seamless, tileable, uniform lighting, match opposite edges horizontally and vertically. FULLY OPAQUE color fills every edge; no margins, no transparency, no perspective, no cast shadow, no vignette, no text, no watermark. Sparse color palette, no photorealistic micro detail.",
+      "raw": "raw/tiles/wedding/hedge-rose.png",
+      "output": "assets/tiles/X4.png"
+    },
+    {
+      "group": "objects",
+      "id": "chair",
+      "name": "chair",
+      "size": [
+        32,
+        48
+      ],
+      "detail": "ONE elegant white folding wedding guest chair, FRONT VIEW, white wooden slatted backrest and visible seat, four slim sturdy legs, folded-chair construction, no bow or flowers obscuring the silhouette. Tall narrow complete chair, no person. Intended for rows beside an aisle.",
+      "prompt": "cute chibi pixel art, 4-head-tall proportions, big head with expressive face, thick dark outline, soft cel shading, pastel warm palette, 16-bit RPG sprite style, centered, no text, no watermark. Asset: ONE production-ready game OBJECT SPRITE, no character. ONE elegant white folding wedding guest chair, FRONT VIEW, white wooden slatted backrest and visible seat, four slim sturdy legs, folded-chair construction, no bow or flowers obscuring the silhouette. Tall narrow complete chair, no person. Intended for rows beside an aisle. Intended final dimensions 32x48 pixels. Clean thick dark pixel outline, soft cel shading, warm pastel 16-bit garden wedding RPG style, clear chunky pixel clusters. Complete silhouette centered with transparent padding, full object visible. Genuinely transparent background, no ground shadow, no scene, no background or floor, no watermark or text.",
+      "raw": "raw/objects/chair.png",
+      "output": "assets/objects/chair.png"
+    },
+    {
+      "group": "objects",
+      "id": "bush",
+      "name": "bush",
+      "size": [
+        64,
+        64
+      ],
+      "detail": "ONE round voluminous low flowering bush with abundant blush pink blossoms and sage green leaves, broad rounded dome silhouette. Slightly overhead RPG view, dense flowers reduce visible green, no pot, no ground patch, no scattered duplicate bushes.",
+      "prompt": "cute chibi pixel art, 4-head-tall proportions, big head with expressive face, thick dark outline, soft cel shading, pastel warm palette, 16-bit RPG sprite style, centered, no text, no watermark. Asset: ONE production-ready game OBJECT SPRITE, no character. ONE round voluminous low flowering bush with abundant blush pink blossoms and sage green leaves, broad rounded dome silhouette. Slightly overhead RPG view, dense flowers reduce visible green, no pot, no ground patch, no scattered duplicate bushes. Intended final dimensions 64x64 pixels. Clean thick dark pixel outline, soft cel shading, warm pastel 16-bit garden wedding RPG style, clear chunky pixel clusters. Complete silhouette centered with transparent padding, full object visible. Genuinely transparent background, no ground shadow, no scene, no background or floor, no watermark or text.",
+      "raw": "raw/objects/bush.png",
+      "output": "assets/objects/bush.png"
+    },
+    {
+      "group": "objects",
+      "id": "lantern",
+      "name": "lantern",
+      "size": [
+        32,
+        64
+      ],
+      "detail": "ONE tall slender wedding lantern post with a cream lantern, small warm pale yellow light inside, elegant narrow metal pole, blush satin ribbon tied beneath the lantern, tiny stable base. Slightly overhead RPG view. Complete top and bottom, no glow halo outside lantern, no ground.",
+      "prompt": "cute chibi pixel art, 4-head-tall proportions, big head with expressive face, thick dark outline, soft cel shading, pastel warm palette, 16-bit RPG sprite style, centered, no text, no watermark. Asset: ONE production-ready game OBJECT SPRITE, no character. ONE tall slender wedding lantern post with a cream lantern, small warm pale yellow light inside, elegant narrow metal pole, blush satin ribbon tied beneath the lantern, tiny stable base. Slightly overhead RPG view. Complete top and bottom, no glow halo outside lantern, no ground. Intended final dimensions 32x64 pixels. Clean thick dark pixel outline, soft cel shading, warm pastel 16-bit garden wedding RPG style, clear chunky pixel clusters. Complete silhouette centered with transparent padding, full object visible. Genuinely transparent background, no ground shadow, no scene, no background or floor, no watermark or text.",
+      "raw": "raw/objects/lantern.png",
+      "output": "assets/objects/lantern.png"
+    },
+    {
+      "group": "objects",
+      "id": "petal-pile",
+      "name": "petal-pile",
+      "size": [
+        32,
+        32
+      ],
+      "detail": "ONE sparse loose scatter of blush pink and ivory rose petals lying flat in a roughly round patch, top-down view. Separate clearly readable petals with transparent empty spaces between, no ground, no stems, no full flowers, no bowl, no sack. Small non-colliding floor decoration.",
+      "prompt": "cute chibi pixel art, 4-head-tall proportions, big head with expressive face, thick dark outline, soft cel shading, pastel warm palette, 16-bit RPG sprite style, centered, no text, no watermark. Asset: ONE production-ready game OBJECT SPRITE, no character. ONE sparse loose scatter of blush pink and ivory rose petals lying flat in a roughly round patch, top-down view. Separate clearly readable petals with transparent empty spaces between, no ground, no stems, no full flowers, no bowl, no sack. Small non-colliding floor decoration. Intended final dimensions 32x32 pixels. Clean thick dark pixel outline, soft cel shading, warm pastel 16-bit garden wedding RPG style, clear chunky pixel clusters. Complete silhouette centered with transparent padding, full object visible. Genuinely transparent background, no ground shadow, no scene, no background or floor, no watermark or text.",
+      "raw": "raw/objects/petal-pile.png",
+      "output": "assets/objects/petal-pile.png"
+    },
+    {
+      "group": "objects",
+      "id": "welcome-board",
+      "name": "welcome-board",
+      "size": [
+        64,
+        64
+      ],
+      "detail": "ONE garden wedding welcome easel board, natural light wood three-legged easel, cream BLANK signboard with blush roses and sage leaves decorating two corners and a tiny ribbon. Slightly overhead front RPG view. Absolutely NO lettering, NO text, NO symbols imitating handwriting, NO scribbles. Entire easel and legs visible.",
+      "prompt": "cute chibi pixel art, 4-head-tall proportions, big head with expressive face, thick dark outline, soft cel shading, pastel warm palette, 16-bit RPG sprite style, centered, no text, no watermark. Asset: ONE production-ready game OBJECT SPRITE, no character. ONE garden wedding welcome easel board, natural light wood three-legged easel, cream BLANK signboard with blush roses and sage leaves decorating two corners and a tiny ribbon. Slightly overhead front RPG view. Absolutely NO lettering, NO text, NO symbols imitating handwriting, NO scribbles. Entire easel and legs visible. Intended final dimensions 64x64 pixels. Clean thick dark pixel outline, soft cel shading, warm pastel 16-bit garden wedding RPG style, clear chunky pixel clusters. Complete silhouette centered with transparent padding, full object visible. Genuinely transparent background, no ground shadow, no scene, no background or floor, no watermark or text.",
+      "raw": "raw/objects/welcome-board.png",
+      "output": "assets/objects/welcome-board.png"
+    }
+  ]
+}

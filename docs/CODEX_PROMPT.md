@@ -1,5 +1,8 @@
 # 에셋 작업 인수인계 프롬프트 (Codex / Claude)
 
+> 앞부분은 1차 인수인계 기록이다. 현재 크기·등록 상태·후속 연결 사항은 문서 마지막의
+> **2차 에셋 작업 기록**을 우선한다. 현재 캐릭터 규격은 48×72이고 기존 웨딩 6종은 연결되어 있다.
+
 2026-10-16 작업 결과를 반영한 최신 프롬프트다. 예전의 “API 키를 설정하고 전체 에셋을
 처음부터 생성”하는 지시는 완료된 작업이며 현재 작업 지시로 사용하지 않는다.
 
@@ -107,3 +110,53 @@ TILES/WEDDING_TILES/OBJECT_SIZES에 추가한 뒤 실행). js/ 는 수정하지 
 
 변환 후 assets/manifest.json에 자동 등록되는지 확인하고, 결과 PNG 크기를 출력해 보고해라.
 ```
+
+## 2차 에셋 작업 기록 (2026-10-16, 완료)
+
+내장 이미지 생성 도구로 요청한 9종을 생성하고 최종 PNG 및 런타임 manifest에 등록했다.
+JS·CSS·HTML은 이 작업에서 수정하지 않았다. **새 9종의 맵 배치와 로더 연결은 클로드 작업으로 남아 있다.**
+
+| ID / 이름 | 원본 | 최종 파일 | 크기 / 배경 |
+|---|---|---|---|
+| X1 | raw/tiles/wedding/flower-bed-pink.png | assets/tiles/X1.png | 32×32 RGBA, 불투명 |
+| X2 | raw/tiles/wedding/flower-bed-white.png | assets/tiles/X2.png | 32×32 RGBA, 불투명 |
+| X3 | raw/tiles/wedding/white-gravel.png | assets/tiles/X3.png | 32×32 RGBA, 불투명 |
+| X4 | raw/tiles/wedding/hedge-rose.png | assets/tiles/X4.png | 32×32 RGBA, 불투명 |
+| chair | raw/objects/chair.png | assets/objects/chair.png | 32×48 RGBA, 투명 |
+| bush | raw/objects/bush.png | assets/objects/bush.png | 64×64 RGBA, 투명 |
+| lantern | raw/objects/lantern.png | assets/objects/lantern.png | 32×64 RGBA, 투명 |
+| petal-pile | raw/objects/petal-pile.png | assets/objects/petal-pile.png | 32×32 RGBA, 투명 |
+| welcome-board | raw/objects/welcome-board.png | assets/objects/welcome-board.png | 64×64 RGBA, 투명 |
+
+- 정확한 생성 프롬프트·출력 경로·연결 메모: `assets/round2-prompts.json`.
+- 반복 타일과 오브젝트 비교 미리보기: `assets/round2-preview.png`.
+- `tools/prepare_assets.py`의 `WEDDING_TILES`에 X1~X4, `OBJECT_SIZES`에 새 오브젝트 5종을 추가했다.
+- `--skip-existing` 옵션을 추가했다. 기존 최종 PNG를 재축소하지 않고 manifest에는 계속 등록한다.
+  현재 권장 명령은 `python tools/prepare_assets.py --skip-existing`이다.
+  원본이 없는 기존 PNG도 유지되므로 새 체크아웃에서 이 옵션으로 등록 목록을 재생성할 수 있다.
+  원본 수정 후 재변환하려면 해당 최종 PNG를 별도 보관해 제거한 뒤 실행하거나,
+  전체 원본이 있을 때 옵션 없이 실행한다. 옵션 없이 실행하면 기존 PNG도 다시 변환된다.
+- 새 오브젝트는 축소 후 사라진 미세 알파 여백을 다시 잘라 실제 보이는 픽셀 기준으로
+  아래 가운데 정렬한다. 이 처리를 `process_object()`로 분리했다.
+- 기존 42종 PNG는 변환 전후 SHA-256이 동일하다. 캐릭터 48×72와 수정된 신랑·신부 얼굴을 보존했다.
+- 현재 런타임 manifest는 캐릭터 12종 / 타일 19종 / 오브젝트 20종, 총 51종이다.
+  PNG 크기·RGBA·타일 불투명도·오브젝트 투명도 및 정렬·새 ID 9개 등록 검증을 통과했다.
+- 앞부분의 “캐릭터 64×96”, “기존 웨딩 6종 미연결”은 1차 당시 기록이다.
+  현재 캐릭터는 48×72이며 기존 A/B/C/E/M/L은 이미 JS 허용 목록과 런타임 manifest에 있다.
+  `assets/tiles/wedding/manifest.json`의 등록 상태는 초기 라이브러리 기록이므로 현재 런타임 판단에 쓰지 않는다.
+
+### 클로드가 연결할 때 확인할 점
+
+1. `js/assets.js`의 `TILE_IDS`와 `OBJECT_IDS`에 새 9종은 아직 없다.
+   manifest에 적혀 있어도 이 허용 목록을 통과하지 못하면 로드되지 않는다.
+2. X1~X4는 요청대로 두 글자 ID로 저장했다. 현재 `js/world/tilemap.js`는 문자열의
+   한 글자를 한 칸으로 읽으므로, 맵 문자열에 `X1`을 그대로 넣으면 두 칸으로 해석된다.
+   맵 표현을 토큰 배열로 확장하거나, 한 글자 맵 코드와 X1~X4 에셋 키를 매핑해야 한다.
+   기존 `X`는 맵 밖/막힘 타일이므로 재사용하지 않는다.
+3. `X4` 장미 산울타리는 막힘 타일로 연결한다. 표시용 키와 충돌용 키가 다르면 둘을 함께 매핑한다.
+4. 현재 오브젝트 로더는 높이를 32의 배수로 반올림한다. 의자 48px는 그대로 두면 64px로 늘어나므로
+   로더에서 원본 32×48을 보존하고 배치/충돌 영역은 따로 계산한다.
+5. `petal-pile`은 비충돌 바닥 장식이다. 배치할 때 `solid: false`, `floor: true`로 처리한다.
+6. 환영 안내판에는 실제 글자를 그리지 않았다. 기존 폴백·클릭 상호작용·NPC 자리·출입 동선을 확인하며 배치한다.
+7. 신규 9종은 `tools/prepare_assets.py`가 담당한다. `tools/prepare_wedding_tiles.py`는
+   이전 별도 라이브러리 6종만 담당하므로 이번 파일의 변환 명령으로 사용하지 않는다.

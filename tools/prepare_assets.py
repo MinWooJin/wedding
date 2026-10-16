@@ -5,6 +5,7 @@ AI로 생성한 원본 이미지를 게임 규격 PNG로 변환하고 assets/man
   pip install pillow
   python tools/prepare_assets.py            # raw/ → assets/
   python tools/prepare_assets.py --pixel    # 결과를 더 또렷한 도트 느낌으로(인접 보간)
+  python tools/prepare_assets.py --skip-existing  # 기존 최종 PNG 유지, 새 파일만 변환
 
 입력 폴더 구조(raw/):
   raw/characters/preset-0.png ... preset-9.png, groom.png, bride.png   정면 전신 1장(배경은 단색 또는 투명)
@@ -51,7 +52,20 @@ OBJECT_SIZES = {  # 오브젝트별 원본 비율과 요청 규격. 의자는 �
 MAP_SIZES = {"hub": (352, 1024), "info": (352, 256), "guestbook": (352, 384), "gifts": (352, 256)}
 
 PIXEL = "--pixel" in sys.argv
+SKIP_EXISTING = "--skip-existing" in sys.argv
 RESAMPLE_DOWN = Image.Resampling.BOX if PIXEL else Image.Resampling.LANCZOS
+
+
+def keep_existing(path: Path) -> bool:
+    """기존 최종 PNG를 보존하면서 manifest에는 계속 등록한다."""
+    if not SKIP_EXISTING or not path.exists():
+        return False
+    with Image.open(path) as image:
+        if image.format != "PNG":
+            raise ValueError(f"PNG가 아닙니다: {path}")
+        image.verify()
+    print("keep", path.relative_to(OUT))
+    return True
 
 
 def remove_background(img: Image.Image, tol: int = 40) -> Image.Image:
@@ -95,12 +109,25 @@ def process_character(src: Path, name: str) -> Image.Image:
     return fit_bottom_center(trim(remove_background(img)), CHAR_W, CHAR_H)
 
 
+def process_object(src: Path, w: int, h: int) -> Image.Image:
+    """축소 시 사라지는 미세 알파 여백까지 제거하고 실제 픽셀을 아래 가운데 정렬."""
+    with Image.open(src) as source:
+        fitted = fit_bottom_center(trim(remove_background(source)), w, h)
+    visible = trim(fitted)
+    canvas = Image.new("RGBA", (w, h), (0, 0, 0, 0))
+    canvas.alpha_composite(visible, ((w - visible.width) // 2, h - visible.height))
+    return canvas
+
+
 def main():
     manifest = {"characters": [], "tiles": [], "objects": [], "maps": []}
     for sub in ["characters", "tiles", "objects", "maps"]:
         (OUT / sub).mkdir(parents=True, exist_ok=True)
 
     for name in CHARACTERS:
+        if keep_existing(OUT / "characters" / f"{name}.png"):
+            manifest["characters"].append(name)
+            continue
         src = RAW / "characters" / f"{name}-sheet.png"
         if not src.exists():
             src = RAW / "characters" / f"{name}.png"
@@ -111,6 +138,9 @@ def main():
         print("character", name)
 
     for tid in TILES:
+        if keep_existing(OUT / "tiles" / f"{tid}.png"):
+            manifest["tiles"].append(tid)
+            continue
         src = RAW / "tiles" / f"{tid}.png"
         if not src.exists():
             continue
@@ -119,6 +149,9 @@ def main():
         print("tile", tid)
 
     for tid, name in WEDDING_TILES.items():
+        if keep_existing(OUT / "tiles" / f"{tid}.png"):
+            manifest["tiles"].append(tid)
+            continue
         src = RAW / "tiles" / "wedding" / f"{name}.png"
         if not src.exists():
             continue
@@ -127,14 +160,20 @@ def main():
         print("tile", tid, name)
 
     for oid, (w, h) in OBJECT_SIZES.items():
+        if keep_existing(OUT / "objects" / f"{oid}.png"):
+            manifest["objects"].append(oid)
+            continue
         src = RAW / "objects" / f"{oid}.png"
         if not src.exists():
             continue
-        fit_bottom_center(trim(remove_background(Image.open(src))), w, h).save(OUT / "objects" / f"{oid}.png")
+        process_object(src, w, h).save(OUT / "objects" / f"{oid}.png")
         manifest["objects"].append(oid)
         print("object", oid, f"{w}x{h}")
 
     for sid, (w, h) in MAP_SIZES.items():
+        if keep_existing(OUT / "maps" / f"{sid}.png"):
+            manifest["maps"].append(sid)
+            continue
         src = RAW / "maps" / f"{sid}.png"
         if not src.exists():
             continue
