@@ -1,5 +1,5 @@
 import { PAL } from './palette.js';
-import { parseSprite, mirrorRows } from './raster.js';
+import { parseSprite, mirrorRows, scaleSprite } from './raster.js';
 
 const ARCH_HALF = [ // 24×32 왼쪽 절반
   '...........ooooooooooooo',
@@ -128,8 +128,9 @@ export const OBJECTS = {
   ],
 };
 
+/** 코드 오브젝트는 16px 기준으로 그려져 있어 32px 격자에 맞게 2배 확대해 돌려준다(폴백용). */
 const cache = new Map();
 export function objectSprite(id) {
-  if (!cache.has(id)) cache.set(id, parseSprite(OBJECTS[id], PAL));
+  if (!cache.has(id)) cache.set(id, scaleSprite(parseSprite(OBJECTS[id], PAL), 2));
   return cache.get(id);
 }

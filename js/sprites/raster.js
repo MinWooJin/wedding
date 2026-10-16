@@ -26,6 +26,16 @@ export function stackY(...sprites) {
   return { w, h: sprites.reduce((a, s) => a + s.h, 0), px: sprites.flatMap((s) => s.px) };
 }
 
+/** 정수 배율 확대(nearest). 16px 코드 그림을 32px 타일 격자에 맞출 때 사용. */
+export function scaleSprite(sprite, k) {
+  const px = [];
+  for (const row of sprite.px) {
+    const r = row.flatMap((c) => Array(k).fill(c));
+    for (let i = 0; i < k; i++) px.push(r);
+  }
+  return { w: sprite.w * k, h: sprite.h * k, px };
+}
+
 /** 왼쪽 절반 행들을 받아 좌우 대칭인 전체 행을 만든다(대칭 오브젝트 제작용). */
 export function mirrorRows(halfRows) {
   return halfRows.map((r) => r + [...r].reverse().join(''));

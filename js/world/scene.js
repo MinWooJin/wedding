@@ -2,31 +2,31 @@ import { TILE } from '../renderer.js';
 import { parseMap, tileAt, rectBlocked, tileKey } from './tilemap.js';
 import { findPath } from './movement.js';
 import { objectSprite } from '../sprites/objects.js';
+import { BOX_W, BOX_H, standPos } from '../entities/character.js';
 
-const INTERACT_DIST = 26; // px: 이 거리 안이면 이동 없이 바로 상호작용
+export { standPos };
 
-/** 타일 (tx,ty)에 서 있을 때의 발 위치 */
-export function standPos(tx, ty) {
-  return { x: tx * TILE + 8, y: ty * TILE + 14 };
-}
+const INTERACT_DIST = TILE * 1.6; // 이 거리 안이면 이동 없이 바로 상호작용
 
 /**
  * @typedef {{id:string, sprite:string, tx:number, ty:number, solid?:boolean, floor?:boolean,
  *            stand?:{tx:number,ty:number}, interact?:(game)=>void}} SceneObject
- *   sprite: objects.js의 ID. 발자국 = 스프라이트 맨 아래 타일 행 전체(solid 기본 true).
- *   floor: 바닥 장식(문 등). solid 아님, 캐릭터보다 먼저 그림. stand: 상호작용 시 설 타일(기본은 바로 아래/위).
+ *   sprite: objects.js의 ID(assets.objects에 같은 이름의 PNG가 있으면 그것을 사용).
+ *   발자국 = 스프라이트 맨 아래 타일 행 전체(solid 기본 true).
+ *   floor: 바닥 장식(문 등). solid 아님, 캐릭터보다 먼저 그림. stand: 상호작용 시 설 타일(기본은 가장 가까운 빈 이웃).
  * @typedef {{tx:number, ty:number, to:string, spawn:{tx:number,ty:number}|null}} Entrance
  * @typedef {{character:Character, interact?:(game)=>void}} Npc
  */
 export class Scene {
-  constructor({ id, rows, spawn, objects = [], entrances = [], npcs = [], bg = '#1b2a1f', onEnter = null }) {
+  constructor({ id, rows, spawn, objects = [], entrances = [], npcs = [], bg = '#1b2a1f', onEnter = null, assets = {} }) {
     this.id = id;
     this.map = parseMap(rows);
     this.spawn = spawn;
-    this.objects = objects.map((o) => ({ solid: !o.floor, ...o, spr: objectSprite(o.sprite) }));
+    this.objects = objects.map((o) => ({ solid: !o.floor, ...o, spr: assets.objects?.[o.sprite] ?? objectSprite(o.sprite) }));
     this.entrances = entrances;
     this.npcs = npcs;
     this.bg = bg;
+    this.bgImage = assets.maps?.[id] ?? null; // 씬 배경 한 장(있으면 타일 대신 그림)
     this.onEnter = onEnter;
     this.pending = null;      // 도착 후 실행할 상호작용
     this.onEntrance = false;  // 입구 재발동 방지
@@ -37,12 +37,12 @@ export class Scene {
     this.extraSolid = new Set();
     for (const o of this.objects) {
       if (!o.solid) continue;
-      const wTiles = o.spr.w / TILE, footY = o.ty + o.spr.h / TILE - 1;
+      const wTiles = Math.ceil(o.spr.w / TILE), footY = o.ty + Math.ceil(o.spr.h / TILE) - 1;
       for (let i = 0; i < wTiles; i++) this.extraSolid.add(tileKey(o.tx + i, footY));
     }
     for (const n of this.npcs) {
-      const c = n.character;
-      this.extraSolid.add(tileKey(Math.floor(c.x / TILE), Math.floor((c.y - 1) / TILE)));
+      const t = this.tileOf(n.character.x, n.character.y);
+      this.extraSolid.add(tileKey(t.tx, t.ty));
     }
   }
 
@@ -59,11 +59,13 @@ export class Scene {
   }
 
   blockedFor() {
-    return (x, y) => rectBlocked(this.map, x - 5, y - 8, 10, 8, this.extraSolid);
+    return (x, y) => rectBlocked(this.map, x - BOX_W / 2, y - BOX_H, BOX_W, BOX_H, this.extraSolid);
   }
 
+  tileOf(x, y) { return { tx: Math.floor(x / TILE), ty: Math.floor((y - 1) / TILE) }; }
+
   entranceAt(player) {
-    const tx = Math.floor(player.x / TILE), ty = Math.floor((player.y - 1) / TILE);
+    const { tx, ty } = this.tileOf(player.x, player.y);
     return this.entrances.find((e) => e.tx === tx && e.ty === ty) ?? null;
   }
 
@@ -88,8 +90,6 @@ export class Scene {
   isSolidTile(tx, ty) {
     return rectBlocked(this.map, tx * TILE, ty * TILE, TILE, TILE, this.extraSolid);
   }
-
-  tileOf(x, y) { return { tx: Math.floor(x / TILE), ty: Math.floor((y - 1) / TILE) }; }
 
   /**
    * (x,y)까지 타일 BFS 경로를 따라 걷는다. 경로가 없으면 직선 이동으로 폴백.
@@ -117,7 +117,7 @@ export class Scene {
   hitNpc(wx, wy) {
     return this.npcs.find((n) => {
       const p = n.character.drawPos();
-      return wx >= p.x && wx < p.x + 16 && wy >= p.y && wy < p.y + 24;
+      return wx >= p.x && wx < p.x + p.w && wy >= p.y && wy < p.y + p.h;
     }) ?? null;
   }
 
@@ -128,13 +128,14 @@ export class Scene {
     const target = npc ?? obj;
     if (target && target.interact) {
       const c = npc ? npc.character : null;
-      const tx = c ? Math.floor(c.x / TILE) : obj.tx;
-      const footY = c ? Math.floor((c.y - 1) / TILE) : obj.ty + obj.spr.h / TILE - 1;
-      const wTiles = c ? 1 : obj.spr.w / TILE;
+      const ct = c ? this.tileOf(c.x, c.y) : null;
+      const tx = c ? ct.tx : obj.tx;
+      const footY = c ? ct.ty : obj.ty + Math.ceil(obj.spr.h / TILE) - 1;
+      const wTiles = c ? 1 : Math.ceil(obj.spr.w / TILE);
       const st = (obj && obj.stand) ? obj.stand : this.standTileFor(tx, footY, wTiles, player);
       const stand = standPos(st.tx, st.ty);
       const faceX = c ? c.x : obj.tx * TILE + obj.spr.w / 2;
-      const faceY = c ? c.y : footY * TILE + 8;
+      const faceY = c ? c.y : footY * TILE + TILE / 2;
       if (Math.hypot(stand.x - player.x, stand.y - player.y) < INTERACT_DIST) {
         player.stop();
         this.face(player, faceX, faceY);
@@ -151,8 +152,8 @@ export class Scene {
       return;
     }
     this.pending = null;
-    const x = Math.max(8, Math.min(this.pixelW - 8, wx));
-    const y = Math.max(16, Math.min(this.pixelH - 2, wy));
+    const x = Math.max(TILE / 2, Math.min(this.pixelW - TILE / 2, wx));
+    const y = Math.max(TILE, Math.min(this.pixelH - 2, wy));
     this.walkTo(player, x, y);
   }
 
@@ -175,10 +176,14 @@ export class Scene {
     }
   }
 
-  /** @param r renderer: drawTile(id,x,y), drawSprite(spr,x,y), drawNameTag(text,cx,topY), drawBubble(text,cx,bottomY) */
+  /** @param r renderer: drawTile, drawSprite, drawCanvas, drawNameTag(text,cx,topY), drawBubble(text,cx,bottomY) */
   draw(r, player) {
-    for (let ty = 0; ty < this.map.h; ty++) {
-      for (let tx = 0; tx < this.map.w; tx++) r.drawTile(tileAt(this.map, tx, ty), tx * TILE, ty * TILE);
+    if (this.bgImage) {
+      r.drawCanvas(this.bgImage, 0, 0);
+    } else {
+      for (let ty = 0; ty < this.map.h; ty++) {
+        for (let tx = 0; tx < this.map.w; tx++) r.drawTile(tileAt(this.map, tx, ty), tx * TILE, ty * TILE);
+      }
     }
     for (const o of this.objects) if (o.floor) r.drawSprite(o.spr, o.tx * TILE, o.ty * TILE);
     const items = [];
@@ -186,10 +191,10 @@ export class Scene {
     const chars = [player, ...this.npcs.map((n) => n.character)];
     for (const c of chars) {
       const p = c.drawPos();
-      items.push({ y: c.y, draw: () => { r.drawSprite(c.sprite(), p.x, p.y); r.drawNameTag(c.name, p.x + 8, p.y - 2); } });
+      items.push({ y: c.y, draw: () => { r.drawSprite(c.sprite(), p.x, p.y); r.drawNameTag(c.name, p.x + p.w / 2, p.y - 2); } });
     }
     items.sort((a, b) => a.y - b.y);
     for (const it of items) it.draw();
-    for (const c of chars) if (c.bubble) { const p = c.drawPos(); r.drawBubble(c.bubble, p.x + 8, p.y - 10); }
+    for (const c of chars) if (c.bubble) { const p = c.drawPos(); r.drawBubble(c.bubble, p.x + p.w / 2, p.y - 16); }
   }
 }

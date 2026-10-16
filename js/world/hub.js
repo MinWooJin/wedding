@@ -2,6 +2,7 @@ import { Scene, standPos } from './scene.js';
 import { Character } from '../entities/character.js';
 import { GROOM, BRIDE } from '../sprites/characters.js';
 import { toast } from '../ui/toast.js';
+import { characterSet } from '../assets.js';
 
 export const HUB_ROWS = [
   'HHHHHHHHHHH',
@@ -48,8 +49,8 @@ const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
 export class HubScene extends Scene {
   constructor(game) {
     const cfg = game.config;
-    const groom = new Character({ sprites: GROOM, name: cfg.groom.name, ...standPos(4, 3) });
-    const bride = new Character({ sprites: BRIDE, name: cfg.bride.name, ...standPos(6, 3) });
+    const groom = new Character({ sprites: characterSet(game.assets, 'groom', GROOM), name: cfg.groom.name, ...standPos(4, 3) });
+    const bride = new Character({ sprites: characterSet(game.assets, 'bride', BRIDE), name: cfg.bride.name, ...standPos(6, 3) });
     const greet = (c) => () => c.say(pick(cfg.greetings));
 
     const objects = [
@@ -64,7 +65,7 @@ export class HubScene extends Scene {
     }
 
     super({
-      id: 'hub', rows: HUB_ROWS, spawn: HUB_SPAWN, objects, entrances,
+      id: 'hub', rows: HUB_ROWS, spawn: HUB_SPAWN, objects, entrances, assets: game.assets,
       npcs: [{ character: groom, interact: greet(groom) }, { character: bride, interact: greet(bride) }],
     });
     this.hosts = [groom, bride];

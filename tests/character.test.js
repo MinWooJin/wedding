@@ -9,11 +9,11 @@ test('기본 상태: 아래를 보고 정지', () => {
   const c = mk();
   assert.equal(c.dir, 'down');
   assert.equal(c.target, null);
-  assert.equal(c.sprite().h, 24);
+  assert.equal(c.sprite().h, 48);
 });
 
-test('충돌 박스는 발 밑 중앙 기준 10×8', () => {
-  assert.deepEqual(mk().box(), { x: 95, y: 92, w: 10, h: 8 });
+test('충돌 박스는 발 밑 중앙 기준 20×16', () => {
+  assert.deepEqual(mk().box(), { x: 90, y: 84, w: 20, h: 16 });
 });
 
 test('target이 있으면 update로 이동하고 방향이 바뀐다', () => {
@@ -36,12 +36,20 @@ test('도착하면 target이 null이 되고 onArrive가 한 번 호출된다', (
   assert.equal(n, 1);
 });
 
-test('걷는 동안 프레임이 0/1을 오간다', () => {
+test('걷는 동안 걷기 프레임(1,2)을 오가고 멈추면 idle(0)', () => {
   const c = mk();
   c.moveTo(1000, 100);
   const seen = new Set();
-  for (let i = 0; i < 10; i++) { c.update(0.1, () => false); seen.add(c.frame); }
-  assert.deepEqual([...seen].sort(), [0, 1]);
+  for (let i = 0; i < 10; i++) { c.update(0.1, () => false); seen.add(c.sprite()); }
+  assert.equal(seen.size, 2);
+  assert.ok(seen.has(c.sprites.right[1]) && seen.has(c.sprites.right[2]));
+  c.stop();
+  assert.equal(c.sprite(), c.sprites.right[0]);
+});
+
+test('drawPos는 스프라이트 크기 기준으로 발 밑 중앙에 맞춘다', () => {
+  const c = mk();
+  assert.deepEqual(c.drawPos(), { x: 84, y: 52, w: 32, h: 48 });
 });
 
 test('followPath는 경유점을 차례로 지나 마지막에 onArrive를 호출한다', () => {

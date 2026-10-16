@@ -2,6 +2,7 @@ import { Renderer } from './renderer.js';
 import { attachPointer } from './input.js';
 import { Character } from './entities/character.js';
 import { presetSprites } from './sprites/characters.js';
+import { characterSet } from './assets.js';
 
 /** 카메라: 뷰보다 큰 축은 플레이어 중심 + 클램프, 작은 축은 가운데 정렬(음수) */
 export function computeCamera(view, scene, player) {
@@ -20,11 +21,16 @@ export class Game {
    *          scenes:Record<string,(game)=>Scene>, ui:object}} o
    * scenes: id → 팩토리. 처음 goTo할 때 생성해 캐시한다.
    */
-  constructor({ canvas, frame, config, profile, scenes, ui }) {
+  constructor({ canvas, frame, config, profile, scenes, ui, assets = {} }) {
     this.canvas = canvas; this.frame = frame;
     this.config = config; this.profile = profile; this.ui = ui;
+    this.assets = assets;
     this.renderer = new Renderer(canvas);
-    this.player = new Character({ sprites: presetSprites(profile.charId), name: profile.nickname, x: 0, y: 0 });
+    this.renderer.tiles = assets.tiles ?? {};
+    this.player = new Character({
+      sprites: characterSet(assets, `preset-${profile.charId}`, presetSprites(profile.charId)),
+      name: profile.nickname, x: 0, y: 0,
+    });
     this.factories = scenes;
     this.scenes = {};
     this.scene = null;

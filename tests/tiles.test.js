@@ -2,11 +2,11 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { TILES, SOLID_TILES, tileSprite } from '../js/sprites/tiles.js';
 
-test('모든 타일은 16×16', () => {
+test('모든 타일은 32×32(코드 그림 2배 확대)', () => {
   for (const id of Object.keys(TILES)) {
     const s = tileSprite(id);
-    assert.equal(s.w, 16, `${id} width`);
-    assert.equal(s.h, 16, `${id} height`);
+    assert.equal(s.w, 32, `${id} width`);
+    assert.equal(s.h, 32, `${id} height`);
   }
 });
 

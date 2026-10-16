@@ -1,5 +1,5 @@
 import { PAL } from './palette.js';
-import { parseSprite } from './raster.js';
+import { parseSprite, scaleSprite } from './raster.js';
 
 /** 16×16을 한 문자로 채운 뒤 (x,y,ch) 점을 찍어 타일 행을 만든다. */
 function fillTile(base, dots = []) {
@@ -55,8 +55,9 @@ export const TILES = {
 
 export const SOLID_TILES = new Set(['H', 'F', 'K', 'X']);
 
+/** 코드 타일은 16px로 그려져 있어 32px 격자에 맞게 2배 확대해 돌려준다(폴백용). */
 const cache = new Map();
 export function tileSprite(id) {
-  if (!cache.has(id)) cache.set(id, parseSprite(TILES[id], PAL));
+  if (!cache.has(id)) cache.set(id, scaleSprite(parseSprite(TILES[id], PAL), 2));
   return cache.get(id);
 }

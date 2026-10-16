@@ -2,9 +2,10 @@ import { PRESET_COUNT, presetSprites } from '../sprites/characters.js';
 import { spriteCanvas } from '../renderer.js';
 import { validateNickname } from '../state.js';
 import { esc, h } from './dom.js';
+import { characterSet } from '../assets.js';
 
 /** 인트로 화면을 띄우고 {nickname, charId}를 resolve한다. */
-export function showIntro(root, config) {
+export function showIntro(root, config, assets = {}) {
   return new Promise((resolve) => {
     let charId = Math.floor(Math.random() * PRESET_COUNT);
     let frame = 0;
@@ -15,7 +16,7 @@ export function showIntro(root, config) {
         <input id="nick" maxlength="10" placeholder="닉네임 (2~10자)" autocomplete="off">
         <div class="picker">
           <button class="btn" id="prev">◀</button>
-          <canvas width="16" height="24"></canvas>
+          <canvas width="48" height="72"></canvas>
           <button class="btn" id="next">▶</button>
         </div>
         <p class="muted" id="count"></p>
@@ -26,11 +27,14 @@ export function showIntro(root, config) {
     const count = card.querySelector('#count'), err = card.querySelector('#err'), nick = card.querySelector('#nick');
 
     const render = () => {
-      ctx.clearRect(0, 0, 16, 24);
-      ctx.drawImage(spriteCanvas(presetSprites(charId).down[frame]), 0, 0);
+      const set = characterSet(assets, `preset-${charId}`, presetSprites(charId));
+      const spr = set.down[Math.min(frame, set.down.length - 1)];
+      cv.width = spr.w; cv.height = spr.h;
+      ctx.imageSmoothingEnabled = false;
+      ctx.drawImage(spriteCanvas(spr), 0, 0);
       count.textContent = `캐릭터 ${charId + 1} / ${PRESET_COUNT}`;
     };
-    const timer = setInterval(() => { frame = frame ? 0 : 1; render(); }, 300);
+    const timer = setInterval(() => { frame = frame ? 0 : 2; render(); }, 300);
     card.querySelector('#prev').onclick = () => { charId = (charId + PRESET_COUNT - 1) % PRESET_COUNT; render(); };
     card.querySelector('#next').onclick = () => { charId = (charId + 1) % PRESET_COUNT; render(); };
     const go = () => {

@@ -28,13 +28,13 @@ test('tileAt은 맵 밖을 X로 취급', () => {
 
 test('rectBlocked: 잔디 위 박스는 통과, 울타리에 걸치면 막힘', () => {
   const extra = new Set();
-  assert.equal(rectBlocked(map, 20, 20, 10, 8, extra), false);
-  assert.equal(rectBlocked(map, 10, 20, 10, 8, extra), true);
-  assert.equal(rectBlocked(map, 20, 44, 10, 8, extra), true);
+  assert.equal(rectBlocked(map, 40, 40, 20, 16, extra), false);
+  assert.equal(rectBlocked(map, 20, 40, 20, 16, extra), true);   // x 20..39 → 타일 0 (H)
+  assert.equal(rectBlocked(map, 40, 88, 20, 16, extra), true);   // y 88..103 → 타일 3 (H)
 });
 
 test('rectBlocked: 추가 solid 타일(오브젝트 발자국)도 막는다', () => {
   const extra = new Set(['2,2']);
-  assert.equal(rectBlocked(map, 36, 36, 10, 8, extra), true);
-  assert.equal(rectBlocked(map, 18, 36, 10, 8, extra), false);
+  assert.equal(rectBlocked(map, 72, 72, 20, 16, extra), true);
+  assert.equal(rectBlocked(map, 36, 72, 20, 16, extra), false);
 });

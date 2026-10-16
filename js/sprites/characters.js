@@ -1,4 +1,4 @@
-import { parseSprite, flipX, stackY } from './raster.js';
+import { parseSprite, flipX, stackY, scaleSprite } from './raster.js';
 
 // 팔레트 문자: o 외곽선, H 머리, S 피부, C 옷, P 바지, E 눈동자, n 흰자, f 볼터치, . 투명
 // 머리+몸통 20행 + 다리 4행 = 24행, 폭 16.
@@ -86,15 +86,17 @@ function palette({ hair, skin, cloth, pants }) {
 }
 
 /**
+ * 캐릭터 스프라이트 세트: 방향별 프레임 배열. 프레임 0 = idle, 1.. = 걷기 사이클.
+ * 코드 그림은 16×24로 그려져 있어 2배 확대(32×48)해 돌려준다(폴백용).
  * @returns {{down:Sprite[],up:Sprite[],left:Sprite[],right:Sprite[]}}
- * 프레임 0 = idle 겸 걷기 A, 프레임 1 = 걷기 B
  */
 export function makeCharacter(colors) {
   const pal = palette(colors);
-  const frames = (body) => [
-    stackY(parseSprite(body, pal), parseSprite(LEGS_A, pal)),
-    stackY(parseSprite(body, pal), parseSprite(LEGS_B, pal)),
-  ];
+  const frames = (body) => {
+    const a = scaleSprite(stackY(parseSprite(body, pal), parseSprite(LEGS_A, pal)), 2);
+    const b = scaleSprite(stackY(parseSprite(body, pal), parseSprite(LEGS_B, pal)), 2);
+    return [a, a, b];
+  };
   const left = frames(HEAD_BODY_LEFT);
   return { down: frames(HEAD_BODY_DOWN), up: frames(HEAD_BODY_UP), left, right: left.map(flipX) };
 }

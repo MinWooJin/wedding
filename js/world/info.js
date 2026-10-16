@@ -50,7 +50,7 @@ export function createInfo(game) {
     .filter(([, u]) => u).map(([l, u]) => `<a class="btn" target="_blank" rel="noopener" href="${esc(u)}">${esc(l)}</a>`).join(' ');
 
   return new Scene({
-    id: 'info', rows: ROWS, bg: '#3b2a1e',
+    id: 'info', rows: ROWS, bg: '#3b2a1e', assets: game.assets,
     spawn: { tx: 5, ty: 6 },
     entrances: [{ tx: 5, ty: 7, to: 'hub', spawn: HUB_DOORS.info.back }],
     objects: [

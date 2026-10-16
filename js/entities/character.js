@@ -1,10 +1,15 @@
 import { stepToward } from '../world/movement.js';
+import { TILE } from '../renderer.js';
 
-export const SPEED = 60; // px/s (내부 해상도 기준)
+export const SPEED = 120; // px/s (내부 해상도 기준, 타일 32px)
 const FRAME_TIME = 0.18;
+export const BOX_W = 20, BOX_H = 16; // 발 밑 충돌 박스
 
 export class Character {
-  /** @param {{sprites:object,name:string,x:number,y:number}} o  x,y는 발 밑 중앙 */
+  /**
+   * @param {{sprites:object,name:string,x:number,y:number}} o
+   * x,y는 발 밑 중앙. sprites: {down:Sprite[],up,left,right} (프레임 0 = idle, 1.. = 걷기)
+   */
   constructor({ sprites, name, x, y }) {
     this.sprites = sprites;
     this.name = name;
@@ -18,7 +23,7 @@ export class Character {
     this.bubbleT = 0;
   }
 
-  box() { return { x: this.x - 5, y: this.y - 8, w: 10, h: 8 }; }
+  box() { return { x: this.x - BOX_W / 2, y: this.y - BOX_H, w: BOX_W, h: BOX_H }; }
 
   moveTo(x, y, onArrive = null) {
     this.target = { x, y };
@@ -44,7 +49,7 @@ export class Character {
     this.x = r.x; this.y = r.y; this.dir = r.dir;
     if (r.moved) {
       this.animT += dt;
-      if (this.animT >= FRAME_TIME) { this.animT = 0; this.frame = this.frame ? 0 : 1; }
+      if (this.animT >= FRAME_TIME) { this.animT = 0; this.frame++; }
     }
     if (r.arrived) {
       const cb = this.onArrive;
@@ -53,8 +58,24 @@ export class Character {
     }
   }
 
-  sprite() { return this.sprites[this.dir][this.target ? this.frame : 0]; }
+  get walking() { return this.target !== null; }
 
-  /** 스프라이트 좌상단 */
-  drawPos() { return { x: Math.round(this.x) - 8, y: Math.round(this.y) - 24 }; }
+  sprite() {
+    const frames = this.sprites[this.dir];
+    if (!this.walking || frames.length < 2) return frames[0];
+    const cycle = frames.length - 1;
+    return frames[1 + (this.frame % cycle)];
+  }
+
+  /** 스프라이트 좌상단. 걷는 동안 홀수 프레임에 1px 들썩임(정면 1장짜리 이미지도 살아 보이게) */
+  drawPos() {
+    const s = this.sprite();
+    const bob = this.walking && this.frame % 2 === 1 ? -2 : 0;
+    return { x: Math.round(this.x) - Math.floor(s.w / 2), y: Math.round(this.y) - s.h + bob, w: s.w, h: s.h };
+  }
+}
+
+/** 타일 (tx,ty)에 서 있을 때의 발 위치 */
+export function standPos(tx, ty) {
+  return { x: tx * TILE + TILE / 2, y: ty * TILE + TILE - 4 };
 }
