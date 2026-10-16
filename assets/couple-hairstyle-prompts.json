@@ -1,0 +1,19 @@
+{
+  "generation_mode": "Codex built-in image redraw",
+  "date": "2026-10-16",
+  "final_size": [
+    48,
+    72
+  ],
+  "supersedes": "The earlier face-only edits in assets/couple-face-prompts.json; hairstyle and full head design are now redrawn.",
+  "characters": [
+    {
+      "name": "groom",
+      "prompt": "REDRAW this wedding character from scratch, using the provided image ONLY for the pixel art rendering style, palette and game sprite scale. This is a FULL NEW CHARACTER DESIGN, not a small expression edit. A Korean groom with a clearly recognizable AS-PERM (애즈펌) hairstyle: neat black hair with a natural 6:4 middle/off-center part, rounded soft volume, gently permed C-curved curtain fringe sweeping to BOTH sides of the forehead, visible small center forehead opening. Smooth rounded crown, tidy tapered sides, no spikes, no messy sticking-out tufts, no pointed anime bangs across the center. This hair silhouette must be COMPLETELY DIFFERENT from the spiky reference groom and guest. A distinct slightly longer oval face with subtle angular jaw, smaller narrow dark almond eyes, straight brows and a gentle confident closed-mouth smile. Black tuxedo, white shirt, black bow tie, small ivory boutonniere, black shoes, arms resting at sides. Cute polished chibi 16-bit RPG pixel art, large expressive head and short body, crisp chunky pixels, thick dark outline, soft warm cel shading, restrained pastel highlights. Match the world style, not the old face/head geometry. Single full-body FRONT VIEW standing sprite, entire hair top and feet/dress hem visible, centered portrait. Make hairstyle readable at final 48x72 game pixels, choose big simple characteristic hair shapes. Genuinely transparent background. No ground, no ground shadow, no glow halo, no scene, no text, no watermark."
+    },
+    {
+      "name": "bride",
+      "prompt": "REDRAW this wedding character from scratch, using the provided image ONLY for the pixel art rendering style, palette and game sprite scale. This is a FULL NEW CHARACTER DESIGN, not a small expression edit. A Korean bride with a clearly readable formal UPDO (올림머리): dark brown hair smoothly swept fully BACK from the forehead into a prominent rounded elegant HIGH BUN visible above the crown, clean center part at the scalp, exposed forehead, tiny pearl hairpins. No heavy front bangs, no big side-swept anime fringe, no spiky tufts, no loose hair covering the bun. Attach a small sheer veil BELOW the bun so the complete bun silhouette remains clearly visible. A distinct soft heart-shaped face with graceful arched brows, warm curved smiling eyes, gentle closed-mouth smile and subtle blush. Ivory-white wedding dress, delicate neckline, short veil, small blush-and-ivory bouquet held at waist. Clearly different head silhouette and facial design from the reference guest-style bride. Cute polished chibi 16-bit RPG pixel art, large expressive head and short body, crisp chunky pixels, thick dark outline, soft warm cel shading, restrained pastel highlights. Match the world style, not the old face/head geometry. Single full-body FRONT VIEW standing sprite, entire hair top and feet/dress hem visible, centered portrait. Make hairstyle readable at final 48x72 game pixels, choose big simple characteristic hair shapes. Genuinely transparent background. No ground, no ground shadow, no glow halo, no scene, no text, no watermark."
+    }
+  ]
+}
