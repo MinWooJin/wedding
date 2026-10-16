@@ -1,0 +1,90 @@
+/**
+ * 선택적 PNG 에셋 로더. 파일이 있으면 코드 그림 대신 사용하고, 없으면 조용히 폴백.
+ *
+ *  assets/characters/<name>.png  정면 1장(가로:세로 ≈ 2:3) 또는 3열×4행 시트(열: idle/걷기A/걷기B, 행: down/left/right/up)
+ *  assets/tiles/<ID>.png         32×32
+ *  assets/objects/<id>.png       32의 배수 크기(아치 96×64, 나무 32×64, 벤치·책상 64×32, 나머지 32×32)
+ *  assets/maps/<sceneId>.png     씬 전체 배경(맵 픽셀 크기와 같게; 다르면 늘려 맞춤)
+ */
+import { TILE } from './renderer.js';
+import { PRESET_COUNT } from './sprites/characters.js';
+
+export const CHAR_W = 48, CHAR_H = 72;
+export const CHARACTER_NAMES = [...Array.from({ length: PRESET_COUNT }, (_, i) => `preset-${i}`), 'groom', 'bride'];
+export const TILE_IDS = ['G', 'W', 'P', 'H', 'F', 'D', 'K', 'R', 'S'];
+export const OBJECT_IDS = ['arch', 'tree', 'sign', 'mailbox', 'frame', 'bench', 'chest', 'desk', 'board', 'phone', 'calendar', 'mapframe', 'flower', 'stone', 'door'];
+export const SCENE_IDS = ['hub', 'info', 'gallery', 'story', 'guestbook', 'gifts'];
+
+function loadImage(src) {
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.onload = () => resolve(img);
+    img.onerror = () => resolve(null);
+    img.src = src;
+  });
+}
+
+/** 이미지(또는 일부)를 w×h 캔버스로. 크기가 같으면 그대로, 다르면 리샘플(축소는 부드럽게, 확대는 픽셀 유지). */
+function toCanvas(img, sx, sy, sw, sh, w, h, flip = false) {
+  const c = document.createElement('canvas');
+  c.width = w; c.height = h;
+  const ctx = c.getContext('2d');
+  ctx.imageSmoothingEnabled = sw > w || sh > h;
+  if (flip) { ctx.translate(w, 0); ctx.scale(-1, 1); }
+  ctx.drawImage(img, sx, sy, sw, sh, 0, 0, w, h);
+  return c;
+}
+
+const imgSprite = (canvas) => ({ w: canvas.width, h: canvas.height, canvas });
+
+/** 정면 1장 → 4방향 세트(좌우는 반전, 뒷모습은 정면 재사용). 걷기 들썩임은 Character가 처리. */
+export function setFromSingle(img, w = CHAR_W, h = CHAR_H) {
+  const front = imgSprite(toCanvas(img, 0, 0, img.width, img.height, w, h));
+  const flipped = imgSprite(toCanvas(img, 0, 0, img.width, img.height, w, h, true));
+  return { down: [front], up: [front], left: [front], right: [flipped] };
+}
+
+/** 3열×4행 시트 → 4방향 세트. 행 순서: down, left, right, up. 열: idle, 걷기A, 걷기B */
+export function setFromSheet(img, w = CHAR_W, h = CHAR_H) {
+  const fw = img.width / 3, fh = img.height / 4;
+  const row = (r) => [0, 1, 2].map((c) => imgSprite(toCanvas(img, c * fw, r * fh, fw, fh, w, h)));
+  return { down: row(0), left: row(1), right: row(2), up: row(3) };
+}
+
+/** 세로/가로 비율로 시트(≈2.0)인지 정면 1장(≈1.5)인지 판별 */
+export function characterSetFromImage(img) {
+  const ratio = img.height / img.width;
+  return Math.abs(ratio - 2) < Math.abs(ratio - 1.5) ? setFromSheet(img) : setFromSingle(img);
+}
+
+/**
+ * assets/manifest.json: {"characters":[...], "tiles":[...], "objects":[...], "maps":[...]} — 존재하는 파일 이름만 적는다.
+ * tools/prepare_assets.py가 자동으로 만들어 준다. manifest가 없으면 아무것도 로드하지 않는다(코드 그림 폴백).
+ */
+export async function loadAssets(base = 'assets') {
+  const out = { characters: {}, tiles: {}, objects: {}, maps: {} };
+  let manifest;
+  try {
+    const res = await fetch(`${base}/manifest.json`, { cache: 'no-cache' });
+    if (!res.ok) return out;
+    manifest = await res.json();
+  } catch { return out; }
+
+  const pick = (list, allowed) => (Array.isArray(list) ? list.filter((n) => allowed.includes(n)) : []);
+  const jobs = [];
+  for (const n of pick(manifest.characters, CHARACTER_NAMES)) jobs.push(loadImage(`${base}/characters/${n}.png`).then((img) => { if (img) out.characters[n] = characterSetFromImage(img); }));
+  for (const id of pick(manifest.tiles, TILE_IDS)) jobs.push(loadImage(`${base}/tiles/${id}.png`).then((img) => { if (img) out.tiles[id] = imgSprite(toCanvas(img, 0, 0, img.width, img.height, TILE, TILE)); }));
+  for (const id of pick(manifest.objects, OBJECT_IDS)) jobs.push(loadImage(`${base}/objects/${id}.png`).then((img) => {
+    if (!img) return;
+    const w = Math.max(TILE, Math.round(img.width / TILE) * TILE), h = Math.max(TILE, Math.round(img.height / TILE) * TILE);
+    out.objects[id] = imgSprite(toCanvas(img, 0, 0, img.width, img.height, w, h));
+  }));
+  for (const id of pick(manifest.maps, SCENE_IDS)) jobs.push(loadImage(`${base}/maps/${id}.png`).then((img) => { if (img) out.maps[id] = img; }));
+  await Promise.all(jobs);
+  return out;
+}
+
+/** 이름에 해당하는 PNG 세트가 있으면 그것, 없으면 코드 폴백 */
+export function characterSet(assets, name, fallback) {
+  return assets?.characters?.[name] ?? fallback;
+}
