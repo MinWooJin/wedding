@@ -16,9 +16,9 @@ python tools/prepare_assets.py --pixel  # 또렷한 도트 느낌
 | 하객 캐릭터 | `raw/characters/preset-0.png` … `preset-9.png` | 48×72 | 정면 전신 1장이면 충분(좌우는 반전, 걷기는 들썩임으로 표현) |
 | 신랑·신부 | `raw/characters/groom.png`, `bride.png` | 48×72 | 광장 아치 아래, 이야기 길 벤치에 등장 |
 | 걷기 시트(선택) | `raw/characters/<name>-sheet.png` | 144×288 | 3열(idle/걷기A/걷기B) × 4행(앞/왼쪽/오른쪽/뒤) |
-| 타일 | `raw/tiles/G W P H F D K R S.png` | 32×32 | G 잔디, W 꽃잔디, P 흙길, H 산울타리, F 울타리, D 마루, K 벽, R 카펫, S 돌바닥 |
-| 오브젝트 | `raw/objects/<id>.png` | 32의 배수 | arch 160×128, tree 96×96, bench·desk 128×64, flower·door 32×32, 나머지(sign·mailbox·chest·frame·board·phone·calendar·mapframe·stone) 64×64 |
-| 웨딩 타일 | `raw/tiles/wedding/aisle-ivory.png` 등 6종 | 32×32 | A 버진로드, B 꽃잎 버진로드, C 입구 마감, E 꽃잎 잔디, M 대리석, L 블러시 카펫 (광장 5열 1~19행에 A/B/C 사용) |
+| 타일 | `raw/tiles/G W P H F D K R S M.png` | 32×32 | G 잔디, W 꽃잔디, P 흙길, H 그늘진 잔디, F 울타리, D 크림 오크, K 크림 벽, R 카펫, S 돌바닥, M 대리석 |
+| 오브젝트 | `raw/objects/<id>.png` | 오브젝트별 | arch 224×160, tree 96×128, bench·desk 128×64, flower 32×48, door 32×32. 전체 규격은 `tools/prepare_assets.py`의 OBJECT_SIZES 참고 |
+| 추가 타일 | `raw/tiles/wedding/<name>.png` | 32×32 | A/B/C 버진로드, E 꽃잎 잔디, L 카펫, J/U 꽃잔디, N 모래길, X1~X4 꽃밭·자갈·장미 산울타리. M은 `raw/tiles/M.png`로 별도 처리 |
 | 씬 배경(선택) | `raw/maps/hub.png info.png guestbook.png gifts.png` | hub 352×1024, info 352×256, guestbook 352×384, gifts 352×256 | 타일 대신 한 장으로 그림. 길·벽 위치는 아래 레이아웃을 따라야 함 |
 
 배경은 단색(흰색 등)이나 투명이면 됩니다. 스크립트가 모서리 색을 기준으로 배경을 지우고, 여백을 잘라내고, 크기를 맞춥니다.
@@ -82,11 +82,31 @@ centered, plain white background, no shadow on ground, no text, 16-bit game spri
 
 ## 타일 · 오브젝트 프롬프트
 
+### 5·6차 단상·크림 톤 실내 보완 (최신)
+
+D는 연한 오크/아이보리 바닥, K는 민무늬 크림 벽과 아래 1/3 흰 몰딩,
+M은 은은한 크림 대리석으로 교체했습니다. M의 정규 원본은 `raw/tiles/M.png`입니다.
+H는 G의 동일 무늬를 밝기만 12.5% 낮춘 그늘진 잔디로 교체했습니다. X4는 유지합니다.
+H를 다시 산울타리로 만들지 않도록 자연 정원 변환 도구에도 최신 방식을 적용했습니다.
+
+새 단상은 160×64, 꽃은 32×48, 도어매트는 32×32, 창문은 64×64,
+화분은 32×64, 표지판은 64×64입니다. 모두 투명 배경·아래 가운데 정렬입니다.
+
+```powershell
+python tools/prepare_interior_assets.py
+```
+
+`raw/round56-source/`의 생성 원본으로 요청한 10종만 변환하며 캐릭터는 처리하지 않습니다.
+H는 현재 G에서 밝기를 계산합니다. 생성 원본이 없는 체크아웃에서는 최종 PNG를 사용하세요.
+백업은 `raw/round56-backup/`, 프롬프트는 `assets/round56-prompts.json`,
+크기·알파 bbox는 `assets/round56-report.json`, 미리보기는 `assets/round56-preview.png`입니다.
+5차의 낮은 단상은 이전에 보류한 3차 단상 요청을 대체합니다.
+
 ### 4차 자연 정원 세트 (현재 배경 방향)
 
 G/J/U/W는 하나의 생성 잔디 베이스를 공유하고 J/U/W에만 생성한 작은 꽃 레이어를 합성합니다.
 꽃을 덮지 않는 배경 픽셀은 G와 정확히 같습니다. N은 밝은 베이지 모래·자갈길,
-H는 작은 흰 꽃이 있는 짙은 산울타리입니다. 여섯 타일은 32×32 불투명 RGBA입니다.
+H의 초기 흰 꽃 산울타리는 6차에서 그늘진 잔디로 바뀌었습니다. 여섯 타일은 32×32 불투명 RGBA입니다.
 tree는 96×128, arch는 224×160으로 교체했고 bush-white 64×64를 추가했습니다.
 아치의 (52,70,172,160) 부분은 인물을 가리지 않도록 완전히 투명하게 유지합니다.
 

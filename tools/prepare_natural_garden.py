@@ -51,7 +51,7 @@ def make_raw():
     backup(raw_g)
     raw_g.parent.mkdir(parents=True, exist_ok=True)
     base.save(raw_g)
-    checks, layers = {}, {}
+    checks = {}
     for tile_id, (name, layer_name) in GRASS.items():
         with Image.open(SOURCE / f"{layer_name}.png") as source:
             layer = source.convert("RGBA").resize((32, 32), Image.Resampling.LANCZOS)
@@ -62,7 +62,6 @@ def make_raw():
         if not 0 < coverage <= 256:
             raise ValueError(f"{tile_id}: flowers must occupy at most 25% of the tile ({coverage}/1024)")
         layer.putalpha(alpha)
-        layers[tile_id] = layer
         final = Image.alpha_composite(base, layer)
         pixels, originals = final.tobytes(), base.tobytes()
         equal = all(a != 0 or pixels[i * 4:i * 4 + 4] == originals[i * 4:i * 4 + 4]
@@ -75,10 +74,8 @@ def make_raw():
         final.save(target)
         checks[tile_id] = {"flower_pixels": coverage, "identical_background_pixels": 1024 - coverage,
                            "background_matches_G_exactly": equal}
-    with Image.open(SOURCE / "hedge-white.png") as source:
-        hedge = source.convert("RGBA").resize((32, 32), Image.Resampling.LANCZOS)
-    # Use the generated small white flowers so they remain visible at game scale.
-    hedge = Image.alpha_composite(hedge, layers["J"])
+    # Round 6 supersedes the original hedge: same grass pattern, 12.5% darker.
+    hedge = base.convert("RGB").point(lambda value: (value * 7 + 4) // 8).convert("RGBA")
     raw_h = ROOT / "raw" / "tiles" / "H.png"
     backup(raw_h)
     hedge.save(raw_h)

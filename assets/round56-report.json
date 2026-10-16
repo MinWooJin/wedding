@@ -1,0 +1,195 @@
+{
+  "assets": [
+    {
+      "group": "tiles",
+      "name": "D",
+      "size": [
+        32,
+        32
+      ],
+      "alpha_bbox": [
+        0,
+        0,
+        32,
+        32
+      ],
+      "alpha_extrema": [
+        255,
+        255
+      ]
+    },
+    {
+      "group": "tiles",
+      "name": "K",
+      "size": [
+        32,
+        32
+      ],
+      "alpha_bbox": [
+        0,
+        0,
+        32,
+        32
+      ],
+      "alpha_extrema": [
+        255,
+        255
+      ]
+    },
+    {
+      "group": "tiles",
+      "name": "M",
+      "size": [
+        32,
+        32
+      ],
+      "alpha_bbox": [
+        0,
+        0,
+        32,
+        32
+      ],
+      "alpha_extrema": [
+        255,
+        255
+      ]
+    },
+    {
+      "group": "tiles",
+      "name": "H",
+      "size": [
+        32,
+        32
+      ],
+      "alpha_bbox": [
+        0,
+        0,
+        32,
+        32
+      ],
+      "alpha_extrema": [
+        255,
+        255
+      ]
+    },
+    {
+      "group": "objects",
+      "name": "door",
+      "size": [
+        32,
+        32
+      ],
+      "alpha_bbox": [
+        0,
+        13,
+        32,
+        32
+      ],
+      "alpha_extrema": [
+        0,
+        255
+      ]
+    },
+    {
+      "group": "objects",
+      "name": "flower",
+      "size": [
+        32,
+        48
+      ],
+      "alpha_bbox": [
+        2,
+        0,
+        29,
+        48
+      ],
+      "alpha_extrema": [
+        0,
+        255
+      ]
+    },
+    {
+      "group": "objects",
+      "name": "window",
+      "size": [
+        64,
+        64
+      ],
+      "alpha_bbox": [
+        7,
+        0,
+        57,
+        64
+      ],
+      "alpha_extrema": [
+        0,
+        255
+      ]
+    },
+    {
+      "group": "objects",
+      "name": "plant",
+      "size": [
+        32,
+        64
+      ],
+      "alpha_bbox": [
+        1,
+        0,
+        31,
+        64
+      ],
+      "alpha_extrema": [
+        0,
+        255
+      ]
+    },
+    {
+      "group": "objects",
+      "name": "sign",
+      "size": [
+        64,
+        64
+      ],
+      "alpha_bbox": [
+        8,
+        0,
+        56,
+        64
+      ],
+      "alpha_extrema": [
+        0,
+        255
+      ]
+    },
+    {
+      "group": "objects",
+      "name": "platform",
+      "size": [
+        160,
+        64
+      ],
+      "alpha_bbox": [
+        0,
+        15,
+        160,
+        64
+      ],
+      "alpha_extrema": [
+        0,
+        255
+      ]
+    }
+  ],
+  "characters_processed": 0,
+  "untouched_asset_count": 48,
+  "marble_raw_path": "raw/tiles/M.png",
+  "wall_repeat_axes": [
+    "x"
+  ],
+  "H": {
+    "base": "assets/tiles/G.png",
+    "brightness_factor": 0.875,
+    "method": "RGB channels scaled by 7/8, alpha kept opaque; no flowers"
+  }
+}

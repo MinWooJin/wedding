@@ -10,7 +10,7 @@ AI로 생성한 원본 이미지를 게임 규격 PNG로 변환하고 assets/man
 입력 폴더 구조(raw/):
   raw/characters/preset-0.png ... preset-9.png, groom.png, bride.png   정면 전신 1장(배경은 단색 또는 투명)
   raw/characters/<name>-sheet.png                                    선택: 3열×4행 걷기 시트(열: idle/걷기A/걷기B, 행: down/left/right/up)
-  raw/tiles/G.png W.png P.png H.png F.png D.png K.png R.png S.png     정사각 타일(이음새 없는 패턴 권장)
+  raw/tiles/G.png W.png P.png H.png F.png D.png K.png R.png S.png M.png 정사각 타일(이음새 없는 패턴 권장)
   raw/tiles/wedding/<name>.png                                      WEDDING_TILES의 이름 → assets/tiles/<ID>.png
   raw/objects/arch.png tree.png sign.png mailbox.png frame.png bench.png chest.png desk.png board.png phone.png calendar.png mapframe.png flower.png stone.png door.png
   raw/maps/hub.png info.png guestbook.png gifts.png                   씬 배경 한 장(선택)
@@ -33,11 +33,11 @@ TILE = 32
 CHAR_W, CHAR_H = 48, 72
 
 CHARACTERS = [f"preset-{i}" for i in range(10)] + ["groom", "bride"]
-TILES = list("GWPHFDKRS")
+TILES = list("GWPHFDKRSM")
 # 웨딩 타일: raw/tiles/wedding/<이름>.png → assets/tiles/<ID>.png
 WEDDING_TILES = {
     "A": "aisle-ivory", "B": "aisle-petals", "C": "aisle-entrance",
-    "E": "rose-petal-grass", "M": "ivory-marble", "L": "blush-carpet",
+    "E": "rose-petal-grass", "L": "blush-carpet",
     "X1": "flower-bed-pink", "X2": "flower-bed-white",
     "X3": "white-gravel", "X4": "hedge-rose",
     "J": "grass-flowers-a", "U": "grass-flowers-b", "N": "sand-path",
@@ -45,7 +45,7 @@ WEDDING_TILES = {
 OBJECT_SIZES = {  # 오브젝트별 원본 비율과 요청 규격. 의자는 높이 48px를 유지한다.
     "arch": (224, 160), "tree": (96, 128), "bench": (128, 64), "desk": (128, 64),
     "sign": (64, 64), "mailbox": (64, 64), "frame": (64, 64), "chest": (64, 64), "board": (64, 64),
-    "phone": (64, 64), "calendar": (64, 64), "mapframe": (64, 64), "stone": (64, 64), "flower": (32, 32), "door": (32, 32),
+    "phone": (64, 64), "calendar": (64, 64), "mapframe": (64, 64), "stone": (64, 64), "flower": (32, 48), "door": (32, 32),
     "chair": (32, 48), "bush": (64, 64), "lantern": (32, 64),
     "petal-pile": (32, 32), "welcome-board": (64, 64),
     "bush-white": (64, 64), "platform": (160, 64), "window": (64, 64), "plant": (32, 64),

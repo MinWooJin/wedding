@@ -58,7 +58,10 @@
     "lantern",
     "petal-pile",
     "welcome-board",
-    "bush-white"
+    "bush-white",
+    "window",
+    "plant",
+    "platform"
   ],
   "maps": []
 }

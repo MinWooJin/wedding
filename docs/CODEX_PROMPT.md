@@ -1,5 +1,8 @@
 # 에셋 작업 인수인계 프롬프트 (Codex / Claude)
 
+> **5·6차 단상·실내 보완 10종 완료.** 3차 단상 보류는 과거 기록이며, 단상은 5차의 낮은 자연 정원용 디자인으로 새로 제작했다.
+> H는 6차 요청대로 울타리 대신 G와 같은 패턴을 12.5% 어둡게 만든 그늘진 잔디다. 문서 하단의 5·6차 완료 기록을 우선한다.
+
 > 최신 배경 방향은 **4차 자연 정원 세트**다. 문서 하단의 4차 완료 기록을 우선한다.
 > 3차 단상은 보류됐으며 생성하지 않았다. 기존 애즈펌·올림머리 캐릭터 PNG는 그대로 유지했다.
 
@@ -315,3 +318,44 @@ tools/prepare_assets.py에는 window (64,64), plant (32,64)가 이미 추가돼 
 
 prepare_assets.py 반영: D/K/M은 TILES에 이미 있음. OBJECT_SIZES에 "window": (64, 64), "plant": (32, 64)는 있음. "flower"는 (32, 48)로 바꿔라.
 ```
+
+## 5·6차 에셋 작업 기록 (2026-10-16, 완료)
+
+내장 이미지 생성 도구로 단상·실내 타일·장식 9종을 만들고, 추가된 H 요청은 G의 동일 패턴을
+밝기만 12.5% 낮춰 처리했다. 총 10종을 교체·추가했다. JS·CSS·HTML은 이 작업에서 수정하지 않았다.
+
+| ID / 이름 | 최종 파일 | 크기 | 알파 bbox (left, top, right, bottom) |
+|---|---|---|---|
+| D | assets/tiles/D.png | 32×32 | (0, 0, 32, 32) |
+| K | assets/tiles/K.png | 32×32 | (0, 0, 32, 32) |
+| M | assets/tiles/M.png | 32×32 | (0, 0, 32, 32) |
+| H | assets/tiles/H.png | 32×32 | (0, 0, 32, 32) |
+| door | assets/objects/door.png | 32×32 | (0, 13, 32, 32) |
+| flower | assets/objects/flower.png | 32×48 | (2, 0, 29, 48) |
+| window | assets/objects/window.png | 64×64 | (7, 0, 57, 64) |
+| plant | assets/objects/plant.png | 32×64 | (1, 0, 31, 64) |
+| sign | assets/objects/sign.png | 64×64 | (8, 0, 56, 64) |
+| platform | assets/objects/platform.png | 160×64 | (0, 15, 160, 64) |
+
+- 모두 RGBA다. 타일은 불투명, 오브젝트는 투명 배경·아래 가운데 정렬이다.
+- D는 연한 크림 오크, K는 크림 벽과 아래 1/3의 흰 몰딩, M은 은은한 크림 계열 대리석이다.
+  D/M은 두 방향 반복용이고 K는 벽면 띠로 가로 방향 반복용이다.
+- H는 현재 `assets/tiles/G.png`의 RGB 각 채널을 `floor((value * 7 + 4) / 8)`로 변환한다.
+  무늬 위치·형태는 G와 같고 꽃은 추가하지 않는다. X4 장미 산울타리는 변경하지 않았다.
+  `prepare_natural_garden.py`도 최신 H 규격으로 갱신해 이전 산울타리로 돌아가지 않게 했다.
+- M의 정규 입력을 `raw/tiles/M.png`로 옮겼다. 기존에는 WEDDING_TILES에서
+  `raw/tiles/wedding/ivory-marble.png`를 읽었으므로 TILES에 M을 추가하고 중복 등록을 제거했다.
+  이전 라이브러리 원본에도 같은 새 M을 복사했다.
+- flower의 OBJECT_SIZES를 32×48로 변경했다. platform/window/plant의 기존 규격도 확인했다.
+- 생성 원본: `raw/round56-source/`. 요청한 raw/tiles와 raw/objects에도 배치했다.
+  기존 원본·결과 백업: `raw/round56-backup/`.
+- 안전한 재변환: `python tools/prepare_interior_assets.py`.
+  `prepare_assets.py`를 임시 폴더에서 10종만 처리하고 검증한 결과와 manifest를 반영한다.
+  캐릭터 변환 목록은 비운다. 전체 변환 명령으로 기존 캐릭터를 다시 축소하지 마라.
+  생성 원본이 없는 체크아웃에서는 저장된 최종 PNG를 사용한다.
+- 캐릭터 변환 0건, 관련 없는 기존 PNG 48종은 SHA-256이 동일하다.
+  캐릭터 12종 / 타일 22종 / 오브젝트 24종, 총 58종을 manifest에 등록했다.
+- 실제 생성 프롬프트와 H 처리 방식: `assets/round56-prompts.json`.
+  크기·bbox 검증: `assets/round56-report.json`. 미리보기: `assets/round56-preview.png`.
+- 반복 변환 후 전체 PNG 58종과 manifest가 동일함을 확인했다. 캐릭터 12종·G·X4는 Git HEAD와도 일치한다.
+  브라우저에서 단상과 H, 안내소의 크림 바닥·벽·화분 표시를 확인했으며 콘솔 오류는 없었다.

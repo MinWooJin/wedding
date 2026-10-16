@@ -1,0 +1,110 @@
+{
+  "generation_mode": "Codex built-in image generation; no OPENAI_API_KEY",
+  "date": "2026-10-16",
+  "scope": "Rounds 5 and 6: low garden platform and calm cream interior; no JS changes",
+  "derived_assets": [{"name": "H", "source": "assets/tiles/G.png", "brightness_factor": 0.875, "method": "Scale RGB by 7/8 with integer rounding; keep pattern, opacity and channel proportions; no flowers."}],
+  "sources": [
+    {
+      "group": "tiles",
+      "name": "D",
+      "size": [
+        32,
+        32
+      ],
+      "detail": "A PALE OAK / IVORY WOOD FLOOR texture. Very light warm cream-oak base #eee5d3, almost ivory, fine subtle pale beige wood grain, low-contrast horizontal planks with only gentle seams. NO orange wood, no dark brown boards, no strong stripes, no plants or flowers. Seamless in both axes.",
+      "prompt": "Create ONE production-ready square 16-bit pixel RPG INTERIOR TILE. A PALE OAK / IVORY WOOD FLOOR texture. Very light warm cream-oak base #eee5d3, almost ivory, fine subtle pale beige wood grain, low-contrast horizontal planks with only gentle seams. NO orange wood, no dark brown boards, no strong stripes, no plants or flowers. Seamless in both axes. Warm modern cream/ivory palette, calm low-contrast coloring, simple chunky pixel clusters that remain legible at final 32x32. Fully OPAQUE image, material fills every edge, flat uniform lighting, no perspective floor scene, no border frame, no vignette, no cast shadow, no text or watermark. This is only the requested material texture, not a garden scene."
+    },
+    {
+      "group": "tiles",
+      "name": "K",
+      "size": [
+        32,
+        32
+      ],
+      "detail": "A simple RPG INTERIOR WALL BAND viewed straight-on/slightly overhead: top TWO THIRDS is smooth PLAIN warm cream plaster #f2ebde; bottom ONE THIRD is smooth WHITE wainscot panel with one gentle horizontal molding edge. No vertical stripe wallpaper, no vertical slats, no wood plank pattern, no diagonal stripes, no text or objects. Repeats seamlessly horizontally across a room wall.",
+      "prompt": "Create ONE production-ready square 16-bit pixel RPG INTERIOR TILE. A simple RPG INTERIOR WALL BAND viewed straight-on/slightly overhead: top TWO THIRDS is smooth PLAIN warm cream plaster #f2ebde; bottom ONE THIRD is smooth WHITE wainscot panel with one gentle horizontal molding edge. No vertical stripe wallpaper, no vertical slats, no wood plank pattern, no diagonal stripes, no text or objects. Repeats seamlessly horizontally across a room wall. Warm modern cream/ivory palette, calm low-contrast coloring, simple chunky pixel clusters that remain legible at final 32x32. Fully OPAQUE image, material fills every edge, flat uniform lighting, no perspective floor scene, no border frame, no vignette, no cast shadow, no text or watermark. This is only the requested material texture, not a garden scene."
+    },
+    {
+      "group": "tiles",
+      "name": "M",
+      "size": [
+        32,
+        32
+      ],
+      "detail": "A warm CREAM IVORY MARBLE FLOOR texture matching a pale cream-oak interior palette. Nearly uniform #eee7da with just a few extremely faint warm light grey/cream veins, VERY low contrast. No orange, no pink, no green, no slabs, no grout grid, no shiny reflections. Seamless in both axes.",
+      "prompt": "Create ONE production-ready square 16-bit pixel RPG INTERIOR TILE. A warm CREAM IVORY MARBLE FLOOR texture matching a pale cream-oak interior palette. Nearly uniform #eee7da with just a few extremely faint warm light grey/cream veins, VERY low contrast. No orange, no pink, no green, no slabs, no grout grid, no shiny reflections. Seamless in both axes. Warm modern cream/ivory palette, calm low-contrast coloring, simple chunky pixel clusters that remain legible at final 32x32. Fully OPAQUE image, material fills every edge, flat uniform lighting, no perspective floor scene, no border frame, no vignette, no cast shadow, no text or watermark. This is only the requested material texture, not a garden scene."
+    },
+    {
+      "group": "objects",
+      "name": "door",
+      "size": [
+        32,
+        32
+      ],
+      "detail": "ONE small flat IVORY DOORMAT floor marker viewed directly from above. Soft rounded rectangular mat, very pale beige thin border, two or three tiny blush-pink petals and one small subtle ivory ribbon at a corner. No yellow border, no black heavy frame, no doorway, no door panel, no text, no letters. Complete small simple floor decoration.",
+      "prompt": "Create ONE transparent game OBJECT SPRITE for a cozy natural garden wedding RPG with cream and very pale pink accents. ONE small flat IVORY DOORMAT floor marker viewed directly from above. Soft rounded rectangular mat, very pale beige thin border, two or three tiny blush-pink petals and one small subtle ivory ribbon at a corner. No yellow border, no black heavy frame, no doorway, no door panel, no text, no letters. Complete small simple floor decoration. Final dimensions 32x32 pixels. Cute polished 16-bit pixel art, crisp chunky clusters, clean dark outline, soft cel shading, warm restrained pastel palette. Full object centered, complete silhouette, no crop. Genuinely transparent surrounding background, NO ground shadow, NO glow halo, NO surrounding scene, NO people, NO watermark or text."
+    },
+    {
+      "group": "objects",
+      "name": "flower",
+      "size": [
+        32,
+        48
+      ],
+      "detail": "ONE CLEAR UPRIGHT CLUMP of TWO or THREE blossoms, some blush pink and some white, with bright yellow tiny centers and crisp green stems/leaves. Tall slender flowering garden plant. Bigger clean readable flower heads, bold simple pixel shapes so it remains sharp at 32x48. No pot, no dirt patch, no background, no full bouquet wrapping, complete stem bottoms and blossoms visible.",
+      "prompt": "Create ONE transparent game OBJECT SPRITE for a cozy natural garden wedding RPG with cream and very pale pink accents. ONE CLEAR UPRIGHT CLUMP of TWO or THREE blossoms, some blush pink and some white, with bright yellow tiny centers and crisp green stems/leaves. Tall slender flowering garden plant. Bigger clean readable flower heads, bold simple pixel shapes so it remains sharp at 32x48. No pot, no dirt patch, no background, no full bouquet wrapping, complete stem bottoms and blossoms visible. Final dimensions 32x48 pixels. Cute polished 16-bit pixel art, crisp chunky clusters, clean dark outline, soft cel shading, warm restrained pastel palette. Full object centered, complete silhouette, no crop. Genuinely transparent surrounding background, NO ground shadow, NO glow halo, NO surrounding scene, NO people, NO watermark or text."
+    },
+    {
+      "group": "objects",
+      "name": "window",
+      "size": [
+        64,
+        64
+      ],
+      "detail": "ONE ARCHED WALL WINDOW, round arch across top, white cream frame, pale blue sky and soft pale green foliage visible INSIDE the window opening. A little white lace curtain at the sides, restrained elegant cozy interior style. Exterior outside the window silhouette is transparent. No wall, no windowsill plant, no text, no letters, no surrounding room.",
+      "prompt": "Create ONE transparent game OBJECT SPRITE for a cozy natural garden wedding RPG with cream and very pale pink accents. ONE ARCHED WALL WINDOW, round arch across top, white cream frame, pale blue sky and soft pale green foliage visible INSIDE the window opening. A little white lace curtain at the sides, restrained elegant cozy interior style. Exterior outside the window silhouette is transparent. No wall, no windowsill plant, no text, no letters, no surrounding room. Final dimensions 64x64 pixels. Cute polished 16-bit pixel art, crisp chunky clusters, clean dark outline, soft cel shading, warm restrained pastel palette. Full object centered, complete silhouette, no crop. Genuinely transparent surrounding background, NO ground shadow, NO glow halo, NO surrounding scene, NO people, NO watermark or text."
+    },
+    {
+      "group": "objects",
+      "name": "plant",
+      "size": [
+        32,
+        64
+      ],
+      "detail": "ONE tall narrow indoor POTTED PLANT for a room corner: round dark-to-mid green leafy foliage on a short trunk above an elegant WHITE ceramic pot. Clean rounded plant dome, whole pot bottom visible, simple friendly silhouette. No flowers, no surrounding room or floor, no extra pots.",
+      "prompt": "Create ONE transparent game OBJECT SPRITE for a cozy natural garden wedding RPG with cream and very pale pink accents. ONE tall narrow indoor POTTED PLANT for a room corner: round dark-to-mid green leafy foliage on a short trunk above an elegant WHITE ceramic pot. Clean rounded plant dome, whole pot bottom visible, simple friendly silhouette. No flowers, no surrounding room or floor, no extra pots. Final dimensions 32x64 pixels. Cute polished 16-bit pixel art, crisp chunky clusters, clean dark outline, soft cel shading, warm restrained pastel palette. Full object centered, complete silhouette, no crop. Genuinely transparent surrounding background, NO ground shadow, NO glow halo, NO surrounding scene, NO people, NO watermark or text."
+    },
+    {
+      "group": "objects",
+      "name": "sign",
+      "size": [
+        64,
+        64
+      ],
+      "detail": "ONE crisp WOODEN GARDEN SIGNPOST with exactly TWO horizontal blank wooden planks, slightly offset, on ONE sturdy vertical post, a few small ivory and pale pink flowers decorating one corner. Clear dark brown pixel outline, warm pale oak, readable silhouette, no text, no letters, no imitated handwriting, no arrows painted on it. Entire post and board visible. Preserve the two-blank-plank character of the reference but sharpen the outline.",
+      "prompt": "Create ONE transparent game OBJECT SPRITE for a cozy natural garden wedding RPG with cream and very pale pink accents. ONE crisp WOODEN GARDEN SIGNPOST with exactly TWO horizontal blank wooden planks, slightly offset, on ONE sturdy vertical post, a few small ivory and pale pink flowers decorating one corner. Clear dark brown pixel outline, warm pale oak, readable silhouette, no text, no letters, no imitated handwriting, no arrows painted on it. Entire post and board visible. Preserve the two-blank-plank character of the reference but sharpen the outline. Final dimensions 64x64 pixels. Cute polished 16-bit pixel art, crisp chunky clusters, clean dark outline, soft cel shading, warm restrained pastel palette. Full object centered, complete silhouette, no crop. Genuinely transparent surrounding background, NO ground shadow, NO glow halo, NO surrounding scene, NO people, NO watermark or text."
+    },
+    {
+      "group": "objects",
+      "name": "platform",
+      "size": [
+        160,
+        64
+      ],
+      "detail": "ONE WIDE LOW WEDDING STONE PLATFORM, shallow rectangular footprint with softly rounded corners, final sprite aspect 160 wide by 64 tall. Overhead RPG view that shows a broad FLAT BRIGHT IVORY CREAM stone TOP SURFACE taking the upper roughly 44px of height, and ONE or TWO low shallow steps on the FRONT lower roughly 20px, slightly darker cream to indicate elevation. Center of top is completely EMPTY and flat so TWO 48x72 characters can stand side by side. Tiny sparse white and very pale pink flowers only as a THIN trim at outer side/back edges. Natural garden palette, understated, no ornate gold, no tall altar, no arch, no people, no columns, no lettering. Complete platform and steps visible; transparent around its gently outlined perimeter.",
+      "prompt": "Create ONE transparent game OBJECT SPRITE for a cozy natural garden wedding RPG with cream and very pale pink accents. ONE WIDE LOW WEDDING STONE PLATFORM, shallow rectangular footprint with softly rounded corners, final sprite aspect 160 wide by 64 tall. Overhead RPG view that shows a broad FLAT BRIGHT IVORY CREAM stone TOP SURFACE taking the upper roughly 44px of height, and ONE or TWO low shallow steps on the FRONT lower roughly 20px, slightly darker cream to indicate elevation. Center of top is completely EMPTY and flat so TWO 48x72 characters can stand side by side. Tiny sparse white and very pale pink flowers only as a THIN trim at outer side/back edges. Natural garden palette, understated, no ornate gold, no tall altar, no arch, no people, no columns, no lettering. Complete platform and steps visible; transparent around its gently outlined perimeter. Final dimensions 160x64 pixels. Cute polished 16-bit pixel art, crisp chunky clusters, clean dark outline, soft cel shading, warm restrained pastel palette. Full object centered, complete silhouette, no crop. Genuinely transparent surrounding background, NO ground shadow, NO glow halo, NO surrounding scene, NO people, NO watermark or text."
+    }
+  ],
+  "preparation": {
+    "command": "python tools/prepare_interior_assets.py",
+    "source_directory": "raw/round56-source/",
+    "backup_directory": "raw/round56-backup/",
+    "characters_processed": 0,
+    "marble_input": "raw/tiles/M.png",
+    "marble_compatibility_copy": "raw/tiles/wedding/ivory-marble.png",
+    "wall_repeat_axes": [
+      "x"
+    ],
+    "alpha_cleanup": "Object alpha below 16 cleared before crop/fit to remove faint matte padding."
+  }
+}
