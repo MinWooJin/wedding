@@ -1,8 +1,34 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { guestPlacements, HUB_ROWS, HUB_DOORS, GUEST_ZONE, createHub } from '../js/world/hub.js';
+import { guestPlacements, HUB_ROWS, HUB_DOORS, GUEST_ZONE, createHub, uniqueGuests, MAX_GUESTS } from '../js/world/hub.js';
 import { DEFAULT_CONFIG } from '../js/config.js';
+
+test('여러 글과 방문 기록이 섞여도 한 하객을 한 번만 업데이트한다', () => {
+  const entries = [
+    { n: '하객', c: 1, m: '첫 글', t: 1 },
+    { n: '하객', c: 1, m: '최신 글', t: 3 },
+    { n: '하객', c: 1, m: '', t: 4 },
+  ];
+  const hub = createHub({ config: DEFAULT_CONFIG, profile: { nickname: '나' }, assets: {}, data: { messages: entries } });
+  for (let i = 0; i < 3; i++) {
+    hub.setGuests(entries);
+    assert.equal(hub.npcs.length - hub.baseNpcs.length, 1);
+    assert.equal(hub.guestMap.get('하객:1').entry.m, '최신 글');
+    assert.equal(new Set(hub.npcs).size, hub.npcs.length);
+  }
+  assert.equal(entries.length, 3, '원본 메시지 목록은 그대로 유지');
+  assert.equal(uniqueGuests(entries).length, 1);
+});
+
+test('보존한 하객과 신규 하객을 합쳐도 전체 상한을 넘지 않는다', () => {
+  const entries = Array.from({ length: 100 }, (_, i) => ({ t: i, n: `추가하객${i}`, c: i % 10, m: '축하' }));
+  const hub = createHub({ config: DEFAULT_CONFIG, profile: { nickname: '나' }, assets: {}, data: { messages: entries.slice(0, 20) } });
+  for (let i = 20; i <= 100; i += 10) {
+    hub.setGuests(entries.slice(0, i));
+    assert.ok(hub.npcs.length - hub.baseNpcs.length <= MAX_GUESTS);
+  }
+});
 
 test('반복 갱신과 새 하객 추가 시 기존 캐릭터·배회 상태를 보존한다', () => {
   const entries = Array.from({ length: 5 }, (_, i) => ({ t: i, n: `손님${i}`, c: i, m: '축하' }));

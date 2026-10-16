@@ -85,6 +85,17 @@ export function guestPlacements(entries, reserved) {
 
 const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
 
+/** 한 사람의 여러 글은 목록에 유지하되 광장의 캐릭터는 한 명만 만든다. */
+export function uniqueGuests(entries) {
+  const selected = new Map();
+  for (const entry of entries) {
+    const key = `${entry.n}:${entry.c}`;
+    const previous = selected.get(key);
+    if (!previous || (!previous.m && entry.m) || (!!previous.m === !!entry.m && entry.t > previous.t)) selected.set(key, entry);
+  }
+  return [...selected.values()];
+}
+
 export class HubScene extends Scene {
   constructor(game) {
     const cfg = game.config;
@@ -96,7 +107,7 @@ export class HubScene extends Scene {
     const guide = new Character({ sprites: characterSet(game.assets, 'preset-4', presetSprites(4)), name: '정원 안내인', ...standPos(3, 11) });
     const guideNpc = { character: guide, solid: false, interact: () => showOverlay(game, {
       title: '작은 정원에 오신 걸 환영해요',
-      html: '<p>두 사람에게 축하 편지를 남기면 정원에 꽃이 피어요.</p><p>꽃과 하객을 누르면 남겨진 마음을 읽을 수 있어요. 공간 메뉴에서는 사진과 이야기도 만나 보세요.</p>',
+      html: '<p>두 사람에게 축하 편지를 남기면 정원에 꽃이 피어요.</p><p>꽃과 하객을 누르면 남겨진 마음을 읽을 수 있어요. 공간 메뉴에서는 사진과 결혼 소식도 만나 보세요.</p>',
       buttons: [{ label: '좋아요' }],
     }) };
 
@@ -131,6 +142,7 @@ export class HubScene extends Scene {
     this.rebuildSolid(); // 오브젝트 발자국 + 신랑신부 자리
     const reserved = new Set(this.extraSolid);
     for (const o of this.objects) { // 오브젝트가 덮는 타일(표지판은 주변 1칸까지)
+      if (o.spr.missing) continue;
       const w = Math.ceil(o.spr.w / 32), h = Math.ceil(o.spr.h / 32);
       const m = o.sprite === 'sign' ? 1 : 0;
       for (let dy = -m; dy < h + m; dy++) for (let dx = -m; dx < w + m; dx++) reserved.add(`${o.tx + dx},${o.ty + dy}`);
@@ -147,7 +159,7 @@ export class HubScene extends Scene {
       reserved.add(`${d.back.tx},${d.back.ty}`);
     }
     const me = this.game?.profile?.nickname;
-    const others = entries.filter((e) => e.n !== me); // 본인은 플레이어로 이미 있으므로 제외
+    const others = uniqueGuests(entries).filter((e) => e.n !== me).slice(0, MAX_GUESTS); // 본인은 플레이어로 이미 있으므로 제외
     const wanderReserved = new Set(reserved);
     const inZone = (tx, ty) => GUEST_ZONE.cols.includes(tx) && ty >= GUEST_ZONE.rowMin && ty <= GUEST_ZONE.rowMax && !wanderReserved.has(`${tx},${ty}`);
     const faceAisle = () => 'down'; // 레퍼런스처럼 모두 정면(카메라)을 본다

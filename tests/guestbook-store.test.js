@@ -1,6 +1,24 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { readPreview, savePreview } from '../js/guestbook-store.js';
+import { readPreview, savePreview, deletePreviewEntry } from '../js/guestbook-store.js';
+
+test('같은 타임스탬프의 두 글 중 선택한 글 하나만 지운다', () => {
+  let stored;
+  const storage = { setItem: (_, value) => { stored = JSON.parse(value); } };
+  const entries = [{ n: '하객', c: 1, m: '첫 글', t: 1 }, { n: '하객', c: 1, m: '다른 글', t: 1 }];
+  const result = deletePreviewEntry(entries, 1, storage);
+  assert.equal(result.ok, true);
+  assert.deepEqual(result.entries, [entries[0]]);
+  assert.deepEqual(stored, [entries[0]]);
+  assert.equal(entries.length, 2);
+});
+
+test('삭제 저장 실패나 잘못된 선택은 기존 글을 보존한다', () => {
+  const entries = [{ n: '하객', c: 1, m: '축하', t: 1 }];
+  const storage = { setItem: () => { throw Error('quota'); } };
+  assert.deepEqual(deletePreviewEntry(entries, 0, storage), { ok: false, entries });
+  assert.deepEqual(deletePreviewEntry(entries, -1, storage), { ok: false, entries });
+});
 
 test('미리보기는 전용 키에 저장하고 재방문 시 읽으며 100건까지 보관한다', () => {
   const values = new Map();

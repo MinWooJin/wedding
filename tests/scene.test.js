@@ -23,6 +23,19 @@ function makeScene(extra = {}) {
 }
 const player = () => new Character({ sprites: presetSprites(0), name: 'me', x: 0, y: 0 });
 
+test('로드에 실패한 투명 장식은 보이지 않는 벽이나 탭 장애물을 남기지 않는다', () => {
+  const s = makeScene({ objects: [{ id: 'missing', sprite: 'bush-white', tx: 3, ty: 3 }] });
+  assert.equal(s.objects[0].spr.missing, true);
+  assert.equal(s.isSolidTile(3, 3), false);
+  assert.equal(s.hitObject(112, 112), null);
+});
+
+test('PNG 전용 오브젝트가 없어도 라벨이 있는 기능은 사용할 수 있다', () => {
+  const s = makeScene({ objects: [{ id: 'missing', sprite: 'share-letter', tx: 3, ty: 3, label: '공유', interact: () => {} }] });
+  assert.equal(s.isSolidTile(3, 3), false);
+  assert.equal(s.hitObject(112, 80)?.id, 'missing');
+});
+
 test('경유 입구는 피하고 목적지로 선택한 입구만 통과한다', () => {
   const s = makeScene({ entrances: [{ tx: 3, ty: 3, to: 'room' }] });
   const p = player(); s.enter(p, { tx: 3, ty: 2 });

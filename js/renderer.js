@@ -46,6 +46,7 @@ export class Renderer {
     this.view = { scale: 1, width: VIEW_W, height: 600 };
     this.tiles = {}; // id → 이미지 스프라이트(있으면 코드 타일 대신 사용)
     this.motionPreference = globalThis.matchMedia?.('(prefers-reduced-motion: reduce)');
+    this.groundCache = new WeakMap();
   }
 
   get reducedMotion() { return this.motionPreference?.matches ?? false; }
@@ -66,6 +67,36 @@ export class Renderer {
   }
 
   drawTile(id, x, y) { this.drawSprite(this.tiles[id] ?? tileSprite(id), x, y); }
+
+  /** 정적 타일·바닥 장식은 씬당 한 번 합성하고 카메라 위치만 바꿔 그린다. */
+  drawGround(map, bgImage, floors) {
+    // 긴 갤러리는 거대한 캔버스를 만들지 않고 기존 가시 영역 렌더링으로 돌아간다.
+    if (map.w * TILE * map.h * TILE > 2_000_000) return false;
+    let cached = this.groundCache.get(map);
+    if (!cached || cached.tiles !== this.tiles || cached.bgImage !== bgImage || cached.floors.length !== floors.length || cached.floors.some((o, i) => o !== floors[i])) {
+      const canvas = document.createElement('canvas');
+      canvas.width = map.w * TILE; canvas.height = map.h * TILE;
+      const context = canvas.getContext('2d');
+      if (!context) return false;
+      const painter = Object.create(this);
+      painter.ctx = context; painter.ctx.imageSmoothingEnabled = false;
+      painter.cam = { x: 0, y: 0 }; painter.view = { width: canvas.width, height: canvas.height, scale: 1 };
+      if (bgImage) painter.drawCanvas(bgImage, 0, 0);
+      else for (let ty = 0; ty < map.h; ty++) for (let tx = 0; tx < map.w; tx++) {
+        painter.drawGardenTile(map.rows[ty][tx], tx * TILE, ty * TILE, [
+          map.rows[ty - 1]?.[tx] === 'N', map.rows[ty]?.[tx + 1] === 'N',
+          map.rows[ty + 1]?.[tx] === 'N', map.rows[ty]?.[tx - 1] === 'N',
+        ]);
+      }
+      for (const o of floors) painter.drawSprite(o.spr, o.tx * TILE, o.drawY);
+      cached = { canvas, tiles: this.tiles, bgImage, floors: floors.slice() };
+      this.groundCache.set(map, cached);
+    }
+    this.drawCanvas(cached.canvas, 0, 0);
+    return true;
+  }
+
+  invalidateGround(map) { this.groundCache.delete(map); }
 
   /** 기존 G/N 이미지를 그대로 사용해 길의 바깥 모서리만 부드럽게 잇는다. */
   drawGardenTile(id, x, y, neighbors) {

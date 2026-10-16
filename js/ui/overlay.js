@@ -9,6 +9,7 @@ export function showOverlay(game, { title = '', html = '', buttons = [{ label: '
   active.get(game)?.();
   const root = document.getElementById('overlay');
   const previousFocus = document.activeElement;
+  const hud = document.getElementById('hud'), previousInert = hud?.inert ?? false;
   root.innerHTML = '';
   const card = h(`<section class="card" role="dialog" aria-modal="true" aria-label="${esc(title || '안내')}" tabindex="-1">${title ? `<h2>${esc(title)}</h2>` : ''}<div class="body">${html}</div><div class="row dialog-actions"></div></section>`);
   let busy = false, closed = false;
@@ -16,8 +17,10 @@ export function showOverlay(game, { title = '', html = '', buttons = [{ label: '
     if (closed || (busy && !force)) return;
     closed = true; document.removeEventListener('keydown', onKey);
     root.hidden = true; root.innerHTML = ''; root.onclick = null; game.paused = false;
-    active.delete(game); onClose?.(card);
+    active.delete(game);
+    if (hud) hud.inert = previousInert;
     if (previousFocus?.isConnected) previousFocus.focus();
+    onClose?.(card);
   };
   const onKey = (e) => {
     if (e.key === 'Escape') { e.preventDefault(); close(); }
@@ -34,7 +37,8 @@ export function showOverlay(game, { title = '', html = '', buttons = [{ label: '
     btn.onclick = async () => {
       if (busy) return;
       busy = true; card.setAttribute('aria-busy', 'true');
-      row.querySelectorAll('button').forEach((el) => { el.disabled = true; });
+      const controls = [...card.querySelectorAll('button,input,textarea,select')].map((el) => [el, el.disabled]);
+      controls.forEach(([el]) => { el.disabled = true; });
       try {
         const keep = b.onClick ? await b.onClick(card) : false;
         if (!keep) close(true);
@@ -43,7 +47,7 @@ export function showOverlay(game, { title = '', html = '', buttons = [{ label: '
         if (err) err.textContent = '처리하지 못했어요. 잠시 후 다시 시도해 주세요.';
       } finally {
         busy = false;
-        if (!closed) { card.removeAttribute('aria-busy'); row.querySelectorAll('button').forEach((el) => { el.disabled = false; }); }
+        if (!closed) { card.removeAttribute('aria-busy'); controls.forEach(([el, disabled]) => { el.disabled = disabled; }); }
       }
     };
     row.appendChild(btn);
@@ -51,6 +55,7 @@ export function showOverlay(game, { title = '', html = '', buttons = [{ label: '
   root.appendChild(card);
   root.hidden = false;
   game.paused = true;
+  if (hud) hud.inert = true;
   active.set(game, () => close(true));
   document.addEventListener('keydown', onKey); card.focus();
   root.onclick = (e) => { if (e.target === root) close(); };

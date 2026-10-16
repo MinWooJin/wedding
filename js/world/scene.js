@@ -41,7 +41,7 @@ export class Scene {
     const spr = this.assets.objects?.[o.sprite] ?? objectSprite(o.sprite);
     const rows = Math.ceil(spr.h / TILE);
     // 스프라이트 아래쪽을 발자국 행의 바닥에 맞춘다(48px 의자 등). 32 배수면 ty*TILE과 같다.
-    return { solid: !o.floor, ...o, spr, drawY: (o.ty + rows) * TILE - spr.h, bottom: (o.ty + rows) * TILE };
+    return { ...o, solid: !spr.missing && (o.solid ?? !o.floor), spr, drawY: (o.ty + rows) * TILE - spr.h, bottom: (o.ty + rows) * TILE };
   }
 
   rebuildSolid() {
@@ -170,6 +170,7 @@ export class Scene {
     const ordered = this.objects.slice().sort((a, b) => (a.floor ? -Infinity : a.bottom) - (b.floor ? -Infinity : b.bottom));
     for (let i = ordered.length - 1; i >= 0; i--) {
       const o = ordered[i];
+      if (o.spr.missing && !o.interact) continue;
       const width = o.label ? Math.max(o.spr.w, o.label.length * 10 + 14) : o.spr.w;
       const x0 = o.tx * TILE + (o.spr.w - width) / 2;
       if (wx >= x0 && wx < x0 + width && wy >= o.drawY - (o.label ? 24 : 0) && wy < o.drawY + o.spr.h) return o;
@@ -248,18 +249,21 @@ export class Scene {
 
   /** @param r renderer: drawTile, drawSprite, drawCanvas, drawNameTag(text,cx,topY), drawBubble(text,cx,bottomY) */
   draw(r, player) {
-    if (this.bgImage) {
-      r.drawCanvas(this.bgImage, 0, 0);
-    } else {
-      for (let ty = 0; ty < this.map.h; ty++) {
-        for (let tx = 0; tx < this.map.w; tx++) {
-          const id = tileAt(this.map, tx, ty);
-          if (r.drawGardenTile) r.drawGardenTile(id, tx * TILE, ty * TILE, [[0, -1], [1, 0], [0, 1], [-1, 0]].map(([dx, dy]) => tileAt(this.map, tx + dx, ty + dy) === 'N'));
-          else r.drawTile(id, tx * TILE, ty * TILE);
+    const floors = this.objects.filter((o) => o.floor);
+    if (r.drawGround?.(this.map, this.bgImage, floors) !== true) {
+      if (this.bgImage) {
+        r.drawCanvas(this.bgImage, 0, 0);
+      } else {
+        for (let ty = 0; ty < this.map.h; ty++) {
+          for (let tx = 0; tx < this.map.w; tx++) {
+            const id = tileAt(this.map, tx, ty);
+            if (r.drawGardenTile) r.drawGardenTile(id, tx * TILE, ty * TILE, [[0, -1], [1, 0], [0, 1], [-1, 0]].map(([dx, dy]) => tileAt(this.map, tx + dx, ty + dy) === 'N'));
+            else r.drawTile(id, tx * TILE, ty * TILE);
+          }
         }
       }
+      for (const o of floors) r.drawSprite(o.spr, o.tx * TILE, o.drawY);
     }
-    for (const o of this.objects) if (o.floor) r.drawSprite(o.spr, o.tx * TILE, o.drawY);
     if (this.destination) r.drawDestination?.(this.destination.x, this.destination.y);
     const items = [];
     for (const o of this.objects) if (!o.floor) items.push({ y: o.bottom, draw: () => { r.drawSprite(o.spr, o.tx * TILE, o.drawY); o.drawContent?.(r); } });

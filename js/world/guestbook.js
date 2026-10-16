@@ -3,7 +3,7 @@ import { HUB_DOORS } from './hub.js';
 import { freeTiles, pickTiles } from './guest-layout.js';
 import { showOverlay } from '../ui/overlay.js';
 import { toast } from '../ui/toast.js';
-import { savePreview } from '../guestbook-store.js';
+import { savePreview, deletePreviewEntry } from '../guestbook-store.js';
 import { esc } from '../ui/dom.js';
 import { validateEntry, postMessage, MESSAGE_MAX } from '../api.js';
 
@@ -65,18 +65,20 @@ export class GuestbookScene extends Scene {
   }
 
   openList() {
-    const entries = this.game.data.messages.filter((e) => e.m).slice().sort((a, b) => b.t - a.t);
+    const snapshot = this.game.data.messages;
+    const entries = snapshot.map((entry, index) => ({ ...entry, sourceIndex: index })).filter((e) => e.m).sort((a, b) => b.t - a.t);
     const { card, close } = showOverlay(this.game, {
       title: `정원에 도착한 마음 · ${entries.length}`,
       html: `${!this.game.config.guestbookApi ? '<p class="preview-notice">이 기기에 저장한 미리보기예요. 다른 사람에게 공개되지 않아요.</p>' : ''}
-        <div class="message-list">${entries.length ? entries.map((e) => `<article class="message-item"><strong>${esc(e.n)}</strong><p>${esc(e.m)}</p><small>${esc(new Date(e.t).toLocaleDateString('ko-KR'))}</small>${!this.game.config.guestbookApi ? `<button class="text-button preview-delete" data-time="${e.t}">이 미리보기 지우기</button>` : ''}</article>`).join('') : '<div class="empty-state"><span>❀</span><h3>첫 번째 꽃을 기다리고 있어요</h3><p>따뜻한 한마디가 정원의 첫 꽃이 됩니다.</p></div>'}</div>`,
+        <div class="message-list">${entries.length ? entries.map((e) => `<article class="message-item"><strong>${esc(e.n)}</strong><p>${esc(e.m)}</p><small>${esc(new Date(e.t).toLocaleDateString('ko-KR'))}</small>${!this.game.config.guestbookApi ? `<button class="text-button preview-delete" data-index="${e.sourceIndex}">이 미리보기 지우기</button>` : ''}</article>`).join('') : '<div class="empty-state"><span>❀</span><h3>첫 번째 꽃을 기다리고 있어요</h3><p>따뜻한 한마디가 정원의 첫 꽃이 됩니다.</p></div>'}</div>`,
       buttons: [{ label: '축하 남기기', primary: true, onClick: () => { close(true); this.openForm(this.game); return true; } }, { label: '닫기' }],
     });
     card.querySelectorAll('.preview-delete').forEach((button) => {
       button.onclick = () => {
-        const entries = this.game.data.messages.filter((e) => String(e.t) !== button.dataset.time);
-        if (!savePreview(entries)) { toast('기기에 저장할 수 없어 지우지 못했어요.'); return; }
-        this.game.data.messages = entries; this.game.onMessagesChanged?.();
+        if (snapshot !== this.game.data.messages) { close(); this.openList(); return; }
+        const result = deletePreviewEntry(snapshot, Number(button.dataset.index));
+        if (!result.ok) { toast('기기에 저장할 수 없어 지우지 못했어요.'); return; }
+        this.game.data.messages = result.entries; this.game.onMessagesChanged?.();
         close(); this.openList();
       };
     });
