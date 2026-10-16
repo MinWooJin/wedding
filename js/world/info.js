@@ -67,6 +67,7 @@ export function createInfo(game) {
         title: '캘린더에 저장', html: `<p>${esc(formatDate(w.date))}</p>`,
         buttons: [{ label: '.ics 다운로드', primary: true, onClick: () => { downloadIcs(cfg); } }, { label: '닫기' }] }) },
       { id: 'desk', sprite: 'desk', tx: 2, ty: 1, interact: () => showOverlay(game, { title: '예식 안내', html: infoHtml(cfg) }) },
+      ...(game.assets?.objects?.plant ? [{ id: 'plantL', sprite: 'plant', tx: 1, ty: 5 }, { id: 'plantR', sprite: 'plant', tx: 9, ty: 5 }] : []),
       { id: 'phone', sprite: 'phone', tx: 7, ty: 1, interact: () => showOverlay(game, { title: '연락하기', html: contactsHtml(cfg) }) },
     ],
     onEnter: (g) => { if (!shownOnce) { shownOnce = true; showOverlay(g, { title: '예식 안내', html: infoHtml(cfg) }); } },

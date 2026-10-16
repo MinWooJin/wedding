@@ -23,6 +23,8 @@ export function createStory(game) {
     objects: [
       { id: 'door', sprite: 'door', floor: true, ...L.exit },
       { id: 'bench', sprite: 'bench', ...L.bench },
+      // 울타리 안쪽 가장자리 장식: 이정표가 없는 쪽에 나무(96×128)와 흰 덤불을 번갈아
+      ...L.signs.map((s, i) => ({ id: `edge${i}`, sprite: i % 2 === 0 ? 'tree' : 'bush-white', tx: s.tx === 3 ? 7 : 1, ty: s.ty - (i % 2 === 0 ? 2 : 0) })),
       ...L.signs.map((s) => {
         const t = cfg.timeline[s.index];
         return { id: `sign${s.index}`, sprite: 'sign', tx: s.tx, ty: s.ty,

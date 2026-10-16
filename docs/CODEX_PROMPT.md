@@ -284,3 +284,30 @@ JS·CSS·HTML은 이 작업에서 수정하지 않았다.
 - tools/prepare_assets.py OBJECT_SIZES에 "platform": (160, 64)는 이미 추가돼 있다. 변환 후 manifest에 등록되는지 확인.
 - js/ 는 수정하지 마라. 완료 후 결과 크기·bbox를 이 문서 하단에 기록해라.
 ```
+
+# 6차 요청: 전체 검토 후 보완 (Claude가 2026-10-16 작성) — 5차 단상과 함께 한 번에 처리
+
+```text
+작업 폴더: C:\Users\alsdn\wedding (원격 없음, push 금지, 로컬 커밋 가능)
+
+5차의 platform.png(160×64)와 함께 아래를 만든다. 모두 기존 에셋 스타일(assets/generation-prompts.json 공통 문구)이며
+전체 톤은 "레퍼런스의 자연 정원 + 크림/연분홍 UI"다. 실내는 주황 원목이 아니라 밝고 차분한 톤으로 바꾼다.
+tools/prepare_assets.py에는 window (64,64), plant (32,64)가 이미 추가돼 있다. 캐릭터 PNG는 절대 재변환하지 마라.
+완료 후 결과 크기·bbox를 이 문서 하단에 기록해라.
+
+타일(32×32, 불투명, 이음새 없음)
+  - raw/tiles/D.png (ID D, 교체) 실내 바닥. 지금은 주황색 원목이 너무 강하다 → 연한 오크/아이보리 나무결, 낮은 대비, 따뜻한 크림 톤
+  - raw/tiles/K.png (ID K, 교체) 실내 벽(위에서 본 벽면 띠). 지금은 세로 줄무늬 널빤지처럼 보인다 →
+    크림색 민무늬 벽 + 아래쪽 1/3은 흰 웨인스코팅(몰딩) 느낌, 줄무늬 없이 부드럽게
+  - raw/tiles/M.png (ID M, 교체) 대리석 바닥. 현재도 쓸 만하지만 D와 같은 크림 톤 계열로 통일, 결은 더 은은하게
+
+오브젝트(투명 배경, 아래 가운데 정렬)
+  - raw/objects/door.png   (교체) 32×32 바닥 도어매트. 지금은 노란 테두리 네모로 조잡하다 → 아이보리 매트에 작은 꽃잎·리본, 테두리는 연한 베이지
+  - raw/objects/flower.png (교체) 32×48 방명록 정원에 피는 꽃. 지금은 너무 작고 흐릿하다 → 분홍·흰 꽃송이 2~3개가 모인 한 포기, 잎 포함, 선명하게
+  - raw/objects/window.png (신규, ID window) 64×64 실내 벽에 걸리는 아치형 창문. 밖으로 연한 하늘·초록, 흰 창틀, 레이스 커튼 살짝
+  - raw/objects/plant.png  (신규, ID plant) 32×64 실내 모서리용 화분(흰 화분에 둥근 초록 식물)
+  - raw/objects/sign.png   (교체) 64×64 표지판. 지금 것도 괜찮지만 글씨 없이 판자 2장 + 작은 꽃 장식은 유지하고 외곽을 더 또렷하게
+  - raw/objects/platform.png (5차) 160×64 단상
+
+prepare_assets.py 반영: D/K/M은 TILES에 이미 있음. OBJECT_SIZES에 "window": (64, 64), "plant": (32, 64)는 있음. "flower"는 (32, 48)로 바꿔라.
+```

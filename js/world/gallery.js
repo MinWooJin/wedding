@@ -32,6 +32,7 @@ export class GalleryScene extends Scene {
       })),
     ];
     if (files.length === 0) objects.push({ id: 'empty', sprite: 'sign', tx: 5, ty: 2, interact: () => toast('사진을 준비하고 있어요 📷') });
+    if (game.assets?.objects?.window) objects.push({ id: 'winL', sprite: 'window', tx: 2, ty: -1 }, { id: 'winR', sprite: 'window', tx: 7, ty: -1 });
 
     super({
       id: 'gallery', rows: L.rows, bg: '#f6efe7', spawn: L.spawn, assets: game.assets,

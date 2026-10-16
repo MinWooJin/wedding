@@ -23,7 +23,9 @@ const ROWS = [
 const MAILBOX = { tx: 4, ty: 2 }; // 64×64: 4~5열, 2~3행
 const EXIT = { tx: 5, ty: 11 };
 const SPAWN = { tx: 5, ty: 10 };
-const RESERVED = new Set(['4,2', '5,2', '4,3', '5,3', '4,4', '5,4', '3,3', '6,3', '5,9', '5,10', '4,10', '6,10']); // 우체통 주변, 입구 근처
+const RESERVED = new Set(['4,2', '5,2', '4,3', '5,3', '4,4', '5,4', '3,3', '6,3', '5,9', '5,10', '4,10', '6,10',
+  '1,1', '2,1', '3,1', '1,2', '2,2', '3,2', '1,3', '2,3', '3,3', '1,4', '2,4', '3,4', '7,1', '8,1', '9,1', '7,2', '8,2', '9,2', '7,3', '8,3', '9,3', '7,4', '8,4', '9,4',
+  '1,7', '2,7', '1,8', '2,8', '8,7', '9,7', '8,8', '9,8']); // 우체통·입구·나무·덤불 자리
 const POST_COOLDOWN_MS = 60_000;
 let lastPostAt = 0;
 
@@ -35,6 +37,8 @@ export class GuestbookScene extends Scene {
       objects: [
         { id: 'door', sprite: 'door', floor: true, ...EXIT },
         { id: 'mailbox', sprite: 'mailbox', ...MAILBOX, interact: () => this.openForm(game) },
+        { id: 'treeL', sprite: 'tree', tx: 1, ty: 1 }, { id: 'treeR', sprite: 'tree', tx: 7, ty: 1 },
+        { id: 'bushL', sprite: 'bush-white', tx: 1, ty: 7 }, { id: 'bushR', sprite: 'bush', tx: 8, ty: 7 },
       ],
     });
     this.game = game;
