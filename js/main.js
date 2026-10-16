@@ -1,6 +1,7 @@
 import { Game } from './game.js';
 import { createHub } from './world/hub.js';
 import { createInfo } from './world/info.js';
+import { createGallery } from './world/gallery.js';
 import { loadConfig } from './config.js';
 import { loadProfile, saveProfile } from './state.js';
 import { showIntro } from './ui/intro.js';
@@ -9,7 +10,11 @@ import { loadAssets } from './assets.js';
 
 const canvas = document.getElementById('game');
 const frame = document.getElementById('frame');
-const [config, assets] = await Promise.all([loadConfig(), loadAssets()]);
+async function loadManifest() {
+  try { const r = await fetch('gallery/manifest.json', { cache: 'no-cache' }); return r.ok ? await r.json() : []; }
+  catch { return []; }
+}
+const [config, assets, gallery] = await Promise.all([loadConfig(), loadAssets(), loadManifest()]);
 document.title = `${config.groom.name} ♥ ${config.bride.name} 결혼합니다`;
 
 let profile = loadProfile();
@@ -18,7 +23,8 @@ if (!profile) {
   saveProfile(profile);
 }
 
-const game = new Game({ canvas, frame, config, profile, assets, scenes: { hub: createHub, info: createInfo }, ui: {} });
+const game = new Game({ canvas, frame, config, profile, assets, scenes: { hub: createHub, info: createInfo, gallery: createGallery }, ui: {} });
+game.gallery = gallery;
 game.ui.hud = createHud(document.getElementById('hud'), config, game);
 game.start('hub');
 
