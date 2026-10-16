@@ -1,8 +1,8 @@
-/** rows에서 'G' 또는 'W' 타일 중 exclude("tx,ty")에 없는 타일 목록(행 우선) */
+/** rows에서 잔디 계열('G','W','E') 타일 중 exclude("tx,ty")에 없는 타일 목록(행 우선) */
 export function freeTiles(rows, exclude = new Set()) {
   const out = [];
   rows.forEach((row, ty) => [...row].forEach((ch, tx) => {
-    if ((ch === 'G' || ch === 'W') && !exclude.has(`${tx},${ty}`)) out.push({ tx, ty });
+    if ((ch === 'G' || ch === 'W' || ch === 'E') && !exclude.has(`${tx},${ty}`)) out.push({ tx, ty });
   }));
   return out;
 }

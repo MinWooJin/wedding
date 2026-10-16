@@ -10,7 +10,7 @@ test('guestPlacements: 제외 타일 회피, 잔디 위, 서로 인접하지 않
   assert.deepEqual(a, guestPlacements(entries, reserved));
   for (const g of a) {
     assert.ok(!reserved.has(`${g.tx},${g.ty}`));
-    assert.ok('GW'.includes(HUB_ROWS[g.ty][g.tx]), '잔디/꽃잔디 위');
+    assert.ok('GWE'.includes(HUB_ROWS[g.ty][g.tx]), '잔디/꽃잔디/꽃잎잔디 위');
     assert.ok(g.entry.n.startsWith('손님'));
   }
   for (let i = 0; i < a.length; i++) for (let j = i + 1; j < a.length; j++) {
