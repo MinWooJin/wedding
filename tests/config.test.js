@@ -31,3 +31,10 @@ test('formatDate: 한국어 날짜·요일·시각', () => {
   assert.equal(formatDate('2027-03-13T12:30:00+09:00'), '2027년 3월 13일 토요일 오후 12시 30분');
   assert.equal(formatDate('2027-03-14T11:00:00+09:00'), '2027년 3월 14일 일요일 오전 11시');
 });
+
+test('displayName: shortName 우선, 없으면 name', async () => {
+  const { displayName } = await import('../js/config.js');
+  assert.equal(displayName({ name: '진민우', shortName: '민우' }), '민우');
+  assert.equal(displayName({ name: '진민우', shortName: '' }), '진민우');
+  assert.equal(displayName({ name: '진민우' }), '진민우');
+});

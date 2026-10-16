@@ -24,7 +24,7 @@ function infoHtml(cfg) {
   const notice = w.notice
     ? `<p class="notice">${esc(w.notice).split('\n').join('<br>')}</p>`
     : '';
-  return kv([['일시', formatDate(w.date)], ['장소', [w.venue, w.hall].filter(Boolean).join(' ')], ['주소', w.address]]) + notice;
+  return kv([['신랑', cfg.groom.name], ['신부', cfg.bride.name], ['일시', formatDate(w.date)], ['장소', [w.venue, w.hall].filter(Boolean).join(' ')], ['주소', w.address]]) + notice;
 }
 
 function contactsHtml(cfg) {

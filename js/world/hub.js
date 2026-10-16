@@ -4,6 +4,7 @@ import { GROOM, BRIDE, presetSprites, PRESET_COUNT } from '../sprites/characters
 import { toast } from '../ui/toast.js';
 import { characterSet } from '../assets.js';
 import { freeTiles, pickTiles } from './guest-layout.js';
+import { displayName } from '../config.js';
 
 // 11열 × 32행(352×1024px). 위쪽 19행은 아치까지 이어지는 긴 정원, 아래는 방 입구가 있는 교차로.
 const GARDEN = ['HGGGGPGGGGH', 'HGWGGPGGWGH', 'HGGGGPGGGGH', 'HWGGGPGGGWH', 'HGGGGPGGGGH', 'HGGWGPGWGGH'];
@@ -61,8 +62,8 @@ export class HubScene extends Scene {
   constructor(game) {
     const cfg = game.config;
     // 64px 폭 캐릭터가 겹치지 않도록 길(5열) 양옆 3·7열에 세운다
-    const groom = new Character({ sprites: characterSet(game.assets, 'groom', GROOM), name: cfg.groom.name, ...standPos(3, 3) });
-    const bride = new Character({ sprites: characterSet(game.assets, 'bride', BRIDE), name: cfg.bride.name, ...standPos(7, 3) });
+    const groom = new Character({ sprites: characterSet(game.assets, 'groom', GROOM), name: displayName(cfg.groom), ...standPos(3, 3) });
+    const bride = new Character({ sprites: characterSet(game.assets, 'bride', BRIDE), name: displayName(cfg.bride), ...standPos(7, 3) });
     const greet = (c) => () => c.say(pick(cfg.greetings));
 
     const objects = [

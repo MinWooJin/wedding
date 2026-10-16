@@ -3,6 +3,7 @@ import { spriteCanvas } from '../renderer.js';
 import { validateNickname } from '../state.js';
 import { esc, h } from './dom.js';
 import { characterSet } from '../assets.js';
+import { displayName } from '../config.js';
 
 /** 인트로 화면을 띄우고 {nickname, charId}를 resolve한다. */
 export function showIntro(root, config, assets = {}) {
@@ -11,7 +12,7 @@ export function showIntro(root, config, assets = {}) {
     let frame = 0;
     const card = h(`
       <div class="card">
-        <h2>${esc(config.groom.name)} ♥ ${esc(config.bride.name)}</h2>
+        <h2>${esc(displayName(config.groom))} ♥ ${esc(displayName(config.bride))}</h2>
         <p>픽셀 가든에 오신 걸 환영해요!<br>닉네임을 정하고 캐릭터를 골라주세요.</p>
         <input id="nick" maxlength="10" placeholder="닉네임 (2~10자)" autocomplete="off">
         <div class="picker">

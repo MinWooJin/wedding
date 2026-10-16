@@ -1,6 +1,6 @@
 export const DEFAULT_CONFIG = {
-  groom: { name: '신랑', phone: '', parents: [], account: { bank: '', number: '', holder: '', kakaopay: '' } },
-  bride: { name: '신부', phone: '', parents: [], account: { bank: '', number: '', holder: '', kakaopay: '' } },
+  groom: { name: '신랑', shortName: '', phone: '', parents: [], account: { bank: '', number: '', holder: '', kakaopay: '' } },
+  bride: { name: '신부', shortName: '', phone: '', parents: [], account: { bank: '', number: '', holder: '', kakaopay: '' } },
   wedding: {
     date: '2027-01-01T12:00:00+09:00',
     venue: '', hall: '', address: '',
@@ -14,6 +14,9 @@ export const DEFAULT_CONFIG = {
   kakaoJsKey: '',
   siteUrl: '',
 };
+
+/** 게임 안(HUD·이름표·인트로)에서 쓰는 호칭. shortName이 없으면 본명. 공적인 문구(예식 안내·연락처·계좌·공유·캘린더)는 name을 쓴다. */
+export const displayName = (person) => person.shortName || person.name;
 
 const isObj = (v) => v !== null && typeof v === 'object' && !Array.isArray(v);
 
