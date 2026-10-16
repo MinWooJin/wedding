@@ -1,8 +1,9 @@
 import { Scene, standPos } from './scene.js';
 import { Character } from '../entities/character.js';
-import { GROOM, BRIDE } from '../sprites/characters.js';
+import { GROOM, BRIDE, presetSprites, PRESET_COUNT } from '../sprites/characters.js';
 import { toast } from '../ui/toast.js';
 import { characterSet } from '../assets.js';
+import { freeTiles, pickTiles } from './guest-layout.js';
 
 export const HUB_ROWS = [
   'HHHHHHHHHHH',
@@ -44,6 +45,15 @@ export const HUB_DOORS = {
 
 const TREES = [[1, 1], [9, 1], [1, 5], [9, 5], [3, 7], [7, 7], [1, 9], [9, 9]];
 
+export const MAX_GUESTS = 30;
+
+/** 방명록 항목 → 광장 잔디 위 하객 자리. reserved: "tx,ty" 제외 집합. 같은 입력이면 같은 배치. */
+export function guestPlacements(entries, reserved) {
+  const list = entries.slice(0, MAX_GUESTS);
+  const tiles = pickTiles(freeTiles(HUB_ROWS, reserved), list.length, 2026);
+  return tiles.map((t, i) => ({ tx: t.tx, ty: t.ty, entry: list[i] }));
+}
+
 const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
 
 export class HubScene extends Scene {
@@ -69,6 +79,32 @@ export class HubScene extends Scene {
       npcs: [{ character: groom, interact: greet(groom) }, { character: bride, interact: greet(bride) }],
     });
     this.hosts = [groom, bride];
+    this.baseNpcs = this.npcs.slice();
+    this.setGuests(game.data?.messages ?? []);
+  }
+
+  /** 방명록 목록 → 광장 하객 NPC 재배치. 탭하면 그 사람 메시지를 말풍선으로. */
+  setGuests(entries) {
+    this.npcs = this.baseNpcs;
+    this.rebuildSolid(); // 오브젝트 발자국 + 신랑신부 자리
+    const reserved = new Set(this.extraSolid);
+    for (const o of this.objects) { // 나무 꼭대기 등 오브젝트가 덮는 모든 타일
+      const w = Math.ceil(o.spr.w / 32), h = Math.ceil(o.spr.h / 32);
+      for (let dy = 0; dy < h; dy++) for (let dx = 0; dx < w; dx++) reserved.add(`${o.tx + dx},${o.ty + dy}`);
+    }
+    reserved.add(`${HUB_SPAWN.tx},${HUB_SPAWN.ty}`);
+    for (const d of Object.values(HUB_DOORS)) {
+      reserved.add(`${d.door.tx},${d.door.ty}`);
+      reserved.add(`${d.back.tx},${d.back.ty}`);
+    }
+    const guests = guestPlacements(entries, reserved).map(({ tx, ty, entry }) => {
+      const id = ((entry.c % PRESET_COUNT) + PRESET_COUNT) % PRESET_COUNT;
+      const c = new Character({ sprites: characterSet(this.assets, `preset-${id}`, presetSprites(id)), name: entry.n, ...standPos(tx, ty) });
+      c.dir = ['down', 'left', 'right'][(tx + ty) % 3];
+      return { character: c, interact: () => c.say(entry.m, 4) };
+    });
+    this.npcs = [...this.baseNpcs, ...guests];
+    this.rebuildSolid();
   }
 }
 
