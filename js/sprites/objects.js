@@ -130,8 +130,10 @@ export const OBJECTS = {
 
 /** 코드 오브젝트는 16px 기준으로 그려져 있어 32px 격자에 맞게 2배 확대해 돌려준다(폴백용). */
 const cache = new Map();
+/** PNG 전용 장식(덤불·랜턴·단상 등)이 로드에 실패하면 엉뚱한 그림 대신 보이지 않는 1칸으로 대체한다. */
+const EMPTY = { w: 32, h: 32, px: Array.from({ length: 32 }, () => Array(32).fill(null)) };
 export function objectSprite(id) {
-  if (!OBJECTS[id]) return objectSprite('sign');
+  if (!OBJECTS[id]) return EMPTY;
   if (!cache.has(id)) cache.set(id, scaleSprite(parseSprite(OBJECTS[id], PAL), 2));
   return cache.get(id);
 }

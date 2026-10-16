@@ -68,23 +68,6 @@
     "천천히 둘러보세요~",
     "갤러리도 구경해 주세요!"
   ],
-  "timeline": [
-    {
-      "year": "",
-      "icon": "☕",
-      "text": "처음 만난 날"
-    },
-    {
-      "year": "",
-      "icon": "💍",
-      "text": "프러포즈"
-    },
-    {
-      "year": "2027",
-      "icon": "💒",
-      "text": "1월 9일, 결혼합니다"
-    }
-  ],
   "guestbookApi": "",
   "kakaoJsKey": "",
   "siteUrl": ""

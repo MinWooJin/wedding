@@ -81,7 +81,7 @@ export class Scene {
       if (rectBlocked(this.map, tx * TILE, ty * TILE, TILE, TILE, this.objectSolid)) continue;
       if (allow && !allow(tx, ty)) continue;
       if (taken.has(tileKey(tx, ty))) continue;
-      if ([...taken].some((key) => { const [x, y] = key.split(',').map(Number); return Math.abs(tx - x) <= 1 && Math.abs(ty - y) <= 2; })) continue;
+      if ([...taken].some((key) => { const [x, y] = key.split(',').map(Number); const dx = Math.abs(tx - x), dy = Math.abs(ty - y); return (dx === 0 && dy <= 1) || (dx === 1 && dy === 0); })) continue;
       options.push({ tx, ty });
     }
     return options.length ? options[Math.floor(Math.random() * options.length)] : null;

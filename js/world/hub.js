@@ -6,50 +6,65 @@ import { characterSet } from '../assets.js';
 import { freeTiles, pickTiles } from './guest-layout.js';
 import { displayName } from '../config.js';
 
-// 11열 × 26행(352×832px). 레퍼런스(@dding_one)처럼: 울타리 안 잔디 정원, 가운데 3칸 폭 모래 돌길, 가장자리 나무·덤불, 하객은 길 위까지 가득.
+// 11열 × 27행(352×864px). 레퍼런스(@dding_one)처럼: 울타리 안 잔디 정원, 가운데 3칸 폭 모래 돌길, 가장자리 나무·덤불, 하객은 길 위까지 가득.
 // 타일: H 그늘진 잔디(막힘), G 잔디, J/U 꽃 섞인 잔디, N 모래 돌길(4~6열)
+// 이야기 길을 없애며 생긴 여유를 정원에 돌려줬다(정원 17행). 하객이 모이는 공간이 이 청첩장의 중심이다.
 const FLOWER_SEED = 7;
+const GARDEN_ROWS = 17;
 const grassAt = (tx, ty) => { const v = (tx * 73856093 ^ ty * 19349663 ^ FLOWER_SEED) >>> 0; return v % 7 === 0 ? 'J' : v % 11 === 0 ? 'U' : 'G'; };
 const gardenRow = (ty) => 'H' + Array.from({ length: 9 }, (_, i) => { const tx = i + 1; return tx >= 4 && tx <= 6 ? 'N' : grassAt(tx, ty); }).join('') + 'H';
 const crossRow = 'HNNNNNNNNNH';
 const blockRow = (ty) => 'H' + Array.from({ length: 9 }, (_, i) => { const tx = i + 1; return tx === 1 || tx === 9 || (tx >= 4 && tx <= 6) ? 'N' : grassAt(tx, ty); }).join('') + 'H';
+const CROSS_A = GARDEN_ROWS + 1;   // 18 교차로
+const BLOCK_A = CROSS_A + 1;       // 19 문: 안내소/갤러리
+const CROSS_B = BLOCK_A + 3;       // 22 교차로
+const BLOCK_B = CROSS_B + 1;       // 23 문: 마음 전하기/방명록
 export const HUB_ROWS = [
   'HHHHHHHHHHH',
-  ...Array.from({ length: 13 }, (_, i) => gardenRow(i + 1)), // rows 1..13 정원(아치·신랑신부·하객)
-  crossRow,                                                  // 14 교차로
-  blockRow(15), blockRow(16), blockRow(17),                  // 15 문: 안내소/갤러리
-  crossRow,                                                  // 18
-  blockRow(19), blockRow(20), blockRow(21),                  // 19 문: 이야기/방명록
-  crossRow,                                                  // 22
-  blockRow(23), blockRow(24),                                // 24 문: 마음 전하기
+  ...Array.from({ length: GARDEN_ROWS }, (_, i) => gardenRow(i + 1)),
+  crossRow,
+  blockRow(BLOCK_A), blockRow(BLOCK_A + 1), blockRow(BLOCK_A + 2),
+  crossRow,
+  blockRow(BLOCK_B), blockRow(BLOCK_B + 1), blockRow(BLOCK_B + 2),
   'HHHHHHHHHHH',
 ];
 
-export const HUB_SPAWN = { tx: 5, ty: 9 }; // 돌길 중간에서 시작: 위로 신랑신부, 주변에 하객들
+export const HUB_SPAWN = { tx: 5, ty: 10 }; // 돌길 중간에서 시작: 위로 신랑신부, 주변에 하객들
 
 /** 각 방으로 가는 문 위치와, 그 방에서 돌아올 때 설 자리 */
 export const HUB_DOORS = {
   // sign은 64×64(2×2칸)라 문 옆 두 칸을 차지한다
-  info:      { door: { tx: 1, ty: 15 }, sign: { tx: 2, ty: 15 }, back: { tx: 1, ty: 14 }, label: '예식 안내소' },
-  gallery:   { door: { tx: 9, ty: 15 }, sign: { tx: 7, ty: 15 }, back: { tx: 9, ty: 14 }, label: '갤러리관' },
-  story:     { door: { tx: 1, ty: 19 }, sign: { tx: 2, ty: 19 }, back: { tx: 1, ty: 18 }, label: '우리 이야기 길' },
-  guestbook: { door: { tx: 9, ty: 19 }, sign: { tx: 7, ty: 19 }, back: { tx: 9, ty: 18 }, label: '방명록 정원' },
-  gifts:     { door: { tx: 5, ty: 24 }, sign: { tx: 3, ty: 23 }, back: { tx: 5, ty: 23 }, label: '마음 전하는 곳' },
+  info:      { door: { tx: 1, ty: BLOCK_A }, sign: { tx: 2, ty: BLOCK_A }, back: { tx: 1, ty: CROSS_A }, label: '예식 안내소' },
+  gallery:   { door: { tx: 9, ty: BLOCK_A }, sign: { tx: 7, ty: BLOCK_A }, back: { tx: 9, ty: CROSS_A }, label: '갤러리관' },
+  gifts:     { door: { tx: 1, ty: BLOCK_B }, sign: { tx: 2, ty: BLOCK_B }, back: { tx: 1, ty: CROSS_B }, label: '마음 전하는 곳' },
+  guestbook: { door: { tx: 9, ty: BLOCK_B }, sign: { tx: 7, ty: BLOCK_B }, back: { tx: 9, ty: CROSS_B }, label: '방명록 정원' },
 };
 
-/** 가장자리 장식: 울타리 안쪽을 따라 큰 나무(96×96)와 꽃덤불(64×64)을 번갈아 둔다. 레퍼런스처럼 나무가 양옆 경계를 만든다. */
+/**
+ * 장식: 큰 나무(96×128, 3칸 폭)는 아치 바로 아래 한 쌍만 두어 정원 윗부분의 경계를 만들고,
+ * 그 아래는 2칸 폭 덤불만 가장자리에 둬서 하객이 설 자리를 넉넉히 남긴다.
+ */
 const DECOR = [ // 0~4행은 큰 아치(최대 7칸 폭) 자리라 비워 둔다
   { sprite: 'tree', tx: 1, ty: 5 }, { sprite: 'tree', tx: 7, ty: 5 },
-  { sprite: 'bush-white', tx: 1, ty: 9 }, { sprite: 'bush-white', tx: 8, ty: 9 },
-  { sprite: 'bush', tx: 1, ty: 12 }, { sprite: 'bush-white', tx: 8, ty: 12 },
-  { sprite: 'bush', tx: 3, ty: 16 }, { sprite: 'bush', tx: 6, ty: 16 },
-  { sprite: 'bush', tx: 3, ty: 20 }, { sprite: 'bush', tx: 6, ty: 20 },
+  { sprite: 'bush-white', tx: 1, ty: 11 }, { sprite: 'bush', tx: 8, ty: 11 },
+  { sprite: 'bush', tx: 1, ty: 15 }, { sprite: 'bush-white', tx: 8, ty: 15 },
+  { sprite: 'bush', tx: 3, ty: BLOCK_A + 1 }, { sprite: 'bush', tx: 6, ty: BLOCK_A + 1 },
+  { sprite: 'bush', tx: 3, ty: BLOCK_B + 1 }, { sprite: 'bush', tx: 6, ty: BLOCK_B + 1 },
 ];
 
-/** 하객이 서는 구역: 아치 아래 5행부터 입구 직전 13행까지, 돌길 위를 포함한 정원 전체(1~9열) */
-export const GUEST_ZONE = { cols: [1, 2, 3, 4, 5, 6, 7, 8, 9], rowMin: 6, rowMax: 13 }; // 5행은 신랑신부
+/** 하객이 서는 구역: 신랑신부(5행) 아래부터 정원 끝까지, 돌길 위를 포함한 정원 전체(1~9열) */
+export const GUEST_ZONE = { cols: [1, 2, 3, 4, 5, 6, 7, 8, 9], rowMin: 6, rowMax: GARDEN_ROWS };
 
 export const MAX_GUESTS = 30;
+
+/**
+ * 하객 두 명이 너무 붙었는지. 레퍼런스처럼 빽빽하게 서되 몸이 포개지지 않게:
+ * 같은 열은 위아래 한 칸 비우고(키 72px), 옆 열은 같은 줄만 피한다(폭 48px > 타일 32px). 대각선은 허용.
+ */
+export function tooClose(a, b) {
+  const dx = Math.abs(a.tx - b.tx), dy = Math.abs(a.ty - b.ty);
+  return (dx === 0 && dy <= 1) || (dx === 1 && dy === 0);
+}
 
 /**
  * 방명록 항목 → 광장 잔디 위 하객 자리. reserved: "tx,ty" 제외 집합. 같은 입력이면 같은 배치.
@@ -62,7 +77,7 @@ export function guestPlacements(entries, reserved) {
   const chosen = [];
   for (const t of shuffled) {
     if (chosen.length >= list.length) break;
-    if (chosen.some((c) => Math.abs(c.tx - t.tx) <= 1 && Math.abs(c.ty - t.ty) <= 2)) continue; // 폭 48px·높이 72px를 고려해 간격 유지
+    if (chosen.some((c) => tooClose(c, t))) continue;
     chosen.push(t);
   }
   return chosen.map((t, i) => ({ tx: t.tx, ty: t.ty, entry: list[i] }));
@@ -143,7 +158,9 @@ export class HubScene extends Scene {
       const n = previous.get(`${entry.n}:${entry.c}`);
       const current = this.tileOf(n.character.x, n.character.y);
       for (const center of [current, n.wander.home, n.wander.target].filter(Boolean)) {
-        for (let dy = -2; dy <= 2; dy++) for (let dx = -1; dx <= 1; dx++) reserved.add(`${center.tx + dx},${center.ty + dy}`);
+        for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) {
+          if (tooClose(center, { tx: center.tx + dx, ty: center.ty + dy })) reserved.add(`${center.tx + dx},${center.ty + dy}`);
+        }
       }
     }
     const placements = [

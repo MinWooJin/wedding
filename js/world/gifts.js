@@ -72,7 +72,7 @@ export function createGifts(game) {
       { id: 'door', sprite: 'door', floor: true, ...EXIT },
       { id: 'groom-chest', sprite: 'chest', label: '신랑측 마음', tx: 2, ty: 3, interact: () => showAccounts(game, '신랑', cfg.groom) },
       { id: 'bride-chest', sprite: 'chest', label: '신부측 마음', tx: 7, ty: 3, interact: () => showAccounts(game, '신부', cfg.bride) },
-      { id: 'share', sprite: game.assets?.objects?.['share-letter'] ? 'share-letter' : 'welcome-board', label: '소식 나누기', tx: 4, ty: 7, interact: () => showShare(game) },
+      { id: 'share', sprite: game.assets?.objects?.['share-letter'] ? 'share-letter' : 'welcome-board', label: '소식 나누기', tx: 4, ty: 6, interact: () => showShare(game) },
       ...(game.assets?.objects?.plant ? [{ id: 'plantL', sprite: 'plant', tx: 1, ty: 8 }, { id: 'plantR', sprite: 'plant', tx: 9, ty: 8 }] : []),
       { id: 'lanternL', sprite: 'lantern', tx: 1, ty: 1 }, { id: 'lanternR', sprite: 'lantern', tx: 9, ty: 1 },
     ],

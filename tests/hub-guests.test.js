@@ -1,6 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { guestPlacements, HUB_ROWS, GUEST_ZONE, createHub } from '../js/world/hub.js';
+import { readFileSync } from 'node:fs';
+import { guestPlacements, HUB_ROWS, HUB_DOORS, GUEST_ZONE, createHub } from '../js/world/hub.js';
 import { DEFAULT_CONFIG } from '../js/config.js';
 
 test('반복 갱신과 새 하객 추가 시 기존 캐릭터·배회 상태를 보존한다', () => {
@@ -15,6 +16,24 @@ test('반복 갱신과 새 하객 추가 시 기존 캐릭터·배회 상태를 
   hub.setGuests([]);
   assert.equal(hub.guestMap.size, 0);
   assert.equal(hub.npcs.length, 3, '두 사람과 안내인만 남음');
+});
+
+test('실제 PNG 크기로 광장에 하객이 충분히 모인다(30명 중 20명 이상)', () => {
+  // 코드 대체 그림은 실제 PNG(나무 96×128 등)보다 작아 수용 인원을 부풀린다. 반드시 실제 크기로 잰다.
+  const manifest = JSON.parse(readFileSync(new URL('../assets/manifest.json', import.meta.url)));
+  const objects = Object.fromEntries(manifest.objects.map((name) => {
+    const png = readFileSync(new URL(`../assets/objects/${name}.png`, import.meta.url));
+    return [name, { w: png.readUInt32BE(16), h: png.readUInt32BE(20) }];
+  }));
+  const entries = Array.from({ length: 30 }, (_, i) => ({ t: i, n: `손님${i}`, c: i % 10, m: '축하' }));
+  const hub = createHub({ config: DEFAULT_CONFIG, profile: { nickname: '나' }, assets: { objects }, data: { messages: entries } });
+  assert.ok(hub.guestMap.size >= 20, `배치된 하객 ${hub.guestMap.size}명`);
+});
+
+test('이야기 길은 없고 마음 전하는 곳이 그 자리(왼쪽 두 번째 문)에 있다', () => {
+  assert.equal(HUB_DOORS.story, undefined);
+  assert.deepEqual(HUB_DOORS.gifts.door, { tx: 1, ty: HUB_DOORS.guestbook.door.ty });
+  assert.equal(HUB_DOORS.gifts.door.ty, HUB_DOORS.info.door.ty + 4, '안내소 바로 아래 줄');
 });
 
 test('guestPlacements: 제외 타일 회피, 잔디 위, 서로 인접하지 않음, 결정적', () => {

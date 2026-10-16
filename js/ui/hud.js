@@ -12,7 +12,6 @@ export const SPACES = {
   hub: { icon: '⌂', name: '두 사람의 정원', text: '두 사람을 만나고, 따뜻한 축하를 꽃으로 남겨 주세요.' },
   guestbook: { icon: '✉', name: '축하가 피어나는 정원', text: '우체통을 누르면 편지를 쓸 수 있어요. 꽃에는 하객의 마음이 담겨요.' },
   gallery: { icon: '▧', name: '우리의 순간들', text: '사진 속 두 사람의 이야기를 천천히 만나 보세요.' },
-  story: { icon: '♡', name: '함께 걸어온 길', text: '이정표를 누르며 우리의 작은 이야기를 따라 걸어요.' },
   info: { icon: '♧', name: '결혼 소식', text: '예식 소식과 가족분들을 위한 안내를 모았어요.' },
   gifts: { icon: '♥', name: '마음 전하는 곳', text: '양측 봉투함에서 마음을 전하고, 우리의 소식을 나눠 주세요.' },
 };
@@ -57,7 +56,6 @@ export function createHud(root, config, game) {
       addLink('신부측 마음 →', () => showAccounts(game, '신부', config.bride));
       addLink('소식 공유 →', () => showShare(game));
     }
-    else if (sceneId === 'story') addLink('이야기를 한눈에 보기 →', () => showOverlay(game, { title: '함께 걸어온 길', html: config.timeline.map((t, i) => `<article class="message-item"><small>${esc(t.year || `${i + 1}번째 순간`)}</small><p>${esc(t.icon || '♡')} ${esc(t.text)}</p></article>`).join('') }));
     addLink('내 위치로 ↗', () => { game.follow = true; });
   };
   return { onScene(id) { sceneId = id; refresh(); }, refresh };

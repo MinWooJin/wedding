@@ -8,7 +8,6 @@ import { createHud } from './ui/hud.js';
 import { createHub } from './world/hub.js';
 import { createInfo } from './world/info.js';
 import { createGallery } from './world/gallery.js';
-import { createStory } from './world/story.js';
 import { createGuestbook } from './world/guestbook.js';
 import { createGifts } from './world/gifts.js';
 import { showCover } from './ui/cover.js';
@@ -36,7 +35,7 @@ if (!profile) {
 
 const game = new Game({
   canvas, frame, config, profile, assets,
-  scenes: { hub: createHub, info: createInfo, gallery: createGallery, story: createStory, guestbook: createGuestbook, gifts: createGifts },
+  scenes: { hub: createHub, info: createInfo, gallery: createGallery, guestbook: createGuestbook, gifts: createGifts },
   ui: {},
 });
 game.gallery = Array.isArray(gallery) ? gallery : [];

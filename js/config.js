@@ -9,7 +9,6 @@ export const DEFAULT_CONFIG = {
     transport: { subway: '', bus: '', parking: '' },
   },
   greetings: ['정원에 와주셔서 감사해요!', '멀리서 보내주시는 축하도 감사히 간직할게요 🌸', '천천히 둘러보세요~'],
-  timeline: [],
   guestbookApi: '',
   kakaoJsKey: '',
   siteUrl: '',
