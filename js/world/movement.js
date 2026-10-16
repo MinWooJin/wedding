@@ -54,6 +54,6 @@ export function stepToward(pos, target, dist, blocked) {
   if (ny !== y && !blocked(x, ny)) { y = ny; moved = true; }
 
   const remaining = Math.hypot(target.x - x, target.y - y);
-  const arrived = !moved || remaining < 0.5;
-  return { x, y, dir, moved, arrived };
+  const arrived = remaining < 0.5;
+  return { x, y, dir, moved, arrived, blocked: !moved && !arrived };
 }

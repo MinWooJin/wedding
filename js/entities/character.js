@@ -60,6 +60,7 @@ export class Character {
       this.frame += steps;
       this.animT -= steps * FRAME_TIME;
     }
+    if (r.blocked) { this.stop(); return; }
     if (r.arrived) {
       const cb = this.onArrive;
       this.target = null; this.onArrive = null;

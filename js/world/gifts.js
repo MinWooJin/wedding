@@ -6,15 +6,10 @@ import { esc, copyText } from '../ui/dom.js';
 
 const ROWS = [
   'HHHHHHHHHHH',
-  'HMMMMMMMMMH',
-  'HMMMLLLMMMH',
-  'HMMMLLLMMMH',
-  'HMMMMMMMMMH',
-  'HMMMMMMMMMH',
-  'HMMMMMMMMMH',
+  ...Array.from({ length: 10 }, (_, i) => i >= 3 && i <= 5 ? 'HMMMLLLMMMH' : 'HMMMMMMMMMH'),
   'HHHHHPHHHHH',
 ];
-const EXIT = { tx: 5, ty: 7 };
+const EXIT = { tx: 5, ty: 11 };
 
 function accountHtml(label, acc) {
   if (!acc || !acc.number) return '';
@@ -23,7 +18,7 @@ function accountHtml(label, acc) {
     ${acc.kakaopay ? `<a class="btn" target="_blank" rel="noopener" href="${esc(acc.kakaopay)}">카카오페이</a>` : ''}</p>`;
 }
 
-function showAccounts(game, side, person) {
+export function showAccounts(game, side, person) {
   const html = [
     accountHtml(side, person.account),
     ...person.parents.map((p) => accountHtml(`${side} ${p.role}`, p.account)),
@@ -46,7 +41,7 @@ async function loadKakao(key) {
   return window.Kakao;
 }
 
-function showShare(game) {
+export function showShare(game) {
   const cfg = game.config;
   const url = cfg.siteUrl || location.href.split('#')[0];
   const title = `${cfg.groom.name} ♥ ${cfg.bride.name} 결혼합니다`;
@@ -71,13 +66,14 @@ function showShare(game) {
 export function createGifts(game) {
   const cfg = game.config;
   return new Scene({
-    id: 'gifts', rows: ROWS, bg: '#f6efe7', spawn: { tx: 5, ty: 6 }, assets: game.assets,
+    id: 'gifts', rows: ROWS, bg: '#f6efe7', spawn: { tx: 5, ty: 10 }, assets: game.assets,
     entrances: [{ ...EXIT, to: 'hub', spawn: HUB_DOORS.gifts.back }],
     objects: [
       { id: 'door', sprite: 'door', floor: true, ...EXIT },
-      { id: 'groom-chest', sprite: 'chest', tx: 2, ty: 2, interact: () => showAccounts(game, '신랑', cfg.groom) },
-      { id: 'bride-chest', sprite: 'chest', tx: 7, ty: 2, interact: () => showAccounts(game, '신부', cfg.bride) },
-      { id: 'share', sprite: 'stone', tx: 4, ty: 4, interact: () => showShare(game) },
+      { id: 'groom-chest', sprite: 'chest', label: '신랑측 마음', tx: 2, ty: 3, interact: () => showAccounts(game, '신랑', cfg.groom) },
+      { id: 'bride-chest', sprite: 'chest', label: '신부측 마음', tx: 7, ty: 3, interact: () => showAccounts(game, '신부', cfg.bride) },
+      { id: 'share', sprite: game.assets?.objects?.['share-letter'] ? 'share-letter' : 'welcome-board', label: '소식 나누기', tx: 4, ty: 7, interact: () => showShare(game) },
+      ...(game.assets?.objects?.plant ? [{ id: 'plantL', sprite: 'plant', tx: 1, ty: 8 }, { id: 'plantR', sprite: 'plant', tx: 9, ty: 8 }] : []),
       { id: 'lanternL', sprite: 'lantern', tx: 1, ty: 1 }, { id: 'lanternR', sprite: 'lantern', tx: 9, ty: 1 },
     ],
   });

@@ -11,6 +11,8 @@ import { createGallery } from './world/gallery.js';
 import { createStory } from './world/story.js';
 import { createGuestbook } from './world/guestbook.js';
 import { createGifts } from './world/gifts.js';
+import { showCover } from './ui/cover.js';
+import { readPreview } from './guestbook-store.js';
 
 async function loadManifest() {
   try { const r = await fetch('gallery/manifest.json', { cache: 'no-cache' }); return r.ok ? await r.json() : []; }
@@ -19,10 +21,14 @@ async function loadManifest() {
 
 const canvas = document.getElementById('game');
 const frame = document.getElementById('frame');
-const [config, assets, gallery] = await Promise.all([loadConfig(), loadAssets(), loadManifest()]);
+const assetsReady = loadAssets();
+const galleryReady = loadManifest();
+const config = await loadConfig();
 document.title = `${config.groom.name} ♥ ${config.bride.name} 결혼합니다`;
 
 let profile = loadProfile();
+await showCover(document.getElementById('intro'), config, assetsReady, !!profile);
+const [assets, gallery] = await Promise.all([assetsReady, galleryReady]);
 if (!profile) {
   profile = await showIntro(document.getElementById('intro'), config, assets);
   saveProfile(profile);
@@ -34,17 +40,21 @@ const game = new Game({
   ui: {},
 });
 game.gallery = Array.isArray(gallery) ? gallery : [];
-game.data = { messages: [] };
+game.data = { messages: config.guestbookApi ? [] : readPreview() };
+game.openGuestbook = () => game.sceneById('guestbook').openForm(game);
+game.openMessages = () => game.sceneById('guestbook').openList();
 game.ui.hud = createHud(document.getElementById('hud'), config, game);
 game.onMessagesChanged = () => {
   game.scenes.hub?.setGuests(game.data.messages);
   game.scenes.guestbook?.setEntries(game.data.messages);
+  game.ui.hud?.refresh?.();
 };
 game.start('hub');
 
 async function refreshMessages() {
-  const list = await fetchMessages(config.guestbookApi);
-  if (list.length) { game.data.messages = list; game.onMessagesChanged(); }
+  if (!config.guestbookApi) return;
+  const result = await fetchMessages(config.guestbookApi, { withStatus: true });
+  if (result.ok) { game.data.messages = result.entries; game.onMessagesChanged(); }
 }
 
 /** 한 번 입장한 하객은 광장에 남는다: 세션당 한 번 닉네임·캐릭터를 등록 */
@@ -54,7 +64,7 @@ async function registerVisit() {
   const r = await postVisit(config.guestbookApi, { nickname: profile.nickname, characterId: profile.charId });
   if (r.ok) { try { sessionStorage.setItem(key, '1'); } catch {} }
 }
-registerVisit().then(refreshMessages);
+registerVisit(); refreshMessages();
 setInterval(refreshMessages, 60_000);
 document.addEventListener('visibilitychange', () => { if (!document.hidden) refreshMessages(); });
 

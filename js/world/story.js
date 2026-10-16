@@ -24,10 +24,10 @@ export function createStory(game) {
       { id: 'door', sprite: 'door', floor: true, ...L.exit },
       { id: 'bench', sprite: 'bench', ...L.bench },
       // 울타리 안쪽 가장자리 장식: 이정표가 없는 쪽에 나무(96×128)와 흰 덤불을 번갈아
-      ...L.signs.map((s, i) => ({ id: `edge${i}`, sprite: i % 2 === 0 ? 'tree' : 'bush-white', tx: s.tx === 3 ? 7 : 1, ty: s.ty - (i % 2 === 0 ? 2 : 0) })),
+      ...L.signs.filter((s) => s.tx === 3).map((s, i) => ({ id: `edge${i}`, sprite: 'bush-white', tx: 8, ty: s.ty })),
       ...L.signs.map((s) => {
         const t = cfg.timeline[s.index];
-        return { id: `sign${s.index}`, sprite: 'sign', tx: s.tx, ty: s.ty,
+        return { id: `sign${s.index}`, sprite: 'sign', label: `${t.icon || '♡'} ${t.year || t.text}`, tx: s.tx, ty: s.ty,
           interact: () => showOverlay(game, { title: `${t.icon ?? ''} ${t.year}`.trim(), html: `<p>${esc(t.text)}</p>` }) };
       }),
     ],

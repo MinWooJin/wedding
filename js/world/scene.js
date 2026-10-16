@@ -72,12 +72,16 @@ export class Scene {
       return tileKey(t.tx, t.ty);
     }));
     const options = [];
+    const current = this.tileOf(n.character.x, n.character.y);
     for (let dy = -radius; dy <= radius; dy++) for (let dx = -radius; dx <= radius; dx++) {
       const tx = home.tx + dx, ty = home.ty + dy;
+      if (tx === current.tx && ty === current.ty) continue;
+      if (this.entrances.some((e) => e.tx === tx && e.ty === ty)) continue;
       if (tx < 0 || ty < 0 || tx >= this.map.w || ty >= this.map.h) continue;
       if (rectBlocked(this.map, tx * TILE, ty * TILE, TILE, TILE, this.objectSolid)) continue;
       if (allow && !allow(tx, ty)) continue;
       if (taken.has(tileKey(tx, ty))) continue;
+      if ([...taken].some((key) => { const [x, y] = key.split(',').map(Number); return Math.abs(tx - x) <= 1 && Math.abs(ty - y) <= 2; })) continue;
       options.push({ tx, ty });
     }
     return options.length ? options[Math.floor(Math.random() * options.length)] : null;
@@ -86,6 +90,7 @@ export class Scene {
   updateWander(n, dt) {
     const w = n.wander, c = n.character;
     if (c.walking) return;
+    w.target = null;
     w.timer = (w.timer ?? 1 + Math.random() * 3) - dt;
     if (w.timer > 0) return;
     w.timer = 2 + Math.random() * 5;
@@ -152,24 +157,28 @@ export class Scene {
   walkTo(player, x, y, onArrive = null) {
     const from = this.tileOf(player.x, player.y);
     const to = this.tileOf(x, y);
-    const path = findPath(this.map.w, this.map.h, (tx, ty) => this.isSolidTile(tx, ty), from, to);
-    if (!path) { player.moveTo(x, y, onArrive); return; }
+    const blocked = (tx, ty) => this.isSolidTile(tx, ty) || this.entrances.some((e) => e.tx === tx && e.ty === ty && (tx !== to.tx || ty !== to.ty));
+    const path = findPath(this.map.w, this.map.h, blocked, from, to);
+    if (!path || this.blockedFor()(x, y)) { player.stop(); player.say('그곳으로는 갈 수 없어요', 1.5); this.destination = null; return; }
+    this.destination = { x, y };
     const points = path.slice(0, -1).map((t) => standPos(t.tx, t.ty));
     points.push({ x, y });
-    player.followPath(points, onArrive);
+    player.followPath(points, () => { this.destination = null; onArrive?.(); });
   }
 
   hitObject(wx, wy) {
-    for (let i = this.objects.length - 1; i >= 0; i--) {
-      const o = this.objects[i];
-      const x0 = o.tx * TILE, y0 = o.ty * TILE;
-      if (wx >= x0 && wx < x0 + o.spr.w && wy >= o.drawY && wy < o.drawY + o.spr.h) return o;
+    const ordered = this.objects.slice().sort((a, b) => (a.floor ? -Infinity : a.bottom) - (b.floor ? -Infinity : b.bottom));
+    for (let i = ordered.length - 1; i >= 0; i--) {
+      const o = ordered[i];
+      const width = o.label ? Math.max(o.spr.w, o.label.length * 10 + 14) : o.spr.w;
+      const x0 = o.tx * TILE + (o.spr.w - width) / 2;
+      if (wx >= x0 && wx < x0 + width && wy >= o.drawY - (o.label ? 24 : 0) && wy < o.drawY + o.spr.h) return o;
     }
     return null;
   }
 
   hitNpc(wx, wy) {
-    return this.npcs.find((n) => {
+    return this.npcs.slice().sort((a, b) => b.character.y - a.character.y).find((n) => {
       const p = n.character.drawPos();
       return wx >= p.x && wx < p.x + p.w && wy >= p.y && wy < p.y + p.h;
     }) ?? null;
@@ -177,8 +186,9 @@ export class Scene {
 
   onTap(wx, wy, game) {
     const player = game.player;
-    const npc = this.hitNpc(wx, wy);
-    const obj = npc ? null : this.hitObject(wx, wy);
+    let npc = this.hitNpc(wx, wy);
+    let obj = this.hitObject(wx, wy);
+    if (npc && obj) { if (!obj.floor && obj.bottom >= npc.character.y) npc = null; else obj = null; }
     const target = npc ?? obj;
     if (target && target.interact) {
       const c = npc ? npc.character : null;
@@ -201,6 +211,7 @@ export class Scene {
         if (this.pending !== target) return;
         this.pending = null;
         this.face(player, faceX, faceY);
+        if (npc && Math.hypot(npc.character.x - player.x, npc.character.y - player.y) > TILE * 2) return;
         target.interact(game);
       });
       return;
@@ -219,6 +230,7 @@ export class Scene {
   update(dt, game) {
     const player = game.player;
     player.update(dt, this.blockedFor());
+    if (!player.walking) this.destination = null;
     const npcBlocked = this.blockedStatic();
     for (const n of this.npcs) {
       if (n.wander) this.updateWander(n, dt);
@@ -240,19 +252,26 @@ export class Scene {
       r.drawCanvas(this.bgImage, 0, 0);
     } else {
       for (let ty = 0; ty < this.map.h; ty++) {
-        for (let tx = 0; tx < this.map.w; tx++) r.drawTile(tileAt(this.map, tx, ty), tx * TILE, ty * TILE);
+        for (let tx = 0; tx < this.map.w; tx++) {
+          const id = tileAt(this.map, tx, ty);
+          if (r.drawGardenTile) r.drawGardenTile(id, tx * TILE, ty * TILE, [[0, -1], [1, 0], [0, 1], [-1, 0]].map(([dx, dy]) => tileAt(this.map, tx + dx, ty + dy) === 'N'));
+          else r.drawTile(id, tx * TILE, ty * TILE);
+        }
       }
     }
     for (const o of this.objects) if (o.floor) r.drawSprite(o.spr, o.tx * TILE, o.drawY);
+    if (this.destination) r.drawDestination?.(this.destination.x, this.destination.y);
     const items = [];
-    for (const o of this.objects) if (!o.floor) items.push({ y: o.bottom, draw: () => r.drawSprite(o.spr, o.tx * TILE, o.drawY) });
+    for (const o of this.objects) if (!o.floor) items.push({ y: o.bottom, draw: () => { r.drawSprite(o.spr, o.tx * TILE, o.drawY); o.drawContent?.(r); } });
     const chars = [player, ...this.npcs.map((n) => n.character)];
     for (const c of chars) {
       const p = c.drawPos();
-      items.push({ y: c.y, draw: () => { r.drawSprite(c.sprite(r.reducedMotion), p.x, p.y, c.motion(r.reducedMotion)); r.drawNameTag(c.name, p.x + p.w / 2, p.y - 2); } });
+      items.push({ y: c.y, draw: () => { r.drawSprite(c.sprite(r.reducedMotion), p.x, p.y, c.motion(r.reducedMotion)); if (c === player || this.hosts?.includes(c) || Math.hypot(c.x - player.x, c.y - player.y) < 96 || c.bubble) r.drawNameTag(c.name, p.x + p.w / 2, p.y - 2); } });
     }
     items.sort((a, b) => a.y - b.y);
     for (const it of items) it.draw();
+    r.drawPlayerMarker?.(player.x, player.y);
+    for (const o of this.objects) if (o.label) r.drawLabel?.(o.label, o.tx * TILE + o.spr.w / 2, o.drawY - 6);
     for (const c of chars) if (c.bubble) { const p = c.drawPos(); r.drawBubble(c.bubble, p.x + p.w / 2, p.y - 16); }
   }
 }

@@ -1,0 +1,22 @@
+[
+  {
+    "name": "wedding-mailbox",
+    "size": [
+      64,
+      96
+    ],
+    "prompt": "Use case: stylized-concept. A single game prop sprite: elegant cream wedding guestbook mailbox on short substantial pedestal, large visible envelope slot and dusty pink heart seal, tiny white/blush flowers at its base, cream letter writing shelf integrated on its right. Front three-quarter top-down RPG view with very little perspective. Charming detailed pixel art with clean clusters, readable at 64x96 pixels, warm ivory blush sage palette, subtle brown outlines, upper-left soft light. Entire object isolated centered with transparent background, no ground patch, no letters, no words, no people, no panels. Silhouette fills canvas. This is a wedding invitation garden not a red street postbox.",
+    "source": "raw/v2-source/wedding-mailbox.png",
+    "tool": "built-in imagegen"
+  },
+  {
+    "name": "share-letter",
+    "size": [
+      64,
+      64
+    ],
+    "prompt": "Use case: stylized-concept. A single game prop sprite for a wedding garden: an oversized ivory open envelope with a blush pink heart seal resting upright on a low round cream pedestal, a small pale pink ribbon and two white flowers. Front three-quarter top-down RPG view. Charming detailed pixel art in clean clusters, warm ivory blush sage palette and brown outlines, soft upper-left light, clearly readable at 64x64 pixels. Isolated entire object with genuinely transparent background, no ground patch, no text, no lettering, no logos, no tombstone or rectangular stone slab.",
+    "source": "raw/v2-source/share-letter.png",
+    "tool": "built-in imagegen"
+  }
+]

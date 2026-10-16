@@ -67,6 +67,17 @@ export class Renderer {
 
   drawTile(id, x, y) { this.drawSprite(this.tiles[id] ?? tileSprite(id), x, y); }
 
+  /** 기존 G/N 이미지를 그대로 사용해 길의 바깥 모서리만 부드럽게 잇는다. */
+  drawGardenTile(id, x, y, neighbors) {
+    if (id !== 'N' || !this.ctx.roundRect) { this.drawTile(id, x, y); return; }
+    const [north, east, south, west] = neighbors;
+    const radius = [!north && !west, !north && !east, !south && !east, !south && !west].map((corner) => corner ? 8 : 0);
+    this.drawTile('G', x, y);
+    this.ctx.save(); this.ctx.beginPath();
+    this.ctx.roundRect(Math.round(x - this.cam.x), Math.round(y - this.cam.y), TILE, TILE, radius);
+    this.ctx.clip(); this.drawTile(id, x, y); this.ctx.restore();
+  }
+
   drawSprite(spr, x, y, motion = null) {
     const sx = Math.round(x - this.cam.x), sy = Math.round(y - this.cam.y);
     if (sx + spr.w < 0 || sy + spr.h < 0 || sx > this.view.width || sy > this.view.height) return;
@@ -85,6 +96,27 @@ export class Renderer {
   /** 미리 그려둔 캔버스/이미지(썸네일, 맵 배경 등)를 월드 좌표에 그린다 */
   drawCanvas(c, x, y) {
     this.ctx.drawImage(c, Math.round(x - this.cam.x), Math.round(y - this.cam.y));
+  }
+
+  drawLabel(text, cx, topY) {
+    const ctx = this.ctx;
+    ctx.save(); ctx.font = 'bold 10px Galmuri11, sans-serif';
+    const w = Math.ceil(ctx.measureText(text).width) + 14;
+    const x = Math.max(3, Math.min(this.view.width - w - 3, Math.round(cx - this.cam.x - w / 2)));
+    const y = Math.round(topY - this.cam.y - 18);
+    ctx.fillStyle = '#fffaf0'; ctx.fillRect(x, y, w, 21);
+    ctx.strokeStyle = '#aca98b'; ctx.strokeRect(x + .5, y + .5, w - 1, 20);
+    ctx.fillStyle = '#4e5e3e'; ctx.textBaseline = 'middle'; ctx.textAlign = 'left'; ctx.fillText(text, x + 7, y + 11); ctx.restore();
+  }
+
+  drawDestination(x, y) {
+    const ctx = this.ctx; ctx.save(); ctx.strokeStyle = '#fff8dc'; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.ellipse(x - this.cam.x, y - this.cam.y - 2, 10, 5, 0, 0, Math.PI * 2); ctx.stroke(); ctx.restore();
+  }
+
+  drawPlayerMarker(x, y) {
+    const ctx = this.ctx; ctx.save(); ctx.fillStyle = '#fff5b5';
+    ctx.fillRect(Math.round(x - this.cam.x - 7), Math.round(y - this.cam.y + 1), 14, 2); ctx.restore();
   }
 
   /** 반투명 검은 띠 위 흰 글씨 */
@@ -115,7 +147,7 @@ export class Renderer {
     const h = lines.length * lineH + 10;
     let x = Math.round(cx - this.cam.x - w / 2);
     x = Math.max(4, Math.min(this.view.width - w - 4, x));
-    const y = Math.round(bottomY - this.cam.y - h - 8);
+    const y = Math.max(84, Math.round(bottomY - this.cam.y - h - 8));
     ctx.fillStyle = '#2b1d14'; ctx.fillRect(x - 2, y - 2, w + 4, h + 4);
     ctx.fillStyle = '#fff'; ctx.fillRect(x, y, w, h);
     const tx = Math.round(cx - this.cam.x);

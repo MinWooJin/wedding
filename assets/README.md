@@ -211,3 +211,13 @@ pink and yellow flowers, soft shading, cozy 16-bit RPG map, no characters, no te
 ## 확인
 
 변환 후 `npm run serve`로 띄워 보면 바로 반영됩니다. 특정 파일만 바꾸고 싶으면 raw/에 그 파일만 두고 다시 실행하면 됩니다(manifest는 매번 새로 생성).
+# 2026-10-17 v2 추가 소품
+
+- `objects/wedding-mailbox.png`: 64×96, RGBA, 알파 bbox (0, 0, 63, 96). 방명록 우체통과 편지 받침대.
+- `objects/share-letter.png`: 64×64, RGBA, 알파 bbox (6, 0, 57, 64). 공유용 하트 편지 받침대. 공유 비석을 대체한다.
+- 내장 이미지 생성 도구로 제작했다. 프롬프트는 `v2-generation-prompts.json`, 규격 검증은 `v2-asset-report.json`.
+- 생성 원본은 `raw/v2-source/`. 선택 변환: `python tools/prepare_v2_assets.py`.
+  원본이 없는 체크아웃에서는 저장된 최종 PNG를 사용한다. 캐릭터·기존 타일은 변환하지 않는다.
+- 현재 manifest: 캐릭터 12종 / 타일 22종 / 오브젝트 26종, 총 60종.
+- 길 모서리는 Renderer가 기존 G/N을 클리핑해 처리한다. 신규 길 타일이나 큰 씬 배경은 생성하지 않았다.
+- 안내인은 기존 preset-4를 역할 이름으로 재사용했다. 신랑·신부 PNG와 헤어는 변경하지 않았다.

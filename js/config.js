@@ -8,24 +8,26 @@ export const DEFAULT_CONFIG = {
     map: { kakao: '', naver: '', tmap: '' },
     transport: { subway: '', bus: '', parking: '' },
   },
-  greetings: ['와주셔서 감사해요!', '오늘 꼭 뵈어요 🌸', '천천히 둘러보세요~'],
+  greetings: ['정원에 와주셔서 감사해요!', '멀리서 보내주시는 축하도 감사히 간직할게요 🌸', '천천히 둘러보세요~'],
   timeline: [],
   guestbookApi: '',
   kakaoJsKey: '',
   siteUrl: '',
+  classicUrl: '',
 };
 
 /** 게임 안(HUD·이름표·인트로)에서 쓰는 호칭. shortName이 없으면 본명. 공적인 문구(예식 안내·연락처·계좌·공유·캘린더)는 name을 쓴다. */
 export const displayName = (person) => person.shortName || person.name;
 
 const isObj = (v) => v !== null && typeof v === 'object' && !Array.isArray(v);
+const clone = (value) => typeof globalThis.structuredClone === 'function' ? globalThis.structuredClone(value) : JSON.parse(JSON.stringify(value));
 
 export function mergeConfig(base, over) {
-  if (!isObj(over)) return structuredClone(base);
-  const out = structuredClone(base);
+  if (!isObj(over)) return clone(base);
+  const out = clone(base);
   for (const [k, v] of Object.entries(over)) {
     if (v === undefined) continue;
-    out[k] = isObj(v) && isObj(out[k]) ? mergeConfig(out[k], v) : structuredClone(v);
+    out[k] = isObj(v) && isObj(out[k]) ? mergeConfig(out[k], v) : clone(v);
   }
   return out;
 }
@@ -37,7 +39,7 @@ export async function loadConfig(url = 'data/config.json') {
     return mergeConfig(DEFAULT_CONFIG, await res.json());
   } catch (e) {
     console.warn('config.json 로드 실패, 기본값 사용', e);
-    return structuredClone(DEFAULT_CONFIG);
+    return clone(DEFAULT_CONFIG);
   }
 }
 

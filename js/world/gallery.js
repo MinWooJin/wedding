@@ -3,10 +3,11 @@ import { HUB_DOORS } from './hub.js';
 import { galleryLayout } from './gallery-layout.js';
 import { openViewer } from '../ui/viewer.js';
 import { toast } from '../ui/toast.js';
-import { TILE } from '../renderer.js';
+import { TILE, spriteCanvas } from '../renderer.js';
+import { objectSprite } from '../sprites/objects.js';
 
 // frame 스프라이트(64×64) 안쪽 사진 영역(액자 PNG의 테두리 안쪽)
-const THUMB_X = 18, THUMB_Y = 19, THUMB_W = 30, THUMB_H = 28;
+const THUMB_X = 27, THUMB_Y = 28, THUMB_W = 45, THUMB_H = 42;
 
 /** 이미지를 썸네일 캔버스로(cover 크롭) */
 function makeThumb(img) {
@@ -23,6 +24,14 @@ export class GalleryScene extends Scene {
   /** @param files gallery/manifest.json의 파일명 배열 */
   constructor(game, files) {
     const L = galleryLayout(files.length);
+    let assets = game.assets;
+    const originalFrame = assets?.objects?.frame ?? objectSprite('frame');
+    if (originalFrame) {
+      const canvas = document.createElement('canvas'); canvas.width = 96; canvas.height = 96;
+      const ctx = canvas.getContext('2d'); ctx.imageSmoothingEnabled = false;
+      ctx.drawImage(spriteCanvas(originalFrame), 0, 0, 96, 96);
+      assets = { ...assets, objects: { ...assets.objects, frame: { w: 96, h: 96, canvas } } };
+    }
     const images = files.map((f) => { const img = new Image(); img.decoding = 'async'; img.src = `gallery/${f}`; return img; });
     const objects = [
       { id: 'door', sprite: 'door', floor: true, ...L.exit },
@@ -31,30 +40,29 @@ export class GalleryScene extends Scene {
         interact: () => openViewer(game, images, f.index),
       })),
     ];
-    if (files.length === 0) objects.push({ id: 'empty', sprite: 'sign', tx: 5, ty: 2, interact: () => toast('사진을 준비하고 있어요 📷') });
+    if (files.length === 0) objects.push({ id: 'empty', sprite: 'welcome-board', label: '우리의 사진을 기다려 주세요', tx: 4, ty: 4, interact: () => toast('사진은 마지막 준비 단계에서 채워질 예정이에요 📷') });
     if (game.assets?.objects?.window) objects.push({ id: 'winL', sprite: 'window', tx: 2, ty: -1 }, { id: 'winR', sprite: 'window', tx: 7, ty: -1 });
 
+    if (game.assets?.objects?.plant) objects.push({ id: 'plantL', sprite: 'plant', tx: 1, ty: L.exit.ty - 3 }, { id: 'plantR', sprite: 'plant', tx: 9, ty: L.exit.ty - 3 });
+
     super({
-      id: 'gallery', rows: L.rows, bg: '#f6efe7', spawn: L.spawn, assets: game.assets,
+      id: 'gallery', rows: L.rows, bg: '#f6efe7', spawn: L.spawn, assets,
       entrances: [{ ...L.exit, to: 'hub', spawn: HUB_DOORS.gallery.back }],
       objects,
     });
     this.frames = L.frames;
     this.images = images;
     this.thumbs = new Array(files.length).fill(null);
+    this.objects.forEach((o) => {
+      const f = L.frames.find((entry) => `frame${entry.index}` === o.id);
+      if (f) o.drawContent = (r) => { const thumb = this.thumbs[f.index]; if (thumb) r.drawCanvas(thumb, f.tx * TILE + THUMB_X, o.drawY + THUMB_Y); };
+    });
     images.forEach((img, i) => {
       img.addEventListener('load', () => { this.thumbs[i] = makeThumb(img); }, { once: true });
       img.addEventListener('error', () => console.warn('사진 로드 실패', files[i]), { once: true });
     });
   }
 
-  draw(r, player) {
-    super.draw(r, player);
-    for (const f of this.frames) {
-      const t = this.thumbs[f.index];
-      if (t) r.drawCanvas(t, f.tx * TILE + THUMB_X, f.ty * TILE + THUMB_Y);
-    }
-  }
 }
 
 export function createGallery(game) { return new GalleryScene(game, game.gallery ?? []); }

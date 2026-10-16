@@ -8,12 +8,7 @@ import { buildIcs } from '../ics.js';
 
 const ROWS = [
   'KKKKKKKKKKK',
-  'KDDDDDDDDDK',
-  'KDDDDDDDDDK',
-  'KDDDLLLLDDK',
-  'KDDDLLLLDDK',
-  'KDDDDDDDDDK',
-  'KDDDDDDDDDK',
+  ...Array.from({ length: 10 }, (_, i) => i === 5 || i === 6 ? 'KDDDLLLLDDK' : 'KDDDDDDDDDK'),
   'KKKKKDKKKKK',
 ];
 
@@ -54,21 +49,21 @@ export function createInfo(game) {
 
   return new Scene({
     id: 'info', rows: ROWS, bg: '#f6efe7', assets: game.assets,
-    spawn: { tx: 5, ty: 6 },
-    entrances: [{ tx: 5, ty: 7, to: 'hub', spawn: HUB_DOORS.info.back }],
+    spawn: { tx: 5, ty: 10 },
+    entrances: [{ tx: 5, ty: 11, to: 'hub', spawn: HUB_DOORS.info.back }],
     objects: [
-      { id: 'door', sprite: 'door', floor: true, tx: 5, ty: 7 },
-      { id: 'board', sprite: 'board', tx: 1, ty: -1, interact: () => showOverlay(game, {
+      { id: 'door', sprite: 'door', floor: true, tx: 5, ty: 11 },
+      { id: 'board', sprite: 'board', label: '가족분 안내', tx: 1, ty: 1, interact: () => showOverlay(game, {
         title: '오시는 길', html: kv([['지하철', w.transport.subway], ['버스', w.transport.bus], ['주차', w.transport.parking]]) || '<p class="muted">준비 중</p>' }) },
-      { id: 'map', sprite: 'mapframe', tx: 4, ty: -1, interact: () => showOverlay(game, {
+      { id: 'map', sprite: 'mapframe', label: '지도', tx: 4, ty: 1, interact: () => showOverlay(game, {
         title: '지도', html: `<p>${esc(w.address)}</p><div class="row">${mapButtons}</div>`,
         buttons: [{ label: '주소 복사', onClick: async () => { toast((await copyText(w.address)) ? '주소를 복사했어요' : '복사에 실패했어요'); return true; } }, { label: '닫기' }] }) },
-      { id: 'calendar', sprite: 'calendar', tx: 7, ty: -1, interact: () => showOverlay(game, {
+      { id: 'calendar', sprite: 'calendar', label: '날짜 저장', tx: 7, ty: 1, interact: () => showOverlay(game, {
         title: '캘린더에 저장', html: `<p>${esc(formatDate(w.date))}</p>`,
         buttons: [{ label: '.ics 다운로드', primary: true, onClick: () => { downloadIcs(cfg); } }, { label: '닫기' }] }) },
-      { id: 'desk', sprite: 'desk', tx: 2, ty: 1, interact: () => showOverlay(game, { title: '예식 안내', html: infoHtml(cfg) }) },
-      ...(game.assets?.objects?.plant ? [{ id: 'plantL', sprite: 'plant', tx: 1, ty: 5 }, { id: 'plantR', sprite: 'plant', tx: 9, ty: 5 }] : []),
-      { id: 'phone', sprite: 'phone', tx: 7, ty: 1, interact: () => showOverlay(game, { title: '연락하기', html: contactsHtml(cfg) }) },
+      { id: 'desk', sprite: 'desk', label: '예식 소식', tx: 2, ty: 4, interact: () => showOverlay(game, { title: '예식 안내', html: infoHtml(cfg) }) },
+      ...(game.assets?.objects?.plant ? [{ id: 'plantL', sprite: 'plant', tx: 1, ty: 8 }, { id: 'plantR', sprite: 'plant', tx: 9, ty: 8 }] : []),
+      { id: 'phone', sprite: 'phone', label: '연락하기', tx: 7, ty: 4, interact: () => showOverlay(game, { title: '연락하기', html: contactsHtml(cfg) }) },
     ],
     onEnter: (g) => { if (!shownOnce) { shownOnce = true; showOverlay(g, { title: '예식 안내', html: infoHtml(cfg) }); } },
   });

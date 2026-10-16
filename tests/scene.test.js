@@ -23,6 +23,26 @@ function makeScene(extra = {}) {
 }
 const player = () => new Character({ sprites: presetSprites(0), name: 'me', x: 0, y: 0 });
 
+test('경유 입구는 피하고 목적지로 선택한 입구만 통과한다', () => {
+  const s = makeScene({ entrances: [{ tx: 3, ty: 3, to: 'room' }] });
+  const p = player(); s.enter(p, { tx: 3, ty: 2 });
+  s.walkTo(p, ...Object.values(standPos(3, 4)));
+  let entered = false;
+  const game = { player: p, goTo: () => { entered = true; } };
+  for (let i = 0; i < 50; i++) s.update(.05, game);
+  assert.equal(entered, false);
+  s.walkTo(p, ...Object.values(standPos(3, 3)));
+  for (let i = 0; i < 20; i++) s.update(.05, game);
+  assert.equal(entered, true);
+});
+
+test('막힌 목적지는 도착 콜백 없이 이동을 거절한다', () => {
+  const s = makeScene(); const p = player(); s.enter(p);
+  let called = false;
+  s.walkTo(p, 16, 16, () => { called = true; });
+  assert.equal(p.walking, false); assert.equal(called, false);
+});
+
 test('enter는 플레이어를 spawn 타일 중앙 하단에 놓는다', () => {
   const s = makeScene(); const p = player();
   s.enter(p);
@@ -134,12 +154,21 @@ test('wander NPC는 시간이 지나면 home 주변으로 이동하고, solid:fa
   const p = player(); s.enter(p, { tx: 1, ty: 1 });
   const game = { player: p, goTo: () => {} };
   const start = [npc.x, npc.y];
-  for (let i = 0; i < 40; i++) s.update(0.1, game); // 4초: 타이머 만료 → 이동 → 도착
-  const moved = npc.x !== start[0] || npc.y !== start[1];
+  let moved = false;
+  for (let i = 0; i < 40; i++) { s.update(0.1, game); moved ||= npc.x !== start[0] || npc.y !== start[1]; }
   assert.ok(moved, '자리를 옮겼다');
   const t = s.tileOf(npc.x, npc.y);
   assert.ok(Math.abs(t.tx - 3) <= 1 && Math.abs(t.ty - 3) <= 1, 'home 반경 1칸 안');
   assert.ok(!s.isSolidTile(t.tx, t.ty), '막힌 칸이 아님');
+});
+
+test('액자 내부 콘텐츠는 앞에 있는 캐릭터보다 먼저 그려진다', () => {
+  const s = makeScene({ objects: [{ id: 'frame', sprite: 'frame', tx: 1, ty: 1 }] });
+  const p = player(); s.enter(p, { tx: 3, ty: 4 });
+  const log = [];
+  s.objects[0].drawContent = () => log.push('photo');
+  s.draw({ drawTile: () => {}, drawSprite: (spr) => log.push(spr === p.sprite() ? 'player' : 'frame'), drawNameTag: () => {}, drawBubble: () => {} }, p);
+  assert.deepEqual(log, ['frame', 'photo', 'player']);
 });
 
 test('draw는 타일 → y정렬 드로어블 → 말풍선 순으로 renderer를 호출한다', () => {

@@ -5,6 +5,13 @@ import { presetSprites } from '../js/sprites/characters.js';
 
 const mk = () => new Character({ sprites: presetSprites(0), name: '민우', x: 100, y: 100 });
 
+test('막힌 이동은 도착 콜백을 실행하지 않는다', () => {
+  const c = mk(); let called = false;
+  c.moveTo(200, 100, () => { called = true; });
+  c.update(.1, () => true);
+  assert.equal(c.walking, false); assert.equal(called, false);
+});
+
 test('기본 상태: 아래를 보고 정지', () => {
   const c = mk();
   assert.equal(c.dir, 'down');

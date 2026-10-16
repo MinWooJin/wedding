@@ -49,9 +49,10 @@ OBJECT_SIZES = {  # 오브젝트별 원본 비율과 요청 규격. 의자는 �
     "chair": (32, 48), "bush": (64, 64), "lantern": (32, 64),
     "petal-pile": (32, 32), "welcome-board": (64, 64),
     "bush-white": (64, 64), "platform": (160, 64), "window": (64, 64), "plant": (32, 64),
+    "wedding-mailbox": (64, 96), "share-letter": (64, 64),
 }
 # 고정 크기 씬(갤러리·이야기 길은 사진/타임라인 수에 따라 길이가 변해 배경 이미지를 쓰지 않는다)
-MAP_SIZES = {"hub": (352, 1024), "info": (352, 256), "guestbook": (352, 384), "gifts": (352, 256)}
+MAP_SIZES = {"hub": (352, 832), "info": (352, 384), "guestbook": (352, 384), "gifts": (352, 384)}
 
 PIXEL = "--pixel" in sys.argv
 SKIP_EXISTING = "--skip-existing" in sys.argv

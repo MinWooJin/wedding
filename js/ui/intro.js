@@ -6,19 +6,19 @@ import { characterSet } from '../assets.js';
 import { displayName } from '../config.js';
 
 /** 인트로 화면을 띄우고 {nickname, charId}를 resolve한다. */
-export function showIntro(root, config, assets = {}) {
+export function showIntro(root, config, assets = {}, current = null) {
   return new Promise((resolve) => {
-    let charId = Math.floor(Math.random() * PRESET_COUNT);
+    let charId = current?.charId ?? Math.floor(Math.random() * PRESET_COUNT);
     let frame = 0;
     const card = h(`
-      <div class="card">
+      <div class="card" role="dialog" aria-modal="true" aria-label="정원의 내 캐릭터" tabindex="-1">
         <h2>${esc(displayName(config.groom))} ♥ ${esc(displayName(config.bride))}</h2>
         <p>픽셀 가든에 오신 걸 환영해요!<br>닉네임을 정하고 캐릭터를 골라주세요.</p>
-        <input id="nick" maxlength="10" placeholder="닉네임 (2~10자)" autocomplete="off">
+        <label for="nick">정원에서 사용할 이름</label><input id="nick" maxlength="10" placeholder="닉네임 (2~10자)" autocomplete="nickname">
         <div class="picker">
-          <button class="btn" id="prev">◀</button>
+          <button class="btn" id="prev" aria-label="이전 캐릭터">◀</button>
           <canvas width="48" height="72"></canvas>
-          <button class="btn" id="next">▶</button>
+          <button class="btn" id="next" aria-label="다음 캐릭터">▶</button>
         </div>
         <p class="muted" id="count"></p>
         <p id="err" style="color:#c0392b;min-height:1.5em"></p>
@@ -26,6 +26,15 @@ export function showIntro(root, config, assets = {}) {
       </div>`);
     const cv = card.querySelector('canvas'), ctx = cv.getContext('2d');
     const count = card.querySelector('#count'), err = card.querySelector('#err'), nick = card.querySelector('#nick');
+    const hud = document.getElementById('hud'), previousFocus = document.activeElement;
+    hud.inert = true;
+    const finish = (profile) => {
+      clearInterval(timer); hud.inert = false;
+      root.hidden = true; root.replaceChildren();
+      if (previousFocus?.isConnected) previousFocus.focus();
+      resolve(profile);
+    };
+    nick.value = current?.nickname || '';
 
     const render = () => {
       const set = characterSet(assets, `preset-${charId}`, presetSprites(charId));
@@ -41,15 +50,25 @@ export function showIntro(root, config, assets = {}) {
     const go = () => {
       const v = validateNickname(nick.value);
       if (!v.ok) { err.textContent = v.error; return; }
-      clearInterval(timer);
-      root.hidden = true; root.innerHTML = '';
-      resolve({ nickname: v.value, charId });
+      finish({ nickname: v.value, charId });
     };
     card.querySelector('#go').onclick = go;
+    if (current) {
+      const cancel = h('<button class="btn">그대로 돌아가기</button>');
+      cancel.onclick = () => finish(current);
+      card.querySelector('.row').appendChild(cancel);
+    }
     nick.addEventListener('keydown', (e) => { if (e.key === 'Enter') go(); });
+    card.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && current) finish(current);
+      if (e.key !== 'Tab') return;
+      const nodes = [...card.querySelectorAll('input,button')], first = nodes[0], last = nodes.at(-1);
+      if (e.shiftKey && (document.activeElement === first || document.activeElement === card)) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && (document.activeElement === last || document.activeElement === card)) { e.preventDefault(); first.focus(); }
+    });
 
     root.innerHTML = ''; root.appendChild(card); root.hidden = false;
     render();
-    setTimeout(() => nick.focus(), 50);
+    card.focus({ preventScroll: true });
   });
 }

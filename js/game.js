@@ -73,6 +73,11 @@ export class Game {
   resize() {
     const r = this.frame.getBoundingClientRect();
     this.renderer.resize(r.width, r.height);
+    const header = this.frame.querySelector?.('.garden-header')?.getBoundingClientRect();
+    const panel = this.frame.querySelector?.('.scene-panel')?.getBoundingClientRect();
+    const scale = this.renderer.view.scale;
+    this.cameraView = { ...this.renderer.view, height: panel ? Math.max(200, Math.floor((panel.top - r.top - 8) / scale)) : this.renderer.view.height };
+    this.cameraTop = header ? Math.ceil((header.bottom - r.top + 12) / scale) : HUD_PAD;
   }
 
   sceneById(id) {
@@ -88,10 +93,12 @@ export class Game {
 
   switchNow(id, spawn) {
     this.scene = this.sceneById(id);
-    this.scene.enter(this.player, spawn ?? this.scene.spawn, this);
+    this.scene.enter(this.player, spawn ?? this.scene.spawn, null);
+    this.afterTransition = () => this.scene.onEnter?.(this);
     this.follow = true;
-    this.cam = computeCamera(this.renderer.view, this.scene, this.player, HUD_PAD); // 전환 시 즉시 맞춤
     this.ui.hud?.onScene?.(id);
+    this.resize();
+    this.cam = computeCamera(this.cameraView, this.scene, this.player, this.cameraTop);
   }
 
   tap(cssX, cssY) {
@@ -107,7 +114,7 @@ export class Game {
   drag(dxCss, dyCss) {
     if (!this.scene || this.paused) return;
     const { scale } = this.renderer.view;
-    const b = cameraBounds(this.renderer.view, this.scene, HUD_PAD);
+    const b = cameraBounds(this.cameraView, this.scene, this.cameraTop);
     this.follow = false;
     this.cam = {
       x: clamp(this.cam.x - dxCss / scale, b.minX, b.maxX),
@@ -117,7 +124,7 @@ export class Game {
 
   updateCamera(dt) {
     if (!this.follow) return;
-    const t = computeCamera(this.renderer.view, this.scene, this.player, HUD_PAD);
+    const t = computeCamera(this.cameraView, this.scene, this.player, this.cameraTop);
     const k = 1 - Math.exp(-CAM_SMOOTH * dt);
     this.cam = {
       x: Math.abs(t.x - this.cam.x) < 0.5 ? t.x : this.cam.x + (t.x - this.cam.x) * k,
@@ -149,6 +156,10 @@ export class Game {
     if (f.dir === -1) {
       f.alpha = Math.max(0, f.alpha - dt / FADE_TIME);
       if (f.alpha <= 0) f.dir = 0;
+    }
+    if (f.dir === 0 && this.afterTransition) {
+      const enter = this.afterTransition; this.afterTransition = null; enter();
+      if (this.paused) return;
     }
     this.scene.update(dt, this);
   }

@@ -54,12 +54,14 @@ test('한 축은 변위 0, 다른 축은 막히면 제자리 → moved=false로 
   const r = stepToward({ x: 40, y: 208 }, { x: 40, y: 238 }, 5, (x, y) => y > 208);
   assert.deepEqual([r.x, r.y], [40, 208]);
   assert.equal(r.moved, false);
-  assert.equal(r.arrived, true);
+  assert.equal(r.arrived, false);
+  assert.equal(r.blocked, true);
 });
 
-test('양 축 모두 막히면 그 자리에서 도착 처리(멈춤)', () => {
+test('양 축 모두 막히면 도착과 구별되는 막힘 상태', () => {
   const r = stepToward({ x: 0, y: 0 }, { x: 30, y: 40 }, 5, () => true);
   assert.deepEqual([r.x, r.y], [0, 0]);
   assert.equal(r.moved, false);
-  assert.equal(r.arrived, true);
+  assert.equal(r.arrived, false);
+  assert.equal(r.blocked, true);
 });

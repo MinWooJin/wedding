@@ -2,6 +2,17 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { validateEntry, fetchMessages, postMessage, postVisit } from '../js/api.js';
 
+test('상태 포함 조회는 정상 빈 목록과 실패를 구분한다', async () => {
+  assert.deepEqual(await fetchMessages('u', { withStatus: true, fetchImpl: async () => ({ ok: true, json: async () => [] }) }), { ok: true, entries: [] });
+  assert.deepEqual(await fetchMessages('u', { withStatus: true, fetchImpl: async () => ({ ok: false }) }), { ok: false, entries: [] });
+});
+
+test('전송이 지연되면 중단하고 재시도 가능한 오류를 반환한다', async () => {
+  const fetchImpl = (_, { signal }) => new Promise((resolve, reject) => signal.addEventListener('abort', () => reject(Error('timeout'))));
+  const result = await postMessage('u', {}, { fetchImpl, timeoutMs: 10 });
+  assert.equal(result.ok, false);
+});
+
 test('validateEntry: 닉네임 2~10, 메시지 1~100, characterId 0~9', () => {
   assert.equal(validateEntry({ nickname: '민우', characterId: 0, message: '축하해요' }).ok, true);
   assert.deepEqual(validateEntry({ nickname: '민우', characterId: 0, message: '  축하해요  ' }).value,

@@ -16,19 +16,21 @@ export function validateEntry({ nickname, characterId, message }) {
 const isEntry = (e) => e && typeof e.n === 'string' && typeof e.m === 'string' && Number.isInteger(e.c);
 
 /** @returns {Promise<{t:number,n:string,c:number,m:string}[]>} 실패 시 [] */
-export async function fetchMessages(url, { fetchImpl = globalThis.fetch, timeoutMs = 5000 } = {}) {
-  if (!url) return [];
+export async function fetchMessages(url, { fetchImpl = globalThis.fetch, timeoutMs = 5000, withStatus = false } = {}) {
+  const finish = (ok, entries = []) => withStatus ? { ok, entries } : entries;
+  if (!url) return finish(false);
+  const ctrl = typeof AbortController === 'function' ? new AbortController() : null;
+  const timer = ctrl ? setTimeout(() => ctrl.abort(), timeoutMs) : null;
   try {
-    const ctrl = typeof AbortController === 'function' ? new AbortController() : null;
-    const timer = ctrl ? setTimeout(() => ctrl.abort(), timeoutMs) : null;
     const res = await fetchImpl(url, { signal: ctrl?.signal, cache: 'no-store' });
-    if (timer) clearTimeout(timer);
-    if (!res.ok) return [];
+    if (!res.ok) return finish(false);
     const data = await res.json();
-    return Array.isArray(data) ? data.filter(isEntry) : [];
+    return Array.isArray(data) ? finish(true, data.filter(isEntry)) : finish(false);
   } catch (e) {
     console.warn('방명록 불러오기 실패', e);
-    return [];
+    return finish(false);
+  } finally {
+    if (timer) clearTimeout(timer);
   }
 }
 
@@ -39,15 +41,19 @@ export async function postVisit(url, { nickname, characterId }, { fetchImpl = gl
 }
 
 /** Apps Script는 text/plain POST면 CORS 프리플라이트 없이 받는다 */
-export async function postMessage(url, entry, { fetchImpl = globalThis.fetch } = {}) {
+export async function postMessage(url, entry, { fetchImpl = globalThis.fetch, timeoutMs = 10000 } = {}) {
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), timeoutMs);
   try {
     const res = await fetchImpl(url, {
-      method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(entry),
+      method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(entry), signal: ctrl.signal,
     });
     if (!res.ok) return { ok: false, error: '잠시 후 다시 시도해 주세요' };
     const data = await res.json();
     return data.ok ? { ok: true } : { ok: false, error: data.error || '잠시 후 다시 시도해 주세요' };
   } catch {
     return { ok: false, error: '잠시 후 다시 시도해 주세요' };
+  } finally {
+    clearTimeout(timer);
   }
 }
