@@ -71,7 +71,7 @@ function showShare(game) {
 export function createGifts(game) {
   const cfg = game.config;
   return new Scene({
-    id: 'gifts', rows: ROWS, bg: '#2a2f33', spawn: { tx: 5, ty: 6 }, assets: game.assets,
+    id: 'gifts', rows: ROWS, bg: '#f6efe7', spawn: { tx: 5, ty: 6 }, assets: game.assets,
     entrances: [{ ...EXIT, to: 'hub', spawn: HUB_DOORS.gifts.back }],
     objects: [
       { id: 'door', sprite: 'door', floor: true, ...EXIT },

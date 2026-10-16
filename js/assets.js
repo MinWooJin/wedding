@@ -18,7 +18,7 @@ export const TILE_IDS = ['G', 'W', 'P', 'H', 'F', 'D', 'K', 'R', 'S', 'A', 'B', 
 export const TILE_FILES = { Q: 'X1', Y: 'X2', V: 'X3', Z: 'X4' };
 const FILE_TO_TILE = Object.fromEntries(Object.entries(TILE_FILES).map(([k, v]) => [v, k]));
 export const OBJECT_IDS = ['arch', 'tree', 'sign', 'mailbox', 'frame', 'bench', 'chest', 'desk', 'board', 'phone', 'calendar', 'mapframe', 'flower', 'stone', 'door',
-  'chair', 'bush', 'lantern', 'petal-pile', 'welcome-board', 'bush-white'];
+  'chair', 'bush', 'lantern', 'petal-pile', 'welcome-board', 'bush-white', 'platform'];
 export const SCENE_IDS = ['hub', 'info', 'gallery', 'story', 'guestbook', 'gifts'];
 
 function loadImage(src) {

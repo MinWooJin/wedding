@@ -84,6 +84,8 @@ export class HubScene extends Scene {
     const archTiles = Math.round((game.assets?.objects?.arch?.w ?? 160) / 32);
     const objects = [
       { id: 'arch', sprite: 'arch', tx: 5 - Math.floor(archTiles / 2), ty: 0, solid: false },
+      // 단상(160×64, 3~7열 × 4~5행): 바닥 장식이라 신랑신부 발밑에 깔리고 충돌 없음. assets/objects/platform.png가 있을 때만 표시
+      ...(game.assets?.objects?.platform ? [{ id: 'platform', sprite: 'platform', tx: 3, ty: 4, floor: true }] : []),
       ...DECOR.map((d, i) => ({ id: `decor${i}`, ...d })),
     ];
     const entrances = [];

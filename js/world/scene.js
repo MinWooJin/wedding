@@ -20,7 +20,7 @@ const INTERACT_DIST = TILE * 1.6; // 이 거리 안이면 이동 없이 바로 �
  *   solid:false 면 플레이어가 지나갈 수 있다(움직이는 하객용). wander가 있으면 home 주변 radius 칸 안을 몇 초 간격으로 돌아다닌다.
  */
 export class Scene {
-  constructor({ id, rows, spawn, objects = [], entrances = [], npcs = [], bg = '#1b2a1f', onEnter = null, assets = {} }) {
+  constructor({ id, rows, spawn, objects = [], entrances = [], npcs = [], bg = '#f6efe7', onEnter = null, assets = {} }) {
     this.id = id;
     this.map = parseMap(rows);
     this.spawn = spawn;
