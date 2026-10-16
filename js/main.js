@@ -2,7 +2,7 @@ import { Game } from './game.js';
 import { loadConfig } from './config.js';
 import { loadProfile, saveProfile } from './state.js';
 import { loadAssets } from './assets.js';
-import { fetchMessages } from './api.js';
+import { fetchMessages, postVisit } from './api.js';
 import { showIntro } from './ui/intro.js';
 import { createHud } from './ui/hud.js';
 import { createHub } from './world/hub.js';
@@ -46,7 +46,15 @@ async function refreshMessages() {
   const list = await fetchMessages(config.guestbookApi);
   if (list.length) { game.data.messages = list; game.onMessagesChanged(); }
 }
-refreshMessages();
+
+/** 한 번 입장한 하객은 광장에 남는다: 세션당 한 번 닉네임·캐릭터를 등록 */
+async function registerVisit() {
+  const key = `pixel-wedding-visited:${profile.nickname}:${profile.charId}`;
+  try { if (sessionStorage.getItem(key)) return; } catch {}
+  const r = await postVisit(config.guestbookApi, { nickname: profile.nickname, characterId: profile.charId });
+  if (r.ok) { try { sessionStorage.setItem(key, '1'); } catch {} }
+}
+registerVisit().then(refreshMessages);
 setInterval(refreshMessages, 60_000);
 document.addEventListener('visibilitychange', () => { if (!document.hidden) refreshMessages(); });
 

@@ -10,6 +10,7 @@ AI로 생성한 원본 이미지를 게임 규격 PNG로 변환하고 assets/man
   raw/characters/preset-0.png ... preset-9.png, groom.png, bride.png   정면 전신 1장(배경은 단색 또는 투명)
   raw/characters/<name>-sheet.png                                    선택: 3열×4행 걷기 시트(열: idle/걷기A/걷기B, 행: down/left/right/up)
   raw/tiles/G.png W.png P.png H.png F.png D.png K.png R.png S.png     정사각 타일(이음새 없는 패턴 권장)
+  raw/tiles/wedding/<name>.png                                      WEDDING_TILES의 이름 → assets/tiles/<ID>.png
   raw/objects/arch.png tree.png sign.png mailbox.png frame.png bench.png chest.png desk.png board.png phone.png calendar.png mapframe.png flower.png stone.png door.png
   raw/maps/hub.png info.png guestbook.png gifts.png                   씬 배경 한 장(선택)
 
@@ -33,11 +34,18 @@ CHAR_W, CHAR_H = 48, 72
 CHARACTERS = [f"preset-{i}" for i in range(10)] + ["groom", "bride"]
 TILES = list("GWPHFDKRS")
 # 웨딩 타일: raw/tiles/wedding/<이름>.png → assets/tiles/<ID>.png
-WEDDING_TILES = {"A": "aisle-ivory", "B": "aisle-petals", "C": "aisle-entrance", "E": "rose-petal-grass", "M": "ivory-marble", "L": "blush-carpet"}
-OBJECT_SIZES = {  # 캐릭터 64×96에 맞춘 비율
+WEDDING_TILES = {
+    "A": "aisle-ivory", "B": "aisle-petals", "C": "aisle-entrance",
+    "E": "rose-petal-grass", "M": "ivory-marble", "L": "blush-carpet",
+    "X1": "flower-bed-pink", "X2": "flower-bed-white",
+    "X3": "white-gravel", "X4": "hedge-rose",
+}
+OBJECT_SIZES = {  # 오브젝트별 원본 비율과 요청 규격. 의자는 높이 48px를 유지한다.
     "arch": (160, 128), "tree": (96, 96), "bench": (128, 64), "desk": (128, 64),
     "sign": (64, 64), "mailbox": (64, 64), "frame": (64, 64), "chest": (64, 64), "board": (64, 64),
     "phone": (64, 64), "calendar": (64, 64), "mapframe": (64, 64), "stone": (64, 64), "flower": (32, 32), "door": (32, 32),
+    "chair": (32, 48), "bush": (64, 64), "lantern": (32, 64),
+    "petal-pile": (32, 32), "welcome-board": (64, 64),
 }
 # 고정 크기 씬(갤러리·이야기 길은 사진/타임라인 수에 따라 길이가 변해 배경 이미지를 쓰지 않는다)
 MAP_SIZES = {"hub": (352, 1024), "info": (352, 256), "guestbook": (352, 384), "gifts": (352, 256)}

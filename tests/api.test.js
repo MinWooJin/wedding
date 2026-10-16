@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { validateEntry, fetchMessages, postMessage } from '../js/api.js';
+import { validateEntry, fetchMessages, postMessage, postVisit } from '../js/api.js';
 
 test('validateEntry: 닉네임 2~10, 메시지 1~100, characterId 0~9', () => {
   assert.equal(validateEntry({ nickname: '민우', characterId: 0, message: '축하해요' }).ok, true);
@@ -18,6 +18,16 @@ test('fetchMessages: 배열이면 정규화해서 반환, 실패면 []', async (
   assert.deepEqual(await fetchMessages('u', { fetchImpl: async () => { throw new Error('x'); } }), []);
   assert.deepEqual(await fetchMessages('u', { fetchImpl: async () => ({ ok: false }) }), []);
   assert.deepEqual(await fetchMessages('', { fetchImpl: okFetch }), [], 'URL 비어 있으면 호출 없이 []');
+});
+
+test('postVisit: type=visit로 빈 메시지 POST, URL 없으면 호출 안 함', async () => {
+  let seen = null;
+  const f = async (url, init) => { seen = JSON.parse(init.body); return { ok: true, json: async () => ({ ok: true }) }; };
+  assert.equal((await postVisit('https://x/exec', { nickname: '민우', characterId: 2 }, { fetchImpl: f })).ok, true);
+  assert.deepEqual(seen, { type: 'visit', nickname: '민우', characterId: 2, message: '' });
+  seen = null;
+  assert.equal((await postVisit('', { nickname: '민우', characterId: 2 }, { fetchImpl: f })).ok, false);
+  assert.equal(seen, null);
 });
 
 test('postMessage: text/plain JSON POST, 응답 ok 전달', async () => {

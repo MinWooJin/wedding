@@ -43,7 +43,8 @@ export class GuestbookScene extends Scene {
   }
 
   /** 메시지 목록 → 꽃 오브젝트 재배치 */
-  setEntries(entries) {
+  setEntries(allEntries) {
+    const entries = allEntries.filter((e) => e.m); // 입장만 한 하객(메시지 없음)은 꽃을 피우지 않는다
     this.entries = entries;
     const tiles = pickTiles(freeTiles(ROWS, RESERVED), Math.min(entries.length, 40), 7);
     const flowers = tiles.map((t, i) => this.makeObject({

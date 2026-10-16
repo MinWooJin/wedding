@@ -33,7 +33,7 @@ export const HUB_ROWS = [
   'HHHHHHHHHHH',
 ];
 
-export const HUB_SPAWN = { tx: 5, ty: 20 };
+export const HUB_SPAWN = { tx: 5, ty: 9 }; // 버진로드 중간에서 시작: 위로 신랑신부, 아래로 하객들이 보인다
 
 /** 각 방으로 가는 문 위치와, 그 방에서 돌아올 때 설 자리 */
 export const HUB_DOORS = {
@@ -46,7 +46,10 @@ export const HUB_DOORS = {
 };
 
 // 나무는 96×96(3칸 폭). 왼쪽은 2~4열, 오른쪽은 6~8열에 두고 5열 버진로드와 1·9열 산책로는 비운다
-const TREES = [[2, 5], [6, 7], [2, 10], [6, 12], [2, 15], [6, 17]];
+const TREES = [[2, 6], [6, 10], [2, 14], [6, 18]];
+
+/** 하객이 서는 구역: 버진로드(5열) 양옆 2~4열·6~8열, 아치 아래 5행부터 입구 직전 19행까지 */
+export const GUEST_ZONE = { cols: [2, 3, 4, 6, 7, 8], rowMin: 5, rowMax: 19 };
 
 export const MAX_GUESTS = 30;
 
@@ -56,7 +59,8 @@ export const MAX_GUESTS = 30;
  */
 export function guestPlacements(entries, reserved) {
   const list = entries.slice(0, MAX_GUESTS);
-  const shuffled = pickTiles(freeTiles(HUB_ROWS, reserved), Infinity, 2026);
+  const zone = freeTiles(HUB_ROWS, reserved).filter((t) => GUEST_ZONE.cols.includes(t.tx) && t.ty >= GUEST_ZONE.rowMin && t.ty <= GUEST_ZONE.rowMax);
+  const shuffled = pickTiles(zone, Infinity, 2026);
   const chosen = [];
   for (const t of shuffled) {
     if (chosen.length >= list.length) break;
@@ -71,9 +75,10 @@ const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
 export class HubScene extends Scene {
   constructor(game) {
     const cfg = game.config;
-    // 아치(160×128, 0~3행)보다 아래인 4행에, 길(5열) 양옆 3·7열에 세운다
-    const groom = new Character({ sprites: characterSet(game.assets, 'groom', GROOM), name: displayName(cfg.groom), ...standPos(3, 4) });
-    const bride = new Character({ sprites: characterSet(game.assets, 'bride', BRIDE), name: displayName(cfg.bride), ...standPos(7, 4) });
+    // 아치(160×128, 0~3행) 바로 앞 4행에 나란히(4·6열, 48px 캐릭터가 어깨를 맞댄 간격). 예식이 진행 중인 장면.
+    const groom = new Character({ sprites: characterSet(game.assets, 'groom', GROOM), name: displayName(cfg.groom), ...standPos(4, 4) });
+    const bride = new Character({ sprites: characterSet(game.assets, 'bride', BRIDE), name: displayName(cfg.bride), ...standPos(6, 4) });
+    groom.dir = 'down'; bride.dir = 'down';
     const greet = (c) => () => c.say(pick(cfg.greetings));
 
     const objects = [
@@ -91,6 +96,7 @@ export class HubScene extends Scene {
       id: 'hub', rows: HUB_ROWS, spawn: HUB_SPAWN, objects, entrances, assets: game.assets,
       npcs: [{ character: groom, interact: greet(groom) }, { character: bride, interact: greet(bride) }],
     });
+    this.game = game;
     this.hosts = [groom, bride];
     this.baseNpcs = this.npcs.slice();
     this.setGuests(game.data?.messages ?? []);
@@ -101,9 +107,10 @@ export class HubScene extends Scene {
     this.npcs = this.baseNpcs;
     this.rebuildSolid(); // 오브젝트 발자국 + 신랑신부 자리
     const reserved = new Set(this.extraSolid);
-    for (const o of this.objects) { // 오브젝트가 덮는 타일 + 주변 1칸(64px 폭 캐릭터가 겹치지 않게)
+    for (const o of this.objects) { // 오브젝트가 덮는 타일(표지판은 주변 1칸까지)
       const w = Math.ceil(o.spr.w / 32), h = Math.ceil(o.spr.h / 32);
-      for (let dy = -1; dy <= h; dy++) for (let dx = -1; dx <= w; dx++) reserved.add(`${o.tx + dx},${o.ty + dy}`);
+      const m = o.sprite === 'sign' ? 1 : 0;
+      for (let dy = -m; dy < h + m; dy++) for (let dx = -m; dx < w + m; dx++) reserved.add(`${o.tx + dx},${o.ty + dy}`);
     }
     for (const h of this.hosts) { // 신랑·신부 주변 1칸도 비운다
       const t = this.tileOf(h.x, h.y);
@@ -114,11 +121,13 @@ export class HubScene extends Scene {
       reserved.add(`${d.door.tx},${d.door.ty}`);
       reserved.add(`${d.back.tx},${d.back.ty}`);
     }
-    const guests = guestPlacements(entries, reserved).map(({ tx, ty, entry }) => {
+    const me = this.game?.profile?.nickname;
+    const others = entries.filter((e) => e.n !== me); // 본인은 플레이어로 이미 있으므로 제외
+    const guests = guestPlacements(others, reserved).map(({ tx, ty, entry }) => {
       const id = ((entry.c % PRESET_COUNT) + PRESET_COUNT) % PRESET_COUNT;
       const c = new Character({ sprites: characterSet(this.assets, `preset-${id}`, presetSprites(id)), name: entry.n, ...standPos(tx, ty) });
-      c.dir = ['down', 'left', 'right'][(tx + ty) % 3];
-      return { character: c, interact: () => c.say(entry.m, 4) };
+      c.dir = tx < 5 ? 'right' : 'left'; // 버진로드 쪽을 바라본다
+      return { character: c, interact: () => c.say(entry.m || '결혼 축하해요! 🎉', 4) };
     });
     this.npcs = [...this.baseNpcs, ...guests];
     this.rebuildSolid();

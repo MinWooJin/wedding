@@ -32,6 +32,12 @@ export async function fetchMessages(url, { fetchImpl = globalThis.fetch, timeout
   }
 }
 
+/** 입장만 한 하객도 광장에 남도록 닉네임·캐릭터를 등록한다(메시지 없음). 실패해도 조용히 넘어간다. */
+export async function postVisit(url, { nickname, characterId }, { fetchImpl = globalThis.fetch } = {}) {
+  if (!url) return { ok: false, error: 'no api' };
+  return postMessage(url, { type: 'visit', nickname, characterId, message: '' }, { fetchImpl });
+}
+
 /** Apps Script는 text/plain POST면 CORS 프리플라이트 없이 받는다 */
 export async function postMessage(url, entry, { fetchImpl = globalThis.fetch } = {}) {
   try {
