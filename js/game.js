@@ -20,7 +20,22 @@ export function computeCamera(view, scene, player, topPad = 0) {
   return { x: axis(view.width, scene.pixelW, player.x, 0), y: axis(view.height, scene.pixelH, player.y, topPad) };
 }
 
+/** 수동 스크롤로 갈 수 있는 카메라 범위. 맵이 뷰보다 작으면 min=max(고정). */
+export function cameraBounds(view, scene, topPad = 0) {
+  const range = (viewLen, mapLen, pad) => {
+    const avail = viewLen - pad;
+    if (mapLen <= avail) { const v = 0 - pad - Math.floor((avail - mapLen) / 2); return [v, v]; }
+    return [0 - pad, mapLen - avail - pad];
+  };
+  const [minX, maxX] = range(view.width, scene.pixelW, 0);
+  const [minY, maxY] = range(view.height, scene.pixelH, topPad);
+  return { minX, maxX, minY, maxY };
+}
+
+const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
+
 const FADE_TIME = 0.3;
+const CAM_SMOOTH = 10; // 클수록 빨리 따라붙음
 
 export class Game {
   /**
@@ -44,7 +59,13 @@ export class Game {
     this.fade = { alpha: 0, dir: 0, next: null };
     this.last = 0;
     this.paused = false;
-    attachPointer(canvas, (cx, cy) => this.tap(cx, cy));
+    this.cam = { x: 0, y: 0 };
+    this.follow = true; // false면 사용자가 드래그한 위치에 머문다
+    attachPointer(canvas, {
+      onTap: (cx, cy) => this.tap(cx, cy),
+      onDrag: (dx, dy) => this.drag(dx, dy),
+      onDragEnd: () => {},
+    });
     new ResizeObserver(() => this.resize()).observe(frame);
     this.resize();
   }
@@ -68,15 +89,40 @@ export class Game {
   switchNow(id, spawn) {
     this.scene = this.sceneById(id);
     this.scene.enter(this.player, spawn ?? this.scene.spawn, this);
+    this.follow = true;
+    this.cam = computeCamera(this.renderer.view, this.scene, this.player, HUD_PAD); // 전환 시 즉시 맞춤
     this.ui.hud?.onScene?.(id);
   }
 
   tap(cssX, cssY) {
     if (!this.scene || this.paused || this.fade.dir !== 0) return;
     const { scale } = this.renderer.view;
-    const wx = cssX / scale + this.renderer.cam.x;
-    const wy = cssY / scale + this.renderer.cam.y;
+    const wx = cssX / scale + this.cam.x;
+    const wy = cssY / scale + this.cam.y;
+    this.follow = true; // 탭하면 다시 캐릭터를 따라간다
     this.scene.onTap(wx, wy, this);
+  }
+
+  /** 드래그/휠로 맵 스크롤. 캐릭터 추적을 멈추고 범위 안에서만 움직인다. */
+  drag(dxCss, dyCss) {
+    if (!this.scene || this.paused) return;
+    const { scale } = this.renderer.view;
+    const b = cameraBounds(this.renderer.view, this.scene, HUD_PAD);
+    this.follow = false;
+    this.cam = {
+      x: clamp(this.cam.x - dxCss / scale, b.minX, b.maxX),
+      y: clamp(this.cam.y - dyCss / scale, b.minY, b.maxY),
+    };
+  }
+
+  updateCamera(dt) {
+    if (!this.follow) return;
+    const t = computeCamera(this.renderer.view, this.scene, this.player, HUD_PAD);
+    const k = 1 - Math.exp(-CAM_SMOOTH * dt);
+    this.cam = {
+      x: Math.abs(t.x - this.cam.x) < 0.5 ? t.x : this.cam.x + (t.x - this.cam.x) * k,
+      y: Math.abs(t.y - this.cam.y) < 0.5 ? t.y : this.cam.y + (t.y - this.cam.y) * k,
+    };
   }
 
   start(id) {
@@ -88,6 +134,7 @@ export class Game {
     const dt = Math.min(0.05, (t - this.last) / 1000 || 0);
     this.last = t;
     if (!this.paused) this.update(dt);
+    this.updateCamera(dt);
     this.draw();
     requestAnimationFrame((tt) => this.loop(tt));
   }
@@ -108,7 +155,7 @@ export class Game {
 
   draw() {
     const r = this.renderer;
-    r.cam = computeCamera(r.view, this.scene, this.player, HUD_PAD);
+    r.cam = { x: Math.round(this.cam.x), y: Math.round(this.cam.y) };
     r.begin(this.scene.bg);
     this.scene.draw(r, this.player);
     r.drawFade(this.fade.alpha);

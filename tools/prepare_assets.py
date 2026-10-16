@@ -38,7 +38,7 @@ OBJECT_SIZES = {
     "phone": (32, 32), "calendar": (32, 32), "mapframe": (32, 32), "flower": (32, 32), "stone": (32, 32), "door": (32, 32),
 }
 # 고정 크기 씬(갤러리·이야기 길은 사진/타임라인 수에 따라 길이가 변해 배경 이미지를 쓰지 않는다)
-MAP_SIZES = {"hub": (352, 768), "info": (352, 256), "guestbook": (352, 384), "gifts": (352, 256)}
+MAP_SIZES = {"hub": (352, 1024), "info": (352, 256), "guestbook": (352, 384), "gifts": (352, 256)}
 
 PIXEL = "--pixel" in sys.argv
 RESAMPLE_DOWN = Image.Resampling.BOX if PIXEL else Image.Resampling.LANCZOS

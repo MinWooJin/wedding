@@ -5,45 +5,37 @@ import { toast } from '../ui/toast.js';
 import { characterSet } from '../assets.js';
 import { freeTiles, pickTiles } from './guest-layout.js';
 
+// 11열 × 32행(352×1024px). 위쪽 19행은 아치까지 이어지는 긴 정원, 아래는 방 입구가 있는 교차로.
+const GARDEN = ['HGGGGPGGGGH', 'HGWGGPGGWGH', 'HGGGGPGGGGH', 'HWGGGPGGGWH', 'HGGGGPGGGGH', 'HGGWGPGWGGH'];
 export const HUB_ROWS = [
   'HHHHHHHHHHH',
-  'HGGGGPGGGGH',
-  'HGWGGPGGWGH',
-  'HGGGGPGGGGH',
-  'HWGGGPGGGWH',
-  'HGGGGPGGGGH',
-  'HGGWGPGWGGH',
-  'HGGGGPGGGGH',
-  'HWGGGPGGGWH',
-  'HGGGGPGGGGH',
-  'HGGWGPGWGGH',
-  'HGGGGPGGGGH',
-  'HPPPPPPPPPH',
-  'HPGGGPGGGPH',
+  ...Array.from({ length: 19 }, (_, i) => GARDEN[i % GARDEN.length]), // rows 1..19
+  'HPPPPPPPPPH', // 20 교차로 · 시작 위치
+  'HPGGGPGGGPH', // 21 문: 안내소(1,21), 갤러리(9,21)
   'HPGWGPGWGPH',
   'HPGGGPGGGPH',
-  'HPPPPPPPPPH',
-  'HPGGGPGGGPH',
+  'HPPPPPPPPPH', // 24
+  'HPGGGPGGGPH', // 25 문: 이야기 길(1,25), 방명록(9,25)
   'HPWGGPGGWPH',
   'HPGGGPGGGPH',
-  'HPPPPPPPPPH',
+  'HPPPPPPPPPH', // 28
   'HPGGGPGGGPH',
-  'HPWGGPGGWPH',
+  'HPWGGPGGWPH', // 30 문: 마음 전하기(5,30)
   'HHHHHHHHHHH',
 ];
 
-export const HUB_SPAWN = { tx: 5, ty: 12 };
+export const HUB_SPAWN = { tx: 5, ty: 20 };
 
 /** 각 방으로 가는 문 위치와, 그 방에서 돌아올 때 설 자리 */
 export const HUB_DOORS = {
-  info:      { door: { tx: 1, ty: 13 }, sign: { tx: 2, ty: 13 }, back: { tx: 1, ty: 12 }, label: '예식 안내소' },
-  gallery:   { door: { tx: 9, ty: 13 }, sign: { tx: 8, ty: 13 }, back: { tx: 9, ty: 12 }, label: '갤러리관' },
-  story:     { door: { tx: 1, ty: 17 }, sign: { tx: 2, ty: 17 }, back: { tx: 1, ty: 16 }, label: '우리 이야기 길' },
-  guestbook: { door: { tx: 9, ty: 17 }, sign: { tx: 8, ty: 17 }, back: { tx: 9, ty: 16 }, label: '방명록 정원' },
-  gifts:     { door: { tx: 5, ty: 22 }, sign: { tx: 4, ty: 22 }, back: { tx: 5, ty: 21 }, label: '마음 전하는 곳' },
+  info:      { door: { tx: 1, ty: 21 }, sign: { tx: 2, ty: 21 }, back: { tx: 1, ty: 20 }, label: '예식 안내소' },
+  gallery:   { door: { tx: 9, ty: 21 }, sign: { tx: 8, ty: 21 }, back: { tx: 9, ty: 20 }, label: '갤러리관' },
+  story:     { door: { tx: 1, ty: 25 }, sign: { tx: 2, ty: 25 }, back: { tx: 1, ty: 24 }, label: '우리 이야기 길' },
+  guestbook: { door: { tx: 9, ty: 25 }, sign: { tx: 8, ty: 25 }, back: { tx: 9, ty: 24 }, label: '방명록 정원' },
+  gifts:     { door: { tx: 5, ty: 30 }, sign: { tx: 4, ty: 30 }, back: { tx: 5, ty: 29 }, label: '마음 전하는 곳' },
 };
 
-const TREES = [[1, 1], [9, 1], [1, 5], [9, 5], [3, 7], [7, 7], [1, 9], [9, 9]];
+const TREES = [[1, 1], [9, 1], [1, 5], [9, 5], [3, 7], [7, 7], [1, 9], [9, 9], [3, 12], [7, 12], [1, 15], [9, 15], [2, 18], [8, 18]];
 
 export const MAX_GUESTS = 30;
 

@@ -18,7 +18,7 @@ python tools/prepare_assets.py --pixel  # 또렷한 도트 느낌
 | 걷기 시트(선택) | `raw/characters/<name>-sheet.png` | 192×384 | 3열(idle/걷기A/걷기B) × 4행(앞/왼쪽/오른쪽/뒤) |
 | 타일 | `raw/tiles/G W P H F D K R S.png` | 32×32 | G 잔디, W 꽃잔디, P 흙길, H 산울타리, F 울타리, D 마루, K 벽, R 카펫, S 돌바닥 |
 | 오브젝트 | `raw/objects/<id>.png` | 32의 배수 | arch 96×64, tree 32×64, bench·desk 64×32, 나머지 32×32 |
-| 씬 배경(선택) | `raw/maps/hub.png info.png guestbook.png gifts.png` | hub 352×768, info 352×256, guestbook 352×384, gifts 352×256 | 타일 대신 한 장으로 그림. 길·벽 위치는 아래 레이아웃을 따라야 함 |
+| 씬 배경(선택) | `raw/maps/hub.png info.png guestbook.png gifts.png` | hub 352×1024, info 352×256, guestbook 352×384, gifts 352×256 | 타일 대신 한 장으로 그림. 길·벽 위치는 아래 레이아웃을 따라야 함 |
 
 배경은 단색(흰색 등)이나 투명이면 됩니다. 스크립트가 모서리 색을 기준으로 배경을 지우고, 여백을 잘라내고, 크기를 맞춥니다.
 
@@ -57,34 +57,23 @@ soft shading, centered, plain white background, no ground shadow, no text
 
 ## 씬 배경 한 장으로 그리기 (선택, 가장 레퍼런스에 가까운 방법)
 
-광장(hub)은 11×24 타일, 352×768px입니다. 걸을 수 있는 길과 막힌 곳이 아래 레이아웃과 맞아야 캐릭터가 벽을 통과하거나 길 위에서 막히지 않습니다.
+광장(hub)은 11×32 타일, 352×1024px입니다. 걸을 수 있는 길과 막힌 곳이 아래 레이아웃과 맞아야 캐릭터가 벽을 통과하거나 길 위에서 막히지 않습니다.
 
 ```
 H = 산울타리(막힘)  G = 잔디  W = 꽃잔디  P = 흙길
-HHHHHHHHHHH   row 0
-HGGGGPGGGGH   row 1   ← 꽃 아치(4~6열, 1~2행), 신랑 (4,3) 신부 (6,3)
-HGWGGPGGWGH
-HGGGGPGGGGH
-HWGGGPGGGWH
-HGGGGPGGGGH
-HGGWGPGWGGH
-HGGGGPGGGGH
-HWGGGPGGGWH
-HGGGGPGGGGH
-HGGWGPGWGGH
-HGGGGPGGGGH
-HPPPPPPPPPH   row 12  ← 시작 위치 (5,12)
-HPGGGPGGGPH   row 13  ← 문: 안내소 (1,13), 갤러리 (9,13)
-HPGWGPGWGPH
-HPGGGPGGGPH
-HPPPPPPPPPH
-HPGGGPGGGPH   row 17  ← 문: 이야기 길 (1,17), 방명록 (9,17)
-HPWGGPGGWPH
-HPGGGPGGGPH
-HPPPPPPPPPH
-HPGGGPGGGPH
-HPWGGPGGWPH   row 22  ← 문: 마음 전하기 (5,22)
-HHHHHHHHHHH   row 23
+row 0      HHHHHHHHHHH
+row 1~19   HGGGGPGGGGH  (가운데 5열만 길, 양옆 잔디·꽃잔디 반복)
+           ← 꽃 아치(4~6열, 1~2행), 신랑 (3,3) 신부 (7,3)
+row 20     HPPPPPPPPPH  ← 시작 위치 (5,20)
+row 21     HPGGGPGGGPH  ← 문: 안내소 (1,21), 갤러리 (9,21)
+row 22~23  HPG?GPG?GPH
+row 24     HPPPPPPPPPH
+row 25     HPGGGPGGGPH  ← 문: 이야기 길 (1,25), 방명록 (9,25)
+row 26~27  HPG?GPG?GPH
+row 28     HPPPPPPPPPH
+row 29     HPGGGPGGGPH
+row 30     HPWGGPGGWPH  ← 문: 마음 전하기 (5,30)
+row 31     HHHHHHHHHHH
 ```
 
 가장 쉬운 방법: 게임을 켠 뒤 브라우저 콘솔에서 `__exportMap()`을 실행하면 현재 씬의 타일 렌더가 PNG로 내려받아집니다. 이 이미지를 ComfyUI img2img(ControlNet tile/depth)의 밑그림으로 넣고 아래 프롬프트로 다시 그리면 레이아웃이 유지된 고퀄 배경이 나옵니다.

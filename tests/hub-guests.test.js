@@ -4,7 +4,7 @@ import { guestPlacements, HUB_ROWS } from '../js/world/hub.js';
 
 test('guestPlacements: 제외 타일 회피, 잔디 위, 서로 인접하지 않음, 결정적', () => {
   const entries = Array.from({ length: 40 }, (_, i) => ({ t: i, n: `손님${i}`, c: i % 10, m: `축하 ${i}` }));
-  const reserved = new Set(['3,3', '7,3', '5,12']);
+  const reserved = new Set(['3,3', '7,3', '5,20']);
   const a = guestPlacements(entries, reserved);
   assert.ok(a.length >= 15 && a.length <= 30, `배치 수 ${a.length}`);
   assert.deepEqual(a, guestPlacements(entries, reserved));
