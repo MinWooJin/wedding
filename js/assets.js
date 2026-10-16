@@ -1,15 +1,15 @@
 /**
  * 선택적 PNG 에셋 로더. 파일이 있으면 코드 그림 대신 사용하고, 없으면 조용히 폴백.
  *
- *  assets/characters/<name>.png  정면 1장(가로:세로 ≈ 2:3, 64×96으로 맞춰짐) 또는 3열×4행 시트(열: idle/걷기A/걷기B, 행: down/left/right/up)
+ *  assets/characters/<name>.png  정면 1장(가로:세로 ≈ 2:3, 48×72로 맞춰짐) 또는 3열×4행 시트(열: idle/걷기A/걷기B, 행: down/left/right/up)
  *  assets/tiles/<ID>.png         32×32
- *  assets/objects/<id>.png       32의 배수 크기(아치 160×128, 벤치·책상 128×64, 꽃·문 32×32, 나머지 64×64)
+ *  assets/objects/<id>.png       32의 배수 크기(아치 160×128, 나무 96×96, 벤치·책상 128×64, 꽃·문 32×32, 나머지 64×64)
  *  assets/maps/<sceneId>.png     씬 전체 배경(맵 픽셀 크기와 같게; 다르면 늘려 맞춤)
  */
 import { TILE } from './renderer.js';
 import { PRESET_COUNT } from './sprites/characters.js';
 
-export const CHAR_W = 64, CHAR_H = 96; // 화면(352px 폭 기준)에서 캐릭터가 폭 64px, 높이 96px로 보인다
+export const CHAR_W = 48, CHAR_H = 72; // 화면(352px 폭 기준)에서 캐릭터가 폭 48px, 높이 72px로 보인다(타일 1.5칸 폭)
 export const CHARACTER_NAMES = [...Array.from({ length: PRESET_COUNT }, (_, i) => `preset-${i}`), 'groom', 'bride'];
 export const TILE_IDS = ['G', 'W', 'P', 'H', 'F', 'D', 'K', 'R', 'S', 'A', 'B', 'C', 'E', 'M', 'L']; // A/B/C 버진로드·입구, E 꽃잎잔디, M 대리석, L 블러시 카펫
 export const OBJECT_IDS = ['arch', 'tree', 'sign', 'mailbox', 'frame', 'bench', 'chest', 'desk', 'board', 'phone', 'calendar', 'mapframe', 'flower', 'stone', 'door'];

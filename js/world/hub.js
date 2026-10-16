@@ -8,8 +8,8 @@ import { displayName } from '../config.js';
 
 // 11열 × 32행(352×1024px). 위쪽 19행은 아치까지 이어지는 긴 정원, 아래는 방 입구가 있는 교차로.
 // 타일: H 산울타리, G 잔디, W 꽃잔디, E 장미꽃잎 잔디, M 아이보리 대리석(무대·산책로), A/B 버진로드, C 입구 마감
-const STAGE = 'HEMMM?MMMEH';                                   // 1~4행: 아치 주변 대리석 무대
-const GARDEN = ['HEEEE?EEEEH']; // 5~19행: 장미 꽃잎 잔디로 통일(초록 톤을 누그러뜨림)
+const STAGE = 'HMMMM?MMMMH';                                   // 1~4행: 아치 주변 대리석 무대
+const GARDEN = ['HMEEE?EEEMH']; // 5~19행: 양옆 대리석 산책로(1·9열) + 꽃잎 잔디(W 꽃잔디는 톤이 달라 얼룩처럼 보여 제외)
 /** 가운데(5열)는 버진로드 A, 4행마다 꽃잎 B, 19행은 입구 마감 C */
 const aisleRow = (i) => {
   const base = i <= 3 ? STAGE : GARDEN[(i - 4) % GARDEN.length];
@@ -45,8 +45,8 @@ export const HUB_DOORS = {
   gifts:     { door: { tx: 5, ty: 30 }, sign: { tx: 3, ty: 29 }, back: { tx: 5, ty: 29 }, label: '마음 전하는 곳' },
 };
 
-// 나무는 64×64(2칸 폭)라 왼쪽은 1~3열, 오른쪽은 7~8열에 둔다(5열 버진로드를 피함)
-const TREES = [[1, 1], [8, 1], [1, 5], [8, 5], [3, 7], [7, 7], [1, 9], [8, 9], [3, 12], [7, 12], [1, 15], [8, 15], [2, 18], [7, 18]];
+// 나무는 96×96(3칸 폭). 왼쪽은 2~4열, 오른쪽은 6~8열에 두고 5열 버진로드와 1·9열 산책로는 비운다
+const TREES = [[2, 5], [6, 7], [2, 10], [6, 12], [2, 15], [6, 17]];
 
 export const MAX_GUESTS = 30;
 
@@ -104,6 +104,10 @@ export class HubScene extends Scene {
     for (const o of this.objects) { // 오브젝트가 덮는 타일 + 주변 1칸(64px 폭 캐릭터가 겹치지 않게)
       const w = Math.ceil(o.spr.w / 32), h = Math.ceil(o.spr.h / 32);
       for (let dy = -1; dy <= h; dy++) for (let dx = -1; dx <= w; dx++) reserved.add(`${o.tx + dx},${o.ty + dy}`);
+    }
+    for (const h of this.hosts) { // 신랑·신부 주변 1칸도 비운다
+      const t = this.tileOf(h.x, h.y);
+      for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) reserved.add(`${t.tx + dx},${t.ty + dy}`);
     }
     reserved.add(`${HUB_SPAWN.tx},${HUB_SPAWN.ty}`);
     for (const d of Object.values(HUB_DOORS)) {

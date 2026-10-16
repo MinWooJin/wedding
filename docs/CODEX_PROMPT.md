@@ -81,3 +81,29 @@ Git 저장소이며 원격 없음. git push 또는 remote 추가 금지. 로컬 
 - npm run serve로 http://localhost:5173에서 확인한다. 저장된 프로필이 없으면 입장 화면이 나온다.
 - 완료 후 검증한 변경분만 로컬 커밋하고 원격 추가나 push는 하지 마라.
 ```
+
+# 2차 요청: 초록 면적을 줄일 장식 타일·오브젝트 (Claude가 2026-10-16 작성)
+
+```text
+작업 폴더: C:\Users\alsdn\wedding (원격 없음, push 금지, 로컬 커밋 가능)
+
+현재 광장이 잔디 위주라 "가든 웨딩" 느낌이 약하다. 내장 이미지 생성 도구로 아래 에셋을 만들어
+raw/에 넣고 python tools/prepare_assets.py 로 변환해라(스크립트는 아래 새 ID/크기를 아직 모르므로
+TILES/WEDDING_TILES/OBJECT_SIZES에 추가한 뒤 실행). js/ 는 수정하지 마라. 연결은 Claude가 한다.
+스타일은 기존 에셋(assets/generation-prompts.json의 공통 스타일 문구)과 동일하게 맞춘다.
+
+새 타일 (32×32, 불투명, 이음새 없음) → raw/tiles/wedding/<이름>.png
+  - flower-bed-pink.png   (ID X1) 분홍·흰 장미가 빽빽한 꽃밭. 잔디가 거의 안 보일 정도로 꽃 위주
+  - flower-bed-white.png  (ID X2) 흰·연노랑 꽃밭 변형
+  - white-gravel.png      (ID X3) 흰 자갈 산책로(대리석보다 질감 있는 밝은 바닥)
+  - hedge-rose.png        (ID X4) 장미가 핀 산울타리(막힘 타일, 현재 H를 대체할 수 있게 같은 톤)
+
+새 오브젝트 (투명 배경, 아래 가운데 정렬) → raw/objects/<이름>.png
+  - chair.png     32×48  흰색 접이식 하객 의자(정면). 버진로드 양옆에 줄지어 놓을 것
+  - bush.png      64×64  분홍 꽃이 핀 둥근 꽃덤불
+  - lantern.png   32×64  리본 달린 랜턴 기둥
+  - petal-pile.png 32×32 바닥에 흩어진 꽃잎(비충돌 장식)
+  - welcome-board.png 64×64 "Welcome" 느낌의 이젤 안내판(글자 없이 장식 위주)
+
+변환 후 assets/manifest.json에 자동 등록되는지 확인하고, 결과 PNG 크기를 출력해 보고해라.
+```

@@ -28,14 +28,14 @@ ROOT = Path(__file__).resolve().parent.parent
 RAW = ROOT / "raw"
 OUT = ROOT / "assets"
 TILE = 32
-CHAR_W, CHAR_H = 64, 96
+CHAR_W, CHAR_H = 48, 72
 
 CHARACTERS = [f"preset-{i}" for i in range(10)] + ["groom", "bride"]
 TILES = list("GWPHFDKRS")
 # 웨딩 타일: raw/tiles/wedding/<이름>.png → assets/tiles/<ID>.png
 WEDDING_TILES = {"A": "aisle-ivory", "B": "aisle-petals", "C": "aisle-entrance", "E": "rose-petal-grass", "M": "ivory-marble", "L": "blush-carpet"}
 OBJECT_SIZES = {  # 캐릭터 64×96에 맞춘 비율
-    "arch": (160, 128), "tree": (64, 64), "bench": (128, 64), "desk": (128, 64),
+    "arch": (160, 128), "tree": (96, 96), "bench": (128, 64), "desk": (128, 64),
     "sign": (64, 64), "mailbox": (64, 64), "frame": (64, 64), "chest": (64, 64), "board": (64, 64),
     "phone": (64, 64), "calendar": (64, 64), "mapframe": (64, 64), "stone": (64, 64), "flower": (32, 32), "door": (32, 32),
 }

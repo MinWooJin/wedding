@@ -13,11 +13,11 @@ python tools/prepare_assets.py --pixel  # 또렷한 도트 느낌
 
 | 종류 | raw 파일명 | 결과 크기 | 비고 |
 |---|---|---|---|
-| 하객 캐릭터 | `raw/characters/preset-0.png` … `preset-9.png` | 64×96 | 정면 전신 1장이면 충분(좌우는 반전, 걷기는 들썩임으로 표현) |
-| 신랑·신부 | `raw/characters/groom.png`, `bride.png` | 64×96 | 광장 아치 아래, 이야기 길 벤치에 등장 |
-| 걷기 시트(선택) | `raw/characters/<name>-sheet.png` | 192×384 | 3열(idle/걷기A/걷기B) × 4행(앞/왼쪽/오른쪽/뒤) |
+| 하객 캐릭터 | `raw/characters/preset-0.png` … `preset-9.png` | 48×72 | 정면 전신 1장이면 충분(좌우는 반전, 걷기는 들썩임으로 표현) |
+| 신랑·신부 | `raw/characters/groom.png`, `bride.png` | 48×72 | 광장 아치 아래, 이야기 길 벤치에 등장 |
+| 걷기 시트(선택) | `raw/characters/<name>-sheet.png` | 144×288 | 3열(idle/걷기A/걷기B) × 4행(앞/왼쪽/오른쪽/뒤) |
 | 타일 | `raw/tiles/G W P H F D K R S.png` | 32×32 | G 잔디, W 꽃잔디, P 흙길, H 산울타리, F 울타리, D 마루, K 벽, R 카펫, S 돌바닥 |
-| 오브젝트 | `raw/objects/<id>.png` | 32의 배수 | arch 160×128, bench·desk 128×64, flower·door 32×32, 나머지(tree·sign·mailbox·chest·frame·board·phone·calendar·mapframe·stone) 64×64 |
+| 오브젝트 | `raw/objects/<id>.png` | 32의 배수 | arch 160×128, tree 96×96, bench·desk 128×64, flower·door 32×32, 나머지(sign·mailbox·chest·frame·board·phone·calendar·mapframe·stone) 64×64 |
 | 웨딩 타일 | `raw/tiles/wedding/aisle-ivory.png` 등 6종 | 32×32 | A 버진로드, B 꽃잎 버진로드, C 입구 마감, E 꽃잎 잔디, M 대리석, L 블러시 카펫 (광장 5열 1~19행에 A/B/C 사용) |
 | 씬 배경(선택) | `raw/maps/hub.png info.png guestbook.png gifts.png` | hub 352×1024, info 352×256, guestbook 352×384, gifts 352×256 | 타일 대신 한 장으로 그림. 길·벽 위치는 아래 레이아웃을 따라야 함 |
 
@@ -63,7 +63,7 @@ python tools/prepare_assets.py
 경계를 확인하고, 이음새가 보이는 원본만 제거하거나 별도로 보관한 뒤 해당 그룹을
 `--skip-existing`으로 다시 생성하세요.
 
-생성 해상도는 클수록 좋습니다(예: 1024×1536). 스크립트가 64×96으로 줄이면서 자연스럽게 도트화됩니다. 캐릭터가 화면에서 폭 64px·높이 96px(길 2칸 폭)로 크게 보이므로 얼굴 표정이 살아 있는 그림을 고르세요. (ComfyUI / ChatGPT 이미지 / Midjourney 공통)
+생성 해상도는 클수록 좋습니다(예: 1024×1536). 스크립트가 48×72로 줄이면서 자연스럽게 도트화됩니다. 캐릭터가 화면에서 폭 48px·높이 72px(길 1.5칸 폭)로 보이므로 얼굴 표정이 살아 있는 그림을 고르세요. (ComfyUI / ChatGPT 이미지 / Midjourney 공통)
 
 레퍼런스(@dding_one)와 같은 톤을 내기 위한 영문 프롬프트입니다. `[...]` 부분만 바꿔서 12장을 뽑으세요.
 
