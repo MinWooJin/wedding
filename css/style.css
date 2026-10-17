@@ -130,6 +130,7 @@ label { display: block; font-size: 13px; font-weight: 600; margin: 12px 0 6px; }
 .cover-platform { width: 160px; height: 64px; left: 50%; bottom: 0; transform: translateX(-50%); }
 .cover-groom { width: 48px; height: 72px; left: calc(50% - 43px); bottom: 16px; }
 .cover-bride { width: 48px; height: 72px; left: calc(50% - 8px); bottom: 16px; }
+.cover-couple { width: 96px; height: 72px; left: 50%; bottom: 16px; transform: translateX(-50%); }
 .cover h1 { font-size: 34px; font-weight: 500; margin: 7px 0 16px; letter-spacing: .08em; }
 .cover h1 span { color: #ad7b79; font: italic 30px Georgia,serif; }
 .cover-date { font-size: 13px; margin: 0 0 5px; }

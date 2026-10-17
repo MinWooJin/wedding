@@ -10,6 +10,7 @@ export function showCover(root, config, assetsReady, returning = false) {
         <img class="cover-platform" alt="" hidden>
         <img class="cover-groom" src="assets/characters/groom.png" alt="">
         <img class="cover-bride" src="assets/characters/bride.png" alt="">
+        <img class="cover-couple" alt="" hidden>
       </div>
       <p class="eyebrow">우리의 새로운 시작</p>
       <h1 id="cover-title">${esc(displayName(config.groom))}<span> & </span>${esc(displayName(config.bride))}</h1>
@@ -24,6 +25,13 @@ export function showCover(root, config, assetsReady, returning = false) {
     root.replaceChildren(card); root.hidden = false;
     const button = card.querySelector('button');
     assetsReady.then((assets) => {
+      const coupleUrl = assets?.urls?.['characters/couple'];
+      if (coupleUrl) {
+        const couple = card.querySelector('.cover-couple');
+        couple.src = coupleUrl; couple.hidden = false;
+        card.querySelector('.cover-groom').hidden = true;
+        card.querySelector('.cover-bride').hidden = true;
+      }
       const stageUrl = assets?.urls?.['objects/platform'];
       if (stageUrl) {
         const stage = card.querySelector('.cover-platform');

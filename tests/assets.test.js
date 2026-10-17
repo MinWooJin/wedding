@@ -47,3 +47,19 @@ test('등록된 버전 파일은 실제 PNG이고 캐릭터 프레임과 타일 
     }
   }
 });
+
+test('단상용 커플은 개별 캐릭터와 달리 96×72 크기로 로드한다', async () => {
+  const saved = { fetch: globalThis.fetch, Image: globalThis.Image, document: globalThis.document };
+  globalThis.fetch = async () => ({ ok: true, json: async () => ({ characters: ['couple', 'groom'] }) });
+  globalThis.Image = class {
+    width = 96; height = 72;
+    set src(value) { queueMicrotask(() => this.onload()); }
+  };
+  globalThis.document = { createElement: () => ({ getContext: () => ({ drawImage() {}, translate() {}, scale() {} }) }) };
+  try {
+    const loaded = await loadAssets();
+    assert.equal(loaded.characters.couple.down[0].w, 96);
+    assert.equal(loaded.characters.couple.down[0].h, 72);
+    assert.equal(loaded.characters.groom.down[0].w, 48);
+  } finally { Object.assign(globalThis, saved); }
+});

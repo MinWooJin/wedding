@@ -11,7 +11,7 @@ import { TILE } from './renderer.js';
 import { PRESET_COUNT } from './sprites/characters.js';
 
 export const CHAR_W = 48, CHAR_H = 72; // 화면(352px 폭 기준)에서 캐릭터가 폭 48px, 높이 72px로 보인다(타일 1.5칸 폭)
-export const CHARACTER_NAMES = [...Array.from({ length: PRESET_COUNT }, (_, i) => `preset-${i}`), 'groom', 'bride'];
+export const CHARACTER_NAMES = [...Array.from({ length: PRESET_COUNT }, (_, i) => `preset-${i}`), 'groom', 'bride', 'couple'];
 export const TILE_IDS = ['G', 'W', 'P', 'H', 'F', 'D', 'K', 'R', 'S', 'A', 'B', 'C', 'E', 'M', 'L', 'Q', 'Y', 'V', 'Z', 'N', 'J', 'U'];
 // N 모래빛 돌길(버진로드), J/U 꽃이 드문드문 섞인 잔디(G와 같은 베이스색) — 레퍼런스 톤
 // 맵 문자열은 한 글자가 한 칸이므로, 두 글자 파일명(X1~X4)은 한 글자 코드로 쓴다.
@@ -99,7 +99,7 @@ export async function loadAssets(base = 'assets') {
 
   const pick = (list, allowed) => (Array.isArray(list) ? list.filter((n) => allowed.includes(n)) : []);
   const jobs = [];
-  for (const n of pick(manifest.characters, CHARACTER_NAMES)) jobs.push(imageFor('characters', n).then((img) => { if (img) out.characters[n] = characterSetFromImage(img); }));
+  for (const n of pick(manifest.characters, CHARACTER_NAMES)) jobs.push(imageFor('characters', n).then((img) => { if (img) out.characters[n] = n === 'couple' ? setFromSingle(img, 96, 72) : characterSetFromImage(img); }));
   const tileNames = Array.isArray(manifest.tiles) ? manifest.tiles.map((n) => FILE_TO_TILE[n] ?? n) : [];
   for (const id of pick(tileNames, TILE_IDS)) {
     const file = TILE_FILES[id] ?? id;

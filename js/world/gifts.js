@@ -3,11 +3,12 @@ import { HUB_DOORS } from './hub.js';
 import { showOverlay } from '../ui/overlay.js';
 import { toast } from '../ui/toast.js';
 import { esc, copyText } from '../ui/dom.js';
+import { makeHostNpc } from './host-npc.js';
 
 const ROWS = [
-  'HHHHHHHHHHH',
-  ...Array.from({ length: 10 }, (_, i) => i >= 3 && i <= 5 ? 'HMMMLLLMMMH' : 'HMMMMMMMMMH'),
-  'HHHHHPHHHHH',
+  'KKKKKKKKKKK',
+  ...Array.from({ length: 10 }, () => 'KMMMMMMMMMK'),
+  'KKKKKMKKKKK',
 ];
 const EXIT = { tx: 5, ty: 11 };
 
@@ -81,6 +82,10 @@ export function createGifts(game) {
   const decline = !!cfg.gifts?.declineMoney;
   return new Scene({
     id: 'gifts', rows: ROWS, bg: '#f6efe7', spawn: { tx: 5, ty: 10 }, assets: game.assets,
+    npcs: [makeHostNpc(game, 'bride', { tx: 3, ty: 8 }, [
+      '함께 마음을 나눠 주시는 것만으로도 참 감사해요.',
+      decline ? '축의금은 정중히 사양해요. 따뜻한 축하만으로 충분해요.' : '보내 주신 축하를 소중히 간직할게요.',
+    ])],
     entrances: [{ ...EXIT, to: 'hub', spawn: HUB_DOORS.gifts.back }],
     objects: [
       { id: 'door', sprite: 'door', floor: true, ...EXIT },

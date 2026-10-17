@@ -72,3 +72,19 @@ test('새 꽃/버진로드 PNG가 없으면 기존 모래길로 표시하고 기
   assert.equal(hub.entrances.length, 4);
   assert.equal(hub.guestMap.size, 10);
 });
+
+test('팔짱 커플이 있으면 단상에는 한 쌍만 그리고 하객 갱신 후에도 안내인을 보존한다', () => {
+  const sprite = { w: 96, h: 72 };
+  const couple = { down: [sprite], up: [sprite], left: [sprite], right: [sprite] };
+  const hub = createHub({ config: DEFAULT_CONFIG, profile: { nickname: '나' }, assets: { objects, characters: { couple } }, data: { messages: [] } });
+  assert.equal(hub.hosts.length, 1);
+  assert.equal(hub.hosts[0].sprite(), sprite);
+  assert.equal(hub.hosts[0].x, 176);
+  assert.equal(hub.baseNpcs.length, 2, '커플 한 쌍과 안내인');
+  const guide = hub.guide;
+  hub.setGuests([{ n: '손님', c: 0, m: '축하해요', t: 1 }]);
+  assert.equal(hub.guide, guide);
+  assert.ok(hub.npcs.some((n) => n.character === guide));
+  hub.baseNpcs[0].interact();
+  assert.ok(hub.hosts[0].bubble);
+});

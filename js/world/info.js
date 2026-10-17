@@ -5,6 +5,7 @@ import { toast } from '../ui/toast.js';
 import { esc, copyText } from '../ui/dom.js';
 import { formatDate, familyLine } from '../config.js';
 import { buildIcs } from '../ics.js';
+import { makeHostNpc } from './host-npc.js';
 
 const ROWS = [
   'KKKKKKKKKKK',
@@ -51,6 +52,10 @@ export function createInfo(game) {
   return new Scene({
     id: 'info', rows: ROWS, bg: '#f6efe7', assets: game.assets,
     spawn: { tx: 5, ty: 10 },
+    npcs: [makeHostNpc(game, 'groom', { tx: 7, ty: 8 }, [
+      '예식 소식과 가족분들을 위한 안내를 모아 두었어요.',
+      '위 안내판에서 오시는 길과 날짜를 확인해 주세요.',
+    ])],
     entrances: [{ tx: 5, ty: 11, to: 'hub', spawn: HUB_DOORS.info.back }],
     objects: [
       { id: 'door', sprite: 'door', floor: true, tx: 5, ty: 11 },

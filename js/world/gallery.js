@@ -5,6 +5,7 @@ import { openViewer } from '../ui/viewer.js';
 import { toast } from '../ui/toast.js';
 import { TILE, spriteCanvas } from '../renderer.js';
 import { objectSprite } from '../sprites/objects.js';
+import { makeHostNpc } from './host-npc.js';
 
 // frame 스프라이트(64×64) 안쪽 사진 영역(액자 PNG의 테두리 안쪽)
 const THUMB_X = 27, THUMB_Y = 28, THUMB_W = 45, THUMB_H = 42;
@@ -47,6 +48,10 @@ export class GalleryScene extends Scene {
 
     super({
       id: 'gallery', rows: L.rows, bg: '#f6efe7', spawn: L.spawn, assets,
+      npcs: [makeHostNpc(game, 'groom', files.length ? { tx: 4, ty: 4 } : { tx: 7, ty: 6 }, [
+        files.length ? '액자를 누르면 사진을 크게 볼 수 있어요.' : '우리의 사진은 조금 더 준비하고 있어요. 완성되면 이곳에 담아둘게요.',
+        '함께한 순간들을 천천히 둘러봐 주세요.',
+      ])],
       entrances: [{ ...L.exit, to: 'hub', spawn: HUB_DOORS.gallery.back }],
       objects,
     });

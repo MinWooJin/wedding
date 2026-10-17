@@ -1,0 +1,63 @@
+{
+  "date": "2026-10-17",
+  "mode": "Codex built-in imagegen; no API key",
+  "reference_images": [
+    {
+      "path": "assets/characters/groom-v3.png",
+      "role": "groom identity, AS-perm, tuxedo, pixel style"
+    },
+    {
+      "path": "assets/characters/bride-v3.png",
+      "role": "bride identity, high updo, veil and dress"
+    }
+  ],
+  "prompt": "Create ONE combined couple character sprite for a Korean pixel wedding invitation game, using the two attached character images as identity and costume references. Bride and groom together as ONE connected full-body sprite, front facing, standing close ARM-IN-ARM ready to walk down the wedding aisle. Groom on image LEFT, bride on image RIGHT. Their shoulders almost touch. Groom's RIGHT arm is clearly bent at elbow across his lower chest/waist; bride's LEFT forearm threads around and hooks over his bent right elbow, her left hand visibly resting on his sleeve. The joined arms must be a readable interlocking shape between their torsos, NOT merely two adjacent separate people, NOT holding hands at their sides. Bride holds a small blush/ivory/sage bouquet in her free RIGHT hand at hip level, away from the linked arms. Feet on a common baseline, relaxed standing idle. Keep groom identity: natural black 6:4 parted AS-PERM hair with rounded C-curl fringe, exposed forehead part, slim oval subtly angular face, small almond eyes, straight brows, black tuxedo/ivory shirt/dark bow tie/ivory boutonniere. Keep bride identity: brown high UPDO with a clearly visible round bun above crown, exposed forehead, veil attached BELOW bun, soft heart face and curved smiling eyes, ivory A-line gown. Match reference warm cozy chunky pixel RPG style, adult chibi about three heads tall, crisp square clusters, limited 28-36 colors, flat two-tone shading, no fine lace or hair texture, no gradients or antialiasing. Intended game size: whole combined visible couple about 78px wide by 64px tall inside a 96x72 transparent canvas; do NOT shrink either person's head compared with references. ONE couple only. No background, scenery, podium, ground, cast shadow, glow, labels, watermark, border, extra limbs, extra hands or duplicate figures. Entire bun, hair, shoes and dress hem visible, transparent padding.",
+  "transparent_background": true,
+  "source": "raw/couple-source/couple.png",
+  "preparation": "tools/prepare_couple_asset.py. Alpha160 trim, fit84x68 preserving proportions, BOX downsample,36colors, final alpha128 binary. Bottom-center96x72. Actual bbox(22,4,74,72), visible52x68. Existing individual PNGs untouched.",
+  "use": "characters/couple.png is a single 96x72 front sprite loaded without48x72 resizing. One Character at(176,176) on stage; shared breath so arms never separate. Cover uses same sprite. Missing joined sprite falls back to original two individual hosts.",
+  "room_hosts": [
+    {
+      "scene": "guestbook",
+      "role": "bride",
+      "tile": [
+        2,
+        6
+      ],
+      "dialogue": "letter guidance and gratitude",
+      "note": "reserve nearby flower placements"
+    },
+    {
+      "scene": "gallery",
+      "role": "groom",
+      "tile_empty": [
+        7,
+        6
+      ],
+      "tile_with_photos": [
+        4,
+        4
+      ],
+      "dialogue": "photo preparation or frame interaction guidance"
+    },
+    {
+      "scene": "gifts",
+      "role": "bride",
+      "tile": [
+        3,
+        8
+      ],
+      "dialogue": "gratitude and decline-money policy when enabled"
+    },
+    {
+      "scene": "info",
+      "role": "groom",
+      "tile": [
+        7,
+        8
+      ],
+      "dialogue": "wedding information and travel/date guidance"
+    }
+  ],
+  "behavior": "js/world/host-npc.js rotates two lines on taps, shows5sec bubble. All room hosts are passable stationary NPCs with existing idle breathing. Individual image files, character presets and API/photos deferral preserved."
+}

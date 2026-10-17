@@ -1,0 +1,18 @@
+{
+  "file": "characters/couple.png",
+  "size": [
+    96,
+    72
+  ],
+  "bbox": [
+    22,
+    4,
+    74,
+    72
+  ],
+  "colors": 36,
+  "alpha_values": [
+    0,
+    255
+  ]
+}

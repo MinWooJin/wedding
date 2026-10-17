@@ -6,6 +6,7 @@ import { toast } from '../ui/toast.js';
 import { savePreview, deletePreviewEntry } from '../guestbook-store.js';
 import { esc } from '../ui/dom.js';
 import { validateEntry, postMessage, MESSAGE_MAX } from '../api.js';
+import { makeHostNpc } from './host-npc.js';
 
 const ROWS = [
   'HHHHHHHHHHH',
@@ -24,6 +25,7 @@ const ROWS = [
 const MAILBOX = { tx: 4, ty: 2 }; // 64×64: 4~5열, 2~3행
 const EXIT = { tx: 5, ty: 11 };
 const SPAWN = { tx: 5, ty: 10 };
+const HOST_POS = { tx: 2, ty: 6 };
 const RESERVED = new Set(['4,2', '5,2', '4,3', '5,3', '4,4', '5,4', '3,3', '6,3', '5,9', '5,10', '4,10', '6,10', '5,11',
   '1,1', '2,1', '3,1', '1,2', '2,2', '3,2', '1,3', '2,3', '3,3', '1,4', '2,4', '3,4', '7,1', '8,1', '9,1', '7,2', '8,2', '9,2', '7,3', '8,3', '9,3', '7,4', '8,4', '9,4',
   '1,7', '2,7', '1,8', '2,8', '8,7', '9,7', '8,8', '9,8']); // 우체통·입구·나무·덤불 자리
@@ -34,6 +36,10 @@ export class GuestbookScene extends Scene {
   constructor(game) {
     super({
       id: 'guestbook', rows: ROWS, spawn: SPAWN, assets: game.assets, groundTile: 'G',
+      npcs: [makeHostNpc(game, 'bride', HOST_POS, [
+        '축하 편지를 남겨 주시면 이 정원에 꽃이 피어요.',
+        '멀리서 보내 주신 마음도 오래 소중히 간직할게요.',
+      ])],
       entrances: [{ ...EXIT, to: 'hub', spawn: HUB_DOORS.guestbook.back }],
       objects: [
         { id: 'door', sprite: 'door', floor: true, ...EXIT },
@@ -44,6 +50,8 @@ export class GuestbookScene extends Scene {
     });
     this.game = game;
     this.reserved = new Set(RESERVED);
+    // 편지가 많아져도 신부의 얼굴과 이름표에 꽃이 겹치지 않게 한다.
+    for (let dy = -2; dy <= 0; dy++) for (let dx = -1; dx <= 1; dx++) this.reserved.add(`${HOST_POS.tx + dx},${HOST_POS.ty + dy}`);
     for (const o of this.objects) {
       for (let y = -1; y < Math.ceil(o.spr.h / 32); y++) for (let x = 0; x < Math.ceil(o.spr.w / 32); x++) this.reserved.add(`${o.tx + x},${o.ty + y}`);
     }

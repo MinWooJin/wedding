@@ -15,7 +15,7 @@ const INTERACT_DIST = TILE * 1.6; // 이 거리 안이면 이동 없이 바로 �
  *   발자국 = 스프라이트 맨 아래 타일 행 전체(solid 기본 true).
  *   floor: 바닥 장식(문 등). solid 아님, 캐릭터보다 먼저 그림. stand: 상호작용 시 설 타일(기본은 가장 가까운 빈 이웃).
  * @typedef {{tx:number, ty:number, to:string, spawn:{tx:number,ty:number}|null}} Entrance
- * @typedef {{character:Character, interact?:(game)=>void, solid?:boolean,
+ * @typedef {{character:Character, interact?:(game)=>void, solid?:boolean, host?:boolean,
  *            wander?:{home:{tx:number,ty:number}, radius:number, allow?:(tx:number,ty:number)=>boolean, faceDir?:string|((tx:number)=>string), timer?:number}}} Npc
  *   solid:false 면 플레이어가 지나갈 수 있다(움직이는 하객용). wander가 있으면 home 주변 radius 칸 안을 몇 초 간격으로 돌아다닌다.
  */
@@ -28,6 +28,7 @@ export class Scene {
     this.objects = objects.map((o) => this.makeObject(o));
     this.entrances = entrances;
     this.npcs = npcs;
+    this.hosts = npcs.filter((n) => n.host).map((n) => n.character);
     this.bg = bg;
     this.groundTile = groundTile; // 야외는 같은 잔디로 경계 H와 맵 밖 여백까지 이어 그린다. 충돌 ID는 유지.
     this.bgImage = assets.maps?.[id] ?? null; // 씬 배경 한 장(있으면 타일 대신 그림)

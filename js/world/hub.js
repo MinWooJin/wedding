@@ -130,6 +130,11 @@ export class HubScene extends Scene {
     const groom = new Character({ sprites: characterSet(game.assets, 'groom', GROOM), name: displayName(cfg.groom), x: CEREMONY.groomX, y: CEREMONY.feetY });
     const bride = new Character({ sprites: characterSet(game.assets, 'bride', BRIDE), name: displayName(cfg.bride), x: CEREMONY.brideX, y: CEREMONY.feetY });
     groom.dir = 'down'; bride.dir = 'down';
+    const joined = game.assets?.characters?.couple ? new Character({
+      sprites: game.assets.characters.couple, name: `${displayName(cfg.groom)} ♥ ${displayName(cfg.bride)}`,
+      x: 176, y: CEREMONY.feetY,
+    }) : null;
+    const hosts = joined ? [joined] : [groom, bride];
     const greet = (c) => () => c.say(pick(cfg.greetings));
     const guide = new Character({ sprites: characterSet(game.assets, 'preset-4', presetSprites(4)), name: '정원 안내인', ...standPos(3, CROSS_A) });
     const guideNpc = { character: guide, solid: false, interact: () => showOverlay(game, {
@@ -159,10 +164,11 @@ export class HubScene extends Scene {
 
     super({
       id: 'hub', rows: HUB_ROWS, spawn: HUB_SPAWN, objects, entrances, assets: game.assets, groundTile: 'G',
-      npcs: [{ character: groom, interact: greet(groom) }, { character: bride, interact: greet(bride) }, guideNpc],
+      npcs: [...hosts.map((character) => ({ character, interact: greet(character) })), guideNpc],
     });
     this.game = game;
-    this.hosts = [groom, bride];
+    this.hosts = hosts;
+    this.guide = guide;
     this.baseNpcs = this.npcs.slice();
     this.setGuests(game.data?.messages ?? []);
   }
@@ -180,9 +186,10 @@ export class HubScene extends Scene {
     }
     for (const h of this.hosts) { // 신랑·신부 주변 1칸도 비운다
       const t = this.tileOf(h.x, h.y);
-      for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) reserved.add(`${t.tx + dx},${t.ty + dy}`);
+      const radiusX = Math.max(1, Math.ceil(h.sprite().w / 64)); // 두 사람짜리 프레임은 단상 양옆까지 여유를 둔다.
+      for (let dy = -1; dy <= 1; dy++) for (let dx = -radiusX; dx <= radiusX; dx++) reserved.add(`${t.tx + dx},${t.ty + dy}`);
     }
-    const guideTile = this.tileOf(this.baseNpcs[2].character.x, this.baseNpcs[2].character.y);
+    const guideTile = this.tileOf(this.guide.x, this.guide.y);
     for (let dy = -2; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) reserved.add(`${guideTile.tx + dx},${guideTile.ty + dy}`);
     reserved.add(`${HUB_SPAWN.tx},${HUB_SPAWN.ty}`);
     for (const d of Object.values(HUB_DOORS)) {

@@ -37,7 +37,7 @@ npm run serve     # http://localhost:5173
 
 ## 그래픽 교체 (AI 생성 PNG)
 
-현재는 PNG 캐릭터 12종, 타일 22종, 오브젝트 29종을 사용한다. 코드 픽셀 아트는 로드 실패 시의 폴백이다.
+현재는 PNG 캐릭터 13종, 타일 22종, 오브젝트 29종을 사용한다. 코드 픽셀 아트는 로드 실패 시의 폴백이다.
 기존 캐릭터를 전체 변환 명령으로 다시 축소하지 말고 `assets/README.md`의 선택 변환 지침을 따른다.
 
 2026-10-17 레퍼런스 고도화로 캐릭터 12종·정원 타일 6종·나무의 새 버전을 적용했다.
@@ -45,7 +45,10 @@ npm run serve     # http://localhost:5173
 [비교 페이지](tools/art-review.html), [생성 프롬프트](assets/reference-v3-prompts.json),
 [크기·투명도 기록](assets/reference-v3-report.json)을 참고한다.
 
-단상 위 두 사람의 간격을 좁히고, 아이보리 버진로드 양옆에 웨딩홀을 참고한 32×48 꽃다발을 6개씩 배치했다.
+단상과 커버에는 팔짱 낀 커플을 새로 그린 96×72 이미지 한 장으로 배치했다. 기존 신랑·신부는 네 방에서 탭하면 공간별 안내 대사를 전한다.
+결합 이미지의 [생성 프롬프트](assets/couple-joined-prompts.json)와 [미리보기](assets/couple-joined-preview.png)를 참고한다.
+
+단상 아래에는 아이보리 버진로드 양옆에 웨딩홀을 참고한 32×48 꽃다발을 6개씩 배치했다.
 하객은 길 밖 잔디에 모인다. 현재 꽃만 변환할 때는 `python tools/prepare_hall_flowers.py`를 사용한다.
 이전 꽃띠는 보존되어 있으며 `manifest.files`가 새 버전을 선택한다. 비교 페이지에서 이전/개선 모습을 함께 볼 수 있다.
 

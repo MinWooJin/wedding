@@ -1,5 +1,11 @@
 # 에셋 가이드 (AI 생성 → 게임 적용)
 
+현재 단상·커버는 팔짱 낀 `characters/couple.png` 한 장이다. 96×72 프레임(실제 그림 52×68), 36색·이진 알파.
+기존 신랑·신부 48×72 PNG는 보존하고 네 방의 안내 인물로 사용한다. 전체 캐릭터 ID는 13종, 하객 선택은 10종이다.
+프롬프트 `couple-joined-prompts.json`, 규격 `couple-joined-report.json`, 확대 `couple-joined-preview.png`.
+선택 변환은 `python tools/prepare_couple_asset.py`(원본 `raw/couple-source/couple.png` 필요). 결합 이미지를 48px 폭으로 줄이지 마라.
+마음 전하는 곳도 K 크림 벽과 M 대리석으로 통일했다. 아래 기존 개별 단상 배치 설명은 폴백/과거 기록이다.
+
 현재 야외 경계 표현: 광장·방명록의 `groundTile:'G'`가 H도 G로 그린다.
 H 파일은 과거 그늘진 잔디로 보관하지만 현재 야외 화면에 어두운 띠로 표시하지 않는다.
 맵 밖과 캔버스 양옆 여백도 같은 잔디를 이어 사용하며 충돌용 H 타일은 그대로다.
@@ -45,6 +51,7 @@ python tools/prepare_assets.py --pixel  # 또렷한 도트 느낌
 | 종류 | raw 파일명 | 결과 크기 | 비고 |
 |---|---|---|---|
 | 하객 캐릭터 | `raw/characters/preset-0.png` … `preset-9.png` | 48×72 | 정면 전신 1장이면 충분(좌우는 반전, 걷기는 들썩임으로 표현) |
+| 팔짱 낀 커플 | `raw/couple-source/couple.png` | 96×72 | 단상·커버 전용. 선택 변환기 사용 |
 | 신랑·신부 | `raw/reference-v3-source/groom.png`, `bride.png` | 48×72 | 광장 아치 아래. 애즈펌·올림머리 유지 |
 | 걷기 시트(선택) | `raw/characters/<name>-sheet.png` | 144×288 | 3열(idle/걷기A/걷기B) × 4행(앞/왼쪽/오른쪽/뒤) |
 | 타일 | `raw/tiles/G W P H F D K R S M.png` | 32×32 | G 잔디, W 꽃잔디, P 흙길, H 그늘진 잔디, F 울타리, D 크림 오크, K 크림 벽, R 카펫, S 돌바닥, M 대리석 |

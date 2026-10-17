@@ -32,7 +32,7 @@ OUT = ROOT / "assets"
 TILE = 32
 CHAR_W, CHAR_H = 48, 72
 
-CHARACTERS = [f"preset-{i}" for i in range(10)] + ["groom", "bride"]
+CHARACTERS = [f"preset-{i}" for i in range(10)] + ["groom", "bride", "couple"]
 TILES = list("GWPHFDKRSM")
 # 웨딩 타일: raw/tiles/wedding/<이름>.png → assets/tiles/<ID>.png
 WEDDING_TILES = {
@@ -100,6 +100,9 @@ def fit_bottom_center(img: Image.Image, w: int, h: int) -> Image.Image:
 
 
 def process_character(src: Path, name: str) -> Image.Image:
+    if name == 'couple':
+        # 전용 변환기가 준비한 96×72 프레임과 두 사람의 비율을 보존한다.
+        return Image.open(src).convert('RGBA').resize((96, 72), Image.Resampling.NEAREST)
     img = Image.open(src)
     if src.stem.endswith("-sheet"):
         fw, fh = img.width // 3, img.height // 4
