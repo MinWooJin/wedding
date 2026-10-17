@@ -23,7 +23,9 @@
     {
       "id": "guest-extra-3",
       "prompt": "Use case: style-transfer. Input1 is STYLE AND SCALE reference of existing wedding guests; input2 is a single guest for pixel density and head/body ratio. Create ONE NEW wedding guest sprite, full body front view standing relaxed arms down, not a sheet. Match the reference60px-tall visible person in48x72frame, smallish20px-wide head and about3-heads-tall body, thin1px-equivalent outline, same feet baseline and cozy RPG pixel style. Adult guest not bride. No text labels, no floor, no ground shadows, no props. Crisp large readable pixel clusters, restrained32colors, real transparent background. Do not enlarge the head into a baby-like bobblehead. Adult woman with straight black shoulder-length bob and side fringe, oval face, subtle friendly smile. Ivory long sleeve blouse tucked into charcoal pleated calf-length skirt, dark low shoes. Modest neutral formal wedding guest outfit.",
-      "source": "raw/round7-guests-source/guest-extra-3.png"
+      "source": "raw/round7-guests-source/guest-extra-3-selected.png",
+      "revision_prompt": "Edit image1 (woman in ivory blouse and charcoal skirt). Keep her hair identity, blouse, skirt and neutral wedding guest palette. Change ONLY chibi proportions to match image2 game sprite: head plus hair approx24px wide and24px high when full visible body is60px tall, shorten torso and legs accordingly. The current head is too small and the figure too tall. Match image2's 1px-equivalent outline and readable low-resolution pixel clusters, 32colors, no glow no blur. Final intended48x72frame with visibleperson60pxhigh; preserve both full feet. One front-view standing character, transparent background, no text or floor.",
+      "revision_inputs": ["raw/round7-guests-source/guest-extra-3.png", "assets/characters/preset-3-v3.png"]
     },
     {
       "id": "guest-extra-4",

@@ -322,3 +322,12 @@ Codex가 다음 작업 전에 읽을 문서다. 오늘 Claude가 바꾼 내용, 
 - `computeViewport(cssW, cssH, dpr)`: 기기 픽셀 비율 2 미만(데스크톱)에서는 정수 배율로 내린다. 소수 배율은 픽셀을 1칸·2칸으로 들쭉날쭉 늘려 울퉁불퉁하게 보였다. 폰(비율 2~3)은 그대로 화면 폭을 꽉 채운다.
 - 방명록 정원(`js/world/guestbook.js`)이 "횡하다"는 지적을 받아 다시 짰다. 11×14행, 광장과 같은 들꽃 잔디 + 가운데 돌길과 꽃띠. 우체통 양옆에 신랑·신부가 함께 선다(이 방만 두 사람). 가장자리는 초록 나무·벚꽃나무·장미 덤불·라벤더·버드배스·리본 조명·화분 상자. 메시지 꽃은 돌길·두 사람 주변·장식 위를 피해 피고, 50개 넣어도 20송이 이상 자리가 있다.
 - 테스트 `tests/room-hosts.test.js`가 방명록 두 사람 구성을 반영한다. 126개 통과.
+
+
+## 23. 7차 D 추가 군중 하객6종 완료 (Codex, 2026-10-17)
+
+- 사용자 재요청으로 선택 D도 완료했다. `assets/characters/guest-extra-0~5-v4.png`, 각각48×72 RGBA·실제높이60·발y72·이진 알파·30~31색이다. 기존 PNG 전체는 해시 동일하다. 정장/블라우스/원피스에 서로 다른 헤어 실루엣, 새치/안경 등을 적용했다.
+- manifest에는 별도 characters ID/파일 매핑을 등록했으나 CHARACTER_NAMES 허용 목록과 실제 배치는 아직 미연결이다. **후속:** 군중용으로만 로드하고 광장 entry.extra에 우선 배정한다. 선택 프리셋10종/PRESET_COUNT와 방명록characterId0~9는 유지하고 에셋 누락 시 기존 프리셋을 쓴다. 이번 작업은 JS/CSS를 수정하지 않았다.
+- 제작 내장 imagegen6종+단발 비율 수정1회, API 키 미사용. `raw/round7-guests-source/`는 Git 제외다. `.venv-assets/Scripts/python.exe tools/prepare_round7_guests.py`로 이6종만 재변환한다. 원본이 없으면 저장된 PNG를 사용한다.
+- 프롬프트/수정 내역 `assets/round7-guests-prompts.json`, 규격 `assets/round7-guests-report.json`, v3 대비2배 비교 `assets/round7-guests-comparison.png`, 투명 나열 `assets/round7-guests-strip.png`(걷기 시트 아님). 검토 보드 `tools/round7-art-review.html`.
+- HANDOFF21/22의 Claude 변경은 유지했다. 현 상태에서 테스트126개 통과. A~C 15종에 D6종까지 총21종이 준비됐으며 새6명의 군중 연결은 위 지침대로 이어가면 된다.

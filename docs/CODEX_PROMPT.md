@@ -1,5 +1,11 @@
 # 에셋 작업 인수인계 프롬프트 (Codex / Claude)
 
+> **최신 추가: 7차 D 군중 하객6종도 제작 완료(2026-10-17).** `guest-extra-0~5` → `assets/characters/guest-extra-0~5-v4.png`.
+> 48×72·실제 높이60px·발 y72·이진 알파·32색 이하. 기존 하객10종/신랑/신부/커플 PNG는 그대로다.
+> manifest에는 목록/파일 매핑을 등록했다. CHARACTER_NAMES 허용 목록과 광장 extra 인물 연결은 아직 Claude가 해야 한다. 선택 프리셋 수10은 늘리지 마라.
+> 현재 Claude의 A~C 배치/파티 연출/방명록 정원 변경은 HANDOFF21·22절을 읽는다. 이번에는 새 군중 PNG와 비교·문서만 추가했다.
+> 비교 `assets/round7-guests-comparison.png`, 프롬프트 `assets/round7-guests-prompts.json`, 규격 `assets/round7-guests-report.json`, 선택 변환 `tools/prepare_round7_guests.py`.
+
 > **최신: 7차 A~C 그림 15종 제작·등록 완료(2026-10-17).** 문서 맨 아래 완료 기록과 `docs/REVIEW_PARTY_2026-10-17.md`를 읽는다.
 > 아치/단상/타일은 새 버전으로 선택했고, 새 장식8종은 등록만 했다. JS 변경은 허용된 OBJECT_IDS 추가뿐이며 장면 배치는 Claude 담당이다.
 > 이번 명시 요청에 따라 G/J/U/H는32×32 `*-v5.png`다. 과거128px lawn-v5.png 선택 기록보다 이 요청을 우선한다. 경계 동기화 코드는 유지한다.
@@ -624,3 +630,23 @@ D. 분위기용 하객 (선택, A~C 다음)
 | tiles/N / `N-v4.png` | 32×32 | (0, 0, 32, 32) | 3 |
 
 - 검증 완료: npm test122개 통과. 390/320px 정적 모형의 커플 얼굴 가림 없음과 실제 앱 에셋 로드/콘솔 오류 없음을 확인했다. 선택 변환 재실행 결과15종 PNG·비교 그림·manifest·보고서가 동일하다. 새 장식의 실제 배치/충돌 검증은 Claude 연결 후 진행한다.
+
+
+## 7차 D 추가 군중 하객 제작 완료 (2026-10-17)
+
+사용자가 이전에 제외한 항목을 다시 요청해 분위기용 하객6종을 내장 imagegen으로 제작했다. 남성3명/여성3명이며 검정·차콜·흰색·네이비 중심의 정장/원피스/블라우스를 쓴다. 머리는 검정 가르마, 짧은 갈색 머리, 새치와 안경, 검정 단발, 낮은 묶음머리, 짧은 웨이브로 구분한다. 단발은 기존 v3 대비 머리가 작아 보이는 첫 원본을 비율 수정 후 선택했다. 생성7회(6종+수정1), API 키 미사용이다.
+
+- 모두48×72 RGBA, 실제높이60px, 발 y72, 전체 RGBA32색 이하·이진 알파다. 기존 하객10종과 신랑/신부/팔짱 커플을 포함한 이전 모든 PNG는 해시가 동일하다. 이름표는 그림에 없다.
+- manifest.characters와 files.characters에6종을 별도 등록했다. 현재 js/assets.js의 CHARACTER_NAMES는 기존13종이므로 아직 로드하지 않는다. **Claude 후속:** 군중용 허용 목록을 분리/추가하고 HubScene의 entry.extra에만 새 에셋을 배정하라. 선택 하객PRESET_COUNT=10과 실제 방명록 c값 범위0~9는 유지한다. 새 파일이 없으면 기존 프리셋으로 폴백한다. JS/CSS와 기존 배치·모션은 이번에 수정하지 않았다.
+- 선택 변환 `.venv-assets/Scripts/python.exe tools/prepare_round7_guests.py`; 원본은 `raw/round7-guests-source/`(Git 제외), 원본 없는 체크아웃은 최종 PNG를 사용한다. 일반 전체 캐릭터 변환기를 실행하지 마라.
+- 프롬프트/수정 내역/기존 PNG 해시 `assets/round7-guests-prompts.json`, 규격 `assets/round7-guests-report.json`, 기존v3와2배 비교 `assets/round7-guests-comparison.png`, 투명 나열 `assets/round7-guests-strip.png`. strip은 검토용6명 나열이며 걷기 시트가 아니다.
+- 비교 보드 `tools/round7-art-review.html`에 추가했다. Claude의 최신 작업이 들어온 현재 상태에서 npm test126개 통과.
+
+| 군중 ID / 파일 | 크기 | 알파 bbox | 전체 RGBA 색 수 |
+|---|---|---|---:|
+| guest-extra-0 / `guest-extra-0-v4.png` | 48×72 | (11, 12, 36, 72) | 30 |
+| guest-extra-1 / `guest-extra-1-v4.png` | 48×72 | (12, 12, 35, 72) | 30 |
+| guest-extra-2 / `guest-extra-2-v4.png` | 48×72 | (12, 12, 36, 72) | 31 |
+| guest-extra-3 / `guest-extra-3-v4.png` | 48×72 | (13, 12, 35, 72) | 30 |
+| guest-extra-4 / `guest-extra-4-v4.png` | 48×72 | (13, 12, 34, 72) | 30 |
+| guest-extra-5 / `guest-extra-5-v4.png` | 48×72 | (12, 12, 35, 72) | 30 |
