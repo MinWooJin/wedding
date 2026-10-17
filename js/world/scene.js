@@ -16,8 +16,8 @@ const INTERACT_DIST = TILE * 1.6; // 이 거리 안이면 이동 없이 바로 �
  *   floor: 바닥 장식(문 등). solid 아님, 캐릭터보다 먼저 그림. stand: 상호작용 시 설 타일(기본은 가장 가까운 빈 이웃).
  * @typedef {{tx:number, ty:number, to:string, spawn:{tx:number,ty:number}|null}} Entrance
  * @typedef {{character:Character, interact?:(game)=>void, solid?:boolean, host?:boolean,
- *            wander?:{home:{tx:number,ty:number}, radius:number, allow?:(tx:number,ty:number)=>boolean, faceDir?:string|((tx:number)=>string), timer?:number}}} Npc
- *   solid:false 면 플레이어가 지나갈 수 있다(움직이는 하객용). wander가 있으면 home 주변 radius 칸 안을 몇 초 간격으로 돌아다닌다.
+ *            wander?:{home:{tx:number,ty:number}, radius:number, roam?:boolean, allow?:(tx:number,ty:number)=>boolean, faceDir?:string|((tx:number)=>string), timer?:number}}} Npc
+ *   solid:false 면 플레이어가 지나갈 수 있다(움직이는 하객용). wander가 있으면 home 주변 radius 칸 안을 몇 초 간격으로 돌아다닌다. roam:true는 현재 위치에서 다음 걸음을 고른다.
  */
 export class Scene {
   constructor({ id, rows, spawn, objects = [], entrances = [], npcs = [], bg = '#f6efe7', groundTile = null, onEnter = null, assets = {} }) {
@@ -68,20 +68,23 @@ export class Scene {
 
   /** 배회 NPC가 다음에 갈 타일을 고른다. 없으면 null. */
   pickWanderTile(n) {
-    const { home, radius, allow } = n.wander;
+    const { home, radius, allow, roam } = n.wander;
     const taken = new Set(this.npcs.filter((o) => o !== n).map((o) => {
       const t = o.wander?.target ?? this.tileOf(o.character.x, o.character.y);
       return tileKey(t.tx, t.ty);
     }));
     const options = [];
     const current = this.tileOf(n.character.x, n.character.y);
+    const origin = roam ? current : home; // 자유 배회는 현재 위치에서 다음 한 걸음을 고른다.
+    const allowed = (tx, ty) => !rectBlocked(this.map, tx * TILE, ty * TILE, TILE, TILE, this.objectSolid) && (!allow || allow(tx, ty));
     for (let dy = -radius; dy <= radius; dy++) for (let dx = -radius; dx <= radius; dx++) {
-      const tx = home.tx + dx, ty = home.ty + dy;
+      const tx = origin.tx + dx, ty = origin.ty + dy;
       if (tx === current.tx && ty === current.ty) continue;
       if (this.entrances.some((e) => e.tx === tx && e.ty === ty)) continue;
       if (tx < 0 || ty < 0 || tx >= this.map.w || ty >= this.map.h) continue;
-      if (rectBlocked(this.map, tx * TILE, ty * TILE, TILE, TILE, this.objectSolid)) continue;
-      if (allow && !allow(tx, ty)) continue;
+      if (!allowed(tx, ty)) continue;
+      // 한 칸 대각선으로 걸을 때 테이블 모서리나 배회 금지 구역을 가로지르지 않는다.
+      if (roam && dx && dy && (!allowed(current.tx, ty) || !allowed(tx, current.ty))) continue;
       if (taken.has(tileKey(tx, ty))) continue;
       if ([...taken].some((key) => { const [x, y] = key.split(',').map(Number); const dx = Math.abs(tx - x), dy = Math.abs(ty - y); return (dx === 0 && dy <= 1) || (dx === 1 && dy === 0); })) continue;
       options.push({ tx, ty });

@@ -203,3 +203,20 @@ test('draw는 타일 → y정렬 드로어블 → 말풍선 순으로 renderer�
   assert.equal(log.filter((l) => l === 'sprite').length, 2);
   assert.ok(log.indexOf('bubble') > log.lastIndexOf('sprite'));
 });
+
+
+test('자유 배회는 출발 열을 벗어나 현재 위치에서 걷고 장식 모서리를 대각선으로 자르지 않는다', () => {
+  const c = new Character({ sprites: GROOM, name: '손님', ...standPos(1, 1) });
+  const n = { character: c, solid: false, wander: { home: { tx: 1, ty: 1 }, radius: 1, roam: true } };
+  const s = makeScene({ npcs: [n], assets: { objects: { table: { w: 32, h: 32 } } } });
+  const random = Math.random;
+  try {
+    Math.random = () => 0.999;
+    assert.deepEqual(s.pickWanderTile(n), { tx: 2, ty: 2 }, '빈 잔디에서 대각선 이동');
+    s.objects.push(s.makeObject({ id: 'table', sprite: 'table', tx: 2, ty: 1 }));
+    s.rebuildSolid();
+    assert.deepEqual(s.pickWanderTile(n), { tx: 1, ty: 2 }, '테이블 모서리 우회');
+    Object.assign(c, standPos(1, 3));
+    assert.deepEqual(s.pickWanderTile(n), { tx: 2, ty: 4 }, '처음 자리 반경에 갇히지 않는다');
+  } finally { Math.random = random; }
+});

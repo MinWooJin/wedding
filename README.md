@@ -49,7 +49,7 @@ npm run serve     # http://localhost:5173
 결합 이미지의 [생성 프롬프트](assets/couple-joined-prompts.json)와 [미리보기](assets/couple-joined-preview.png)를 참고한다.
 
 단상 아래에는 아이보리 버진로드 양옆에 웨딩홀을 참고한 32×48 꽃다발을 6개씩 배치했다.
-꽃은 길 바깥 3/7열에 놓고 버진로드 96px 폭을 모두 비웠다. 나무 한 쌍은 단상 양옆 바깥에 두고 덤불을 덜어, 하객 10명은 좌우 다섯 쌍으로 정리했다. 현재 꽃만 변환할 때는 `python tools/prepare_hall_flowers.py`를 사용한다.
+꽃은 길 바깥 3/7열에 놓고 버진로드 96px 폭을 모두 비웠다. 나무 한 쌍은 단상 양옆 바깥에 두고 덤불을 덜어, 하객 10명은 좌우에서 시작한 뒤 잔디 안에서 자유롭게 돌아다닌다. 현재 꽃만 변환할 때는 `python tools/prepare_hall_flowers.py`를 사용한다.
 이전 꽃띠는 보존되어 있으며 `manifest.files`가 새 버전을 선택한다. 비교 페이지에서 이전/개선 모습을 함께 볼 수 있다.
 
 ```

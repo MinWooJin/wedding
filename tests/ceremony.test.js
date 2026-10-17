@@ -96,7 +96,7 @@ test('팔짱 커플이 있으면 단상에는 한 쌍만 그리고 하객 갱신
   assert.ok(hub.hosts[0].bubble);
 });
 
-test('열 명의 하객은 꽃 바깥 좌우에 다섯 쌍으로 서고 각자 열 안에서만 움직인다', () => {
+test('열 명의 하객은 좌우에서 시작하고 잔디의 좌우·대각선으로 자유 배회한다', () => {
   const hub = make();
   const homes = [...hub.guestMap.values()].map((n) => n.wander.home);
   for (const ty of [7, 9, 11, 13, 15]) {
@@ -105,6 +105,10 @@ test('열 명의 하객은 꽃 바깥 좌우에 다섯 쌍으로 서고 각자 �
   }
   for (const n of hub.guestMap.values()) {
     assert.equal(n.wander.radius, 1);
-    assert.equal(n.wander.allow(n.wander.home.tx === 2 ? 1 : 9, n.wander.home.ty), false);
+    assert.equal(n.wander.roam, true);
+    if (n.wander.home.ty === 9) {
+      assert.equal(n.wander.allow(n.wander.home.tx === 2 ? 1 : 9, 9), true, '좌우 이동');
+      assert.equal(n.wander.allow(n.wander.home.tx === 2 ? 1 : 9, 10), true, '대각선 이동');
+    }
   }
 });

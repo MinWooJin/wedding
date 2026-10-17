@@ -223,7 +223,7 @@ export class HubScene extends Scene {
       c.dir = faceAisle(tx);
       const npc = {
         entry, character: c, solid: false, // 돌아다니므로 플레이어가 지나갈 수 있다
-        wander: { home: { tx, ty }, radius: 1, allow: (x, y) => x === tx && inZone(x, y), faceDir: faceAisle, timer: 1 + Math.random() * 6 },
+        wander: { home: { tx, ty }, radius: 1, roam: true, allow: inZone, faceDir: faceAisle, timer: 1 + Math.random() * 6 },
         interact: () => { c.stop(); c.say(npc.entry.m || '결혼 축하해요! 🎉', 4); },
       };
       this.guestMap.set(key, npc); return npc;
