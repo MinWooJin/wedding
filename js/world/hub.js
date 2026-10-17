@@ -106,8 +106,6 @@ export const GUEST_ZONE = { cols: [1, 2, 3, 4, 5, 6, 7, 8, 9], rowMin: 6, rowMax
 export const SIDE_COLS = [1, 2, 3, 7, 8, 9];
 export const AISLE_COLS = [4, 5, 6];
 export const AISLE_OPEN_FROM = 9;
-/** 그림에 구워진 꽃띠의 발자국. 인물과 플레이어 모두 꽃 위를 길처럼 걷지 않는다. */
-export const inPaintedFlowerBed = (tx, ty) => [3,7].includes(tx) && ty >= 6 && ty <= 17;
 export const inGuestZone = (tx, ty) => GUEST_ZONE.cols.includes(tx) && ty >= GUEST_ZONE.rowMin && ty <= GUEST_ZONE.rowMax
   && (!AISLE_COLS.includes(tx) || ty >= AISLE_OPEN_FROM);
 
@@ -239,15 +237,6 @@ export class HubScene extends Scene {
     this.setGuests(game.data?.messages ?? []);
   }
 
-  rebuildSolid() {
-    super.rebuildSolid();
-    if (!this.bgImage) return;
-    for (let ty=6;ty<=17;ty++) for (const tx of [3,7]) {
-      this.extraSolid.add(`${tx},${ty}`);
-      this.objectSolid.add(`${tx},${ty}`);
-    }
-  }
-
   /** 방명록 목록 → 광장 하객 NPC 재배치. 탭하면 그 사람 메시지를 말풍선으로. */
   setGuests(entries) {
     this.npcs = this.baseNpcs;
@@ -292,9 +281,12 @@ export class HubScene extends Scene {
         }
       }
     }
+    // Keep standing guests off the floral display; walking may cross it freely.
+    const homeReserved = new Set(reserved);
+    if (this.painted) for (let ty=6;ty<=17;ty++) for (const tx of [3,7]) homeReserved.add(`${tx},${ty}`);
     const placements = [
       ...retained.map((entry) => ({ entry, ...previous.get(guestKey(entry)).wander.home })),
-      ...guestPlacements(others.filter((entry) => !previous.has(guestKey(entry))), reserved, this.painted),
+      ...guestPlacements(others.filter((entry) => !previous.has(guestKey(entry))), homeReserved, this.painted),
     ];
     // 처음 정원을 열 때는 잠깐 뒤에 행렬을 시작하고, 이후 새로 생긴 하객은 바로 걸어 들어온다.
     let order = 0;
@@ -307,7 +299,7 @@ export class HubScene extends Scene {
       // 군중 그림만 쓰면 검정·회색이 몰려 무거워 보이고, 프리셋만 쓰면 실제 하객과 구분되지 않는다. 군중 그림이 없으면 프리셋으로 돌아간다.
       const extraName = entry.extra !== undefined && entry.extra % 2 === 0 ? `guest-extra-${(entry.extra / 2) % EXTRA_GUEST_COUNT}` : null;
       const sprites = (extraName && this.assets?.characters?.[extraName]) || characterSet(this.assets, `preset-${id}`, presetSprites(id));
-      // 꽃띠 옆은 충돌 박스 여유를 두어 ±5px, 일반 타일 맵은 ±7px로 흩뜨린다.
+      // 그림 모드는 꽃 장식과 겹침을 줄이도록 기본 자리에서 ±5px로 흩뜨린다.
       const jitter = { x: Math.round(hash01(`${key}:x`) * (this.painted ? 5 : 7)), y: Math.round(hash01(`${key}:y`) * 3) };
       const home = standPos(tx, ty);
       const c = new Character({ sprites, name: entry.n, speed: GUEST_SPEED, x: home.x + jitter.x, y: home.y + jitter.y });
@@ -345,11 +337,8 @@ export class HubScene extends Scene {
         c.x = start.x + Math.round(hash01(`${n.character.name}${homeTile.tx},${homeTile.ty}`) * 8); c.y = start.y;
         c.hidden = false; c.alpha = 0; c.speed = ARRIVAL.speed; c.dir = 'up';
         const blocked = (tx, ty) => this.isSolidTile(tx, ty) || this.entrances.some((e) => e.tx === tx && e.ty === ty);
-        // 잔디 하객은 꽃띠가 끝나는 아래 광장에서 옆길로 갈라진다.
-        // 중앙으로 올라갔다 다시 내려오거나 꽃 위를 가로지르지 않는다.
-        const via = this.painted && !AISLE_COLS.includes(homeTile.tx)
-          ? { tx: homeTile.tx, ty: ARRIVAL.from.ty }
-          : { tx: 5, ty: Math.max(AISLE_OPEN_FROM, homeTile.ty) };
+        // 꽃은 통행 가능하므로 중앙 길에서 자기 자리 쪽으로 자연스럽게 흩어진다.
+        const via = { tx: 5, ty: Math.max(AISLE_OPEN_FROM, homeTile.ty) };
         const leg1 = findPath(this.map.w, this.map.h, blocked, ARRIVAL.from, via) ?? [];
         const leg2 = findPath(this.map.w, this.map.h, blocked, via, homeTile) ?? [];
         const points = [...leg1, ...leg2].map((t) => standPos(t.tx, t.ty));
