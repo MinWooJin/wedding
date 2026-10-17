@@ -49,7 +49,7 @@ test('반복 갱신과 새 하객 추가 시 기존 캐릭터·배회 상태를 
   assert.ok([...hub.guestMap.values()].every((g) => g.character.name === '하객'));
 });
 
-test('실제 PNG 크기로 광장에 하객이 충분히 모인다(30명 중 20명 이상)', () => {
+test('리셉션 소품을 포함한 실제 PNG 크기로 하객 18명 이상을 배치한다', () => {
   // 단상·아치·표지판 등 현재 선택된 PNG 크기로 여유 공간을 확인한다.
   const manifest = JSON.parse(readFileSync(new URL('../assets/manifest.json', import.meta.url)));
   const objects = Object.fromEntries(manifest.objects.map((name) => {
@@ -58,7 +58,7 @@ test('실제 PNG 크기로 광장에 하객이 충분히 모인다(30명 중 20�
   }));
   const entries = Array.from({ length: 30 }, (_, i) => ({ t: i, n: `손님${i}`, c: i % 10, m: '축하' }));
   const hub = createHub({ config: DEFAULT_CONFIG, profile: { nickname: '나' }, assets: { objects }, data: { messages: entries } });
-  assert.ok(hub.guestMap.size >= 20, `배치된 하객 ${hub.guestMap.size}명`);
+  assert.ok(hub.guestMap.size >= 18, `배치된 하객 ${hub.guestMap.size}명`);
   const trees = hub.objects.filter((o) => o.sprite === 'tree');
   assert.equal(trees.length, 2, '단상 양옆 나무 한 쌍');
   assert.equal(trees[0].tx * 32, 0);

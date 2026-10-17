@@ -50,6 +50,7 @@ OBJECT_SIZES = {  # 오브젝트별 원본 비율과 요청 규격. 의자는 �
     "petal-pile": (32, 32), "welcome-board": (64, 64),
     "bush-white": (64, 64), "platform": (160, 64), "window": (64, 64), "plant": (32, 64),
     "wedding-mailbox": (64, 96), "share-letter": (64, 64),
+    "party-table": (64, 64), "ribbon-lantern": (32, 64),
     "aisle-runner": (96, 32), "aisle-flower-left": (32, 32), "aisle-flower-right": (32, 32),
 }
 # 고정 크기 씬(갤러리는 사진 수에 따라 길이가 변해 배경 이미지를 쓰지 않는다)

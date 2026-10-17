@@ -1,0 +1,36 @@
+{
+  "party-table": {
+    "size": [
+      64,
+      64
+    ],
+    "bbox": [
+      14,
+      8,
+      50,
+      64
+    ],
+    "colors": 31,
+    "alpha_values": [
+      0,
+      255
+    ]
+  },
+  "ribbon-lantern": {
+    "size": [
+      32,
+      64
+    ],
+    "bbox": [
+      8,
+      4,
+      23,
+      64
+    ],
+    "colors": 30,
+    "alpha_values": [
+      0,
+      255
+    ]
+  }
+}

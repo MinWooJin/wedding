@@ -1,5 +1,10 @@
 # 에셋 가이드 (AI 생성 → 게임 적용)
 
+정원 파티 소품: `objects/party-table.png`(64×64)와 `objects/ribbon-lantern.png`(32×64).
+기존 나무는 유지하며 테이블은 0/9열·12행, 조명은 0/10열·8행에 놓는다. 버진로드와 꽃 구역은 비운다.
+내장 생성 프롬프트 `party-prompts.json`, 규격 `party-report.json`, 확대 `party-preview.png`.
+선택 변환 `python tools/prepare_party_assets.py` (원본 `raw/party-source/` 필요). 전체 오브젝트는 31종이다.
+
 현재 메인 꽃은 버진로드 **바깥 3/7열**, 길 전체 폭 96px를 비운다. 아래 중앙 통로 32px 설명은 이전 배치 기록이다.
 메인은 나무 한 쌍을 0/9열·5행에 배치한다. 덤불은 배치에서 제외했으며 PNG는 보관한다. 다른 방은 기존 에셋을 그대로 사용한다.
 

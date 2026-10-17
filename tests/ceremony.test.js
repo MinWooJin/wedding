@@ -51,6 +51,11 @@ test('버진로드는 단상 밑에서 끝까지 이어지고 양쪽 꽃장식�
   for (let ty = 6; ty <= CEREMONY.aisleEnd; ty++) {
     assert.equal(hub.isSolidTile(5, ty), false, `중앙 통로 ${ty}`);
   }
+  for (const sprite of ['party-table', 'ribbon-lantern']) {
+    const pair = hub.objects.filter((o) => o.sprite === sprite);
+    assert.equal(pair.length, 2, '리셉션 소품 한 쌍');
+    assert.ok(pair.every((o) => o.tx * 32 + o.spr.w <= 96 || o.tx * 32 >= 256), '꽃길 바깥 리셉션');
+  }
   for (const door of Object.values(HUB_DOORS)) {
     const path = findPath(hub.map.w, hub.map.h, (x, y) => hub.isSolidTile(x, y), HUB_SPAWN, door.back);
     assert.ok(path.length > 0, `${door.label} 접근 가능`);

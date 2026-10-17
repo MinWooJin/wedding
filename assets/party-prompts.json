@@ -1,0 +1,35 @@
+{
+  "mode": "built-in image_gen; no API key",
+  "references": [
+    "assets/objects/wedding-mailbox.png",
+    "assets/objects/aisle-flower-left-v2.png"
+  ],
+  "reference_role": "style only",
+  "prompts": {
+    "party-table": "Create ONE isolated pixel-art sprite for a romantic Korean garden wedding mobile game: a compact round standing cocktail reception table with an ivory floor-length linen cloth tied with a muted dusty-rose bow, a tiny low ivory-and-blush rose bouquet with sage leaves and two delicate gold-rim champagne flutes on its elliptical tabletop. No people, no chairs, no text, no background scenery or ground patch. Reference images are STYLE REFERENCES ONLY: match their warm ivory, pale blush and sage, thin warm brown pixel outlines, restrained soft shading and slightly elevated frontal RPG perspective. Not photorealistic, not smooth vector. Clear handmade pixel clusters, readable at a FINAL 64 by 64 pixels: simple bold silhouette, medium-scale details, uncluttered. Show entire object including cloth hem, centered, transparent background, no cast shadow outside object. Make table width about 52px and height 52px in the final 64px canvas. Table is a side decoration smaller than a 64px-high person. This is a new asset; do not redraw reference objects.",
+    "ribbon-lantern": "Create ONE isolated pixel-art game decoration sprite: a slender romantic garden wedding party lantern post. Warm pale-gold narrow upright stand on a small round base, a single softly glowing ivory paper globe on top, a clearly readable dusty-rose silk bow and two long ribbon tails tied below the globe, a small sprig of sage greenery and ivory roses at the knot. No people, no typography, no scenery, no ground patch. Use reference images ONLY as STYLE REFERENCES: warm cream and muted blush/sage palette, thin warm brown outlines, handmade pixel clusters with gentle shading and an elevated frontal RPG perspective. Must read at FINAL 32 by 64 pixels with the visible object about 22px wide by 58px tall. Simple coherent silhouette, not ornate or realistic. Entire object visible centered, genuinely transparent background. New object, do not redraw the reference mailbox or flowers. A refined garden reception, no balloons or neon."
+  },
+  "preparation": "tools/prepare_party_assets.py: alpha threshold160, trim, fit BOX, 32-color palette, binary alpha128, bottom-center in fixed frame",
+  "placements": {
+    "party-table": [
+      [
+        0,
+        12
+      ],
+      [
+        9,
+        12
+      ]
+    ],
+    "ribbon-lantern": [
+      [
+        0,
+        8
+      ],
+      [
+        10,
+        8
+      ]
+    ]
+  }
+}

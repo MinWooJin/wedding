@@ -140,6 +140,15 @@ export class HubScene extends Scene {
       // 나무 한 쌍은 바깥 가장자리에 두어 꽃길·하객과 겹치지 않게 한다.
       { id: 'tree-left', sprite: 'tree', tx: 0, ty: 5 },
       { id: 'tree-right', sprite: 'tree', tx: 11 - treeCols, ty: 5 },
+      // 리셉션 소품은 나무 아래 바깥 잔디에만 놓고 중앙 통로를 비운다.
+      ...(game.assets?.objects?.['party-table'] ? [
+        { id: 'party-table-left', sprite: 'party-table', tx: 0, ty: 12 },
+        { id: 'party-table-right', sprite: 'party-table', tx: 9, ty: 12 },
+      ] : []),
+      ...(game.assets?.objects?.['ribbon-lantern'] ? [
+        { id: 'ribbon-left', sprite: 'ribbon-lantern', tx: 0, ty: 8 },
+        { id: 'ribbon-right', sprite: 'ribbon-lantern', tx: 10, ty: 8 },
+      ] : []),
       { id: 'arch', sprite: 'arch', tx: 5 - Math.floor(archTiles / 2), ty: 0, solid: false },
       // 단상(160×64, 3~7열 × 4~5행): 바닥 장식이라 신랑신부 발밑에 깔리고 충돌 없음. assets/objects/platform.png가 있을 때만 표시
       ...(game.assets?.objects?.platform ? [{ id: 'platform', sprite: 'platform', tx: 3, ty: 4, floor: true }] : []),
