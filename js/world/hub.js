@@ -6,6 +6,7 @@ import { characterSet, EXTRA_GUEST_COUNT } from '../assets.js';
 import { freeTiles, pickTiles } from './guest-layout.js';
 import { findPath } from './movement.js';
 import { displayName } from '../config.js';
+import { WEDDING_RECEPTION } from './wedding-decor.js';
 
 // 11열 × 27행(352×864px). 레퍼런스(Pixel Guestbook)처럼: 종·커튼 아치 아래 계단 단상의 두 사람,
 // 그 아래로 버진로드와 길 가장자리 꽃띠, 양옆 잔디에 하객이 무리 지어 서고 가장자리는 나무·덤불·라벤더가 감싼다.
@@ -205,7 +206,7 @@ export class HubScene extends Scene {
     const archTiles = Math.round((game.assets?.objects?.arch?.w ?? 160) / 32);
     const treeCols = Math.ceil((game.assets?.objects?.tree?.w ?? 96) / 32);
     // 한 장의 배경 그림(assets.maps.hub)이 있으면 아치·단상·화분·나무·꽃띠·길이 모두 그 안에 있다(레퍼런스 방식).
-    // 그때는 눌러야 하는 문·표지판과 케이크만 오브젝트로 올린다. 배경이 없으면 예전처럼 타일 + 장식 오브젝트로 그린다.
+    // 꽃과 벚꽃은 로더가 같은 배경 위에 합성하고, 리셉션 소품은 발자국이 있는 오브젝트로 올린다.
     const painted = !!game.assets?.maps?.hub;
     const objects = painted ? [] : [
       // 버진로드·꽃띠는 단상보다 먼저 합성해 시작 부분이 단상 밑으로 자연스럽게 이어진다.
@@ -215,8 +216,9 @@ export class HubScene extends Scene {
       // 계단 단상(160×64, 3~7열): 바닥 장식이라 두 사람 발밑에 깔리고 충돌 없음.
       ...(has(game.assets, 'platform') ? [{ id: 'platform', sprite: 'platform', tx: 3, ty: CEREMONY.stageTy, floor: true }] : []),
     ];
-    // 리셉션 케이크는 하객 자리를 줄이지 않게 아래 입구 광장 가운데(표지판 사이)에 둔다. 지나갈 수 있는 장식.
-    if (has(game.assets, 'wedding-cake')) objects.push({ id: 'cake-display', sprite: 'wedding-cake', tx: 4.5, ty: BLOCK_A, solid: false });
+    // 리셉션은 하객 구역 아래, 표지판 사이에 모으고 소품의 발자국은 피해서 걷는다.
+    if (painted) objects.push(...WEDDING_RECEPTION.filter((o) => has(game.assets, o.sprite)));
+    else if (has(game.assets, 'wedding-cake')) objects.push({ id: 'cake-display', sprite: 'wedding-cake', tx: 4.5, ty: BLOCK_A, solid: false });
     const entrances = [];
     for (const [id, d] of Object.entries(HUB_DOORS)) {
       objects.push({ id: `door-${id}`, sprite: 'door', floor: true, ...d.door });

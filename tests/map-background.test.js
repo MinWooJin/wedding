@@ -27,18 +27,30 @@ test('광장 배경은 세 조각을 0/256/544에 이어 붙여 352×864 한 장
   assert.deepEqual([gb.width, gb.height], [352, 448]);
 });
 
-test('배경 그림이 있으면 광장은 문·표지판·케이크만 오브젝트로 올리고 두 사람은 단상 윗면에 선다', () => {
+test('그려진 광장의 리셉션 소품을 피해서 네 문까지 이동하고 두 사람은 단상에 선다', () => {
   const hubBg = { width: 352, height: 864 };
   const hub = createHub({ config: DEFAULT_CONFIG, profile: { nickname: '나' }, assets: { objects, maps: { hub: hubBg } }, data: { messages: [] } });
   assert.equal(hub.bgImage, hubBg);
   const sprites = new Set(hub.objects.map((o) => o.sprite));
-  assert.deepEqual([...sprites].sort(), ['door', 'sign', 'wedding-cake', 'welcome-board']);
+  assert.deepEqual([...sprites].sort(), ['door', 'party-table', 'ribbon-lantern', 'sign', 'wedding-cake', 'welcome-board']);
   assert.ok(hub.hosts.every((c) => c.y === CEREMONY.feetY && c.y >= 128 + 15 && c.y <= 164), '발이 단상 윗면(y128~164) 안');
   for (const n of hub.guestMap.values()) {
     const { ty, tx } = n.wander.home;
     assert.ok(ty >= 6, `하객은 단상·화분 아래(${tx},${ty})`);
   }
   for (const e of hub.entrances) assert.ok(findPath(hub.map.w, hub.map.h, (x, y) => hub.isSolidTile(x, y), hub.spawn, e), '문 접근');
+  for (const prop of hub.objects.filter((o) => ['party-table', 'ribbon-lantern', 'wedding-cake'].includes(o.sprite))) {
+    assert.equal(prop.solid, true, '테이블과 케이크를 관통하지 않는다');
+    const foot = prop.ty + Math.ceil(prop.spr.h / 32) - 1;
+    assert.equal(hub.isSolidTile(prop.tx, foot), true);
+  }
+  const crowd = [...hub.guestMap.values()];
+  assert.equal(crowd.length, 20);
+  for (let i = 0; i < 2400 && crowd.some((n) => n.arrival); i++) {
+    hub.updateArrivals(.05, false);
+    for (const n of crowd) n.character.update(.05, hub.blockedStatic());
+  }
+  assert.ok(crowd.every((n) => !n.arrival), '리셉션이 있어도 스무 명 모두 자기 자리에 도착한다');
   const plain = createHub({ config: DEFAULT_CONFIG, profile: { nickname: '나' }, assets: { objects }, data: { messages: [] } });
   assert.ok(plain.objects.some((o) => o.sprite === 'arch'), '배경이 없으면 예전처럼 장식 오브젝트');
 });

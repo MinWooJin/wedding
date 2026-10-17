@@ -371,3 +371,11 @@ Codex가 다음 작업 전에 읽을 문서다. 오늘 Claude가 바꾼 내용, 
 - 그림 모드 광장의3/7열·6~17행을 꽃띠 발자국으로 막는다. 하객 배치/배회/입장이 이를 피하고 잔디로 가는 하객은 아래 광장에서 갈라진다. 좌우 jitter는 이 모드에서±5다. 초기 배치는 약70% 잔디/나머지9행 이후 중앙 길로 섞는다. 기본20명·실제 하객/선택 프리셋·자동 말풍선·모션 줄이기는 유지했다.
 - `npm test`133개 통과. 꽃띠 회피와 하객20명 입장 완료(실제 blockedStatic 적용), 네 공간 접근,352px 전체 폭과 가로 카메라 고정, 캔버스 물리 높이를 검사했다. 실제 앱320/390/430px 화면 및 방명록 표시를 확인했다.
 - 검토 `tools/garden-framing-review.html`은 실제 앱 iframe3개다. 프롬프트/기존 PNG 해시 `assets/garden-framing-prompts.json`, 규격 `assets/garden-framing-report.json`, 비교 `assets/garden-framing-comparison.png`. 선택 변환 `.venv-assets/Scripts/python.exe tools/prepare_garden_framing.py`, 원본 `raw/garden-framing-source/`는 Git 제외다. 원본8차 변환기 이후 이 선택 변환기를 마지막에 실행해야 현재 maps 매핑이 유지된다. API·실사진 보류는 그대로다.
+
+## 28. 벚꽃·웨딩홀 꽃·리셉션 복원 (Codex, 2026-10-17)
+
+- 사용자가 단조로운 꽃과 장식 제거를 지적했고, 평가 후 복원을 승인했다. `docs/REVIEW_WEDDING_DECOR_2026-10-17.md`를 우선한다. 이전 REVIEW_MAP의 벚꽃·장식 전부 제거 지침은 대체한다.
+- 새 이미지 생성 없이 기존 에셋을 재사용한다. `js/world/wedding-decor.js`의 Canvas 합성이 방명록 배경의 온전한 벚꽃을 광장 양쪽에 복원하고, 아치와 겹치는 부분은 원래 그림으로 유지한다. 큰 장미40×60 네 개와 낮은 꽃무더기34×51 두 개를 기존 꽃띠 안에 합성한다. 배경 원본과 manifest 선택은 변경하지 않았다. PNG 단독 미리보기는 최종 장식이 빠져 있으므로 실제 앱으로 확인한다.
+- `hub.js`는 아래 광장의 표지판 사이에 테이블·리본 조명·케이크를 모은다. 케이크80px/테이블·조명64px의 발을y704에 정렬하고 충돌을 적용한다. 이전처럼 사람과 겹쳐 걸을 수 있는 소품으로 되돌리지 않는다.
+- `npm test`133개 통과. 실제 PNG 크기로 리셉션 발자국 충돌, 네 출입구 접근, 하객20명의 충돌 적용 입장 완료를 검사했다. 실제 앱320/390/430px에서도 나무와 꽃길 표시를 확인했다.352px 전체 폭·안정된 모션·메시지·API/실사진 마지막 연결 방침을 유지한다.
+- 실제 화면 기록: `docs/wedding-decor-top-2026-10-17.jpg`, `docs/wedding-decor-reception-2026-10-17.jpg`. 검토 페이지 `tools/garden-framing-review.html` 설명도 갱신했다.

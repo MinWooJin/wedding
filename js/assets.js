@@ -9,6 +9,7 @@
  */
 import { TILE } from './renderer.js';
 import { PRESET_COUNT } from './sprites/characters.js';
+import { decorateWeddingHub } from './world/wedding-decor.js';
 
 export const CHAR_W = 48, CHAR_H = 72; // 화면(352px 폭 기준)에서 캐릭터가 폭 48px, 높이 72px로 보인다(타일 1.5칸 폭)
 /** 분위기용 군중 하객 그림 수(선택 프리셋 10종과 별개, 캐릭터 고르기에는 나오지 않는다) */
@@ -152,7 +153,9 @@ export async function loadAssets(base = 'assets') {
   for (const [scene, list] of Object.entries(MAP_PIECES)) {
     if (out.maps[scene]) continue; // 씬 전체 한 장이 따로 있으면 그것을 우선한다
     const composed = composeMap(pieces, list);
-    if (composed) out.maps[scene] = composed;
+    if (composed) out.maps[scene] = scene === 'hub'
+      ? decorateWeddingHub(composed, { top: pieces['hub-top'], guestbook: pieces['guestbook-bg'], objects: out.objects })
+      : composed;
   }
   return out;
 }
