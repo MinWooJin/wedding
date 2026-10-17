@@ -14,7 +14,6 @@ const GARDEN_ROWS = 17;
 const grassAt = (tx, ty) => { const v = (tx * 73856093 ^ ty * 19349663 ^ FLOWER_SEED) >>> 0; return v % 7 === 0 ? 'J' : v % 11 === 0 ? 'U' : 'G'; };
 const gardenRow = (ty) => 'H' + Array.from({ length: 9 }, (_, i) => { const tx = i + 1; return tx >= 4 && tx <= 6 ? 'N' : grassAt(tx, ty); }).join('') + 'H';
 const crossRow = 'HNNNNNNNNNH';
-const blockRow = (ty) => 'H' + Array.from({ length: 9 }, (_, i) => { const tx = i + 1; return tx === 1 || tx === 9 || (tx >= 4 && tx <= 6) ? 'N' : grassAt(tx, ty); }).join('') + 'H';
 const CROSS_A = GARDEN_ROWS + 1;   // 18 교차로
 const BLOCK_A = CROSS_A + 1;       // 19 문: 안내소/갤러리
 const CROSS_B = BLOCK_A + 3;       // 22 교차로
@@ -22,10 +21,8 @@ const BLOCK_B = CROSS_B + 1;       // 23 문: 마음 전하기/방명록
 export const HUB_ROWS = [
   'HHHHHHHHHHH',
   ...Array.from({ length: GARDEN_ROWS }, (_, i) => gardenRow(i + 1)),
-  crossRow,
-  blockRow(BLOCK_A), blockRow(BLOCK_A + 1), blockRow(BLOCK_A + 2),
-  crossRow,
-  blockRow(BLOCK_B), blockRow(BLOCK_B + 1), blockRow(BLOCK_B + 2),
+  // 네 표지판 아래까지 같은 모래빛 바닥으로 이어지는 입구 광장.
+  ...Array.from({ length: BLOCK_B + 3 - CROSS_A }, () => crossRow),
   'HHHHHHHHHHH',
 ];
 
