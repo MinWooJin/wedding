@@ -1,5 +1,11 @@
 # 에셋 가이드 (AI 생성 → 게임 적용)
 
+현재 잔디: `tiles/G-v4.png`, `J-v4.png`, `U-v4.png`(32×32·12색). 현재 J/U는 같은 톤의 잔디 질감 변형이다.
+작은 들꽃 `objects/meadow-sprig.png`(32×32)를 잔디 12곳에 놓고, 새 `aisle-flower-airy-left/right.png`(32×48)를 기존 장미와 교차 배치한다.
+`objects/wedding-cake.png`(64×80)는 0열·2행. 나무·테이블·리본 조명·중앙 96px 통로는 유지한다.
+선택 변환 `python tools/prepare_garden_detail_assets.py`, 원본 `raw/garden-detail-source/`. 프롬프트 `garden-detail-prompts.json`, 규격 `garden-detail-report.json`, 비교 `garden-detail-preview.png`.
+기존 PNG는 보존한다. 현재 오브젝트는 35종이며 아래의 31종·3색 잔디 설명은 과거 기록이다.
+
 정원 파티 소품: `objects/party-table.png`(64×64)와 `objects/ribbon-lantern.png`(32×64).
 기존 나무는 유지하며 테이블은 0/9열·12행, 조명은 0/10열·8행에 놓는다. 버진로드와 꽃 구역은 비운다.
 내장 생성 프롬프트 `party-prompts.json`, 규격 `party-report.json`, 확대 `party-preview.png`.

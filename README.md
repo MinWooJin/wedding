@@ -37,7 +37,7 @@ npm run serve     # http://localhost:5173
 
 ## 그래픽 교체 (AI 생성 PNG)
 
-현재는 PNG 캐릭터 13종, 타일 22종, 오브젝트 31종을 사용한다. 코드 픽셀 아트는 로드 실패 시의 폴백이다.
+현재는 PNG 캐릭터 13종, 타일 22종, 오브젝트 35종을 사용한다. 코드 픽셀 아트는 로드 실패 시의 폴백이다.
 기존 캐릭터를 전체 변환 명령으로 다시 축소하지 말고 `assets/README.md`의 선택 변환 지침을 따른다.
 
 2026-10-17 레퍼런스 고도화로 캐릭터 12종·정원 타일 6종·나무의 새 버전을 적용했다.
@@ -63,6 +63,9 @@ python tools/prepare_v2_assets.py  # v2 소품 2종만, raw/v2-source 원본이 
 
 정원 파티 소품으로 아이보리 리셉션 테이블과 리본 조명을 좌우에 배치했다. 나무와 빈 버진로드는 유지한다.
 [새 소품 미리보기](assets/party-preview.png) · [프롬프트](assets/party-prompts.json). 선택 변환은 `python tools/prepare_party_assets.py`.
+
+현재 잔디는 풀잎 질감 3종(v4)을 섞고 작은 들꽃을 흩어 배치한다. 버진로드 장미와 수국 장식을 번갈아 놓고 케이크도 추가했다.
+[잔디·장식 비교](assets/garden-detail-preview.png) · [생성 프롬프트](assets/garden-detail-prompts.json). 선택 변환은 `python tools/prepare_garden_detail_assets.py`.
 
 ## 방명록(Google 스프레드시트) 연결
 

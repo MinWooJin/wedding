@@ -38,10 +38,13 @@ test('버진로드는 단상 밑에서 끝까지 이어지고 양쪽 꽃장식�
   assert.ok(flowers.every((o) => o.floor && !o.solid));
   assert.ok(flowers.every((o) => o.ty < HUB_DOORS.guestbook.back.ty), '교차로는 꽃장식 밖');
   assert.ok(flowers.every((o) => o.bottom <= HUB_DOORS.guestbook.back.ty * 32), '큰 꽃도 교차로에 걸치지 않는다');
-  const leftFlowers = flowers.filter((o) => o.sprite === 'aisle-flower-left');
+  const leftFlowers = flowers.filter((o) => o.sprite.endsWith('-left'));
   assert.equal(leftFlowers.length, 6, '한쪽에 큰 꽃장식 여섯 개');
+  assert.equal(leftFlowers.filter((o) => o.sprite === 'aisle-flower-left').length, 3);
+  assert.equal(leftFlowers.filter((o) => o.sprite === 'aisle-flower-airy-left').length, 3);
+  assert.ok(leftFlowers.every((o, i) => i === 0 || o.sprite !== leftFlowers[i-1].sprite), '장미와 수국 교차 배치');
   assert.ok(flowers.every((o) => o.spr.w === 32 && o.spr.h === 48), '선택된 새 꽃 PNG 규격');
-  const left = leftFlowers[0], right = flowers.find((o) => o.sprite === 'aisle-flower-right');
+  const left = leftFlowers[0], right = flowers.find((o) => o.sprite.endsWith('-right'));
   assert.equal(left.tx * 32 + left.spr.w, strips[0].tx * 32, '왼쪽 꽃은 버진로드 바깥');
   assert.equal(right.tx * 32, strips[0].tx * 32 + strips[0].spr.w, '오른쪽 꽃은 버진로드 바깥');
   assert.equal(right.tx * 32 - (left.tx * 32 + left.spr.w), 96, '버진로드 전체 폭 유지');
@@ -51,6 +54,11 @@ test('버진로드는 단상 밑에서 끝까지 이어지고 양쪽 꽃장식�
   for (let ty = 6; ty <= CEREMONY.aisleEnd; ty++) {
     assert.equal(hub.isSolidTile(5, ty), false, `중앙 통로 ${ty}`);
   }
+  const meadow = hub.objects.filter((o) => o.sprite === 'meadow-sprig');
+  assert.equal(meadow.length, 12);
+  assert.ok(meadow.every((o) => o.floor && !o.solid && (o.tx < 3 || o.tx > 7)), '작은 들꽃은 바깥 잔디의 비충돌 바닥');
+  const cake = hub.objects.find((o) => o.sprite === 'wedding-cake');
+  assert.ok(cake.tx * 32 + cake.spr.w <= 96, '케이크도 꽃길 바깥');
   for (const sprite of ['party-table', 'ribbon-lantern']) {
     const pair = hub.objects.filter((o) => o.sprite === sprite);
     assert.equal(pair.length, 2, '리셉션 소품 한 쌍');

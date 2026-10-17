@@ -1,0 +1,94 @@
+{
+  "tiles/G": {
+    "file": "G-v4.png",
+    "size": [
+      32,
+      32
+    ],
+    "colors": 12
+  },
+  "tiles/J": {
+    "file": "J-v4.png",
+    "size": [
+      32,
+      32
+    ],
+    "colors": 12
+  },
+  "tiles/U": {
+    "file": "U-v4.png",
+    "size": [
+      32,
+      32
+    ],
+    "colors": 12
+  },
+  "objects/meadow-sprig": {
+    "size": [
+      32,
+      32
+    ],
+    "bbox": [
+      5,
+      21,
+      28,
+      32
+    ],
+    "colors": 20,
+    "alpha_values": [
+      0,
+      255
+    ]
+  },
+  "objects/aisle-flower-airy-left": {
+    "size": [
+      32,
+      48
+    ],
+    "bbox": [
+      0,
+      9,
+      32,
+      48
+    ],
+    "colors": 30,
+    "alpha_values": [
+      0,
+      255
+    ]
+  },
+  "objects/aisle-flower-airy-right": {
+    "size": [
+      32,
+      48
+    ],
+    "bbox": [
+      0,
+      9,
+      32,
+      48
+    ],
+    "colors": 30,
+    "alpha_values": [
+      0,
+      255
+    ]
+  },
+  "objects/wedding-cake": {
+    "size": [
+      64,
+      80
+    ],
+    "bbox": [
+      11,
+      12,
+      52,
+      80
+    ],
+    "colors": 32,
+    "alpha_values": [
+      0,
+      255
+    ]
+  }
+}

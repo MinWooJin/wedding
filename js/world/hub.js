@@ -7,10 +7,11 @@ import { freeTiles, pickTiles } from './guest-layout.js';
 import { displayName } from '../config.js';
 
 // 11열 × 27행(352×864px). 잔디가 외곽까지 이어지는 정원, 가운데 3칸 버진로드, 바깥 꽃장식과 양옆 하객.
-// 타일: H 외곽 충돌 마스크(화면은 G), G 잔디, N 모래 돌길(4~6열)
+// 타일: H 외곽 충돌 마스크(화면은 G), G/J/U 잔디 질감, N 모래 돌길(4~6열)
 // 이야기 길을 없애며 생긴 여유를 정원에 돌려줬다(정원 17행). 하객이 모이는 공간이 이 청첩장의 중심이다.
 const GARDEN_ROWS = 17;
-const gardenRow = () => 'HGGGNNNGGGH'; // 꽃무늬를 섞지 않고 단상·꽃길에 시선을 모은다.
+const grassAt = (tx, ty) => ['G', 'G', 'J', 'U'][((tx * 73856093 ^ ty * 19349663) >>> 16) % 4];
+const gardenRow = (ty) => 'H' + Array.from({ length: 9 }, (_, i) => i >= 3 && i <= 5 ? 'N' : grassAt(i + 1, ty)).join('') + 'H';
 const crossRow = 'HNNNNNNNNNH';
 const CROSS_A = GARDEN_ROWS + 1;   // 18 교차로
 const BLOCK_A = CROSS_A + 1;       // 19 문: 안내소/갤러리
@@ -39,8 +40,14 @@ function ceremonyFloors(assets) {
   for (const [sprite, tx] of [['aisle-flower-left', 3], ['aisle-flower-right', 7]]) {
     if (!assets?.objects?.[sprite]) continue;
     for (let ty = CEREMONY.flowerStart; ty <= CEREMONY.flowerEnd; ty += CEREMONY.flowerStep) {
-      objects.push({ id: `${sprite}-${ty}`, sprite, tx, ty, floor: true });
+      const airy = sprite === 'aisle-flower-left' ? 'aisle-flower-airy-left' : 'aisle-flower-airy-right';
+      const alternate = ((ty - CEREMONY.flowerStart) / CEREMONY.flowerStep) % 2 === 1 && assets.objects[airy];
+      objects.push({ id: `${sprite}-${ty}`, sprite: alternate ? airy : sprite, tx, ty, floor: true });
     }
+  }
+  if (assets?.objects?.['meadow-sprig']) {
+    const patches = [[0,3],[2,2],[8,3],[10,6],[1,9],[9,10],[2,11],[0,14],[8,14],[10,15],[2,16],[9,17]];
+    for (const [tx,ty] of patches) objects.push({ id: `meadow-${tx}-${ty}`, sprite: 'meadow-sprig', tx, ty, floor: true });
   }
   return objects;
 }
@@ -140,6 +147,7 @@ export class HubScene extends Scene {
       // 나무 한 쌍은 바깥 가장자리에 두어 꽃길·하객과 겹치지 않게 한다.
       { id: 'tree-left', sprite: 'tree', tx: 0, ty: 5 },
       { id: 'tree-right', sprite: 'tree', tx: 11 - treeCols, ty: 5 },
+      ...(game.assets?.objects?.['wedding-cake'] ? [{ id: 'cake-display', sprite: 'wedding-cake', tx: 0, ty: 2 }] : []),
       // 리셉션 소품은 나무 아래 바깥 잔디에만 놓고 중앙 통로를 비운다.
       ...(game.assets?.objects?.['party-table'] ? [
         { id: 'party-table-left', sprite: 'party-table', tx: 0, ty: 12 },

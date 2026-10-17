@@ -69,7 +69,11 @@
     "aisle-flower-left",
     "aisle-flower-right",
     "party-table",
-    "ribbon-lantern"
+    "ribbon-lantern",
+    "meadow-sprig",
+    "aisle-flower-airy-left",
+    "aisle-flower-airy-right",
+    "wedding-cake"
   ],
   "maps": [],
   "files": {
@@ -93,10 +97,10 @@
       "aisle-flower-right": "aisle-flower-right-v2.png"
     },
     "tiles": {
-      "G": "G-v3.png",
+      "G": "G-v4.png",
       "H": "H-v3.png",
-      "J": "J-v3.png",
-      "U": "U-v3.png",
+      "J": "J-v4.png",
+      "U": "U-v4.png",
       "W": "W-v3.png",
       "N": "N-v3.png"
     }
