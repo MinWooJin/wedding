@@ -42,7 +42,7 @@ test('등록된 버전 파일은 실제 PNG이고 캐릭터 프레임과 타일 
       assert.equal(png.subarray(1, 4).toString(), 'PNG');
       const size = [png.readUInt32BE(16), png.readUInt32BE(20)];
       if (group === 'characters') assert.deepEqual(size, [48, 72]);
-      if (group === 'tiles') assert.deepEqual(size, ['G','J','U'].includes(name) ? [128,128] : [32,32]);
+      if (group === 'tiles') assert.deepEqual(size, filename === 'lawn-v5.png' ? [128,128] : [32,32]);
       if (name === 'tree') assert.deepEqual(size, [64, 96]);
     }
   }

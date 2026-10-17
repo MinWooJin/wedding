@@ -1,5 +1,11 @@
 # 에셋 작업 인수인계 프롬프트 (Codex / Claude)
 
+> **최신: 7차 A~C 그림 15종 제작·등록 완료(2026-10-17).** 문서 맨 아래 완료 기록과 `docs/REVIEW_PARTY_2026-10-17.md`를 읽는다.
+> 아치/단상/타일은 새 버전으로 선택했고, 새 장식8종은 등록만 했다. JS 변경은 허용된 OBJECT_IDS 추가뿐이며 장면 배치는 Claude 담당이다.
+> 이번 명시 요청에 따라 G/J/U/H는32×32 `*-v5.png`다. 과거128px lawn-v5.png 선택 기록보다 이 요청을 우선한다. 경계 동기화 코드는 유지한다.
+> 단상은 기존 위치에서 커플 발이 윗면보다 아래이므로 배치 조정이 필요하다. 비교 모형은 단상 y144/커플 발176이며 실제 좌표는 미변경이다.
+> 검토 `tools/round7-art-review.html`, 프롬프트/이전 매핑 `assets/round7-prompts.json`, 규격 `assets/round7-report.json`. 기존 PNG는 모두 보존했다.
+
 > **주 레퍼런스 변경(2026-10-17, 설계만 반영):** 사용자가 픽셀게스트북을 기준으로 지정했다.
 > 실제 https://pixelguestbook.com/260829 정원/메뉴를 확인했다. 아래 설계 문서 **0절**을 먼저 읽는다.
 > 커플·꽃길·하객·메시지를 우선하며 큰 나무는 외곽 프레임, 꽃은 높이가 다른 군집으로 설계한다. LimeZu/실사 예식장은 보조 자료다.
@@ -585,3 +591,36 @@ D. 분위기용 하객 (선택, A~C 다음)
 - 타일은 3×3 반복 미리보기로 이음새 확인.
 - npm test 통과(새 PNG 규격 테스트를 추가해도 좋다).
 ```
+
+
+## 7차 에셋 제작 완료 기록 (2026-10-17)
+
+- Pixel Guestbook 실제 정원/메뉴를 다시 확인한 뒤 내장 imagegen으로 원본 13장을 생성했다. 외부 그림 복사와 API 키 사용은 없었다. A~C 필수 15종을 새 버전 파일로 준비했다. 선택 D 하객6종은 이번 작업에서 제작하지 않았다. 기존 하객10종·신랑·신부·팔짱 커플을 포함한 이전 PNG는 전부 SHA-256 동일하다.
+- 모든 오브젝트는 RGBA·이진 알파·투명 포함32색 이하다. 타일은 불투명32×32다. 파일명은 오브젝트 `-v4`, 잔디 G/J/U/H `-v5`, 길 N `-v4`다. 기존 `lawn-v5.png`128×128과 다른 파일이므로 혼동하지 마라.
+- manifest.files.objects.arch → arch-v4.png, platform → stage-steps-v4.png. 새 단상을 별도 stage-steps ID로 중복 등록하지 않았다. 새 ID8종(planter-box, aisle-edge-left/right, lavender, rose-bush-l/s, tree-green, birdbath)은 manifest와 js/assets.js OBJECT_IDS에 등록했다. 장면 배치는 아직 Claude가 해야 한다. js/ 변경은 허용된 OBJECT_IDS 등록뿐이다.
+- arch의 (52,70)–(172,160)은 완전 투명이다. 금색 종은 위쪽 꽃 중앙에 있고 흰 커튼은 양옆에만 있다. 꽃띠 좌우는 실제 폭12px·bbox x10..22이며 오른쪽은 왼쪽의 정확한 반전이다. 최상/최하 행이 일치한다.
+- G/J/U는 동일한 G 바탕 위에 생성된 꽃 머리만 합성한다. J는 흰3송이, U는 분홍2/노랑1송이이며 머리는3×3px로 보존했다. H RGB는 G의 floor((v*7+4)/8), 알파255다. 5타일의 마주 보는 가장자리 픽셀은 정확히 같다.
+- **Claude 연결 주의:** 요청대로 manifest의 G/J/U는 새32px 타일을 선택한다. 기존 로더는32/128 둘 다 처리하고 경계 동기화 계산도 실제 texture.w/h를 사용한다. 128px 고정값을 새로 넣지 마라. 현재 광장 맵은 대부분 G라 J/U 들꽃 혼합은 아직 미적용이다. H 충돌 마스크를 G로 그리는 기존 규칙도 그대로다. 기존 aisle-runner는 N과 별개이므로 꽃띠를 놓을 때 새 N 길로 연결하는 배치가 필요하다.
+- **단상 높이 주의:** 새 단상의 bbox는 (0,14,160,64), 넓은 윗면은 대략 y20~36이다. 기존 위치(96,128)에서 커플 발176은 윗면보다 아래다. 비교 모형은 단상만 y144로 내려 커플 발176을 윗면에 맞췄다. 런타임 좌표는 수정하지 않았으며 Claude가 단상/화분/길 시작을 함께 조정해야 한다. 꽃띠는3/7열 밖 위치를 유지하고, 초록 나무를 기존 tree ID에 덮어씌우지 마라. 벚꽃과 함께 쓸 별도 ID다.
+- 선택 재변환: `.venv-assets/Scripts/python.exe tools/prepare_round7_assets.py`. 원본 `raw/round7-source/`는 Git 제외, 원본 없는 체크아웃은 최종 PNG를 사용한다. 일반 전체 변환기는 실행하지 마라. 프롬프트·이전 manifest·기존 PNG 해시는 `assets/round7-prompts.json`, 규격은 `assets/round7-report.json`이다.
+- 비교 보드 `tools/round7-art-review.html`, 한 장 비교 `assets/round7-comparison.png`, 3×3 반복 `assets/round7-repeats.png`. 보드는 정적 크기/가림 모형이며 실제 신규 배치가 적용됐다는 의미가 아니다.
+
+| ID / 파일 | 크기 | 알파 bbox | 전체 RGBA 색 수 |
+|---|---|---|---:|
+| objects/arch / `arch-v4.png` | 224×160 | (0, 0, 224, 160) | 32 |
+| objects/stage-steps / `stage-steps-v4.png` | 160×64 | (0, 14, 160, 64) | 31 |
+| objects/planter-box / `planter-box-v4.png` | 64×48 | (0, 5, 64, 48) | 31 |
+| objects/aisle-edge-left / `aisle-edge-left-v4.png` | 32×32 | (10, 0, 22, 32) | 30 |
+| objects/aisle-edge-right / `aisle-edge-right-v4.png` | 32×32 | (10, 0, 22, 32) | 30 |
+| objects/lavender / `lavender-v4.png` | 32×48 | (1, 0, 31, 48) | 29 |
+| objects/rose-bush-l / `rose-bush-l-v4.png` | 96×64 | (0, 1, 96, 64) | 30 |
+| objects/rose-bush-s / `rose-bush-s-v4.png` | 64×48 | (0, 11, 64, 48) | 30 |
+| objects/tree-green / `tree-green-v4.png` | 96×128 | (0, 14, 96, 128) | 31 |
+| objects/birdbath / `birdbath-v4.png` | 32×48 | (0, 6, 32, 48) | 31 |
+| tiles/G / `G-v5.png` | 32×32 | (0, 0, 32, 32) | 3 |
+| tiles/J / `J-v5.png` | 32×32 | (0, 0, 32, 32) | 5 |
+| tiles/U / `U-v5.png` | 32×32 | (0, 0, 32, 32) | 6 |
+| tiles/H / `H-v5.png` | 32×32 | (0, 0, 32, 32) | 3 |
+| tiles/N / `N-v4.png` | 32×32 | (0, 0, 32, 32) | 3 |
+
+- 검증 완료: npm test122개 통과. 390/320px 정적 모형의 커플 얼굴 가림 없음과 실제 앱 에셋 로드/콘솔 오류 없음을 확인했다. 선택 변환 재실행 결과15종 PNG·비교 그림·manifest·보고서가 동일하다. 새 장식의 실제 배치/충돌 검증은 Claude 연결 후 진행한다.

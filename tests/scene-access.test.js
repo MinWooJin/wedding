@@ -6,6 +6,7 @@ import { createGuestbook } from '../js/world/guestbook.js';
 import { createInfo } from '../js/world/info.js';
 import { createGifts } from '../js/world/gifts.js';
 import { findPath } from '../js/world/movement.js';
+import { assetFilename } from '../js/assets.js';
 
 test('안내소는 원목 바닥으로 통일하고 야외 경계의 이동 제한은 유지한다', () => {
   const game = { config: JSON.parse(readFileSync(new URL('../data/config.json', import.meta.url))), assets: {}, profile: { nickname: '테스트' }, data: { messages: [] } };
@@ -22,7 +23,7 @@ test('안내소는 원목 바닥으로 통일하고 야외 경계의 이동 제�
 test('실제 PNG 크기 기준으로 모든 상호작용 오브젝트와 입구까지 길이 열린다', () => {
   const manifest = JSON.parse(readFileSync(new URL('../assets/manifest.json', import.meta.url)));
   const objects = Object.fromEntries(manifest.objects.map((name) => {
-    const png = readFileSync(new URL(`../assets/objects/${name}.png`, import.meta.url));
+    const png = readFileSync(new URL(`../assets/objects/${assetFilename(manifest, 'objects', name)}`, import.meta.url));
     return [name, { w: png.readUInt32BE(16), h: png.readUInt32BE(20) }];
   }));
   const game = { config: JSON.parse(readFileSync(new URL('../data/config.json', import.meta.url))), assets: { objects }, profile: { nickname: '테스트' }, data: { messages: [] } };

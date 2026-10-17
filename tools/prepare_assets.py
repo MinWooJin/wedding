@@ -53,6 +53,9 @@ OBJECT_SIZES = {  # 오브젝트별 원본 비율과 요청 규격. 의자는 �
     "party-table": (64, 64), "ribbon-lantern": (32, 64),
     "meadow-sprig": (32, 32), "aisle-flower-airy-left": (32, 48), "aisle-flower-airy-right": (32, 48), "wedding-cake": (64, 80),
     "aisle-runner": (96, 32), "aisle-flower-left": (32, 32), "aisle-flower-right": (32, 32),
+    "stage-steps": (160, 64), "planter-box": (64, 48),
+    "aisle-edge-left": (32, 32), "aisle-edge-right": (32, 32), "lavender": (32, 48),
+    "rose-bush-l": (96, 64), "rose-bush-s": (64, 48), "tree-green": (96, 128), "birdbath": (32, 48),
 }
 # 고정 크기 씬(갤러리는 사진 수에 따라 길이가 변해 배경 이미지를 쓰지 않는다)
 MAP_SIZES = {"hub": (352, 864), "info": (352, 384), "guestbook": (352, 384), "gifts": (352, 384)}

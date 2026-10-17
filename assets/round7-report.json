@@ -1,0 +1,269 @@
+{
+  "objects/arch": {
+    "size": [
+      224,
+      160
+    ],
+    "bbox": [
+      0,
+      0,
+      224,
+      160
+    ],
+    "colors": 32,
+    "alpha_values": [
+      0,
+      255
+    ],
+    "file": "arch-v4.png"
+  },
+  "objects/stage-steps": {
+    "size": [
+      160,
+      64
+    ],
+    "bbox": [
+      0,
+      14,
+      160,
+      64
+    ],
+    "colors": 31,
+    "alpha_values": [
+      0,
+      255
+    ],
+    "file": "stage-steps-v4.png"
+  },
+  "objects/planter-box": {
+    "size": [
+      64,
+      48
+    ],
+    "bbox": [
+      0,
+      5,
+      64,
+      48
+    ],
+    "colors": 31,
+    "alpha_values": [
+      0,
+      255
+    ],
+    "file": "planter-box-v4.png"
+  },
+  "objects/aisle-edge-left": {
+    "size": [
+      32,
+      32
+    ],
+    "bbox": [
+      10,
+      0,
+      22,
+      32
+    ],
+    "colors": 30,
+    "alpha_values": [
+      0,
+      255
+    ],
+    "file": "aisle-edge-left-v4.png"
+  },
+  "objects/aisle-edge-right": {
+    "size": [
+      32,
+      32
+    ],
+    "bbox": [
+      10,
+      0,
+      22,
+      32
+    ],
+    "colors": 30,
+    "alpha_values": [
+      0,
+      255
+    ],
+    "file": "aisle-edge-right-v4.png"
+  },
+  "objects/lavender": {
+    "size": [
+      32,
+      48
+    ],
+    "bbox": [
+      1,
+      0,
+      31,
+      48
+    ],
+    "colors": 29,
+    "alpha_values": [
+      0,
+      255
+    ],
+    "file": "lavender-v4.png"
+  },
+  "objects/rose-bush-l": {
+    "size": [
+      96,
+      64
+    ],
+    "bbox": [
+      0,
+      1,
+      96,
+      64
+    ],
+    "colors": 30,
+    "alpha_values": [
+      0,
+      255
+    ],
+    "file": "rose-bush-l-v4.png"
+  },
+  "objects/rose-bush-s": {
+    "size": [
+      64,
+      48
+    ],
+    "bbox": [
+      0,
+      11,
+      64,
+      48
+    ],
+    "colors": 30,
+    "alpha_values": [
+      0,
+      255
+    ],
+    "file": "rose-bush-s-v4.png"
+  },
+  "objects/tree-green": {
+    "size": [
+      96,
+      128
+    ],
+    "bbox": [
+      0,
+      14,
+      96,
+      128
+    ],
+    "colors": 31,
+    "alpha_values": [
+      0,
+      255
+    ],
+    "file": "tree-green-v4.png"
+  },
+  "objects/birdbath": {
+    "size": [
+      32,
+      48
+    ],
+    "bbox": [
+      0,
+      6,
+      32,
+      48
+    ],
+    "colors": 31,
+    "alpha_values": [
+      0,
+      255
+    ],
+    "file": "birdbath-v4.png"
+  },
+  "tiles/G": {
+    "size": [
+      32,
+      32
+    ],
+    "bbox": [
+      0,
+      0,
+      32,
+      32
+    ],
+    "colors": 3,
+    "alpha_values": [
+      255
+    ],
+    "file": "G-v5.png"
+  },
+  "tiles/J": {
+    "size": [
+      32,
+      32
+    ],
+    "bbox": [
+      0,
+      0,
+      32,
+      32
+    ],
+    "colors": 5,
+    "alpha_values": [
+      255
+    ],
+    "file": "J-v5.png",
+    "shared_grass_pixels": 1007
+  },
+  "tiles/U": {
+    "size": [
+      32,
+      32
+    ],
+    "bbox": [
+      0,
+      0,
+      32,
+      32
+    ],
+    "colors": 6,
+    "alpha_values": [
+      255
+    ],
+    "file": "U-v5.png",
+    "shared_grass_pixels": 1010
+  },
+  "tiles/H": {
+    "size": [
+      32,
+      32
+    ],
+    "bbox": [
+      0,
+      0,
+      32,
+      32
+    ],
+    "colors": 3,
+    "alpha_values": [
+      255
+    ],
+    "file": "H-v5.png"
+  },
+  "tiles/N": {
+    "size": [
+      32,
+      32
+    ],
+    "bbox": [
+      0,
+      0,
+      32,
+      32
+    ],
+    "colors": 3,
+    "alpha_values": [
+      255
+    ],
+    "file": "N-v4.png"
+  }
+}

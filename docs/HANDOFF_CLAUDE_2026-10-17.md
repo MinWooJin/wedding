@@ -270,3 +270,17 @@ Codex가 다음 작업 전에 읽을 문서다. 오늘 Claude가 바꾼 내용, 
 - footprint/시각 예약 구분, 메인 안내 카드72~80px, 첫 카메라 구도 개선이 후속 우선순위다. 방명록은 따로 배치 검증한 뒤 큰 나무를 적용한다. 현재 잔디/꽃/모션 안정화는 유지한다.
 - `tools/garden-design-review.html`에 현재/제안·320/390px·수관/줄기 범위 비교 보드를 만들었다. 기존 PNG 확대는 모형임을 표시했다. 외부 사진은 복사하지 않았다.
 - 계산 재현: `node tools/probe-garden-design.mjs` → `tools/garden-design-layouts.json`. 현재와 다섯 후보를 비교한다. 보드 컨트롤·320px 화면·구조 계산을 확인했다. 게임 코드 변경이 없어서 전체 단위 테스트는 재실행하지 않았다.
+
+
+## 20. 7차 무대·길·가장자리 에셋 완료 (2026-10-17)
+
+- 요청 문서의 A~C 15종 제작·등록을 완료했다. 내장 imagegen 원본13장 + 오른쪽 꽃띠 반전 + H 파생이다. 선택 D 하객6종은 제작하지 않았다. 기존 모든 PNG의 해시가 동일하며 캐릭터13종도 보존했다.
+- 아치 `arch-v4.png`224×160은 금색 종/흰 커튼이 있고 중앙(52,70)–(172,160)이 완전 투명이다. `stage-steps-v4.png`160×64를 기존 platform ID의 files 매핑으로 선택한다. 새 stage-steps ID는 불필요하다.
+- 신규 ID8종: planter-box64×48, aisle-edge-left/right32×32(실제폭12), lavender32×48, rose-bush-l96×64/s64×48, tree-green96×128, birdbath32×48. 모두 `-v4.png`; manifest와 OBJECT_IDS에 등록했으나 런타임 배치는 미적용이다. 기존 tree ID/벚꽃나무는 유지했다.
+- 타일은 요청대로 G/J/U/H32×32 `*-v5.png`, N32×32 `N-v4.png`다. 기존128px `lawn-v5.png`는 보존했지만 현재 선택은 새32px이다. G/J/U 바탕은 동일하고 J/U 꽃3송이의 머리는3×3px다. H는 G RGB의7/8. 마주 보는 가장자리 픽셀이 정확히 일치하며 꽃띠 최상/최하 행도 같다.
+- **Claude 후속 배치:** 기존 runner PNG를 새 N 길과 어떻게 연결할지 결정하고 꽃띠는 길 밖3/7열에 매행 이어 둔다. J/U를 G 사이에 성기게 섞는다(현재 광장은 대부분 G). H를 G로 표시하는 기존 충돌 마스크 규칙은 그대로다. 경계 동기화 계산은 실제 재질 크기를 쓰므로32px에 맞춰128을 하드코딩하지 마라.
+- **단상 접지:** 새 그림의 윗면은 약y20~36이다. 현재 단상y128/커플 발176은 계단 부분에 서므로 조정해야 한다. 비교 모형에서는 단상만y144로 내려 발176을 윗면에 맞췄다. 새 단상/화분/길 시작 좌표를 함께 조정한다. 입장 행렬·자동 말풍선·군중·안내카드 변경도 REVIEW_PARTY대로 Claude 담당이며 이번에 구현하지 않았다.
+- JS 변경은 허용된 `js/assets.js` OBJECT_IDS 추가뿐이다. tests/scene-access는 canonical 파일 대신 실제 manifest.files를 읽도록 고쳐 버전 PNG의 실제 치수로 접근 경로를 검사한다. 테스트122개 통과. 캐릭터 프레임/모션/카메라/충돌 로직은 변경하지 않았다.
+- `.venv-assets/Scripts/python.exe tools/prepare_round7_assets.py`만 선택 실행한다. 원본 `raw/round7-source/`는 Git 제외이며 다른 에셋 전체 재변환은 금지한다. 재실행 시15종 PNG·미리보기·manifest·보고서가 모두 동일하다.
+- 프롬프트/이전 매핑/기존 PNG 해시 `assets/round7-prompts.json`, 규격 `assets/round7-report.json`, 단일 비교 `assets/round7-comparison.png`, 3×3 반복 `assets/round7-repeats.png`, 정적390/320 모형 `tools/round7-art-review.html`. CODEX_PROMPT 맨 아래에 전 파일의 치수/bbox/색 수를 기록했다.
+- 390/320px 비교 모형에서 커플 얼굴 가림 없음, 실제 앱의 새 아치/단상/바닥 로드와 콘솔 오류 없음을 확인했다. 실제 새 꽃띠/식생 배치 검증은 Claude 연결 후 필요하다. API·실사진 보류는 그대로다.

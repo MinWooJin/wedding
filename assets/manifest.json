@@ -73,7 +73,15 @@
     "meadow-sprig",
     "aisle-flower-airy-left",
     "aisle-flower-airy-right",
-    "wedding-cake"
+    "wedding-cake",
+    "planter-box",
+    "aisle-edge-left",
+    "aisle-edge-right",
+    "lavender",
+    "rose-bush-l",
+    "rose-bush-s",
+    "tree-green",
+    "birdbath"
   ],
   "maps": [],
   "files": {
@@ -97,15 +105,25 @@
       "aisle-flower-right": "aisle-flower-right-v2.png",
       "meadow-sprig": "meadow-sprig-v2.png",
       "aisle-flower-airy-left": "aisle-flower-airy-left-v2.png",
-      "aisle-flower-airy-right": "aisle-flower-airy-right-v2.png"
+      "aisle-flower-airy-right": "aisle-flower-airy-right-v2.png",
+      "arch": "arch-v4.png",
+      "platform": "stage-steps-v4.png",
+      "planter-box": "planter-box-v4.png",
+      "aisle-edge-left": "aisle-edge-left-v4.png",
+      "aisle-edge-right": "aisle-edge-right-v4.png",
+      "lavender": "lavender-v4.png",
+      "rose-bush-l": "rose-bush-l-v4.png",
+      "rose-bush-s": "rose-bush-s-v4.png",
+      "tree-green": "tree-green-v4.png",
+      "birdbath": "birdbath-v4.png"
     },
     "tiles": {
-      "G": "lawn-v5.png",
-      "H": "H-v3.png",
-      "J": "lawn-v5.png",
-      "U": "lawn-v5.png",
+      "G": "G-v5.png",
+      "H": "H-v5.png",
+      "J": "J-v5.png",
+      "U": "U-v5.png",
       "W": "W-v3.png",
-      "N": "N-v3.png"
+      "N": "N-v4.png"
     }
   }
 }

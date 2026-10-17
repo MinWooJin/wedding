@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="ko"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>7차 · 무대와 정원 에셋 검토</title>
+<style>
+*{box-sizing:border-box}body{margin:0;padding:28px;background:#fff6e5;color:#3d4935;font:15px/1.65 system-ui,sans-serif}main{max-width:1100px;margin:auto}a{color:#8b4864}h1{font-size:25px}h2{font-size:19px;margin-top:32px}img{max-width:100%;image-rendering:pixelated}.phones{display:flex;gap:30px;flex-wrap:wrap}.phone{width:390px;height:620px;position:relative;overflow:hidden;border:1px solid #acb48f;border-radius:16px;background:#90ad59}.world{position:absolute;top:16px;left:0;width:352px;height:620px;transform:scale(1.108);transform-origin:top left;background:url('../assets/tiles/G-v5.png') repeat}.old .world{background-image:url('../assets/tiles/lawn-v5.png')} .item{position:absolute;image-rendering:pixelated;max-width:none}.caption{max-width:820px;color:#637151}.badge{background:#ecdfdd;padding:6px 12px;border-radius:14px;display:inline-block;font-size:12px}label{display:block;margin:15px 0}select{font:inherit;padding:5px 10px}.panel{position:absolute;top:12px;left:10px;background:#fff9e9dd;border-radius:10px;padding:6px 12px;font-size:12px}
+</style>
+<main><span class="badge">7차 그림 제작 완료 · 신규 장식 배치는 Claude 담당</span>
+<h1>종·커튼 아치, 돌계단과 이어지는 꽃길</h1>
+<p>기존 PNG와 캐릭터를 보존했습니다. 아치·단상·바닥은 manifest로 새 버전을 선택하며, 꽃띠·식생은 새 ID로 등록했습니다. 아래는 크기와 가림을 보는 정적 배치 모형입니다. 실제 앱의 배치·충돌·입장 연출은 바꾸지 않았습니다.</p>
+<label>검토 너비 <select id="width"><option>390</option><option>320</option></select> px</label>
+<div class="phones"><section><h2>이전 에셋</h2><div class="phone old" id="old"></div></section><section><h2>7차 에셋 · 배치 모형</h2><div class="phone" id="new"></div></section></div>
+<p class="caption">커플 발은 두 모형 모두 (176,176)입니다. 새 아치의 (52,70)–(172,160)은 완전 투명입니다. 중앙 96px 길과 그 밖의 꽃띠를 확인합니다. 초록 나무는 크기 비교용으로만 바꿨으며 실제 게임의 벚꽃나무는 그대로입니다.</p>
+<h2>3×3 타일 반복 · 꽃띠 세로 연결</h2><img src="../assets/round7-repeats.png" alt="잔디·그늘·모래길 3×3 반복과 좌우 꽃띠 세로 반복">
+<p class="caption">G/J/U의 바탕 픽셀은 같은 G를 공유하고 생성된 꽃만 합성했습니다. H는 G 밝기 7/8입니다. 가장자리 픽셀은 서로 일치합니다. J/U는 성긴 비율로 섞어야 꽃이 격자처럼 반복되는 인상을 피할 수 있습니다. 현재 광장에 섞는 배치는 Claude 작업입니다.</p>
+<h2>전체 파일 · 같은 배율 비교</h2><img src="../assets/round7-comparison.png" alt="7차 15종 에셋의 이전과 새 버전 비교">
+<p><a href="../assets/round7-report.json">규격·bbox·색 수</a> · <a href="../assets/round7-prompts.json">생성 프롬프트·이전 매핑</a> · <a href="../">현재 게임</a></p>
+</main>
+<script type="module">
+const data=await fetch('./garden-design-layouts.json').then(r=>r.json());
+const width=document.querySelector('#width');
+function build(id,fresh){const phone=document.querySelector(id);phone.replaceChildren();phone.style.width=width.value+'px';phone.style.height=Math.round(620*+width.value/390)+'px';const world=document.createElement('div');world.className='world';world.style.transform=`scale(${+width.value/352})`;phone.append(world);
+const items=[];const add=(src,x,y,w,h,layer=1)=>items.push({src,x,y,w,h,bottom:y+h,layer});
+for(let y=160;y<608;y+=32)for(let x=128;x<224;x+=32)add('../assets/tiles/'+(fresh?'N-v4.png':'N-v3.png'),x,y,32,32,0);
+add('../assets/objects/'+(fresh?'stage-steps-v4.png':'platform.png'),96,fresh?144:128,160,64,.5);
+for(const o of data.current.objects.filter(o=>!o.floor&&!['wedding-cake','party-table','ribbon-lantern'].includes(o.sprite))){if(fresh&&o.sprite.startsWith('aisle-flower'))continue;let src=o.src;if(o.sprite==='arch')src='../assets/objects/'+(fresh?'arch-v4.png':'arch.png');if(o.sprite==='platform')src='../assets/objects/'+(fresh?'stage-steps-v4.png':'platform.png');if(o.sprite==='tree'&&fresh){add('../assets/objects/tree-green-v4.png',o.x>100?256:0,48,96,128);continue}add(src,o.x,o.y,o.w,o.h)}
+if(fresh){for(let y=192;y<608;y+=32){add('../assets/objects/aisle-edge-left-v4.png',96,y,32,32);add('../assets/objects/aisle-edge-right-v4.png',224,y,32,32)}add('../assets/objects/planter-box-v4.png',64,144,64,48);add('../assets/objects/planter-box-v4.png',224,144,64,48);add('../assets/objects/lavender-v4.png',0,350,32,48);add('../assets/objects/rose-bush-s-v4.png',288,384,64,48);add('../assets/objects/birdbath-v4.png',16,448,32,48)}
+for(const c of data.current.chars)add(c.src,c.x,c.y,c.w,c.h);
+for(const o of items.sort((a,b)=>a.layer-b.layer||a.bottom-b.bottom)){const im=document.createElement('img');im.className='item';im.alt='';im.src=o.src;Object.assign(im.style,{left:o.x+'px',top:o.y+'px',width:o.w+'px',height:o.h+'px'});world.append(im)}const label=document.createElement('div');label.className='panel';label.textContent=fresh?'7차 에셋 · 정적 배치 모형':'이전 에셋 · 비교 모형';phone.append(label)}
+function update(){build('#old',false);build('#new',true)}width.addEventListener('change',update);update();
+</script></html>
