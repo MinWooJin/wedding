@@ -2,7 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { guestPlacements, HUB_ROWS, HUB_DOORS, GUEST_ZONE, createHub, uniqueGuests, MAX_GUESTS } from '../js/world/hub.js';
-import { MIN_CROWD, withExtras } from '../js/world/hub.js';
+import { MIN_CROWD, withExtras, AISLE_OPEN_FROM } from '../js/world/hub.js';
 import { DEFAULT_CONFIG } from '../js/config.js';
 import { assetFilename } from '../js/assets.js';
 
@@ -45,11 +45,11 @@ test('반복 갱신과 새 하객 추가 시 기존 캐릭터·배회 상태를 
   assert.equal(guest.wander.timer, 3.5);
   hub.setGuests([]);
   assert.equal([...hub.guestMap.keys()].filter((k) => !k.startsWith('extra:')).length, 0, '실제 하객은 모두 사라짐');
-  assert.equal(hub.guestMap.size, MIN_CROWD, '대신 하객 10명이 돌아다님');
+  assert.equal(hub.guestMap.size, MIN_CROWD, '대신 분위기용 하객이 돌아다님');
   assert.ok([...hub.guestMap.values()].every((g) => g.character.name === '하객'));
 });
 
-test('리셉션 소품을 포함한 실제 PNG 크기로 하객 18명 이상을 배치한다', () => {
+test('가장자리 장식을 포함한 실제 PNG 크기로 하객 24명 이상을 배치한다', () => {
   // 단상·아치·표지판 등 현재 선택된 PNG 크기로 여유 공간을 확인한다.
   const manifest = JSON.parse(readFileSync(new URL('../assets/manifest.json', import.meta.url)));
   const objects = Object.fromEntries(manifest.objects.map((name) => {
@@ -58,13 +58,17 @@ test('리셉션 소품을 포함한 실제 PNG 크기로 하객 18명 이상을 
   }));
   const entries = Array.from({ length: 30 }, (_, i) => ({ t: i, n: `손님${i}`, c: i % 10, m: '축하' }));
   const hub = createHub({ config: DEFAULT_CONFIG, profile: { nickname: '나' }, assets: { objects }, data: { messages: entries } });
-  assert.ok(hub.guestMap.size >= 18, `배치된 하객 ${hub.guestMap.size}명`);
+  assert.ok(hub.guestMap.size >= 24, `배치된 하객 ${hub.guestMap.size}명`);
   const trees = hub.objects.filter((o) => o.sprite === 'tree');
-  assert.equal(trees.length, 2, '단상 양옆 나무 한 쌍');
+  assert.equal(trees.length, 2, '벚꽃나무 한 쌍');
   assert.equal(trees[0].tx * 32, 0);
   assert.equal(trees[1].tx * 32 + trees[1].spr.w, hub.pixelW);
-  assert.ok(trees[0].tx * 32 + trees[0].spr.w <= 96 && trees[1].tx * 32 >= 256, '꽃 바깥 나무');
-  assert.ok([...hub.guestMap.values()].every((n) => ![3,4,5,6,7].includes(n.wander.home.tx)), '꽃과 길 바깥에만 배치');
+  assert.equal(hub.objects.filter((o) => o.sprite === 'tree-green').length, 2, '위쪽 모서리 초록 나무 한 쌍');
+  for (const n of hub.guestMap.values()) {
+    const { tx, ty } = n.wander.home;
+    assert.ok(!hub.isSolidTile(tx, ty), `장식 위에 서지 않는다 ${tx},${ty}`);
+    assert.ok(![4, 5, 6].includes(tx) || ty >= AISLE_OPEN_FROM, '단상 앞 길은 비운다');
+  }
 });
 
 test('문 배치: 방명록 왼쪽 위, 갤러리 오른쪽 위, 마음 전하기 왼쪽 아래, 예식 안내소 오른쪽 아래', () => {
@@ -97,10 +101,11 @@ test('guestPlacements: 항목이 적으면 그 수만큼', () => {
   assert.deepEqual(guestPlacements([], new Set()), []);
 });
 
-test('withExtras: 실제 하객이 10명보다 적으면 "하객"으로 채우고, 많으면 그대로', () => {
+test('withExtras: 실제 하객이 20명보다 적으면 "하객"으로 채우고, 많으면 그대로', () => {
   const real = (n) => Array.from({ length: n }, (_, i) => ({ t: i, n: `손님${i}`, c: i % 10, m: '축하' }));
-  assert.equal(withExtras(real(0)).length, 10);
-  assert.equal(withExtras(real(4)).filter((e) => e.n === '하객').length, 6);
-  assert.equal(withExtras(real(12)).length, 12);
+  assert.equal(MIN_CROWD, 20);
+  assert.equal(withExtras(real(0)).length, 20);
+  assert.equal(withExtras(real(4)).filter((e) => e.n === '하객').length, 16);
+  assert.equal(withExtras(real(24)).length, 24);
   assert.ok(withExtras(real(0)).every((e) => e.m === '' && e.extra !== undefined), '메시지 없음 → 축하 개수에 안 잡힘');
 });

@@ -91,11 +91,26 @@ test('캐릭터는 비율·기울기를 변형하지 않고 정수 픽셀로만 
   assert.deepEqual(calls.pop(),[canvas,10,20]);
 });
 
-test('뷰 폭은 항상 352px, 352 이상이면 정수 배율, 더 좁으면 꽉 차는 소수 배율', () => {
-  assert.deepEqual(computeViewport(390, 844), { scale: 1, width: 352, height: 844 });
-  assert.deepEqual(computeViewport(430, 932), { scale: 1, width: 352, height: 932 });
-  assert.deepEqual(computeViewport(1200, 900), { scale: 3, width: 352, height: 300 });
+test('뷰 폭은 항상 352px이고 화면 폭에 꽉 차는 소수 배율(최대 4배)', () => {
+  assert.deepEqual(computeViewport(352, 700), { scale: 1, width: 352, height: 700 });
+  assert.deepEqual(computeViewport(440, 880), { scale: 1.25, width: 352, height: 704 });
+  assert.deepEqual(computeViewport(2000, 900), { scale: 4, width: 352, height: 225 });
   assert.deepEqual(computeViewport(176, 300), { scale: 0.5, width: 352, height: 600 });
+  const v = computeViewport(390, 844);
+  assert.ok(v.scale > 1.1 && v.width * v.scale === 390, '390폭은 좌우 여백 없이 1.1배 이상');
+});
+
+test('캔버스는 기기 픽셀 비율로 그리고 내부 좌표는 변환 행렬로 키운다', () => {
+  const transforms = [];
+  const canvas = { style: {}, getContext: () => ({ setTransform: (...a) => transforms.push(a) }) };
+  const r = new Renderer(canvas);
+  const dpr = globalThis.devicePixelRatio;
+  globalThis.devicePixelRatio = 3;
+  try { r.resize(440, 880); } finally { globalThis.devicePixelRatio = dpr; }
+  assert.equal(canvas.width, 352 * 3.75);
+  assert.equal(canvas.height, 704 * 3.75);
+  assert.equal(canvas.style.width, '440px');
+  assert.deepEqual(transforms.at(-1), [3.75, 0, 0, 3.75, 0, 0]);
 });
 
 

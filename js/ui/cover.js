@@ -32,6 +32,8 @@ export function showCover(root, config, assetsReady, returning = false) {
         card.querySelector('.cover-groom').hidden = true;
         card.querySelector('.cover-bride').hidden = true;
       }
+      const archUrl = assets?.urls?.['objects/arch'];
+      if (archUrl) card.querySelector('.cover-arch').src = archUrl;
       const stageUrl = assets?.urls?.['objects/platform'];
       if (stageUrl) {
         const stage = card.querySelector('.cover-platform');

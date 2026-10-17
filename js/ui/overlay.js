@@ -26,7 +26,7 @@ export function showOverlay(game, { title = '', html = '', buttons = [{ label: '
     if (e.key === 'Escape') { e.preventDefault(); close(); }
     if (e.key !== 'Tab') return;
     const nodes = [...card.querySelectorAll('button:not(:disabled),a[href],input,textarea,[tabindex="0"]')];
-    const first = nodes[0], last = nodes.at(-1);
+    const first = nodes[0], last = nodes[nodes.length - 1];
     if (!first) { e.preventDefault(); card.focus(); return; }
     if (e.shiftKey && (document.activeElement === first || document.activeElement === card)) { e.preventDefault(); last.focus(); }
     else if (!e.shiftKey && (document.activeElement === last || document.activeElement === card)) { e.preventDefault(); first.focus(); }

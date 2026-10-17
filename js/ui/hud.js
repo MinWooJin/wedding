@@ -16,9 +16,12 @@ export const SPACES = {
   gifts: { icon: '♥', name: '마음 전하는 곳', text: '보내주시는 축하의 마음만 감사히 받을게요.' },
 };
 
+/** 안내 카드가 펼쳐져 있는 시간(초) */
+export const PANEL_SECONDS = 6;
+
 export function createHud(root, config, game) {
   root.innerHTML = `<header class="garden-header"><div class="brand"><span class="eyebrow">OUR WEDDING GARDEN</span><strong>${esc(displayName(config.groom))}<i> ♥ </i>${esc(displayName(config.bride))}</strong></div><span class="date-chip">${esc(ddayLabel(config.wedding.date))}</span><button class="btn icon-button menu-button" aria-label="공간 메뉴 열기">☰</button></header>
-    <section class="scene-panel" aria-live="polite"><p class="eyebrow scene-kicker"></p><h2></h2><p class="scene-description"></p><p class="scene-extra"></p><div class="scene-links"></div></section>
+    <section class="scene-panel" aria-live="polite"><p class="eyebrow scene-kicker"></p><button class="scene-title" aria-expanded="true"><h2></h2><svg class="panel-chevron" viewBox="0 0 12 12" width="16" height="16" aria-hidden="true"><path d="M2.5 4.5 6 8l3.5-3.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button><div class="scene-body"><p class="scene-description"></p><p class="scene-extra"></p><div class="scene-links"></div></div></section>
     <nav class="garden-dock" aria-label="정원 빠른 메뉴"><button data-action="home"><span>⌂</span>광장</button><button data-action="write" class="dock-write"><span>✉</span>축하 남기기</button><button data-action="messages"><span>❀</span>메시지 보기</button></nav>`;
   root.hidden = false;
   let sceneId = 'hub';
@@ -37,6 +40,21 @@ export function createHud(root, config, game) {
       buttons: [{ label: '내 캐릭터 바꾸기', onClick: () => { close(true); game.paused = true; changeProfile(); return true; } }, { label: '소식 공유', onClick: () => { close(true); showShare(game); return true; } }, { label: '닫기' }],
     });
     card.querySelectorAll('[data-space]').forEach((b) => { b.onclick = () => { close(); navigate(b.dataset.space); }; });
+  };
+  // 안내 카드: 공간에 들어오면 펼쳐 보였다가 몇 초 뒤 제목 한 줄로 접혀 정원을 넓게 보여 준다. 제목을 누르면 다시 펼친다.
+  const panel = root.querySelector('.scene-panel'), title = root.querySelector('.scene-title');
+  let collapseTimer = null;
+  const setCollapsed = (collapsed) => {
+    panel.classList.toggle('collapsed', collapsed);
+    title.setAttribute('aria-expanded', String(!collapsed));
+    title.setAttribute('aria-label', `${root.querySelector('.scene-panel h2').textContent} 안내 ${collapsed ? '펼치기' : '접기'}`);
+    game.resize();
+  };
+  title.onclick = () => { clearTimeout(collapseTimer); setCollapsed(!panel.classList.contains('collapsed')); };
+  const showPanelBriefly = () => {
+    clearTimeout(collapseTimer);
+    setCollapsed(false);
+    collapseTimer = setTimeout(() => setCollapsed(true), PANEL_SECONDS * 1000);
   };
   root.querySelector('[data-action="home"]').onclick = () => navigate('hub');
   root.querySelector('[data-action="write"]').onclick = () => game.openGuestbook();
@@ -61,5 +79,5 @@ export function createHud(root, config, game) {
     }
     addLink('내 위치로 ↗', () => { game.follow = true; });
   };
-  return { onScene(id) { sceneId = id; refresh(); }, refresh };
+  return { onScene(id) { sceneId = id; refresh(); showPanelBriefly(); }, refresh };
 }

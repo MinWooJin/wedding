@@ -103,6 +103,7 @@ export class Scene {
     if (!t) return;
     w.target = t;
     const p = standPos(t.tx, t.ty);
+    if (w.jitter) { p.x += w.jitter.x; p.y += w.jitter.y; } // 줄 맞춘 느낌이 없도록 칸 안의 자기 위치를 유지
     c.moveTo(p.x, p.y, () => {
       w.target = null;
       const face = typeof w.faceDir === 'function' ? w.faceDir(t.tx) : w.faceDir;
@@ -187,15 +188,15 @@ export class Scene {
     for (let i = ordered.length - 1; i >= 0; i--) {
       const o = ordered[i];
       if (o.spr.missing && !o.interact) continue;
-      const width = o.label ? Math.max(o.spr.w, o.label.length * 10 + 14) : o.spr.w;
+      const width = o.label ? Math.max(o.spr.w, o.label.length * 12 + 16) : o.spr.w;
       const x0 = o.tx * TILE + (o.spr.w - width) / 2;
-      if (wx >= x0 && wx < x0 + width && wy >= o.drawY - (o.label ? 24 : 0) && wy < o.drawY + o.spr.h) return o;
+      if (wx >= x0 && wx < x0 + width && wy >= o.drawY - (o.label ? 26 : 0) && wy < o.drawY + o.spr.h) return o;
     }
     return null;
   }
 
   hitNpc(wx, wy) {
-    return this.npcs.slice().sort((a, b) => b.character.y - a.character.y).find((n) => {
+    return this.npcs.filter((n) => !n.character.hidden).sort((a, b) => b.character.y - a.character.y).find((n) => {
       const p = n.character.drawPos();
       return wx >= p.x && wx < p.x + p.w && wy >= p.y && wy < p.y + p.h;
     }) ?? null;
@@ -250,7 +251,7 @@ export class Scene {
     if (!player.walking) this.destination = null;
     const npcBlocked = this.blockedStatic();
     for (const n of this.npcs) {
-      if (n.wander) this.updateWander(n, dt);
+      if (n.wander && !n.arrival) this.updateWander(n, dt); // 입장 행렬 중에는 배회하지 않는다
       n.character.update(dt, n.wander ? npcBlocked : () => true);
     }
     const e = this.entranceAt(player);
@@ -285,10 +286,18 @@ export class Scene {
     if (this.destination) r.drawDestination?.(this.destination.x, this.destination.y);
     const items = [];
     for (const o of this.objects) if (!o.floor) items.push({ y: o.bottom, draw: () => { r.drawSprite(o.spr, o.tx * TILE, o.drawY); o.drawContent?.(r); } });
-    const chars = [player, ...this.npcs.map((n) => n.character)];
+    const chars = [player, ...this.npcs.map((n) => n.character)].filter((c) => !c.hidden);
     for (const c of chars) {
       const p = c.drawPos();
-      items.push({ y: c.y, draw: () => { r.drawSprite(c.sprite(r.reducedMotion), p.x, p.y, c.motion(r.reducedMotion)); if (c === player || this.hosts?.includes(c) || Math.hypot(c.x - player.x, c.y - player.y) < 96 || c.bubble) r.drawNameTag(c.name, p.x + p.w / 2, p.y - 2); } });
+      const alpha = c.alpha ?? 1;
+      // 이름표: 플레이어·두 사람·이름 있는 하객은 항상, 분위기용 하객(hideTag)은 이름 없이 군중으로.
+      const tag = c === player || this.hosts?.includes(c) || !c.hideTag;
+      items.push({ y: c.y, draw: () => {
+        if (alpha < 1) r.setAlpha?.(alpha);
+        r.drawSprite(c.sprite(r.reducedMotion), p.x, p.y, c.motion(r.reducedMotion));
+        if (tag) r.drawNameTag(c.name, p.x + p.w / 2, p.y - 2, c === player);
+        if (alpha < 1) r.setAlpha?.(1);
+      } });
     }
     items.sort((a, b) => a.y - b.y);
     for (const it of items) it.draw();

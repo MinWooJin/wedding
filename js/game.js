@@ -84,9 +84,12 @@ export class Game {
     this.frameWidth = r.width;
     this.renderer.resize(r.width, r.height);
     const header = this.frame.querySelector?.('.garden-header')?.getBoundingClientRect();
-    const panel = this.frame.querySelector?.('.scene-panel')?.getBoundingClientRect();
+    // 아래 안내 카드(접힘·숨김 포함)와 버튼 중 화면에 보이는 가장 위쪽 요소까지를 정원 화면으로 본다.
+    const bottoms = [...(this.frame.querySelectorAll?.('.scene-panel, .garden-dock') ?? [])]
+      .map((el) => el.getBoundingClientRect()).filter((b) => b.height > 0).map((b) => b.top);
     const scale = this.renderer.view.scale;
-    this.cameraView = { ...this.renderer.view, height: panel ? Math.max(200, Math.floor((panel.top - r.top - 8) / scale)) : this.renderer.view.height };
+    const uiTop = bottoms.length ? Math.min(...bottoms) : null;
+    this.cameraView = { ...this.renderer.view, height: uiTop !== null ? Math.max(160, Math.floor((uiTop - r.top - 8) / scale)) : this.renderer.view.height };
     this.cameraTop = header ? Math.ceil((header.bottom - r.top + 12) / scale) : HUD_PAD;
   }
 
@@ -180,6 +183,7 @@ export class Game {
   draw() {
     const r = this.renderer;
     r.cam = { x: Math.round(this.cam.x), y: Math.round(this.cam.y) };
+    r.topInset = this.cameraTop;
     if (this.scene.groundTile) {
       const bg = groundBackgroundStyle(r.view, this.frameWidth, r.cam, r.tiles[this.scene.groundTile]);
       if (this.frame.style.backgroundSize !== bg.size) this.frame.style.backgroundSize = bg.size;

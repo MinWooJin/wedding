@@ -62,7 +62,7 @@ export function showIntro(root, config, assets = {}, current = null) {
     card.addEventListener('keydown', (e) => {
       if (e.key === 'Escape' && current) finish(current);
       if (e.key !== 'Tab') return;
-      const nodes = [...card.querySelectorAll('input,button')], first = nodes[0], last = nodes.at(-1);
+      const nodes = [...card.querySelectorAll('input,button')], first = nodes[0], last = nodes[nodes.length - 1];
       if (e.shiftKey && (document.activeElement === first || document.activeElement === card)) { e.preventDefault(); last.focus(); }
       else if (!e.shiftKey && (document.activeElement === last || document.activeElement === card)) { e.preventDefault(); first.focus(); }
     });

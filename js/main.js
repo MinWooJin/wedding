@@ -33,6 +33,12 @@ if (!profile) {
   saveProfile(profile);
 }
 
+// 캔버스 글씨는 폰트 로딩을 일으키지 않는다. 이름표가 기본 고딕으로 나오지 않게 미리 불러온다(최대 1.5초).
+await Promise.race([
+  Promise.all(['12px Galmuri11', 'bold 12px Galmuri11', '14px Galmuri11'].map((f) => document.fonts?.load(f))).catch(() => {}),
+  new Promise((r) => setTimeout(r, 1500)),
+]);
+
 const game = new Game({
   canvas, frame, config, profile, assets,
   scenes: { hub: createHub, info: createInfo, gallery: createGallery, guestbook: createGuestbook, gifts: createGifts },

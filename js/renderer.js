@@ -6,12 +6,16 @@ export const VIEW_W = TILE * VIEW_TILES_W; // 352
 
 /**
  * 컨테이너 CSS 크기 → 배율과 내부 해상도.
- * 352px 이상이면 정수 배율(1~4), 그보다 좁은 화면이면 꽉 차게 소수 배율.
+ * 내부 폭 352px을 화면 폭에 꽉 채운다(390폭 1.11배, 430폭 1.22배). 정수 배율로 묶으면 큰 폰일수록
+ * 좌우가 비고 글씨가 작아진다. 캔버스는 기기 해상도로 그려서(resize) 소수 배율의 픽셀 불균일이 보이지 않는다.
  */
 export function computeViewport(cssW, cssH) {
-  const scale = cssW >= VIEW_W ? Math.min(4, Math.floor(cssW / VIEW_W)) : cssW / VIEW_W;
+  const scale = Math.min(4, cssW / VIEW_W);
   return { scale, width: VIEW_W, height: Math.ceil(cssH / scale) };
 }
+
+/** 이름표·말풍선·문 이름표 글씨(내부 px). 화면 배율이 곱해져 390폭에서 약 13·16·13px. */
+export const TEXT = { name: 12, bubble: 14, bubbleLine: 18, label: 12 };
 
 /** 코드 Sprite({w,h,px}) → 오프스크린 캔버스(캐시). 브라우저 전용. */
 const spriteCache = new WeakMap();
@@ -54,14 +58,23 @@ export class Renderer {
 
   resize(cssW, cssH) {
     this.view = computeViewport(cssW, cssH);
-    this.canvas.width = this.view.width;
-    this.canvas.height = this.view.height;
+    // 캔버스 실제 픽셀 = CSS 크기 × 기기 픽셀 비율. 그리기는 내부 좌표 그대로 하고 변환 행렬로 키운다.
+    const dpr = Math.min(3, globalThis.devicePixelRatio || 1);
+    this.pixelRatio = this.view.scale * dpr;
+    this.canvas.width = Math.round(this.view.width * this.pixelRatio);
+    this.canvas.height = Math.round(this.view.height * this.pixelRatio);
     this.canvas.style.width = `${this.view.width * this.view.scale}px`;
     this.canvas.style.height = `${this.view.height * this.view.scale}px`;
+    this.ctx.setTransform?.(this.pixelRatio, 0, 0, this.pixelRatio, 0, 0);
     this.ctx.imageSmoothingEnabled = false;
   }
 
+  /** 입장하는 하객의 반투명(0~1). 다음 호출 전까지 이후 그리기에 적용된다. */
+  setAlpha(alpha) { this.ctx.globalAlpha = alpha; }
+
   begin(bg) {
+    if (this.pixelRatio) this.ctx.setTransform?.(this.pixelRatio, 0, 0, this.pixelRatio, 0, 0);
+    this.ctx.globalAlpha = 1;
     this.ctx.imageSmoothingEnabled = false;
     this.ctx.fillStyle = bg;
     this.ctx.fillRect(0, 0, this.view.width, this.view.height);
@@ -148,13 +161,13 @@ export class Renderer {
 
   drawLabel(text, cx, topY) {
     const ctx = this.ctx;
-    ctx.save(); ctx.font = 'bold 10px Galmuri11, sans-serif';
-    const w = Math.ceil(ctx.measureText(text).width) + 14;
+    ctx.save(); ctx.font = `bold ${TEXT.label}px Galmuri11, sans-serif`;
+    const w = Math.ceil(ctx.measureText(text).width) + 16;
     const x = Math.max(3, Math.min(this.view.width - w - 3, Math.round(cx - this.cam.x - w / 2)));
-    const y = Math.round(topY - this.cam.y - 18);
-    ctx.fillStyle = '#fffaf0'; ctx.fillRect(x, y, w, 21);
-    ctx.strokeStyle = '#aca98b'; ctx.strokeRect(x + .5, y + .5, w - 1, 20);
-    ctx.fillStyle = '#4e5e3e'; ctx.textBaseline = 'middle'; ctx.textAlign = 'left'; ctx.fillText(text, x + 7, y + 11); ctx.restore();
+    const y = Math.round(topY - this.cam.y - 20);
+    ctx.fillStyle = '#fffaf0'; ctx.fillRect(x, y, w, 23);
+    ctx.strokeStyle = '#aca98b'; ctx.strokeRect(x + .5, y + .5, w - 1, 22);
+    ctx.fillStyle = '#4e5e3e'; ctx.textBaseline = 'middle'; ctx.textAlign = 'left'; ctx.fillText(text, x + 8, y + 12); ctx.restore();
   }
 
   drawDestination(x, y) {
@@ -167,25 +180,25 @@ export class Renderer {
     ctx.fillRect(Math.round(x - this.cam.x - 7), Math.round(y - this.cam.y + 1), 14, 2); ctx.restore();
   }
 
-  /** 반투명 검은 띠 위 흰 글씨 */
-  drawNameTag(text, cx, topY) {
+  /** 상자 없는 흰 글씨 + 어두운 외곽선(레퍼런스). 사람이 많아도 화면이 덜 답답하다. 플레이어는 연노랑. */
+  drawNameTag(text, cx, topY, highlight = false) {
     const ctx = this.ctx;
-    ctx.font = '11px Galmuri11, Galmuri9, sans-serif';
-    const w = Math.ceil(ctx.measureText(text).width) + 8;
-    const x = Math.round(cx - this.cam.x - w / 2), y = Math.round(topY - this.cam.y - 14);
-    ctx.fillStyle = 'rgba(0,0,0,.55)';
-    ctx.fillRect(x, y, w, 15);
-    ctx.fillStyle = '#fff';
-    ctx.textBaseline = 'top';
-    ctx.textAlign = 'left';
-    ctx.fillText(text, x + 4, y + 2);
+    ctx.save();
+    ctx.font = `${TEXT.name}px Galmuri11, Galmuri9, sans-serif`;
+    ctx.textBaseline = 'bottom'; ctx.textAlign = 'center';
+    const x = Math.round(cx - this.cam.x), y = Math.round(topY - this.cam.y);
+    ctx.lineJoin = 'round'; ctx.lineWidth = 3; ctx.strokeStyle = 'rgba(38,30,24,.85)';
+    ctx.strokeText(text, x, y);
+    ctx.fillStyle = highlight ? '#fff5b5' : '#fff';
+    ctx.fillText(text, x, y);
+    ctx.restore();
   }
 
   /** 흰 말풍선 + 꼬리, 폭 200px에서 줄바꿈 */
   drawBubble(text, cx, bottomY) {
     const ctx = this.ctx;
-    ctx.font = '12px Galmuri11, Galmuri9, sans-serif';
-    const maxW = 200, lineH = 16, lines = [];
+    ctx.font = `${TEXT.bubble}px Galmuri11, Galmuri9, sans-serif`;
+    const maxW = 220, lineH = TEXT.bubbleLine, lines = [];
     let line = '';
     for (const ch of text) {
       if (ctx.measureText(line + ch).width > maxW) { lines.push(line); line = ch; } else line += ch;
@@ -195,7 +208,7 @@ export class Renderer {
     const h = lines.length * lineH + 10;
     let x = Math.round(cx - this.cam.x - w / 2);
     x = Math.max(4, Math.min(this.view.width - w - 4, x));
-    const y = Math.max(84, Math.round(bottomY - this.cam.y - h - 8));
+    const y = Math.max(this.topInset ?? 84, Math.round(bottomY - this.cam.y - h - 8)); // 상단 바 밑으로는 숨지 않게
     ctx.fillStyle = '#2b1d14'; ctx.fillRect(x - 2, y - 2, w + 4, h + 4);
     ctx.fillStyle = '#fff'; ctx.fillRect(x, y, w, h);
     const tx = Math.round(cx - this.cam.x);

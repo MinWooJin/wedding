@@ -10,7 +10,7 @@ export function attachPointer(canvas, { onTap, onDrag, onDragEnd }) {
   canvas.addEventListener('pointerdown', (e) => {
     down = { x: e.clientX, y: e.clientY, lastX: e.clientX, lastY: e.clientY, t: performance.now() };
     dragging = false;
-    canvas.setPointerCapture?.(e.pointerId);
+    try { canvas.setPointerCapture?.(e.pointerId); } catch { /* 이미 끝난 터치 등: 캡처 없이 진행 */ }
   });
   canvas.addEventListener('pointermove', (e) => {
     if (!down) return;

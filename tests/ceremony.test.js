@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { createHub, CEREMONY, GUEST_ZONE, HUB_DOORS, HUB_SPAWN } from '../js/world/hub.js';
+import { createHub, CEREMONY, GUEST_ZONE, HUB_DOORS, HUB_SPAWN, SIDE_COLS, AISLE_OPEN_FROM, ARRIVAL, CHATTER } from '../js/world/hub.js';
 import { DEFAULT_CONFIG } from '../js/config.js';
 import { assetFilename } from '../js/assets.js';
 import { findPath } from '../js/world/movement.js';
@@ -24,68 +24,77 @@ test('두 사람은 단상 윗면에 가까이 서고 각각 따로 누를 수 �
   assert.equal(hub.hitNpc(bride.x, bride.y - 24).character, bride);
 });
 
-test('버진로드는 단상 밑에서 끝까지 이어지고 양쪽 꽃장식은 이동을 막지 않는다', () => {
+test('버진로드는 단상 밑에서 끝까지 이어지고 양쪽 꽃띠는 끊김 없이 붙어 이동을 막지 않는다', () => {
   const hub = make();
   const strips = hub.objects.filter((o) => o.sprite === 'aisle-runner');
   assert.equal(strips.length, CEREMONY.aisleEnd - CEREMONY.aisleStart + 1);
   assert.equal(strips[0].drawY, 160);
-  assert.equal(strips.at(-1).bottom, hub.pixelH - 32);
+  assert.equal(strips[strips.length - 1].bottom, hub.pixelH - 32);
   const stage = hub.objects.find((o) => o.id === 'platform');
   assert.ok(hub.objects.indexOf(strips[0]) < hub.objects.indexOf(stage), '단상을 위에 합성');
   for (let i = 1; i < strips.length; i++) assert.equal(strips[i - 1].bottom, strips[i].drawY);
-  const flowers = hub.objects.filter((o) => o.sprite.startsWith('aisle-flower-'));
-  assert.equal(flowers.length, 2 * (Math.floor((CEREMONY.flowerEnd - CEREMONY.flowerStart) / CEREMONY.flowerStep) + 1));
-  assert.ok(flowers.every((o) => o.floor && !o.solid));
-  assert.ok(flowers.every((o) => o.ty < HUB_DOORS.guestbook.back.ty), '교차로는 꽃장식 밖');
-  assert.ok(flowers.every((o) => o.bottom <= HUB_DOORS.guestbook.back.ty * 32), '큰 꽃도 교차로에 걸치지 않는다');
-  const leftFlowers = flowers.filter((o) => o.sprite.endsWith('-left'));
-  assert.equal(leftFlowers.length, 6, '한쪽에 큰 꽃장식 여섯 개');
-  assert.equal(leftFlowers.filter((o) => o.sprite === 'aisle-flower-left').length, 3);
-  assert.equal(leftFlowers.filter((o) => o.sprite === 'aisle-flower-airy-left').length, 3);
-  assert.ok(leftFlowers.every((o, i) => i === 0 || o.sprite !== leftFlowers[i-1].sprite), '장미와 수국 교차 배치');
-  assert.ok(flowers.every((o) => o.spr.w === 32 && o.spr.h === 48), '선택된 새 꽃 PNG 규격');
-  const left = leftFlowers[0], right = flowers.find((o) => o.sprite.endsWith('-right'));
-  assert.equal(left.tx * 32 + left.spr.w, strips[0].tx * 32, '왼쪽 꽃은 버진로드 바깥');
-  assert.equal(right.tx * 32, strips[0].tx * 32 + strips[0].spr.w, '오른쪽 꽃은 버진로드 바깥');
-  assert.equal(right.tx * 32 - (left.tx * 32 + left.spr.w), 96, '버진로드 전체 폭 유지');
-  for (let i = 1; i < leftFlowers.length; i++) {
-    assert.ok(leftFlowers[i].drawY > leftFlowers[i - 1].bottom, '큰 꽃송이를 포개지 않고 간격을 둔다');
+  assert.equal(hub.objects.some((o) => o.sprite.startsWith('aisle-flower-')), false, '같은 간격 꽃다발은 꽃띠로 대체');
+  for (const side of ['left', 'right']) {
+    const edge = hub.objects.filter((o) => o.sprite === `aisle-edge-${side}`);
+    assert.equal(edge.length, CEREMONY.edgeEnd - CEREMONY.edgeStart + 1);
+    assert.ok(edge.every((o) => o.floor && !o.solid));
+    for (let i = 1; i < edge.length; i++) assert.equal(edge[i - 1].bottom, edge[i].drawY, '위아래 끊김 없음');
+    assert.ok(edge[edge.length - 1].bottom <= HUB_DOORS.guestbook.back.ty * 32, '교차로에 걸치지 않는다');
   }
+  // 꽃띠 그림(x10..22)이 깔개(128..224) 바로 바깥에 닿는다.
+  const left = hub.objects.find((o) => o.sprite === 'aisle-edge-left'), right = hub.objects.find((o) => o.sprite === 'aisle-edge-right');
+  assert.equal(left.tx * 32 + 22, strips[0].tx * 32);
+  assert.equal(right.tx * 32 + 10, strips[0].tx * 32 + strips[0].spr.w);
   for (let ty = 6; ty <= CEREMONY.aisleEnd; ty++) {
     assert.equal(hub.isSolidTile(5, ty), false, `중앙 통로 ${ty}`);
   }
   const meadow = hub.objects.filter((o) => o.sprite === 'meadow-sprig');
-  assert.equal(meadow.length, 12);
-  assert.ok(meadow.every((o) => o.floor && !o.solid && (o.tx < 3 || o.tx > 7)), '작은 들꽃은 바깥 잔디의 비충돌 바닥');
+  assert.ok(meadow.length >= 6 && meadow.every((o) => o.floor && !o.solid && (o.tx < 3 || o.tx > 7)), '작은 들꽃은 바깥 잔디의 비충돌 바닥');
+  assert.equal(hub.objects.some((o) => o.sprite === 'party-table'), false, '리셉션 테이블은 치워 하객 자리를 넓힌다');
   const cake = hub.objects.find((o) => o.sprite === 'wedding-cake');
-  assert.ok(cake.tx * 32 + cake.spr.w <= 96, '케이크도 꽃길 바깥');
-  for (const sprite of ['party-table', 'ribbon-lantern']) {
-    const pair = hub.objects.filter((o) => o.sprite === sprite);
-    assert.equal(pair.length, 2, '리셉션 소품 한 쌍');
-    assert.ok(pair.every((o) => o.tx * 32 + o.spr.w <= 96 || o.tx * 32 >= 256), '꽃길 바깥 리셉션');
-  }
+  assert.ok(cake.ty >= HUB_DOORS.guestbook.door.ty && !cake.solid, '케이크는 아래 입구 광장의 지나갈 수 있는 장식');
   for (const door of Object.values(HUB_DOORS)) {
     const path = findPath(hub.map.w, hub.map.h, (x, y) => hub.isSolidTile(x, y), HUB_SPAWN, door.back);
     assert.ok(path.length > 0, `${door.label} 접근 가능`);
   }
 });
 
-test('실제 하객과 분위기용 하객은 버진로드를 비우고 양옆에만 서고 배회한다', () => {
+test('가장자리 장식: 화분은 단상 양옆, 라벤더·장미·버드배스·리본 조명은 바깥 열에 불규칙하게', () => {
   const hub = make();
-  for (const npc of hub.guestMap.values()) {
-    assert.ok(![3, 4, 5, 6, 7].includes(npc.wander.home.tx));
-    for (let ty = GUEST_ZONE.rowMin; ty <= GUEST_ZONE.rowMax; ty++) {
-      for (const tx of [3, 4, 5, 6, 7]) assert.equal(npc.wander.allow(tx, ty), false);
-    }
+  const stage = hub.objects.find((o) => o.id === 'platform');
+  const planters = hub.objects.filter((o) => o.sprite === 'planter-box');
+  assert.equal(planters.length, 2);
+  assert.ok(planters[0].tx * 32 + planters[0].spr.w <= stage.tx * 32 && planters[1].tx * 32 >= stage.tx * 32 + stage.spr.w, '단상과 겹치지 않는 양옆');
+  const decor = ['lavender', 'rose-bush-s', 'birdbath', 'ribbon-lantern'];
+  for (const id of decor) {
+    const list = hub.objects.filter((o) => o.sprite === id);
+    assert.ok(list.length >= 1, id);
+    assert.ok(list.every((o) => o.tx === 0 || o.tx * 32 + o.spr.w === hub.pixelW), `${id}는 바깥 열에 붙는다`);
   }
-  assert.equal(hub.guestMap.size, 10, '클로드의 분위기용 하객 유지');
+  const left = hub.objects.filter((o) => o.tx === 0 && decor.includes(o.sprite)).map((o) => o.sprite);
+  const right = hub.objects.filter((o) => o.tx > 0 && decor.includes(o.sprite)).map((o) => o.sprite);
+  assert.notDeepEqual(left, right, '좌우 대칭이 아니라 불규칙');
+});
+
+test('하객은 길 양옆에서 시작하고, 단상 앞 몇 줄을 뺀 버진로드로도 건너가 배회한다', () => {
+  const hub = make();
+  const homes = [...hub.guestMap.values()].map((n) => n.wander.home);
+  assert.equal(hub.guestMap.size, 20, '분위기용 하객 20명');
+  assert.ok(homes.every((t) => SIDE_COLS.includes(t.tx)), '20명은 모두 길 양옆에서 시작');
+  for (const n of hub.guestMap.values()) {
+    for (let ty = GUEST_ZONE.rowMin; ty < AISLE_OPEN_FROM; ty++) for (const tx of [4, 5, 6]) assert.equal(n.wander.allow(tx, ty), false, '단상 앞 길');
+    assert.equal(n.wander.allow(5, 12), true, '길 뒤쪽은 건너갈 수 있다');
+    assert.equal(n.character.hideTag, true, '분위기용 하객은 이름표 없음');
+    assert.equal(n.character.speed, 48, '하객은 천천히 걷는다');
+    assert.ok(Math.abs(n.wander.jitter.x) <= 7 && Math.abs(n.wander.jitter.y) <= 3, '칸 안에서 조금씩 흩어진다');
+  }
 });
 
 test('새 꽃/버진로드 PNG가 없으면 기존 모래길로 표시하고 기능을 유지한다', () => {
   const hub = createHub({ config: DEFAULT_CONFIG, profile: { nickname: '나' }, assets: {}, data: { messages: [] } });
   assert.equal(hub.objects.some((o) => o.sprite.startsWith('aisle-')), false);
   assert.equal(hub.entrances.length, 4);
-  assert.equal(hub.guestMap.size, 10);
+  assert.equal(hub.guestMap.size, 20);
 });
 
 test('팔짱 커플이 있으면 단상에는 한 쌍만 그리고 하객 갱신 후에도 안내인을 보존한다', () => {
@@ -104,20 +113,50 @@ test('팔짱 커플이 있으면 단상에는 한 쌍만 그리고 하객 갱신
   assert.ok(hub.hosts[0].bubble);
 });
 
-test('열 명의 하객은 좌우에서 시작하고 잔디의 좌우·대각선으로 자유 배회한다', () => {
+test('입장 행렬: 하객은 숨은 채 기다렸다 아래 교차로에서 반투명하게 나타나 자기 자리로 걸어간다', () => {
   const hub = make();
-  const homes = [...hub.guestMap.values()].map((n) => n.wander.home);
-  for (const ty of [7, 9, 11, 13, 15]) {
-    assert.ok(homes.some((t) => t.tx === 2 && t.ty === ty));
-    assert.ok(homes.some((t) => t.tx === 8 && t.ty === ty));
+  const guests = [...hub.guestMap.values()];
+  assert.ok(guests.every((n) => n.character.hidden && n.arrival), '처음에는 모두 대기');
+  const c0 = guests[0].character;
+  assert.notEqual(hub.hitNpc(c0.x, c0.y - 20)?.character, c0, '숨은 하객은 누를 수 없다');
+  const home = { x: c0.x, y: c0.y };
+  hub.updateArrivals(ARRIVAL.firstDelay + 0.01, false);
+  assert.equal(c0.hidden, false);
+  assert.ok(c0.y > home.y, '아래 교차로에서 출발');
+  assert.ok(c0.alpha < 1, '반투명으로 시작');
+  assert.equal(guests[1].character.hidden, true, '다음 하객은 간격을 두고 출발');
+  for (let i = 0; i < 4000 && guests.some((n) => n.arrival); i++) {
+    hub.updateArrivals(0.05, false);
+    for (const n of guests) n.character.update(0.05, () => false);
   }
-  for (const n of hub.guestMap.values()) {
-    assert.equal(n.wander.radius, 1);
-    assert.equal(n.wander.roam, true);
-    assert.equal(n.character.speed,48,'하객은 천천히 걷는다');
-    if (n.wander.home.ty === 9) {
-      assert.equal(n.wander.allow(n.wander.home.tx === 2 ? 1 : 9, 9), true, '좌우 이동');
-      assert.equal(n.wander.allow(n.wander.home.tx === 2 ? 1 : 9, 10), true, '대각선 이동');
-    }
-  }
+  assert.ok(guests.every((n) => !n.arrival && !n.character.hidden && n.character.alpha === 1), '모두 도착');
+  assert.deepEqual({ x: c0.x, y: c0.y }, home, '자기 자리(흩뜨린 위치)에 선다');
+  assert.equal(c0.speed, 48, '도착 후에는 천천히 배회');
+});
+
+test('움직임 줄이기 설정이면 걷지 않고 제자리에 나타난다', () => {
+  const hub = make();
+  const n = [...hub.guestMap.values()][0];
+  const home = { x: n.character.x, y: n.character.y };
+  hub.updateArrivals(ARRIVAL.firstDelay + 0.01, true);
+  assert.equal(n.arrival, null);
+  assert.deepEqual({ x: n.character.x, y: n.character.y, alpha: n.character.alpha }, { ...home, alpha: 1 });
+});
+
+test('자동 말풍선: 동시에 두 개까지, 실제 하객은 자기 메시지를 줄여 말한다', () => {
+  const message = '두 사람 정말 축하해! 행복하게 잘 살아야 해, 꼭 꼭 꼭이야';
+  const hub = createHub({ config: DEFAULT_CONFIG, profile: { nickname: '나' }, assets: { objects }, data: { messages: [{ t: 1, n: '친구', c: 2, m: message }] } });
+  hub.updateArrivals(100, true);
+  const random = Math.random;
+  try {
+    Math.random = () => 0.5;
+    for (let i = 0; i < 10; i++) hub.updateChatter(CHATTER.max + 0.01, null);
+    assert.equal(hub.npcs.filter((n) => n.character.bubble).length, CHATTER.maxBubbles);
+    for (const n of hub.npcs) n.character.bubble = null;
+    const friend = hub.guestMap.get('친구:2');
+    for (const n of hub.guestMap.values()) if (n !== friend) n.arrival = { delay: 1 }; // 다른 하객은 아직 입장 중
+    Math.random = () => 0.99; // 두 사람 인사 확률(15%)을 넘는 값
+    hub.updateChatter(CHATTER.max + 0.01, null);
+    assert.equal(friend.character.bubble, `${[...message].slice(0, 30).join('')}…`);
+  } finally { Math.random = random; }
 });
