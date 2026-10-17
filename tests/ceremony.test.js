@@ -34,9 +34,18 @@ test('버진로드는 단상 밑에서 끝까지 이어지고 양쪽 꽃장식�
   assert.ok(hub.objects.indexOf(strips[0]) < hub.objects.indexOf(stage), '단상을 위에 합성');
   for (let i = 1; i < strips.length; i++) assert.equal(strips[i - 1].bottom, strips[i].drawY);
   const flowers = hub.objects.filter((o) => o.sprite.startsWith('aisle-flower-'));
-  assert.equal(flowers.length, 2 * (CEREMONY.flowerEnd - CEREMONY.flowerStart + 1));
+  assert.equal(flowers.length, 2 * (Math.floor((CEREMONY.flowerEnd - CEREMONY.flowerStart) / CEREMONY.flowerStep) + 1));
   assert.ok(flowers.every((o) => o.floor && !o.solid));
   assert.ok(flowers.every((o) => o.ty < HUB_DOORS.guestbook.back.ty), '교차로는 꽃장식 밖');
+  assert.ok(flowers.every((o) => o.bottom <= HUB_DOORS.guestbook.back.ty * 32), '큰 꽃도 교차로에 걸치지 않는다');
+  const leftFlowers = flowers.filter((o) => o.sprite === 'aisle-flower-left');
+  assert.equal(leftFlowers.length, 6, '한쪽에 큰 꽃장식 여섯 개');
+  assert.ok(flowers.every((o) => o.spr.w === 32 && o.spr.h === 48), '선택된 새 꽃 PNG 규격');
+  const left = leftFlowers[0], right = flowers.find((o) => o.sprite === 'aisle-flower-right');
+  assert.equal(right.tx * 32 - (left.tx * 32 + left.spr.w), 32, '꽃 사이 중앙 한 칸 유지');
+  for (let i = 1; i < leftFlowers.length; i++) {
+    assert.ok(leftFlowers[i].drawY > leftFlowers[i - 1].bottom, '큰 꽃송이를 포개지 않고 간격을 둔다');
+  }
   for (let ty = 6; ty <= CEREMONY.aisleEnd; ty++) {
     assert.equal(hub.isSolidTile(5, ty), false, `중앙 통로 ${ty}`);
   }

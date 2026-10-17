@@ -32,7 +32,7 @@ export const HUB_ROWS = [
 export const HUB_SPAWN = { tx: 5, ty: 8 }; // 단상 앞에서 시작해 두 사람의 얼굴이 상단 HUD에 가리지 않게 한다.
 
 // 발은 단상 윗면 위에, 두 사람의 실제 그림 사이에는 몇 px만 남긴다.
-export const CEREMONY = { groomX: 157, brideX: 192, feetY: 176, aisleStart: 5, aisleEnd: BLOCK_B + 2, flowerStart: 6, flowerEnd: GARDEN_ROWS };
+export const CEREMONY = { groomX: 157, brideX: 192, feetY: 176, aisleStart: 5, aisleEnd: BLOCK_B + 2, flowerStart: 6, flowerEnd: GARDEN_ROWS - 1, flowerStep: 2 };
 
 function ceremonyFloors(assets) {
   const objects = [];
@@ -43,7 +43,7 @@ function ceremonyFloors(assets) {
   }
   for (const [sprite, tx] of [['aisle-flower-left', 4], ['aisle-flower-right', 6]]) {
     if (!assets?.objects?.[sprite]) continue;
-    for (let ty = CEREMONY.flowerStart; ty <= CEREMONY.flowerEnd; ty++) {
+    for (let ty = CEREMONY.flowerStart; ty <= CEREMONY.flowerEnd; ty += CEREMONY.flowerStep) {
       objects.push({ id: `${sprite}-${ty}`, sprite, tx, ty, floor: true });
     }
   }

@@ -466,3 +466,25 @@ Claude의 `HANDOFF_CLAUDE_2026-10-17.md`를 먼저 읽고 13절의 정책·동�
 - 바닥 장식은 기존 캐시에 한 번 합성한다. 전체 32px 꽃 프레임을 하객 장애물로 예약하지 않는다.
 - **110개 테스트 통과**. 단상 표면·개별 인물 탭, 바닥 연속성/합성 순서, 네 입구 접근,
   하객의 길 밖 배치·배회, PNG 누락 폴백을 추가 검증했다. 390px·320px 앱 화면과 직접 이동을 확인했다.
+
+## 15. 작은 꽃띠를 웨딩홀 꽃다발로 재작화 (2026-10-17, Codex)
+
+사용자가 꽃이 너무 작아 꽃처럼 보이지 않는다고 지적했다. 기존 생성 원본에 꽃을 많이 넣고 16×32로 줄이면서
+꽃송이들이 잎 무늬와 섞인 것이 문제였다. 크기와 배치 모두 다시 설계했다.
+
+- 레퍼런스: [워커힐 공식 웨딩 안내](https://app.walkerhill.com/convention/Wedding)의
+  [비스타홀 사진](https://app.walkerhill.com/assets/grandwalkerhillseoul/global/images/etc/pic_vistaW01.jpg),
+  [워커홀 사진](https://app.walkerhill.com/assets/grandwalkerhillseoul/global/images/etc/pic_walkerW01.jpg)을 브라우저에서 확인했다.
+  꽃송이가 큰 풍성한 덩어리를 양옆에 반복하는 방식은 이 사진을 보고 내린 디자인 판단이다.
+- 내장 imagegen으로 새 원본을 만들었다. 아이보리 장미·분홍 장미·흰 수국 세 덩어리를 중심으로 그려
+  작은 화면에서도 흰색/분홍색 꽃과 꽃잎 음영을 구분하도록 했다. 기존 띠의 단순 확대가 아니다.
+- 최종 좌우 `aisle-flower-*-v2.png`는 32×48, 실제 그림 32×39, 24색·이진 알파다.
+  이전 꽃띠보다 실제 폭이 2배이며, `manifest.files.objects`로 같은 ID에 연결했다. 기존 PNG는 보존했다.
+- `CEREMONY.flowerStep=2`: ty6/8/10/12/14/16, 한쪽 6개씩 64px 간격. 큰 꽃 프레임을 겹쳐 그리지 않는다.
+  중앙 시각적 통로 32px, 장식 사이 16px, 마지막 꽃 프레임 하단 y576을 확보한다.
+- 비충돌 바닥과 정적 캐시를 유지한다. 하객 21명 배치, 분위기용 10명, 신랑·신부·단상·커버·문 위치는 그대로다.
+- 안전한 준비: `tools/prepare_hall_flowers.py`, 원본 `raw/hall-flowers-source/arrangement.png`(Git 제외).
+  실제 생성 프롬프트/참고 URL은 `assets/hall-flowers-prompts.json`, bbox/알파는 `hall-flowers-report.json`.
+  `hall-flowers-comparison.png`와 `hall-flowers-detail.png`, 실행 가능한 `tools/art-review.html`에서 비교한다.
+- **테스트 110개 통과**. 기존 검증에 새 PNG 규격·6쌍·중앙 여백·교차로 미침범·장식 사이 간격 검사를 보강했다.
+  390px·320px 화면에서도 꽃송이를 구분할 수 있는지 직접 확인했다. API·실사진 연결은 보류 유지.

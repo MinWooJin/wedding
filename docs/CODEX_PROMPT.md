@@ -1,5 +1,10 @@
 # 에셋 작업 인수인계 프롬프트 (Codex / Claude)
 
+> **최신: 버진로드 꽃 재작화(2026-10-17).** 사용자가 꽃이 작아 보인다고 요청해 16px 꽃띠를 새로 그린 큰 꽃다발로 바꿨다.
+> 설계 문서 **15절**과 HANDOFF **7절**이 현재 꽃 규격이다. 이전 14절의 32×32 연속 꽃띠로 되돌리지 마라.
+> 새 파일은 `assets/objects/aisle-flower-left-v2.png`, `aisle-flower-right-v2.png`(각 32×48, 실제 그림 32×39).
+> manifest.files로 연결하며 양옆 6개씩, 64px 간격이다. 프롬프트 `assets/hall-flowers-prompts.json`, 재변환 `tools/prepare_hall_flowers.py`.
+
 > **최신: 단상·버진로드·꽃길 구성 완료(2026-10-17).** 클로드 인수인계를 읽고 후속 적용했다.
 > 설계 문서 **14절**, `docs/HANDOFF_CLAUDE_2026-10-17.md`의 6절을 우선한다.
 > 신랑·신부 중심 간격 35px, 발 높이 176px. 아이보리 버진로드와 양옆 낮은 꽃장식이 연결됐다.

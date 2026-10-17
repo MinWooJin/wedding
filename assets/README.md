@@ -1,5 +1,13 @@
 # 에셋 가이드 (AI 생성 → 게임 적용)
 
+**현재 꽃장식은 웨딩홀 재작화 v2다.** `objects/aisle-flower-left-v2.png`·`aisle-flower-right-v2.png`, 각 32×48 RGBA.
+실제 그림 bbox는 (0,9,32,48)이며 꽃송이를 크게 그렸다. manifest.files로 선택하고 양옆 6개씩 64px 간격으로 놓는다.
+중앙 시각적 통로는 32px, 플레이어 발 충돌 폭은 20px다. 장식은 비충돌 바닥이다.
+참고한 워커힐 웨딩홀 사진·실제 내장 생성 프롬프트는 `hall-flowers-prompts.json`, 규격은 `hall-flowers-report.json`.
+이전/개선 비교 `hall-flowers-comparison.png`, 확대 `hall-flowers-detail.png`.
+현재 꽃 선택 변환: `python tools/prepare_hall_flowers.py` (원본 `raw/hall-flowers-source/arrangement.png` 필요).
+아래 16px 꽃띠는 보존된 이전 버전이며, 현재 버전으로 다시 적용하지 않는다.
+
 최신 예식 장면: `objects/aisle-runner.png`(96×32), `aisle-flower-left.png`·`aisle-flower-right.png`(각 32×32).
 꽃의 실제 폭은 각 16px이고 중앙 64px를 비운다. 충돌 없는 바닥 장식이며 단상 아래에서 길게 연결한다.
 생성 프롬프트 `ceremony-prompts.json`, 규격 `ceremony-report.json`, 미리보기 `ceremony-preview.png`.

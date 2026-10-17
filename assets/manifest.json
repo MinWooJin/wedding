@@ -85,7 +85,9 @@
       "preset-9": "preset-9-v3.png"
     },
     "objects": {
-      "tree": "tree-v3.png"
+      "tree": "tree-v3.png",
+      "aisle-flower-left": "aisle-flower-left-v2.png",
+      "aisle-flower-right": "aisle-flower-right-v2.png"
     },
     "tiles": {
       "G": "G-v3.png",

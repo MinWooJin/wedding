@@ -1,0 +1,38 @@
+{
+  "aisle-flower-left": {
+    "file": "aisle-flower-left-v2.png",
+    "size": [
+      32,
+      48
+    ],
+    "bbox": [
+      0,
+      9,
+      32,
+      48
+    ],
+    "colors": 24,
+    "alpha_values": [
+      0,
+      255
+    ]
+  },
+  "aisle-flower-right": {
+    "file": "aisle-flower-right-v2.png",
+    "size": [
+      32,
+      48
+    ],
+    "bbox": [
+      0,
+      9,
+      32,
+      48
+    ],
+    "colors": 24,
+    "alpha_values": [
+      0,
+      255
+    ]
+  }
+}

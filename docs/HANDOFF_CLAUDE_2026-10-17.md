@@ -123,3 +123,24 @@ Codex가 다음 작업 전에 읽을 문서다. 오늘 Claude가 바꾼 내용, 
 - 테스트 **110개 통과**. 단상 발 위치/두 인물 개별 탭, 길의 연속성/합성 순서, 중앙 통로/네 문 경로,
   길 밖 하객 배치·배회, 에셋 누락 폴백을 검사했다. 390px·320px 비교 화면도 확인했다.
 - API·실사진과 5절의 마지막 데이터 연결 범위는 그대로 보류한다.
+
+## 7. Codex 후속: 웨딩홀 꽃장식 재작화 (2026-10-17)
+
+사용자가 6절의 꽃띠가 너무 작아 꽃으로 보이지 않는다고 요청했다. **현재 꽃은 이 절을 우선한다.**
+
+- [워커힐 공식 웨딩 안내](https://app.walkerhill.com/convention/Wedding)의 비스타홀·워커홀 사진을 시각적으로 확인했다.
+  얇은 띠 대신 풍성한 꽃 덩어리를 양옆에 반복하는 구성을 참고했다. 사진 자체는 프로젝트에 복사하지 않았다.
+- 내장 imagegen으로 아이보리 장미·분홍 장미·흰 수국이 크게 구분되는 새 꽃다발 원본을 만들었다.
+  최종 `assets/objects/aisle-flower-left-v2.png`·`aisle-flower-right-v2.png`는 32×48, 실제 bbox (0,9,32,48), 24색·이진 알파다.
+  기존 16px 꽃띠를 단순 확대하지 않고 새로 그렸으며, 이전 PNG도 그대로 보존한다.
+- 기존 ID의 manifest.files 매핑이 새 파일을 선택한다. 오른쪽은 왼쪽의 정확한 반전이다.
+- 배치: tx4/6, ty6/8/10/12/14/16. 양쪽 6개, 총 12개. 프레임 간격 64px로 꽃송이를 겹치지 않게 한다.
+  48px 프레임 사이에 16px 여백이 있다. 마지막 장식은 y576에서 끝나 교차로를 가리지 않는다.
+- 중앙 시각적 여백은 32px(플레이어 발 충돌 폭 20px). 비충돌 바닥이며 기존 이동·NPC 배치 정책을 유지한다.
+  광장 하객 수용 인원 21명, 분위기용 10명, 단상/커플/커버/문 배치와 API·실사진 보류는 그대로다.
+- 안전한 재변환: `python tools/prepare_hall_flowers.py`, 원본 `raw/hall-flowers-source/arrangement.png`.
+  이전 `prepare_ceremony_assets.py`는 예전 꽃띠 원본도 만들지만, 현재 선택한 v2 매핑은 보존한다.
+- 실제 프롬프트·사진 URL·처리: `assets/hall-flowers-prompts.json`. 크기·bbox: `hall-flowers-report.json`.
+  이전/개선 비교: `hall-flowers-comparison.png`, 확대: `hall-flowers-detail.png`. `tools/art-review.html`에도 추가했다.
+- 테스트 110개 통과. 새 PNG 32×48 선택, 한쪽 6개·중앙 여백·꽃 사이 간격·교차로 침범 없음 검사를 보강했다.
+  390px·320px 앱 화면에서 꽃송이 구분과 중앙 통로를 확인했다.

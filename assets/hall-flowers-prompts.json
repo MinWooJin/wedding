@@ -1,0 +1,20 @@
+{
+  "date": "2026-10-17",
+  "mode": "Codex built-in imagegen; no API key",
+  "reason": "User reports 16px-wide continuous floral border reads as texture, not flowers.",
+  "references": [
+    {
+      "url": "https://app.walkerhill.com/convention/Wedding",
+      "images": [
+        "https://app.walkerhill.com/assets/grandwalkerhillseoul/global/images/etc/pic_vistaW01.jpg",
+        "https://app.walkerhill.com/assets/grandwalkerhillseoul/global/images/etc/pic_walkerW01.jpg"
+      ],
+      "observed": "Viewed official venue photos: large white flower masses, repeated side arrangements, and distinct blooms rather than a thin greenery strip. Applied as original pixel-art arrangement; source photographs were not copied or passed as imagegen input."
+    }
+  ],
+  "prompt": "Production pixel game asset: ONE luxurious low wedding aisle flower arrangement for a Korean wedding hall, isolated on a genuinely transparent background. Slightly overhead front three-quarter RPG view. ONE compact rounded bouquet mound on a very short almost concealed ivory foot. Final game sprite will be 32 pixels wide and 48 pixels tall: design AT THAT LOGICAL SCALE, shown enlarged with crisp square blocks. Flowers must be large and immediately recognizable at 1x size. Exactly THREE dominant flower heads: a large ivory rose about 14 logical pixels across with clearly separated broad concentric petals and a warm cream center; one blush pink rose about 11 pixels across; one large white hydrangea cluster about 12 pixels across with a few broad scalloped petal lobes. A couple secondary white buds only, NO many tiny flowers or filler speckling. Flowers occupy 75 percent of the visible area, muted sage leaves only around bottom and outside, not a green hedge. Generous chunky readable silhouettes, 20-24 total colors, flat two-tone shading, dark sage selective outline around leaves, warm beige petal shadows that clearly distinguish white petals. Arrangement fills full sprite width, body about 38-42 pixels high including short base, neutral symmetrical rounded silhouette with slight natural asymmetry. No thin vertical garland, no strip, no long vine, no tall columns, no surrounding room, no background, no ground shadow, no antialiasing, no photographic detail, no texture noise, no text or watermark. Image is a single arrangement, not a scene or sprite sheet. Portrait composition.",
+  "transparent_background": true,
+  "source": "raw/hall-flowers-source/arrangement.png",
+  "preparation": "tools/prepare_hall_flowers.py. Crop alpha160, fit within32x46 keeping proportions, BOX downsample, palette24, binary alpha128. Bottom-center in32x48 frame. Mirror for right. Preserve old mini-border PNGs, use manifest.files.objects to select *-v2.png.",
+  "layout": "12 low non-colliding mounds, six pairs. tx4/6, ty6/8/10/12/14/16. 64px pitch. Runtime48px height creates16px gap, ends at576 before first crossroad. Nominal32px central visual passage (player collision20px). Other scene geometry, guests, couple, stage, aisle and deferred-data policies unchanged."
+}

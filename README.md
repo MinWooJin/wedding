@@ -45,8 +45,9 @@ npm run serve     # http://localhost:5173
 [비교 페이지](tools/art-review.html), [생성 프롬프트](assets/reference-v3-prompts.json),
 [크기·투명도 기록](assets/reference-v3-report.json)을 참고한다.
 
-단상 위 두 사람의 간격을 좁히고, 길게 이어지는 아이보리 버진로드와 양옆 꽃장식을 추가했다.
-하객은 길 밖 잔디에 모인다. 새 바닥 조각만 변환할 때는 `python tools/prepare_ceremony_assets.py`를 사용한다.
+단상 위 두 사람의 간격을 좁히고, 아이보리 버진로드 양옆에 웨딩홀을 참고한 32×48 꽃다발을 6개씩 배치했다.
+하객은 길 밖 잔디에 모인다. 현재 꽃만 변환할 때는 `python tools/prepare_hall_flowers.py`를 사용한다.
+이전 꽃띠는 보존되어 있으며 `manifest.files`가 새 버전을 선택한다. 비교 페이지에서 이전/개선 모습을 함께 볼 수 있다.
 
 ```
 pip install pillow
