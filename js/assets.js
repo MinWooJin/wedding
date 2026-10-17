@@ -154,7 +154,7 @@ export async function loadAssets(base = 'assets') {
     if (out.maps[scene]) continue; // 씬 전체 한 장이 따로 있으면 그것을 우선한다
     const composed = composeMap(pieces, list);
     if (composed) out.maps[scene] = scene === 'hub'
-      ? decorateWeddingHub(composed, { top: pieces['hub-top'], guestbook: pieces['guestbook-bg'], objects: out.objects })
+      ? decorateWeddingHub(composed, { top: pieces['hub-top'], guestbook: pieces['guestbook-bg'], objects: out.objects, grass: out.tiles.G?.canvas })
       : composed;
   }
   return out;
