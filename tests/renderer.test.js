@@ -91,13 +91,15 @@ test('캐릭터는 비율·기울기를 변형하지 않고 정수 픽셀로만 
   assert.deepEqual(calls.pop(),[canvas,10,20]);
 });
 
-test('뷰 폭은 항상 352px이고 화면 폭에 꽉 차는 소수 배율(최대 4배)', () => {
-  assert.deepEqual(computeViewport(352, 700), { scale: 1, width: 352, height: 700 });
-  assert.deepEqual(computeViewport(440, 880), { scale: 1.25, width: 352, height: 704 });
-  assert.deepEqual(computeViewport(2000, 900), { scale: 4, width: 352, height: 225 });
-  assert.deepEqual(computeViewport(176, 300), { scale: 0.5, width: 352, height: 600 });
-  const v = computeViewport(390, 844);
-  assert.ok(v.scale > 1.1 && v.width * v.scale === 390, '390폭은 좌우 여백 없이 1.1배 이상');
+test('뷰 폭은 항상 352px. 고해상도 폰은 화면 폭에 꽉 차는 소수 배율, 저해상도 화면은 정수 배율(최대 4배)', () => {
+  assert.deepEqual(computeViewport(352, 700, 3), { scale: 1, width: 352, height: 700 });
+  assert.deepEqual(computeViewport(440, 880, 3), { scale: 1.25, width: 352, height: 704 });
+  assert.deepEqual(computeViewport(2000, 900, 2), { scale: 4, width: 352, height: 225 });
+  assert.deepEqual(computeViewport(176, 300, 1), { scale: 0.5, width: 352, height: 600 }, '좁은 화면은 비율과 상관없이 꽉 채운다');
+  const v = computeViewport(390, 844, 3);
+  assert.ok(v.scale > 1.1 && v.width * v.scale === 390, '390폭 폰은 좌우 여백 없이 1.1배 이상');
+  assert.deepEqual(computeViewport(430, 932, 1), { scale: 1, width: 352, height: 932 }, '데스크톱(비율 1)은 픽셀이 울퉁불퉁하지 않게 정수 배율');
+  assert.equal(computeViewport(800, 600, 1).scale, 2);
 });
 
 test('캔버스는 기기 픽셀 비율로 그리고 내부 좌표는 변환 행렬로 키운다', () => {

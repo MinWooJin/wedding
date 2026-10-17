@@ -1,5 +1,5 @@
 import { Scene } from './scene.js';
-import { HUB_DOORS } from './hub.js';
+import { HUB_DOORS, grassAt } from './hub.js';
 import { freeTiles, pickTiles } from './guest-layout.js';
 import { showOverlay } from '../ui/overlay.js';
 import { toast } from '../ui/toast.js';
@@ -8,51 +8,80 @@ import { esc } from '../ui/dom.js';
 import { validateEntry, postMessage, MESSAGE_MAX } from '../api.js';
 import { makeHostNpc } from './host-npc.js';
 
+// 11열 × 14행. 광장과 같은 들꽃 잔디 위에 가운데 돌길이 우체통까지 이어지고,
+// 우체통 양옆에 두 사람이 서서 편지를 기다린다. 가장자리는 나무·장미·라벤더·버드배스로 채워 빈 느낌을 없앴다.
+const COLS = 11, LAST = 13;
+const rowAt = (ty) => 'H' + Array.from({ length: COLS - 2 }, (_, i) => {
+  const tx = i + 1;
+  return tx === 5 && ty >= PATH_START ? 'N' : grassAt(tx + 20, ty + 40); // 광장과 다른 들꽃 배열
+}).join('') + 'H';
+const PATH_START = 5;
 const ROWS = [
-  'HHHHHHHHHHH',
-  'HGJGGGGGUGH',
-  'HGGGGGGGGGH',
-  'HGGGGGGGGGH',
-  'HGGUGGGJGGH',
-  'HGGGGNGGGGH',
-  'HGGGGNGGGGH',
-  'HGJGGNGGUGH',
-  'HGGGGGGGGGH',
-  'HGGGGNGGGGH',
-  'HGGGGNGGGGH',
+  'H'.repeat(COLS),
+  ...Array.from({ length: LAST - 1 }, (_, i) => rowAt(i + 1)),
   'HHHHHNHHHHH',
 ];
-const MAILBOX = { tx: 4, ty: 2 }; // 64×64: 4~5열, 2~3행
-const EXIT = { tx: 5, ty: 11 };
-const SPAWN = { tx: 5, ty: 10 };
-const HOST_POS = { tx: 2, ty: 6 };
-const RESERVED = new Set(['4,2', '5,2', '4,3', '5,3', '4,4', '5,4', '3,3', '6,3', '5,9', '5,10', '4,10', '6,10', '5,11',
-  '1,1', '2,1', '3,1', '1,2', '2,2', '3,2', '1,3', '2,3', '3,3', '1,4', '2,4', '3,4', '7,1', '8,1', '9,1', '7,2', '8,2', '9,2', '7,3', '8,3', '9,3', '7,4', '8,4', '9,4',
-  '1,7', '2,7', '1,8', '2,8', '8,7', '9,7', '8,8', '9,8']); // 우체통·입구·나무·덤불 자리
+const MAILBOX = { tx: 4, ty: 2 }; // 64×96: 4~5열, 2~4행
+const EXIT = { tx: 5, ty: LAST };
+const SPAWN = { tx: 5, ty: LAST - 1 };
+const GROOM_POS = { tx: 3, ty: 4 }, BRIDE_POS = { tx: 6, ty: 4 }; // 우체통 양옆
 const POST_COOLDOWN_MS = 60_000;
 let lastPostAt = 0;
+
+const has = (assets, id) => !!assets?.objects?.[id];
+
+/** 가장자리 장식과 바닥 장식. PNG가 있는 것만 넣는다(코드 그림이 있는 tree·bush는 항상). */
+function gardenDecor(assets) {
+  const always = new Set(['tree', 'bush', 'bush-white', 'door']);
+  const list = [
+    ['tree-green', 0, 0], ['tree', 8, 0],
+    ['rose-bush-s', 0, 5], ['lavender', 10, 5],
+    ['lavender', 0, 7], ['rose-bush-s', 9, 7],
+    ['birdbath', 1, 9], ['ribbon-lantern', 10, 9],
+    ['lavender', 0, 11], ['lavender', 10, 11],
+    ['planter-box', 1, 12], ['planter-box', 8, 12],
+  ];
+  const floors = [
+    ...Array.from({ length: LAST - 1 - PATH_START }, (_, i) => ['aisle-edge-left', (160 - 22) / 32, PATH_START + 1 + i]),
+    ...Array.from({ length: LAST - 1 - PATH_START }, (_, i) => ['aisle-edge-right', (192 - 10) / 32, PATH_START + 1 + i]),
+    ['petal-pile', 3, 3], ['petal-pile', 6, 3],
+    ['meadow-sprig', 2, 7], ['meadow-sprig', 8, 9], ['meadow-sprig', 3, 11], ['meadow-sprig', 7, 6],
+  ];
+  return [
+    ...floors.filter(([id]) => has(assets, id)).map(([sprite, tx, ty]) => ({ id: `floor-${sprite}-${ty}`, sprite, tx, ty, floor: true })),
+    ...list.filter(([id]) => always.has(id) || has(assets, id)).map(([sprite, tx, ty]) => ({ id: `decor-${sprite}-${tx}-${ty}`, sprite, tx, ty })),
+  ];
+}
 
 export class GuestbookScene extends Scene {
   constructor(game) {
     super({
       id: 'guestbook', rows: ROWS, spawn: SPAWN, assets: game.assets, groundTile: 'G',
-      npcs: [makeHostNpc(game, 'bride', HOST_POS, [
-        '축하 편지를 남겨 주시면 이 정원에 꽃이 피어요.',
-        '멀리서 보내 주신 마음도 오래 소중히 간직할게요.',
-      ])],
+      npcs: [
+        makeHostNpc(game, 'groom', GROOM_POS, [
+          '와 주셔서 고마워요. 편지 한 통이 이 정원의 꽃 한 송이가 돼요.',
+          '꽃을 누르면 다른 분들의 마음도 읽을 수 있어요.',
+        ]),
+        makeHostNpc(game, 'bride', BRIDE_POS, [
+          '축하 편지를 남겨 주시면 이 정원에 꽃이 피어요.',
+          '멀리서 보내 주신 마음도 오래 소중히 간직할게요.',
+        ]),
+      ],
       entrances: [{ ...EXIT, to: 'hub', spawn: HUB_DOORS.guestbook.back }],
       objects: [
         { id: 'door', sprite: 'door', floor: true, ...EXIT },
+        ...gardenDecor(game.assets),
         { id: 'mailbox', sprite: game.assets?.objects?.['wedding-mailbox'] ? 'wedding-mailbox' : 'mailbox', label: '축하 편지 쓰기', ...MAILBOX, interact: () => this.openForm(game) },
-        { id: 'treeL', sprite: 'tree', tx: 1, ty: 1 }, { id: 'treeR', sprite: 'tree', tx: 7, ty: 1 },
-        { id: 'bushL', sprite: 'bush-white', tx: 1, ty: 7 }, { id: 'bushR', sprite: 'bush', tx: 8, ty: 7 },
       ],
     });
     this.game = game;
-    this.reserved = new Set(RESERVED);
-    // 편지가 많아져도 신부의 얼굴과 이름표에 꽃이 겹치지 않게 한다.
-    for (let dy = -2; dy <= 0; dy++) for (let dx = -1; dx <= 1; dx++) this.reserved.add(`${HOST_POS.tx + dx},${HOST_POS.ty + dy}`);
+    // 꽃을 피우지 않을 자리: 돌길·입구·우체통 앞, 두 사람 주변(얼굴·이름표), 장식이 덮는 칸(바닥 장식 제외).
+    this.reserved = new Set();
+    for (let ty = 0; ty <= LAST; ty++) this.reserved.add(`5,${ty}`);
+    for (const t of [`4,${LAST - 1}`, `6,${LAST - 1}`, '4,5', '6,5']) this.reserved.add(t);
+    for (const pos of [GROOM_POS, BRIDE_POS]) for (let dy = -2; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) this.reserved.add(`${pos.tx + dx},${pos.ty + dy}`);
     for (const o of this.objects) {
+      if (o.floor) continue;
       for (let y = -1; y < Math.ceil(o.spr.h / 32); y++) for (let x = 0; x < Math.ceil(o.spr.w / 32); x++) this.reserved.add(`${o.tx + x},${o.ty + y}`);
     }
     this.baseObjects = this.objects.slice();

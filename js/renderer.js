@@ -9,8 +9,11 @@ export const VIEW_W = TILE * VIEW_TILES_W; // 352
  * 내부 폭 352px을 화면 폭에 꽉 채운다(390폭 1.11배, 430폭 1.22배). 정수 배율로 묶으면 큰 폰일수록
  * 좌우가 비고 글씨가 작아진다. 캔버스는 기기 해상도로 그려서(resize) 소수 배율의 픽셀 불균일이 보이지 않는다.
  */
-export function computeViewport(cssW, cssH) {
-  const scale = Math.min(4, cssW / VIEW_W);
+export function computeViewport(cssW, cssH, dpr = 1) {
+  let scale = Math.min(4, cssW / VIEW_W);
+  // 기기 픽셀 비율이 낮은 화면(데스크톱)에서는 소수 배율이 픽셀을 1칸·2칸으로 들쭉날쭉 늘려 그림이 울퉁불퉁해진다.
+  // 그런 화면에서는 정수 배율로 내리고 남는 좌우는 잔디 배경으로 채운다. 고해상도 폰(2~3배)에서는 티가 나지 않아 꽉 채운다.
+  if (dpr < 2 && scale >= 1) scale = Math.floor(scale);
   return { scale, width: VIEW_W, height: Math.ceil(cssH / scale) };
 }
 
@@ -57,9 +60,9 @@ export class Renderer {
   get reducedMotion() { return this.motionPreference?.matches ?? false; }
 
   resize(cssW, cssH) {
-    this.view = computeViewport(cssW, cssH);
     // 캔버스 실제 픽셀 = CSS 크기 × 기기 픽셀 비율. 그리기는 내부 좌표 그대로 하고 변환 행렬로 키운다.
     const dpr = Math.min(3, globalThis.devicePixelRatio || 1);
+    this.view = computeViewport(cssW, cssH, dpr);
     this.pixelRatio = this.view.scale * dpr;
     this.canvas.width = Math.round(this.view.width * this.pixelRatio);
     this.canvas.height = Math.round(this.view.height * this.pixelRatio);

@@ -25,8 +25,9 @@ test('네 공간의 신랑/신부는 서로 다른 대사를 말하고 통로를
   for (const [create, role] of [[createInfo, 'groom'], [createGifts, 'bride'], [createGuestbook, 'bride'], [createGallery, 'groom']]) {
     const g = game();
     const scene = create(g);
-    const npc = scene.npcs[0];
-    assert.equal(scene.npcs.length, 1);
+    // 방명록 정원에는 두 사람이 우체통 양옆에 함께 선다. 다른 방은 한 사람씩.
+    assert.equal(scene.npcs.length, scene.id === 'guestbook' ? 2 : 1);
+    const npc = scene.npcs.find((n) => n.character.name === g.config[role].shortName);
     assert.equal(npc.character.name, g.config[role].shortName);
     assert.equal(npc.solid, false);
     assert.ok(scene.hosts.includes(npc.character), '멀리서도 이름 표시');
@@ -44,10 +45,18 @@ test('네 공간의 신랑/신부는 서로 다른 대사를 말하고 통로를
   for (const frame of gallery.frames) assert.ok(findPath(gallery.map.w, gallery.map.h, (x, y) => gallery.isSolidTile(x, y), gallery.spawn, frame.stand));
 });
 
-test('편지가 많아져도 방명록 신부 자리에는 꽃을 배치하지 않는다', () => {
+test('편지가 많아져도 방명록의 두 사람 자리·돌길에는 꽃을 배치하지 않고, 꽃 자리는 넉넉하다', () => {
   const scene = createGuestbook(game());
   scene.setEntries(Array.from({ length: 50 }, (_, i) => ({ n: `하객${i}`, c: 0, m: '축하해요', t: i })));
-  for (const flower of scene.objects.filter((o) => o.id.startsWith('flower'))) {
-    assert.ok(!(flower.tx >= 1 && flower.tx <= 3 && flower.ty >= 4 && flower.ty <= 6));
+  const flowers = scene.objects.filter((o) => o.id.startsWith('flower'));
+  assert.ok(flowers.length >= 20, `꽃 ${flowers.length}송이`);
+  for (const flower of flowers) {
+    for (const host of scene.hosts) {
+      const t = scene.tileOf(host.x, host.y);
+      assert.ok(!(Math.abs(flower.tx - t.tx) <= 1 && flower.ty >= t.ty - 2 && flower.ty <= t.ty + 1), '두 사람 주변');
+    }
+    assert.notEqual(flower.tx, 5, '돌길');
+    assert.ok(!scene.isSolidTile(flower.tx, flower.ty), '장식 위');
   }
+  assert.ok(scene.objects.filter((o) => ['lavender', 'rose-bush-s', 'birdbath', 'tree-green'].includes(o.sprite)).length >= 6, '가장자리 식생');
 });

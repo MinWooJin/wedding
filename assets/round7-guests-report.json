@@ -1,0 +1,116 @@
+{
+  "guest-extra-0": {
+    "file": "guest-extra-0-v4.png",
+    "size": [
+      48,
+      72
+    ],
+    "bbox": [
+      11,
+      12,
+      36,
+      72
+    ],
+    "colors": 30,
+    "alpha_values": [
+      0,
+      255
+    ],
+    "role": "crowd-only; scene/loader integration by Claude"
+  },
+  "guest-extra-1": {
+    "file": "guest-extra-1-v4.png",
+    "size": [
+      48,
+      72
+    ],
+    "bbox": [
+      12,
+      12,
+      35,
+      72
+    ],
+    "colors": 30,
+    "alpha_values": [
+      0,
+      255
+    ],
+    "role": "crowd-only; scene/loader integration by Claude"
+  },
+  "guest-extra-2": {
+    "file": "guest-extra-2-v4.png",
+    "size": [
+      48,
+      72
+    ],
+    "bbox": [
+      12,
+      12,
+      36,
+      72
+    ],
+    "colors": 31,
+    "alpha_values": [
+      0,
+      255
+    ],
+    "role": "crowd-only; scene/loader integration by Claude"
+  },
+  "guest-extra-3": {
+    "file": "guest-extra-3-v4.png",
+    "size": [
+      48,
+      72
+    ],
+    "bbox": [
+      13,
+      12,
+      35,
+      72
+    ],
+    "colors": 30,
+    "alpha_values": [
+      0,
+      255
+    ],
+    "role": "crowd-only; scene/loader integration by Claude"
+  },
+  "guest-extra-4": {
+    "file": "guest-extra-4-v4.png",
+    "size": [
+      48,
+      72
+    ],
+    "bbox": [
+      13,
+      12,
+      34,
+      72
+    ],
+    "colors": 30,
+    "alpha_values": [
+      0,
+      255
+    ],
+    "role": "crowd-only; scene/loader integration by Claude"
+  },
+  "guest-extra-5": {
+    "file": "guest-extra-5-v4.png",
+    "size": [
+      48,
+      72
+    ],
+    "bbox": [
+      12,
+      12,
+      35,
+      72
+    ],
+    "colors": 30,
+    "alpha_values": [
+      0,
+      255
+    ],
+    "role": "crowd-only; scene/loader integration by Claude"
+  }
+}

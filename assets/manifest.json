@@ -12,7 +12,13 @@
     "preset-9",
     "groom",
     "bride",
-    "couple"
+    "couple",
+    "guest-extra-0",
+    "guest-extra-1",
+    "guest-extra-2",
+    "guest-extra-3",
+    "guest-extra-4",
+    "guest-extra-5"
   ],
   "tiles": [
     "G",
@@ -97,7 +103,13 @@
       "preset-6": "preset-6-v3.png",
       "preset-7": "preset-7-v3.png",
       "preset-8": "preset-8-v3.png",
-      "preset-9": "preset-9-v3.png"
+      "preset-9": "preset-9-v3.png",
+      "guest-extra-0": "guest-extra-0-v4.png",
+      "guest-extra-1": "guest-extra-1-v4.png",
+      "guest-extra-2": "guest-extra-2-v4.png",
+      "guest-extra-3": "guest-extra-3-v4.png",
+      "guest-extra-4": "guest-extra-4-v4.png",
+      "guest-extra-5": "guest-extra-5-v4.png"
     },
     "objects": {
       "tree": "tree-v4-cherry.png",
