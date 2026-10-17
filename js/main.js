@@ -35,7 +35,7 @@ if (!profile) {
 
 // 캔버스 글씨는 폰트 로딩을 일으키지 않는다. 이름표가 기본 고딕으로 나오지 않게 미리 불러온다(최대 1.5초).
 await Promise.race([
-  Promise.all(['12px Galmuri11', '14px Galmuri11', '15px "Pretendard Variable"', '600 20px "Pretendard Variable"'].map((f) => document.fonts?.load(f, '민우 새암 방명록 정원 소식 나누기'))).catch(() => {}),
+  Promise.all(['12px Galmuri11', '13px Galmuri11', '14px Galmuri11', '15px "Pretendard Variable"', '600 20px "Pretendard Variable"'].map((f) => document.fonts?.load(f, '민우 새암 방명록 정원 소식 나누기'))).catch(() => {}),
   new Promise((r) => setTimeout(r, 1500)),
 ]);
 

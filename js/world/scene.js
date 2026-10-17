@@ -1,4 +1,4 @@
-import { TILE } from '../renderer.js';
+import { TILE, TEXT } from '../renderer.js';
 import { parseMap, tileAt, rectBlocked, tileKey } from './tilemap.js';
 import { findPath, reachableTiles } from './movement.js';
 import { objectSprite } from '../sprites/objects.js';
@@ -137,7 +137,7 @@ export class Scene {
   /** Room exits are navigation targets, with a generous tap area around the floor marker. */
   exitAt(wx, wy) {
     return this.entrances.find((e) => e.to === 'hub'
-      && wx >= (e.tx - 1) * TILE && wx <= (e.tx + 2) * TILE
+      && wx >= (e.tx + .5) * TILE - 56 && wx <= (e.tx + .5) * TILE + 56
       && wy >= e.ty * TILE - 24 && wy <= (e.ty + 1) * TILE + 16) ?? null;
   }
 
@@ -195,9 +195,9 @@ export class Scene {
     for (let i = ordered.length - 1; i >= 0; i--) {
       const o = ordered[i];
       if (o.spr.missing && !o.interact) continue;
-      const width = o.label ? Math.max(o.spr.w, o.label.length * 12 + 24) : o.spr.w;
+      const width = o.label ? Math.max(o.spr.w, o.label.length * TEXT.label + 36) : o.spr.w;
       const x0 = o.tx * TILE + (o.spr.w - width) / 2;
-      if (wx >= x0 && wx < x0 + width && wy >= o.drawY - (o.label ? 32 : 0) && wy < o.drawY + o.spr.h) return o;
+      if (wx >= x0 && wx < x0 + width && wy >= o.drawY - (o.label ? 36 : 0) && wy < o.drawY + o.spr.h) return o;
     }
     return null;
   }

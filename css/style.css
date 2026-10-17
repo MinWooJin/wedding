@@ -162,7 +162,10 @@ label { display: block; font-size: 13px; font-weight: 600; margin: 12px 0 6px; }
 .fab { pointer-events: auto; border: 1px solid #dedfcf; border-radius: 999px; min-height: 52px; background: #fffcf5; color: #5c644c; font: 600 14px var(--font); display: inline-flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 14px #353d2522; cursor: pointer; }
 .fab span { font-size: 18px; line-height: 1; }
 .fab-write { padding: 0 20px 0 16px; background: #a95670; color: #fff; border-color: #a95670; }
-.fab[data-action="exit"] { background: var(--paper); color: var(--sage); border-color: #d1c7b6; }
+.fab-return { gap: 10px; padding: 8px 16px 8px 10px; border-radius: 16px; background: var(--paper); color: #3e5138; border-color: #b8c2a8; box-shadow: 0 4px 12px #34452b24, inset 0 1px 0 #fff; }
+.fab-return span { font-size: 15px; font-weight: 650; }
+.fab-return .return-arrow { width: 30px; height: 30px; display: inline-flex; align-items: center; justify-content: center; border-radius: 10px; background: #e9eedf; color: #506548; font-size: 20px; }
+.fab-return:active { background: #f0f2e7; }
 .fab-menu { width: 52px; height: 52px; padding: 0; font-size: 22px; }
 .menu-status { color: #95576a; font-size: 13px; margin: 6px 0 0; }
 .menu-actions { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 6px; }

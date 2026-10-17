@@ -22,7 +22,7 @@ export function computeViewport(cssW, cssH, dpr = 1) {
 }
 
 /** 이름표·말풍선·문 이름표 글씨(내부 px). 화면 배율이 곱해져 390폭에서 약 13·16·13px. */
-export const TEXT = { name: 12, bubble: 14, bubbleLine: 18, label: 12 };
+export const TEXT = { name: 12, bubble: 14, bubbleLine: 18, label: 13 };
 
 /** A shared warm paper surface for map labels, exits and speech bubbles. */
 function paperBox(ctx, x, y, w, h, radius = 5) {
@@ -31,6 +31,28 @@ function paperBox(ctx, x, y, w, h, radius = 5) {
   ctx.beginPath(); ctx.roundRect(x + .5, y + .5, w - 1, h - 1, radius);
   ctx.fillStyle = '#fffaf2'; ctx.fill();
   ctx.strokeStyle = '#c8bda9'; ctx.lineWidth = 1; ctx.stroke();
+}
+
+/** Small enamel garden signs: readable lettering and one restrained pixel motif. */
+function gardenPlaque(ctx, x, y, w, h, back = false) {
+  paperBox(ctx, x, y, w, h, 4);
+  ctx.fillStyle = '#6f8361';
+  if (back) {
+    const cy = Math.round(y + h / 2);
+    ctx.fillRect(x + 10, cy - 1, 11, 2);
+    ctx.fillRect(x + 9, cy - 2, 2, 4);
+    ctx.fillRect(x + 11, cy - 4, 2, 2);
+    ctx.fillRect(x + 11, cy + 2, 2, 2);
+  } else {
+    const cy = Math.round(y + h / 2);
+    ctx.fillRect(x + 11, cy + 1, 2, 5);
+    ctx.fillRect(x + 8, cy + 1, 3, 2);
+    ctx.fillRect(x + 13, cy + 3, 3, 2);
+    ctx.fillStyle = '#c58c9c';
+    ctx.fillRect(x + 10, cy - 4, 5, 3);
+    ctx.fillRect(x + 11, cy - 5, 3, 5);
+    ctx.fillStyle = '#f7dfb4'; ctx.fillRect(x + 12, cy - 3, 1, 1);
+  }
 }
 
 /** 코드 Sprite({w,h,px}) → 오프스크린 캔버스(캐시). 브라우저 전용. */
@@ -178,21 +200,21 @@ export class Renderer {
   drawLabel(text, cx, topY) {
     const ctx = this.ctx;
     ctx.save(); ctx.font = `${TEXT.label}px Galmuri11, sans-serif`;
-    const w = Math.min(this.view.width - 12, Math.ceil(ctx.measureText(text).width) + 24);
+    const w = Math.min(this.view.width - 12, Math.ceil(ctx.measureText(text).width) + 36);
     const x = Math.max(3, Math.min(this.view.width - w - 3, Math.round(cx - this.cam.x - w / 2)));
-    const y = Math.round(topY - this.cam.y - 24);
-    paperBox(ctx, x, y, w, 28);
+    const y = Math.round(topY - this.cam.y - 28);
+    gardenPlaque(ctx, x, y, w, 32);
     ctx.fillStyle = '#46513b'; ctx.textBaseline = 'middle'; ctx.textAlign = 'center';
-    ctx.fillText(text, x + w / 2, y + 14, w - 20); ctx.restore();
+    ctx.fillText(text, x + w / 2 + 5, y + 16, w - 36); ctx.restore();
   }
 
   /** Make the small floor exit readable as a navigation target. */
   drawExit(cx, topY) {
     const ctx = this.ctx;
-    const x = Math.round(cx - this.cam.x - 48), y = Math.round(topY - this.cam.y - 12);
-    ctx.save(); paperBox(ctx, x, y, 96, 32);
+    const x = Math.round(cx - this.cam.x - 56), y = Math.round(topY - this.cam.y - 14);
+    ctx.save(); gardenPlaque(ctx, x, y, 112, 36, true);
     ctx.font = `${TEXT.label}px Galmuri11, sans-serif`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-    ctx.fillStyle = '#46513b'; ctx.fillText('← 정원으로', x + 48, y + 16); ctx.restore();
+    ctx.fillStyle = '#3e4e35'; ctx.fillText('정원으로', x + 63, y + 18); ctx.restore();
   }
 
   drawDestination(x, y) {

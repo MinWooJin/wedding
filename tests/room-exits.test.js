@@ -20,17 +20,17 @@ for (const [id, create] of Object.entries({ info: createInfo, gifts: createGifts
     const scene = create(game);
     const exit = scene.entrances.find((e) => e.to === 'hub');
     // Door's upper rim and left/right padding used to be treated as a floor tap.
-    for (const [dx, dy] of [[-31, -12], [16, 0], [63, 16]]) {
+    for (const [dx, dy] of [[-39, -14], [-31, -12], [16, 0], [63, 16], [71, 20]]) {
       player.moveTo(100, 100);
       scene.onTap(exit.tx * 32 + dx, exit.ty * 32 + dy, game);
       assert.deepEqual(calls.at(-1), ['hub', HUB_DOORS[id].back]);
       assert.equal(player.walking, false);
     }
-    assert.equal(calls.length, 3, '탭 한 번에 전환 한 번');
+    assert.equal(calls.length, 5, '넓어진 표식 가장자리도 탭 한 번에 전환 한 번');
     assert.equal(scene.exitAt((exit.tx - 2) * 32, exit.ty * 32), null, '먼 바닥은 출구가 아니다');
     // Entering a room still leaves the player inside; no automatic bounce back.
     scene.enter(player);
     scene.update(.016, game);
-    assert.equal(calls.length, 3);
+    assert.equal(calls.length, 5);
   });
 }

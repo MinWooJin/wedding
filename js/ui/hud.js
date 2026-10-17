@@ -23,7 +23,7 @@ export const SPACES = {
  */
 export function createHud(root, config, game) {
   root.innerHTML = `<div class="garden-header"><strong>${esc(displayName(config.groom))}<i> ♥ </i>${esc(displayName(config.bride))}</strong><span class="date-chip">${esc(ddayLabel(config.wedding.date))}</span></div>
-    <nav class="garden-dock" aria-label="정원 메뉴"><button class="fab fab-write" data-action="write"><span aria-hidden="true">✉</span>축하 남기기</button><button class="fab fab-write" data-action="exit" hidden>← 정원으로</button><button class="fab fab-menu menu-button" aria-label="메뉴 열기">☰</button></nav>`;
+    <nav class="garden-dock" aria-label="정원 메뉴"><button class="fab fab-write" data-action="write"><span aria-hidden="true">✉</span>축하 남기기</button><button class="fab fab-return" data-action="exit" aria-label="정원으로 돌아가기" hidden><span class="return-arrow" aria-hidden="true">←</span><span>정원으로</span></button><button class="fab fab-menu menu-button" aria-label="메뉴 열기">☰</button></nav>`;
   root.hidden = false;
   let sceneId = 'hub';
   const navigate = (id) => { game.player.stop(); game.goTo(id, id === 'hub' ? HUB_SPAWN : null); };
