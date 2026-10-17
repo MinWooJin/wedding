@@ -1,0 +1,124 @@
+{
+  "mode": "Codex built-in imagegen, no API key",
+  "date": "2026-10-17",
+  "references": [
+    {
+      "url": "https://support.gather.town/articles/9253868124-sizes",
+      "use": "32px grid and character/environment scale comparison; our 60-64px ink height is a project-specific readability choice, not Gather dimensions."
+    },
+    {
+      "url": "https://limezu.itch.io/modernexteriors",
+      "preview": "https://img.itch.zone/aW1hZ2UvMTMyOTQyNi85OTEyMzE0LmdpZg==/original/%2B73hqN.gif",
+      "use": "Observed calm ground negative space, grouped foliage and consistent pixel clusters. No source art copied into project."
+    }
+  ],
+  "jobs": [
+    {
+      "name": "groom",
+      "prompt": "Production sprite for a Korean mobile pixel wedding guestbook. ONE full-body character front facing standing neutral, arms relaxed, feet both visible, transparent background, no floor shadow. Deliberately low-resolution handcrafted pixel art: logical 32x48 pixels enlarged with nearest-neighbor square blocks, crisp hard pixel edges, 20-28 colors total, dark warm brown one-logical-pixel outline, flat two-tone shading, NO antialiasing, NO gradients, NO fine hair strands, NO anime rendering. Cozy three-head-tall adult chibi proportions, head about one third of total height, face simple but readable, generous clear pixels separating eyes, small closed smile. Centered with transparent padding. Intended to fit 40x60 visible pixels in a 48x72 frame. Original design, no text or watermark. Use attached existing groom ONLY as identity reference. Redraw his design in the specified chunky pixel style. Keep natural black 6:4 parted AS-PERM hair, soft rounded C-curl fringe curving to both sides with forehead part visible, NOT spikes or a heavy center bang. Slim oval face with subtly angular jaw, small almond eyes, straight eyebrows, relaxed closed-mouth smile. Black tuxedo, ivory shirt, dark bowtie, tiny ivory boutonniere, polished shoes. Warm fair skin. Head silhouette clearly distinct from wedding guests.",
+      "transparent_background": true,
+      "reference": "assets/characters/groom.png",
+      "source": "raw/reference-v3-source/groom.png"
+    },
+    {
+      "name": "bride",
+      "prompt": "Production sprite for a Korean mobile pixel wedding guestbook. ONE full-body character front facing standing neutral, arms relaxed, feet both visible, transparent background, no floor shadow. Deliberately low-resolution handcrafted pixel art: logical 32x48 pixels enlarged with nearest-neighbor square blocks, crisp hard pixel edges, 20-28 colors total, dark warm brown one-logical-pixel outline, flat two-tone shading, NO antialiasing, NO gradients, NO fine hair strands, NO anime rendering. Cozy three-head-tall adult chibi proportions, head about one third of total height, face simple but readable, generous clear pixels separating eyes, small closed smile. Centered with transparent padding. Intended to fit 40x60 visible pixels in a 48x72 frame. Original design, no text or watermark. Use attached existing bride ONLY as identity reference. Redraw her design in the specified chunky pixel style. Brown HIGH UPDO: exposed forehead, hair smoothly swept upward, round bun unmistakably visible above crown, veil attached BELOW bun so bun is never hidden. Soft heart-shaped face, gently curved closed smiling eyes, rosy cheek pixels, small closed smile. Ivory A-line bridal gown simple broad folds, short translucent veil, tiny blush and sage bouquet at waist. Warm fair skin. Readable at tiny scale, no lace microtexture.",
+      "transparent_background": true,
+      "reference": "assets/characters/bride.png",
+      "source": "raw/reference-v3-source/bride.png"
+    },
+    {
+      "name": "preset-0",
+      "prompt": "Production sprite for a Korean mobile pixel wedding guestbook. ONE full-body character front facing standing neutral, arms relaxed, feet both visible, transparent background, no floor shadow. Deliberately low-resolution handcrafted pixel art: logical 32x48 pixels enlarged with nearest-neighbor square blocks, crisp hard pixel edges, 20-28 colors total, dark warm brown one-logical-pixel outline, flat two-tone shading, NO antialiasing, NO gradients, NO fine hair strands, NO anime rendering. Cozy three-head-tall adult chibi proportions, head about one third of total height, face simple but readable, generous clear pixels separating eyes, small closed smile. Centered with transparent padding. Intended to fit 40x60 visible pixels in a 48x72 frame. Original design, no text or watermark. Adult male wedding guest, short black rounded crop with an asymmetric fringe distinct from the groom's parted perm, round face, small dark dot eyes and relaxed eyebrows, warm medium-light skin, red hoodie with single front pocket, dark denim straight trousers, white sneakers. No glasses, no hat. Friendly wide shoulders, simple red silhouette.",
+      "transparent_background": true,
+      "reference": null,
+      "source": "raw/reference-v3-source/preset-0.png"
+    },
+    {
+      "name": "tree",
+      "prompt": "One ornamental garden tree game prop, transparent background, full silhouette with visible trunk and no ground shadow. Original cozy top-down RPG pixel art with slightly overhead view, chunky square pixel clusters, logical 48x56 grid enlarged nearest-neighbor, 12-16 colors, warm dark green edge, flat three-tone sage and olive foliage grouped into 5 large rounded lobes, simple short warm brown trunk at bottom center. Tree canopy width about 1.8 adult character widths, total height about 1.7 character heights. Small calm wedding garden accent, compact rounded silhouette rather than tall pointed forest tree. NO tiny leaf noise, NO gradients, NO antialiasing, NO text.",
+      "transparent_background": true,
+      "reference": null,
+      "source": "raw/reference-v3-source/tree.png"
+    },
+    {
+      "name": "G",
+      "prompt": "ONE seamless tileable lawn texture for a cozy pixel wedding garden, top down flat orthographic. Logical 32x32 pixels enlarged nearest-neighbor crisp square blocks. Uniform muted fresh sage-green base (#779655), with only 6-8 small low-contrast grass blade clusters, each 2-3 logical pixels, two nearby green shades. Mostly quiet flat negative space. Opaque edge-to-edge square. Opposite borders identical flat base green, no border, no vignette, no lighting gradients, no random noisy stipple, no flowers, no stones, no repeating large motif, no grid, no text. Hand placed restrained low resolution pixel art, not painted texture.",
+      "transparent_background": false,
+      "reference": null,
+      "source": "raw/reference-v3-source/G.png"
+    },
+    {
+      "name": "N",
+      "prompt": "ONE seamless tileable warm ivory sand-and-fine-gravel garden aisle texture for a cozy pixel wedding garden, top down flat orthographic. Logical 32x32 pixels enlarged nearest-neighbor crisp square blocks. Uniform warm sand cream base (#dfcda0), only 6-8 tiny pale beige grain clusters, low contrast and generous flat quiet negative space. Opaque edge-to-edge square. Opposite borders identical flat base color. No square slab outlines or grout, no border, no vignette, no gradients, no random noisy stipple, no flowers, no objects, no grid, no text. Restrained original low resolution pixel art.",
+      "transparent_background": false,
+      "reference": null,
+      "source": "raw/reference-v3-source/N.png"
+    },
+    {
+      "name": "preset-1",
+      "prompt": "ONE production character sprite for a Korean mobile pixel wedding guestbook. Front-facing full body idle pose arms relaxed at sides, all hair and both feet visible, transparent background with no floor or shadow. Use attached new groom as STYLE REFERENCE ONLY: same chunky square pixel edges, adult chibi proportions about three heads tall, warm dark outline and simple face readable at 40x60 pixels. Original guest, NOT groom identity or clothes. Logical 32x48 pixel artwork enlarged nearest-neighbor, hard square pixel clusters, 20-28 colors, two-tone shading, NO fine texture, NO gradients, NO antialiasing. Smile small and closed, avoid enormous shiny anime eyes. Center with padding. No text, watermark, border or surrounding scene. Young adult woman, soft long wavy chestnut hair past shoulders and side part, long oval face, gently curved eyebrows, narrow smiling eyes. Warm fair skin. Muted golden-yellow cardigan over ivory shirt, brown midi skirt, brown low shoes. Simple warm silhouette.",
+      "transparent_background": true,
+      "reference": "raw/reference-v3-source/groom.png",
+      "source": "raw/reference-v3-source/preset-1.png"
+    },
+    {
+      "name": "preset-2",
+      "prompt": "ONE production character sprite for a Korean mobile pixel wedding guestbook. Front-facing full body idle pose arms relaxed at sides, all hair and both feet visible, transparent background with no floor or shadow. Use attached new groom as STYLE REFERENCE ONLY: same chunky square pixel edges, adult chibi proportions about three heads tall, warm dark outline and simple face readable at 40x60 pixels. Original guest, NOT groom identity or clothes. Logical 32x48 pixel artwork enlarged nearest-neighbor, hard square pixel clusters, 20-28 colors, two-tone shading, NO fine texture, NO gradients, NO antialiasing. Smile small and closed, avoid enormous shiny anime eyes. Center with padding. No text, watermark, border or surrounding scene. Adult man, broad squared face, short curly honey-blond hair with a rounded silhouette, straight expressive eyebrows, small close-set eyes, warm light skin. Sage green sweater, cream trousers, brown loafers. Taller stocky build.",
+      "transparent_background": true,
+      "reference": "raw/reference-v3-source/groom.png",
+      "source": "raw/reference-v3-source/preset-2.png"
+    },
+    {
+      "name": "preset-3",
+      "prompt": "ONE production character sprite for a Korean mobile pixel wedding guestbook. Front-facing full body idle pose arms relaxed at sides, all hair and both feet visible, transparent background with no floor or shadow. Use attached new groom as STYLE REFERENCE ONLY: same chunky square pixel edges, adult chibi proportions about three heads tall, warm dark outline and simple face readable at 40x60 pixels. Original guest, NOT groom identity or clothes. Logical 32x48 pixel artwork enlarged nearest-neighbor, hard square pixel clusters, 20-28 colors, two-tone shading, NO fine texture, NO gradients, NO antialiasing. Smile small and closed, avoid enormous shiny anime eyes. Center with padding. No text, watermark, border or surrounding scene. Adult woman with neat short black chin-length blunt bob, straight fringe, small round dark glasses, compact heart face, tiny smile, fair warm skin. Dusty pink blouse, charcoal A-line skirt, dark shoes. No long hair.",
+      "transparent_background": true,
+      "reference": "raw/reference-v3-source/groom.png",
+      "source": "raw/reference-v3-source/preset-3.png"
+    },
+    {
+      "name": "preset-4",
+      "prompt": "ONE production character sprite for a Korean mobile pixel wedding guestbook. Front-facing full body idle pose arms relaxed at sides, all hair and both feet visible, transparent background with no floor or shadow. Use attached new groom as STYLE REFERENCE ONLY: same chunky square pixel edges, adult chibi proportions about three heads tall, warm dark outline and simple face readable at 40x60 pixels. Original guest, NOT groom identity or clothes. Logical 32x48 pixel artwork enlarged nearest-neighbor, hard square pixel clusters, 20-28 colors, two-tone shading, NO fine texture, NO gradients, NO antialiasing. Smile small and closed, avoid enormous shiny anime eyes. Center with padding. No text, watermark, border or surrounding scene. Friendly garden guide, adult man with small moss-green beret over short brown hair, narrow oval face with rounded nose and small dot eyes, warm light skin. Navy casual jacket over cream shirt, beige trousers, brown loafers. Beret shape visible and distinct from baseball cap.",
+      "transparent_background": true,
+      "reference": "raw/reference-v3-source/groom.png",
+      "source": "raw/reference-v3-source/preset-4.png"
+    },
+    {
+      "name": "preset-5",
+      "prompt": "ONE production character sprite for a Korean mobile pixel wedding guestbook. Front-facing full body idle pose arms relaxed at sides, all hair and both feet visible, transparent background with no floor or shadow. Use attached new groom as STYLE REFERENCE ONLY: same chunky square pixel edges, adult chibi proportions about three heads tall, warm dark outline and simple face readable at 40x60 pixels. Original guest, NOT groom identity or clothes. Logical 32x48 pixel artwork enlarged nearest-neighbor, hard square pixel clusters, 20-28 colors, two-tone shading, NO fine texture, NO gradients, NO antialiasing. Smile small and closed, avoid enormous shiny anime eyes. Center with padding. No text, watermark, border or surrounding scene. Middle-aged man about fifty, short salt-and-pepper cropped hair, slightly receding temples, rounded rectangular face, gentle thicker eyebrows, subtle tiny mustache, warm tan skin. Muted terracotta-orange blazer over cream shirt, slate gray trousers and brown shoes. Broad shoulders, dignified friendly expression. No hat.",
+      "transparent_background": true,
+      "reference": "raw/reference-v3-source/groom.png",
+      "source": "raw/reference-v3-source/preset-5.png"
+    },
+    {
+      "name": "preset-6",
+      "prompt": "ONE production character sprite for a Korean mobile pixel wedding guestbook. Front-facing full body idle pose arms relaxed at sides, all hair and both feet visible, transparent background with no floor or shadow. Use attached new groom as STYLE REFERENCE ONLY: same chunky square pixel edges, adult chibi proportions about three heads tall, warm dark outline and simple face readable at 40x60 pixels. Original guest, NOT groom identity or clothes. Logical 32x48 pixel artwork enlarged nearest-neighbor, hard square pixel clusters, 20-28 colors, two-tone shading, NO fine texture, NO gradients, NO antialiasing. Smile small and closed, avoid enormous shiny anime eyes. Center with padding. No text, watermark, border or surrounding scene. Adult woman, long chestnut brown hair in low side ponytail draped over one shoulder, elongated oval face with softly curved nose, small dark almond eyes, warm medium tan skin. Muted lavender-purple cardigan over ivory blouse, ivory midi skirt, dark flats. Slim silhouette.",
+      "transparent_background": true,
+      "reference": "raw/reference-v3-source/groom.png",
+      "source": "raw/reference-v3-source/preset-6.png"
+    },
+    {
+      "name": "preset-7",
+      "prompt": "ONE production character sprite for a Korean mobile pixel wedding guestbook. Front-facing full body idle pose arms relaxed at sides, all hair and both feet visible, transparent background with no floor or shadow. Use attached new groom as STYLE REFERENCE ONLY: same chunky square pixel edges, adult chibi proportions about three heads tall, warm dark outline and simple face readable at 40x60 pixels. Original guest, NOT groom identity or clothes. Logical 32x48 pixel artwork enlarged nearest-neighbor, hard square pixel clusters, 20-28 colors, two-tone shading, NO fine texture, NO gradients, NO antialiasing. Smile small and closed, avoid enormous shiny anime eyes. Center with padding. No text, watermark, border or surrounding scene. Adult man with tight rounded honey blond curls, broad round cheeks and broad smiling closed mouth, dark small eyes, medium tan skin, stockier body. Deep teal sweater and charcoal trousers, simple beige shoes. No glasses. Clearly different face and hair from black-haired guests.",
+      "transparent_background": true,
+      "reference": "raw/reference-v3-source/groom.png",
+      "source": "raw/reference-v3-source/preset-7.png"
+    },
+    {
+      "name": "preset-8",
+      "prompt": "ONE production character sprite for a Korean mobile pixel wedding guestbook. Front-facing full body idle pose arms relaxed at sides, all hair and both feet visible, transparent background with no floor or shadow. Use attached new groom as STYLE REFERENCE ONLY: same chunky square pixel edges, adult chibi proportions about three heads tall, warm dark outline and simple face readable at 40x60 pixels. Original guest, NOT groom identity or clothes. Logical 32x48 pixel artwork enlarged nearest-neighbor, hard square pixel clusters, 20-28 colors, two-tone shading, NO fine texture, NO gradients, NO antialiasing. Smile small and closed, avoid enormous shiny anime eyes. Center with padding. No text, watermark, border or surrounding scene. Adult woman with straight dark brown asymmetrical short bob tucked on one side, visible forehead, broad soft round face and gently smiling curved eyes, warm tan skin. Muted coral blouse, ivory skirt, dark brown shoes. No glasses or hair bun.",
+      "transparent_background": true,
+      "reference": "raw/reference-v3-source/groom.png",
+      "source": "raw/reference-v3-source/preset-8.png"
+    },
+    {
+      "name": "preset-9",
+      "prompt": "ONE production character sprite for a Korean mobile pixel wedding guestbook. Front-facing full body idle pose arms relaxed at sides, all hair and both feet visible, transparent background with no floor or shadow. Use attached new groom as STYLE REFERENCE ONLY: same chunky square pixel edges, adult chibi proportions about three heads tall, warm dark outline and simple face readable at 40x60 pixels. Original guest, NOT groom identity or clothes. Logical 32x48 pixel artwork enlarged nearest-neighbor, hard square pixel clusters, 20-28 colors, two-tone shading, NO fine texture, NO gradients, NO antialiasing. Smile small and closed, avoid enormous shiny anime eyes. Center with padding. No text, watermark, border or surrounding scene. Adult man with faded blue baseball cap over short auburn hair, cap brim visible to one side, angular cheekbones, long nose represented by two pixels, small dark eyes, medium tan skin. Sky-blue casual jacket over cream shirt, brown trousers and beige sneakers. No beret.",
+      "transparent_background": true,
+      "reference": "raw/reference-v3-source/groom.png",
+      "source": "raw/reference-v3-source/preset-9.png"
+    }
+  ],
+  "preparation": "tools/prepare_reference_assets.py. BOX downsample, 32-color character palette / 16-color tree, binary alpha. Frame 48x72; ink bounds guests 36x60 / groom 38x64 / bride 44x64. Tree frame64x96. Ground32x32: remove generated low-frequency shading by local-median contrast extraction, apply three-color palette and constant one-pixel outer edges. J/U/W reuse high-contrast flower pixels from canonical variants; H identical pattern at brightness7/8.",
+  "rollback": "Remove individual manifest.files mapping to use the unchanged canonical PNG. Never run the whole converter to recreate characters."
+}

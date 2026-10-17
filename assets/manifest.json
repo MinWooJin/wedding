@@ -65,5 +65,32 @@
     "wedding-mailbox",
     "share-letter"
   ],
-  "maps": []
+  "maps": [],
+  "files": {
+    "characters": {
+      "preset-0": "preset-0-v3.png",
+      "groom": "groom-v3.png",
+      "bride": "bride-v3.png",
+      "preset-1": "preset-1-v3.png",
+      "preset-2": "preset-2-v3.png",
+      "preset-3": "preset-3-v3.png",
+      "preset-4": "preset-4-v3.png",
+      "preset-5": "preset-5-v3.png",
+      "preset-6": "preset-6-v3.png",
+      "preset-7": "preset-7-v3.png",
+      "preset-8": "preset-8-v3.png",
+      "preset-9": "preset-9-v3.png"
+    },
+    "objects": {
+      "tree": "tree-v3.png"
+    },
+    "tiles": {
+      "G": "G-v3.png",
+      "H": "H-v3.png",
+      "J": "J-v3.png",
+      "U": "U-v3.png",
+      "W": "W-v3.png",
+      "N": "N-v3.png"
+    }
+  }
 }

@@ -3,7 +3,8 @@
  *
  *  assets/characters/<name>.png  정면 1장(가로:세로 ≈ 2:3, 48×72로 맞춰짐) 또는 3열×4행 시트(열: idle/걷기A/걷기B, 행: down/left/right/up)
  *  assets/tiles/<ID>.png         32×32
- *  assets/objects/<id>.png       32의 배수 크기(아치 160×128, 나무 96×96, 벤치·책상 128×64, 꽃·문 32×32, 나머지 64×64)
+ *  assets/objects/<id>.png       오브젝트별 크기(현재 아치 224×160, 나무 64×96, 꽃 32×48 등)
+ *  manifest.files               같은 ID의 별도 버전 PNG 선택. 누락/실패하면 원래 파일 사용.
  *  assets/maps/<sceneId>.png     씬 전체 배경(맵 픽셀 크기와 같게; 다르면 늘려 맞춤)
  */
 import { TILE } from './renderer.js';
@@ -64,12 +65,18 @@ export function characterSetFromImage(img) {
   return Math.abs(ratio - 2) < Math.abs(ratio - 1.5) ? setFromSheet(img) : setFromSingle(img);
 }
 
+/** 같은 ID의 새 그림은 별도 파일로 연결해 이전 PNG를 보존한다. */
+export function assetFilename(manifest, category, name) {
+  const variant = manifest?.files?.[category]?.[name];
+  return typeof variant === 'string' && /^[a-zA-Z0-9_-]+\.png$/.test(variant) ? variant : `${name}.png`;
+}
+
 /**
  * assets/manifest.json: {"characters":[...], "tiles":[...], "objects":[...], "maps":[...]} — 존재하는 파일 이름만 적는다.
  * tools/prepare_assets.py가 자동으로 만들어 준다. manifest가 없으면 아무것도 로드하지 않는다(코드 그림 폴백).
  */
 export async function loadAssets(base = 'assets') {
-  const out = { characters: {}, tiles: {}, objects: {}, maps: {} };
+  const out = { characters: {}, tiles: {}, objects: {}, maps: {}, urls: {} };
   let manifest;
   try {
     const res = await fetch(`${base}/manifest.json`, { cache: 'no-cache' });
@@ -77,21 +84,33 @@ export async function loadAssets(base = 'assets') {
     manifest = await res.json();
   } catch { return out; }
 
+  async function imageFor(category, name) {
+    const filename = assetFilename(manifest, category, name);
+    let url = `${base}/${category}/${filename}`;
+    let img = await loadImage(url);
+    if (!img && filename !== `${name}.png`) {
+      url = `${base}/${category}/${name}.png`;
+      img = await loadImage(url);
+    }
+    if (img) out.urls[`${category}/${name}`] = url;
+    return img;
+  }
+
   const pick = (list, allowed) => (Array.isArray(list) ? list.filter((n) => allowed.includes(n)) : []);
   const jobs = [];
-  for (const n of pick(manifest.characters, CHARACTER_NAMES)) jobs.push(loadImage(`${base}/characters/${n}.png`).then((img) => { if (img) out.characters[n] = characterSetFromImage(img); }));
+  for (const n of pick(manifest.characters, CHARACTER_NAMES)) jobs.push(imageFor('characters', n).then((img) => { if (img) out.characters[n] = characterSetFromImage(img); }));
   const tileNames = Array.isArray(manifest.tiles) ? manifest.tiles.map((n) => FILE_TO_TILE[n] ?? n) : [];
   for (const id of pick(tileNames, TILE_IDS)) {
     const file = TILE_FILES[id] ?? id;
-    jobs.push(loadImage(`${base}/tiles/${file}.png`).then((img) => { if (img) out.tiles[id] = imgSprite(toCanvas(img, 0, 0, img.width, img.height, TILE, TILE)); }));
+    jobs.push(imageFor('tiles', file).then((img) => { if (img) out.tiles[id] = imgSprite(toCanvas(img, 0, 0, img.width, img.height, TILE, TILE)); }));
   }
-  for (const id of pick(manifest.objects, OBJECT_IDS)) jobs.push(loadImage(`${base}/objects/${id}.png`).then((img) => {
+  for (const id of pick(manifest.objects, OBJECT_IDS)) jobs.push(imageFor('objects', id).then((img) => {
     if (!img) return;
     // 폭은 타일 배수로 맞추고, 높이는 원본을 유지한다(의자 48px 등). Scene이 발자국 행 바닥에 맞춰 그린다.
     const w = Math.max(TILE, Math.round(img.width / TILE) * TILE), h = Math.max(TILE, img.height);
     out.objects[id] = imgSprite(toCanvas(img, 0, 0, img.width, img.height, w, h));
   }));
-  for (const id of pick(manifest.maps, SCENE_IDS)) jobs.push(loadImage(`${base}/maps/${id}.png`).then((img) => { if (img) out.maps[id] = img; }));
+  for (const id of pick(manifest.maps, SCENE_IDS)) jobs.push(imageFor('maps', id).then((img) => { if (img) out.maps[id] = img; }));
   await Promise.all(jobs);
   return out;
 }

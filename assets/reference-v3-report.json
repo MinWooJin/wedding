@@ -1,0 +1,338 @@
+{
+  "characters/preset-0": {
+    "file": "preset-0-v3.png",
+    "size": [
+      48,
+      72
+    ],
+    "bbox": [
+      11,
+      12,
+      36,
+      72
+    ],
+    "colors": 32,
+    "alpha_values": [
+      0,
+      255
+    ]
+  },
+  "characters/preset-1": {
+    "file": "preset-1-v3.png",
+    "size": [
+      48,
+      72
+    ],
+    "bbox": [
+      10,
+      12,
+      37,
+      72
+    ],
+    "colors": 31,
+    "alpha_values": [
+      0,
+      255
+    ]
+  },
+  "characters/preset-2": {
+    "file": "preset-2-v3.png",
+    "size": [
+      48,
+      72
+    ],
+    "bbox": [
+      11,
+      12,
+      36,
+      72
+    ],
+    "colors": 32,
+    "alpha_values": [
+      0,
+      255
+    ]
+  },
+  "characters/preset-3": {
+    "file": "preset-3-v3.png",
+    "size": [
+      48,
+      72
+    ],
+    "bbox": [
+      10,
+      12,
+      37,
+      72
+    ],
+    "colors": 31,
+    "alpha_values": [
+      0,
+      255
+    ]
+  },
+  "characters/preset-4": {
+    "file": "preset-4-v3.png",
+    "size": [
+      48,
+      72
+    ],
+    "bbox": [
+      11,
+      12,
+      36,
+      72
+    ],
+    "colors": 31,
+    "alpha_values": [
+      0,
+      255
+    ]
+  },
+  "characters/preset-5": {
+    "file": "preset-5-v3.png",
+    "size": [
+      48,
+      72
+    ],
+    "bbox": [
+      11,
+      12,
+      37,
+      72
+    ],
+    "colors": 31,
+    "alpha_values": [
+      0,
+      255
+    ]
+  },
+  "characters/preset-6": {
+    "file": "preset-6-v3.png",
+    "size": [
+      48,
+      72
+    ],
+    "bbox": [
+      12,
+      12,
+      36,
+      72
+    ],
+    "colors": 31,
+    "alpha_values": [
+      0,
+      255
+    ]
+  },
+  "characters/preset-7": {
+    "file": "preset-7-v3.png",
+    "size": [
+      48,
+      72
+    ],
+    "bbox": [
+      11,
+      12,
+      37,
+      72
+    ],
+    "colors": 32,
+    "alpha_values": [
+      0,
+      255
+    ]
+  },
+  "characters/preset-8": {
+    "file": "preset-8-v3.png",
+    "size": [
+      48,
+      72
+    ],
+    "bbox": [
+      11,
+      12,
+      36,
+      72
+    ],
+    "colors": 32,
+    "alpha_values": [
+      0,
+      255
+    ]
+  },
+  "characters/preset-9": {
+    "file": "preset-9-v3.png",
+    "size": [
+      48,
+      72
+    ],
+    "bbox": [
+      11,
+      12,
+      37,
+      72
+    ],
+    "colors": 32,
+    "alpha_values": [
+      0,
+      255
+    ]
+  },
+  "characters/groom": {
+    "file": "groom-v3.png",
+    "size": [
+      48,
+      72
+    ],
+    "bbox": [
+      10,
+      8,
+      37,
+      72
+    ],
+    "colors": 31,
+    "alpha_values": [
+      0,
+      255
+    ]
+  },
+  "characters/bride": {
+    "file": "bride-v3.png",
+    "size": [
+      48,
+      72
+    ],
+    "bbox": [
+      5,
+      8,
+      43,
+      72
+    ],
+    "colors": 31,
+    "alpha_values": [
+      0,
+      255
+    ]
+  },
+  "objects/tree": {
+    "file": "tree-v3.png",
+    "size": [
+      64,
+      96
+    ],
+    "bbox": [
+      0,
+      30,
+      64,
+      96
+    ],
+    "colors": 15,
+    "alpha_values": [
+      0,
+      255
+    ]
+  },
+  "tiles/G": {
+    "file": "G-v3.png",
+    "size": [
+      32,
+      32
+    ],
+    "bbox": [
+      0,
+      0,
+      32,
+      32
+    ],
+    "colors": 3,
+    "alpha_values": [
+      255
+    ]
+  },
+  "tiles/H": {
+    "file": "H-v3.png",
+    "size": [
+      32,
+      32
+    ],
+    "bbox": [
+      0,
+      0,
+      32,
+      32
+    ],
+    "colors": 3,
+    "alpha_values": [
+      255
+    ]
+  },
+  "tiles/J": {
+    "file": "J-v3.png",
+    "size": [
+      32,
+      32
+    ],
+    "bbox": [
+      0,
+      0,
+      32,
+      32
+    ],
+    "colors": 24,
+    "alpha_values": [
+      255
+    ]
+  },
+  "tiles/U": {
+    "file": "U-v3.png",
+    "size": [
+      32,
+      32
+    ],
+    "bbox": [
+      0,
+      0,
+      32,
+      32
+    ],
+    "colors": 32,
+    "alpha_values": [
+      255
+    ]
+  },
+  "tiles/W": {
+    "file": "W-v3.png",
+    "size": [
+      32,
+      32
+    ],
+    "bbox": [
+      0,
+      0,
+      32,
+      32
+    ],
+    "colors": 26,
+    "alpha_values": [
+      255
+    ]
+  },
+  "tiles/N": {
+    "file": "N-v3.png",
+    "size": [
+      32,
+      32
+    ],
+    "bbox": [
+      0,
+      0,
+      32,
+      32
+    ],
+    "colors": 3,
+    "alpha_values": [
+      255
+    ]
+  }
+}

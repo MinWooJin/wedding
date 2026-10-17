@@ -65,7 +65,8 @@ def main():
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
     selected = {(group, name) for group, name, _ in JOBS}
     untouched = {ASSETS / group / f"{name}.png": digest(ASSETS / group / f"{name}.png")
-                 for group, names in manifest.items() for name in names if (group, name) not in selected}
+                 for group in ('characters', 'tiles', 'objects', 'maps')
+                 for name in manifest.get(group, []) if (group, name) not in selected}
     for group, name, _ in JOBS:
         target = ROOT / "raw" / group / f"{name}.png"
         backup(target)

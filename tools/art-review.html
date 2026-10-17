@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="ko">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>픽셀 정원 · 레퍼런스 고도화 비교</title>
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; padding: 32px 24px; background: #faf5ed; color: #394632; font: 15px/1.7 system-ui, sans-serif; }
+  main { max-width: 1000px; margin: auto; }
+  h1 { font-size: 26px; } h2 { margin-top: 36px; font-size: 20px; }
+  a { color: #8b4864; } img { display: block; max-width: 100%; image-rendering: pixelated; }
+  .phones { display: flex; gap: 32px; align-items: flex-start; flex-wrap: wrap; }
+  iframe { box-sizing: content-box; border: 1px solid #d6d6c2; border-radius: 20px; background: #fff9ef; }
+  .note { max-width: 760px; color: #61705a; }
+</style>
+<main>
+  <h1>픽셀 정원 · 레퍼런스 고도화 비교</h1>
+  <p class="note">32px 타일과 48×72 캐릭터 프레임을 유지했습니다. 하객의 실제 그림은 높이 60px, 신랑·신부는 64px이며 발 위치가 같습니다. 이전 PNG는 보관하고 manifest의 files로 새 버전을 연결합니다.</p>
+  <p>참고: <a href="https://support.gather.town/articles/9253868124-sizes">Gather의 타일·캐릭터 크기</a> · <a href="https://limezu.itch.io/modernexteriors">LimeZu의 외부 공간 예시</a>. 그림은 내장 이미지 생성 도구로 새로 제작했습니다.</p>
+  <h2>캐릭터와 바닥의 이전 / 개선 비교</h2>
+  <img src="../assets/reference-v3-comparison.png" alt="캐릭터 12종과 잔디·길의 이전 및 개선 버전 비교">
+  <h2>새 캐릭터 12종 · 2배 확대</h2>
+  <img src="../assets/reference-v3-characters.png" alt="하객 10종과 신랑·신부의 새로운 외형">
+  <h2>실제 화면 · 390px / 320px</h2>
+  <p class="note">아래는 실제 앱입니다. 각 화면에서 정원에 입장해 캐릭터 선택과 이동을 확인할 수 있습니다.</p>
+  <div class="phones">
+    <section><h3>390 × 844</h3><iframe id="phone-wide" title="390px 모바일 청첩장" src="../" width="390" height="844"></iframe></section>
+    <section><h3>320 × 740</h3><iframe id="phone-narrow" title="320px 모바일 청첩장" src="../" width="320" height="740"></iframe></section>
+  </div>
+</main>
+</html>

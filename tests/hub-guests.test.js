@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { guestPlacements, HUB_ROWS, HUB_DOORS, GUEST_ZONE, createHub, uniqueGuests, MAX_GUESTS } from '../js/world/hub.js';
 import { DEFAULT_CONFIG } from '../js/config.js';
+import { assetFilename } from '../js/assets.js';
 
 test('여러 글과 방문 기록이 섞여도 한 하객을 한 번만 업데이트한다', () => {
   const entries = [
@@ -48,12 +49,15 @@ test('실제 PNG 크기로 광장에 하객이 충분히 모인다(30명 중 20�
   // 코드 대체 그림은 실제 PNG(나무 96×128 등)보다 작아 수용 인원을 부풀린다. 반드시 실제 크기로 잰다.
   const manifest = JSON.parse(readFileSync(new URL('../assets/manifest.json', import.meta.url)));
   const objects = Object.fromEntries(manifest.objects.map((name) => {
-    const png = readFileSync(new URL(`../assets/objects/${name}.png`, import.meta.url));
+    const png = readFileSync(new URL(`../assets/objects/${assetFilename(manifest, 'objects', name)}`, import.meta.url));
     return [name, { w: png.readUInt32BE(16), h: png.readUInt32BE(20) }];
   }));
   const entries = Array.from({ length: 30 }, (_, i) => ({ t: i, n: `손님${i}`, c: i % 10, m: '축하' }));
   const hub = createHub({ config: DEFAULT_CONFIG, profile: { nickname: '나' }, assets: { objects }, data: { messages: entries } });
   assert.ok(hub.guestMap.size >= 20, `배치된 하객 ${hub.guestMap.size}명`);
+  const trees = hub.objects.filter((o) => o.sprite === 'tree');
+  assert.equal(trees[0].tx * 32, 32);
+  assert.equal(trees[1].tx * 32 + trees[1].spr.w, 320, '새 나무도 좌우 여백이 대칭');
 });
 
 test('이야기 길은 없고 마음 전하는 곳이 그 자리(왼쪽 두 번째 문)에 있다', () => {

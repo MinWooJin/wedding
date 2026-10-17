@@ -41,7 +41,7 @@ export const HUB_DOORS = {
 };
 
 /**
- * 장식: 큰 나무(96×128, 3칸 폭)는 아치 바로 아래 한 쌍만 두어 정원 윗부분의 경계를 만들고,
+ * 장식: 나무는 아치 바로 아래 한 쌍만 두어 정원 윗부분의 경계를 만들고,
  * 그 아래는 2칸 폭 덤불만 가장자리에 둬서 하객이 설 자리를 넉넉히 남긴다.
  */
 const DECOR = [ // 0~4행은 큰 아치(최대 7칸 폭) 자리라 비워 둔다
@@ -113,11 +113,13 @@ export class HubScene extends Scene {
 
     // 아치는 PNG 폭(160=5칸, 224=7칸 …)에 맞춰 돌길 중앙(5열)에 가운데 정렬한다
     const archTiles = Math.round((game.assets?.objects?.arch?.w ?? 160) / 32);
+    const treeRight = 10 - Math.ceil((game.assets?.objects?.tree?.w ?? 96) / 32);
     const objects = [
       { id: 'arch', sprite: 'arch', tx: 5 - Math.floor(archTiles / 2), ty: 0, solid: false },
       // 단상(160×64, 3~7열 × 4~5행): 바닥 장식이라 신랑신부 발밑에 깔리고 충돌 없음. assets/objects/platform.png가 있을 때만 표시
       ...(game.assets?.objects?.platform ? [{ id: 'platform', sprite: 'platform', tx: 3, ty: 4, floor: true }] : []),
-      ...DECOR.map((d, i) => ({ id: `decor${i}`, ...d })),
+      // 나무 버전의 폭이 달라도 좌우 바깥 여백은 한 칸으로 맞춘다.
+      ...DECOR.map((d, i) => ({ id: `decor${i}`, ...d, tx: d.sprite === 'tree' && d.tx === 7 ? treeRight : d.tx })),
     ];
     const entrances = [];
     for (const [id, d] of Object.entries(HUB_DOORS)) {

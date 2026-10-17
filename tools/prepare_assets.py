@@ -127,6 +127,12 @@ def process_object(src: Path, w: int, h: int) -> Image.Image:
 
 def main():
     manifest = {"characters": [], "tiles": [], "objects": [], "maps": []}
+    # 선택한 버전별 그림 연결은 기존 원본을 변환해도 보존한다.
+    manifest_path = OUT / "manifest.json"
+    if manifest_path.exists():
+        previous = json.loads(manifest_path.read_text(encoding="utf-8"))
+        if "files" in previous:
+            manifest["files"] = previous["files"]
     for sub in ["characters", "tiles", "objects", "maps"]:
         (OUT / sub).mkdir(parents=True, exist_ok=True)
 

@@ -22,7 +22,11 @@ export function showCover(root, config, assetsReady, returning = false) {
     </section>`);
     root.replaceChildren(card); root.hidden = false;
     const button = card.querySelector('button');
-    assetsReady.then(() => {
+    assetsReady.then((assets) => {
+      for (const name of ['groom', 'bride']) {
+        const url = assets?.urls?.[`characters/${name}`];
+        if (url) card.querySelector(`.cover-${name}`).src = url;
+      }
       button.disabled = false;
       button.textContent = returning ? '정원에 다시 입장하기 →' : '정원에 입장하기 →';
     }).catch(() => { button.disabled = false; button.textContent = '정원에 입장하기 →'; });

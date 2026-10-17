@@ -1,7 +1,19 @@
 # 에셋 가이드 (AI 생성 → 게임 적용)
 
 게임은 `assets/manifest.json`에 적힌 PNG만 읽고, 없는 것은 코드로 그린 기본 그림을 씁니다.
-**원본은 `raw/`에 넣고 `python tools/prepare_assets.py`를 실행**하면 규격에 맞게 변환되고 manifest가 자동으로 만들어집니다.
+현재 선택된 그림은 manifest의 **`files`**를 우선합니다. 2026-10-17 레퍼런스 고도화는
+캐릭터 12종·정원 타일 6종·나무를 `*-v3.png`로 추가했습니다. 기존 PNG는 덮어쓰지 않았습니다.
+새 버전이 없으면 원래 PNG로 돌아갑니다. 커버와 캐릭터 선택 화면도 같은 버전을 사용합니다.
+
+- 비교: `reference-v3-comparison.png`, `reference-v3-characters.png`, `../tools/art-review.html`
+- 실제 내장 생성 프롬프트·참고 URL: `reference-v3-prompts.json`
+- 파일별 크기·bbox·팔레트·알파: `reference-v3-report.json`
+- 선택 변환: `python tools/prepare_reference_assets.py` (원본 `raw/reference-v3-source/` 필요)
+- 캐릭터 프레임 48×72, 실제 하객 높이 60px / 신랑·신부 64px. 새 나무 프레임 64×96.
+- 되돌리기: manifest.files에서 해당 ID의 매핑만 제거합니다. 기존 캐릭터 전체 재변환은 하지 마세요.
+
+아래 전체 변환 명령은 과거 기본 파이프라인 설명입니다. 현재 캐릭터를 변환할 때는
+위 선택 변환만 사용합니다. 생성 원본이 없는 체크아웃에서는 커밋된 최종 PNG를 그대로 사용하세요.
 
 ```
 pip install pillow
@@ -14,12 +26,12 @@ python tools/prepare_assets.py --pixel  # 또렷한 도트 느낌
 | 종류 | raw 파일명 | 결과 크기 | 비고 |
 |---|---|---|---|
 | 하객 캐릭터 | `raw/characters/preset-0.png` … `preset-9.png` | 48×72 | 정면 전신 1장이면 충분(좌우는 반전, 걷기는 들썩임으로 표현) |
-| 신랑·신부 | `raw/characters/groom.png`, `bride.png` | 48×72 | 광장 아치 아래, 이야기 길 벤치에 등장 |
+| 신랑·신부 | `raw/reference-v3-source/groom.png`, `bride.png` | 48×72 | 광장 아치 아래. 애즈펌·올림머리 유지 |
 | 걷기 시트(선택) | `raw/characters/<name>-sheet.png` | 144×288 | 3열(idle/걷기A/걷기B) × 4행(앞/왼쪽/오른쪽/뒤) |
 | 타일 | `raw/tiles/G W P H F D K R S M.png` | 32×32 | G 잔디, W 꽃잔디, P 흙길, H 그늘진 잔디, F 울타리, D 크림 오크, K 크림 벽, R 카펫, S 돌바닥, M 대리석 |
-| 오브젝트 | `raw/objects/<id>.png` | 오브젝트별 | arch 224×160, tree 96×128, bench·desk 128×64, flower 32×48, door 32×32. 전체 규격은 `tools/prepare_assets.py`의 OBJECT_SIZES 참고 |
+| 오브젝트 | `raw/objects/<id>.png` | 오브젝트별 | arch 224×160, 현재 tree-v3 64×96(이전 tree 96×128), bench·desk 128×64, flower 32×48, door 32×32. v3 나무는 선택 변환기로만 처리 |
 | 추가 타일 | `raw/tiles/wedding/<name>.png` | 32×32 | A/B/C 버진로드, E 꽃잎 잔디, L 카펫, J/U 꽃잔디, N 모래길, X1~X4 꽃밭·자갈·장미 산울타리. M은 `raw/tiles/M.png`로 별도 처리 |
-| 씬 배경(선택) | `raw/maps/hub.png info.png guestbook.png gifts.png` | hub 352×1024, info 352×256, guestbook 352×384, gifts 352×256 | 타일 대신 한 장으로 그림. 길·벽 위치는 아래 레이아웃을 따라야 함 |
+| 씬 배경(선택) | `raw/maps/hub.png info.png guestbook.png gifts.png` | hub 352×864, info 352×384, guestbook 352×384, gifts 352×384 | 타일 대신 한 장으로 그림. 현재 씬 코드의 레이아웃을 따라야 함 |
 
 배경은 단색(흰색 등)이나 투명이면 됩니다. 스크립트가 모서리 색을 기준으로 배경을 지우고, 여백을 잘라내고, 크기를 맞춥니다.
 
