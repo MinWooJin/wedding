@@ -99,3 +99,18 @@ test('뷰 폭은 항상 352px, 352 이상이면 정수 배율, 더 좁으면 꽉
   assert.deepEqual(computeViewport(1200, 900), { scale: 3, width: 352, height: 300 });
   assert.deepEqual(computeViewport(176, 300), { scale: 0.5, width: 352, height: 600 });
 });
+
+
+test('넓은 잔디 재질은 32px 격자마다 반복하지 않고 월드 좌표로 연속 샘플링한다', () => {
+  const calls = [], canvas = {};
+  const r = new Renderer({ getContext: () => ({ drawImage: (...args) => calls.push(args) }) });
+  r.tiles = { G: { w:128,h:128,canvas } };
+  r.cam = { x:0,y:17 };
+  r.drawTile('G',96,160); r.drawTile('G',128,160);
+  assert.deepEqual(calls[0], [canvas,96,32,32,32,96,143,32,32]);
+  assert.deepEqual(calls[1], [canvas,0,32,32,32,128,143,32,32]);
+  const translates = [];
+  r.ctx = { createPattern: () => ({}), save(){},restore(){},fillRect(){},translate:(...args)=>translates.push(args) };
+  r.cam = {x:17,y:45}; r.drawBackdrop('G');
+  assert.deepEqual(translates[0],[-17,-45], '배경도 128px 재질 위상에 맞춘다');
+});

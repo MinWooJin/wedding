@@ -1,0 +1,63 @@
+{
+  "tiles/lawn": {
+    "file": "lawn-v5.png",
+    "size": [
+      128,
+      128
+    ],
+    "colors": 8,
+    "world_repeat_px": 128,
+    "movement_tile_px": 32
+  },
+  "meadow-sprig-v2.png": {
+    "size": [
+      32,
+      32
+    ],
+    "bbox": [
+      0,
+      17,
+      32,
+      32
+    ],
+    "colors": 28,
+    "alpha_values": [
+      0,
+      255
+    ]
+  },
+  "aisle-flower-airy-left-v2.png": {
+    "size": [
+      32,
+      48
+    ],
+    "bbox": [
+      0,
+      20,
+      32,
+      48
+    ],
+    "colors": 31,
+    "alpha_values": [
+      0,
+      255
+    ]
+  },
+  "aisle-flower-airy-right-v2.png": {
+    "size": [
+      32,
+      48
+    ],
+    "bbox": [
+      0,
+      20,
+      32,
+      48
+    ],
+    "colors": 31,
+    "alpha_values": [
+      0,
+      255
+    ]
+  }
+}

@@ -94,13 +94,16 @@
     "objects": {
       "tree": "tree-v4-cherry.png",
       "aisle-flower-left": "aisle-flower-left-v2.png",
-      "aisle-flower-right": "aisle-flower-right-v2.png"
+      "aisle-flower-right": "aisle-flower-right-v2.png",
+      "meadow-sprig": "meadow-sprig-v2.png",
+      "aisle-flower-airy-left": "aisle-flower-airy-left-v2.png",
+      "aisle-flower-airy-right": "aisle-flower-airy-right-v2.png"
     },
     "tiles": {
-      "G": "G-v4.png",
+      "G": "lawn-v5.png",
       "H": "H-v3.png",
-      "J": "J-v4.png",
-      "U": "U-v4.png",
+      "J": "lawn-v5.png",
+      "U": "lawn-v5.png",
       "W": "W-v3.png",
       "N": "N-v3.png"
     }

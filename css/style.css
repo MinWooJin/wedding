@@ -21,6 +21,7 @@ html, body {
 #frame {
   position: relative; margin: 0 auto; height: 100%;
   width: 100%; max-width: 430px; overflow: hidden;
+  image-rendering: pixelated;
   background: linear-gradient(180deg, var(--bg-top), var(--bg-bottom));
 }
 #game {

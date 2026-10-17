@@ -1,5 +1,10 @@
 # 에셋 작업 인수인계 프롬프트 (Codex / Claude)
 
+> **최신: 경계 흔들림·잔디 가독성 수정(2026-10-17).** HANDOFF 17절 / 설계 24절을 우선한다.
+> 논리 격자는32px, 현재 잔디 그림은 `lawn-v5.png`128px 연속 재질이다. 로더에서32px로 줄이거나 타일마다 처음부터 반복하지 마라.
+> CSS 양옆 배경도 캔버스와 동일한 카메라·배율·중앙 원점으로 움직여야 한다. 고정 background-position으로 되돌리지 마라.
+> 들꽃v2는 더 크게, 수국v2는 낮고 풍성하게 바꿨다. 선택 변환 `tools/prepare_lawn_review_assets.py`.
+
 > **최신: 벚꽃나무(2026-10-17).** HANDOFF 16절 / 설계 23절 참고.
 > tree ID는 `tree-v4-cherry.png`(64×96)를 선택한다. 메인·방명록 모두 연분홍 벚꽃나무이며 기존 초록 나무 파일은 보존한다.
 > 배치·충돌은 그대로다. 프롬프트 `assets/cherry-tree-prompts.json`, 선택 변환 `tools/prepare_cherry_tree_asset.py`.

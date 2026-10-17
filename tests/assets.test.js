@@ -42,7 +42,7 @@ test('등록된 버전 파일은 실제 PNG이고 캐릭터 프레임과 타일 
       assert.equal(png.subarray(1, 4).toString(), 'PNG');
       const size = [png.readUInt32BE(16), png.readUInt32BE(20)];
       if (group === 'characters') assert.deepEqual(size, [48, 72]);
-      if (group === 'tiles') assert.deepEqual(size, [32, 32]);
+      if (group === 'tiles') assert.deepEqual(size, ['G','J','U'].includes(name) ? [128,128] : [32,32]);
       if (name === 'tree') assert.deepEqual(size, [64, 96]);
     }
   }
@@ -61,5 +61,19 @@ test('단상용 커플은 개별 캐릭터와 달리 96×72 크기로 로드한�
     assert.equal(loaded.characters.couple.down[0].w, 96);
     assert.equal(loaded.characters.couple.down[0].h, 72);
     assert.equal(loaded.characters.groom.down[0].w, 48);
+  } finally { Object.assign(globalThis, saved); }
+});
+
+
+test('128px 잔디 재질은 축소하지 않고 일반 바닥만 32px로 로드한다', async () => {
+  const saved = { fetch: globalThis.fetch, Image: globalThis.Image, document: globalThis.document };
+  globalThis.fetch = async () => ({ ok: true, json: async () => ({ tiles: ['G','N'] }) });
+  globalThis.Image = class { width = 128; height = 128; set src(value) { queueMicrotask(() => this.onload()); } };
+  globalThis.document = { createElement: () => ({ getContext: () => ({ drawImage() {} }) }) };
+  try {
+    const loaded = await loadAssets();
+    assert.equal(loaded.tiles.G.w, 128);
+    assert.equal(loaded.tiles.G.h, 128);
+    assert.equal(loaded.tiles.N.w, 32);
   } finally { Object.assign(globalThis, saved); }
 });

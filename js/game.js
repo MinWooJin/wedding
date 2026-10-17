@@ -1,4 +1,4 @@
-import { Renderer } from './renderer.js';
+import { Renderer, TILE } from './renderer.js';
 import { attachPointer } from './input.js';
 import { Character } from './entities/character.js';
 import { presetSprites } from './sprites/characters.js';
@@ -33,6 +33,15 @@ export function cameraBounds(view, scene, topPad = 0) {
 }
 
 const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
+
+
+/** 캔버스와 양옆 CSS 잔디에 같은 월드 원점·배율·반올림 카메라를 적용한다. */
+export function groundBackgroundStyle(view, frameWidth, cam, texture) {
+  const { scale } = view;
+  const x = (frameWidth - view.width * scale) / 2 - Math.round(cam.x) * scale;
+  const y = -Math.round(cam.y) * scale;
+  return { size: `${(texture?.w ?? TILE) * scale}px ${(texture?.h ?? TILE) * scale}px`, position: `${x}px ${y}px` };
+}
 
 const FADE_TIME = 0.3;
 const CAM_SMOOTH = 10; // 클수록 빨리 따라붙음
@@ -72,6 +81,7 @@ export class Game {
 
   resize() {
     const r = this.frame.getBoundingClientRect();
+    this.frameWidth = r.width;
     this.renderer.resize(r.width, r.height);
     const header = this.frame.querySelector?.('.garden-header')?.getBoundingClientRect();
     const panel = this.frame.querySelector?.('.scene-panel')?.getBoundingClientRect();
@@ -170,6 +180,11 @@ export class Game {
   draw() {
     const r = this.renderer;
     r.cam = { x: Math.round(this.cam.x), y: Math.round(this.cam.y) };
+    if (this.scene.groundTile) {
+      const bg = groundBackgroundStyle(r.view, this.frameWidth, r.cam, r.tiles[this.scene.groundTile]);
+      if (this.frame.style.backgroundSize !== bg.size) this.frame.style.backgroundSize = bg.size;
+      if (this.frame.style.backgroundPosition !== bg.position) this.frame.style.backgroundPosition = bg.position;
+    }
     r.begin(this.scene.bg);
     this.scene.draw(r, this.player);
     r.drawFade(this.fade.alpha);

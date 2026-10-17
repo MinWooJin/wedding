@@ -2,7 +2,7 @@
  * 선택적 PNG 에셋 로더. 파일이 있으면 코드 그림 대신 사용하고, 없으면 조용히 폴백.
  *
  *  assets/characters/<name>.png  정면 1장(가로:세로 ≈ 2:3, 48×72로 맞춰짐) 또는 3열×4행 시트(열: idle/걷기A/걷기B, 행: down/left/right/up)
- *  assets/tiles/<ID>.png         32×32
+ *  assets/tiles/<ID>.png         일반 타일32×32, 연속 잔디 재질128×128
  *  assets/objects/<id>.png       오브젝트별 크기(현재 아치 224×160, 나무 64×96, 꽃 32×48 등)
  *  manifest.files               같은 ID의 별도 버전 PNG 선택. 누락/실패하면 원래 파일 사용.
  *  assets/maps/<sceneId>.png     씬 전체 배경(맵 픽셀 크기와 같게; 다르면 늘려 맞춤)
@@ -13,7 +13,7 @@ import { PRESET_COUNT } from './sprites/characters.js';
 export const CHAR_W = 48, CHAR_H = 72; // 화면(352px 폭 기준)에서 캐릭터가 폭 48px, 높이 72px로 보인다(타일 1.5칸 폭)
 export const CHARACTER_NAMES = [...Array.from({ length: PRESET_COUNT }, (_, i) => `preset-${i}`), 'groom', 'bride', 'couple'];
 export const TILE_IDS = ['G', 'W', 'P', 'H', 'F', 'D', 'K', 'R', 'S', 'A', 'B', 'C', 'E', 'M', 'L', 'Q', 'Y', 'V', 'Z', 'N', 'J', 'U'];
-// N 모래빛 돌길, 현재 G/J/U는 같은 톤의 잔디 질감 v4. 들꽃은 별도 바닥 소품.
+// N 모래빛 돌길, 현재 G/J/U는 같은 128px 연속 잔디 재질 v5. 들꽃은 별도 바닥 소품.
 // 맵 문자열은 한 글자가 한 칸이므로, 두 글자 파일명(X1~X4)은 한 글자 코드로 쓴다.
 // Q 분홍 꽃밭(X1), Y 흰 꽃밭(X2), V 흰 자갈길(X3), Z 장미 산울타리(X4, 막힘)
 export const TILE_FILES = { Q: 'X1', Y: 'X2', V: 'X3', Z: 'X4' };
@@ -103,7 +103,12 @@ export async function loadAssets(base = 'assets') {
   const tileNames = Array.isArray(manifest.tiles) ? manifest.tiles.map((n) => FILE_TO_TILE[n] ?? n) : [];
   for (const id of pick(tileNames, TILE_IDS)) {
     const file = TILE_FILES[id] ?? id;
-    jobs.push(imageFor('tiles', file).then((img) => { if (img) out.tiles[id] = imgSprite(toCanvas(img, 0, 0, img.width, img.height, TILE, TILE)); }));
+    jobs.push(imageFor('tiles', file).then((img) => {
+      if (!img) return;
+      // 잔디 재질은 4×4칸 그림을 보존하고 렌더러가 월드 좌표로 잘라 쓴다.
+      const size = ['G', 'J', 'U'].includes(id) && img.width === 128 && img.height === 128 ? 128 : TILE;
+      out.tiles[id] = imgSprite(toCanvas(img, 0, 0, img.width, img.height, size, size));
+    }));
   }
   for (const id of pick(manifest.objects, OBJECT_IDS)) jobs.push(imageFor('objects', id).then((img) => {
     if (!img) return;

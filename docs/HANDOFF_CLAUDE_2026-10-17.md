@@ -236,3 +236,15 @@ Codex가 다음 작업 전에 읽을 문서다. 오늘 Claude가 바꾼 내용, 
 - manifest.files.objects.tree가 새 파일을 선택한다. tree ID를 사용하는 메인과 방명록에 함께 적용된다. 기존 tree.png/tree-v3.png는 보존하고 다른 PNG는 수정하지 않았다. 캐릭터 ID·타일/소품 ID 수는 그대로다.
 - 선택 재변환 `python tools/prepare_cherry_tree_asset.py`, 생성 원본 `raw/cherry-tree-source/tree.png`(Git 제외). 프롬프트와 참조 역할은 `assets/cherry-tree-prompts.json`, 규격은 `cherry-tree-report.json`, 전후 2배 확대는 `cherry-tree-preview.png`다. API 키는 사용하지 않았다.
 - 테스트 119개 통과. 메인·방명록 실제 화면에서 꽃길/인물을 가리지 않는 배치와 콘솔 오류 없음을 확인했다. 잔디 질감·들꽃·장미/수국 교차 배치·케이크·하객 자유 배회는 유지한다.
+
+## 17. 경계 이동 어긋남 수정·잔디와 꽃 가독성 재검토 (2026-10-17)
+
+- 사용자가 이동 중 사이드 경계의 우그러짐/멀미, 지저분한 잔디, 작은 꽃 가독성을 지적해 실제 화면과 렌더링을 재검토했다.
+- 원인: 캔버스의 잔디는 카메라를 따라 이동하지만 Game.switchNow에서 넣은 양옆 CSS 잔디는 고정돼 있었다. 화면 배율도 따로 적용돼 경계의 질감이 어긋났다. `groundBackgroundStyle()`이 캔버스의 중앙 여백·실제 배율·같은 반올림 카메라로 CSS background-size/position을 계산한다. Game.draw에서 변경된 값만 반영하며 실내 전환 시 기존 배경 복원은 유지한다.
+- 이동/충돌 격자는 32px 그대로다. 그림 반복은 32px 단위의 v4 질감 조각 대신 `tiles/lawn-v5.png`(128×128·8색) 한 장을 사용한다. 내장 imagegen으로 조용한 잔디 바탕과 드문 풀잎을 새로 만들었다. G/J/U는 같은 파일을 선택하며 로더가 128px를 유지한다.
+- Renderer.drawTile은 잔디 재질을 월드 x/y에 맞춰 32px씩 샘플링한다. drawBackdrop은 128px 패턴의 위상을 사용한다. 바닥 캐시와 맵 밖/양옆 여백까지 동일한 그림이 이어지고, 잔디의 충돌·맵 크기는 바뀌지 않는다. 기존 v3/v4와 PNG는 보존한다.
+- 들꽃은 기존 생성 원본을 더 크게 준비한 `meadow-sprig-v2.png`(32×32, 실제 32×15)로 바꿨다. 이전 실제23×11보다 꽃 머리가 커져 보인다. 배치 12곳·비충돌은 그대로다.
+- 수국도 길고 가느다란 줄기를 제거한 낮고 풍성한 새 덩어리로 재작화했다. `aisle-flower-airy-left/right-v2.png` 각32×48, 실제32×28이며 큰 수국 꽃 머리가 밀집한다. 기존 장미와 교차 배치, 꽃길 바깥3/7열·96px 빈 길은 그대로다.
+- 새 잔디·수국 원본 두 장은 내장 imagegen으로 생성했다. `raw/lawn-review-source/`는 Git 제외다. 들꽃은 기존 raw/garden-detail-source 원본을 재사용했다. 선택 변환 `python tools/prepare_lawn_review_assets.py`; 기존 전체 변환기는 실행하지 마라.
+- 실제 프롬프트 `assets/lawn-review-prompts.json`, 규격 `lawn-review-report.json`, 이전/새 잔디·꽃 비교 `lawn-review-preview.png`. 기존 꽃나무·케이크·테이블·리본 조명·하객 자유 배회는 유지한다.
+- 테스트 122개 통과. 128px 재질 로드/연속 샘플링, 배경의128px 위상, CSS/캔버스가 소수 배율과 이동 중 같은 지점을 표시하는 회귀 검사를 추가했다. 이동·드래그 전후 실제 화면과 390px·320px 화면, 콘솔 오류도 확인했다.

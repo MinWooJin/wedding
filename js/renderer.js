@@ -67,7 +67,13 @@ export class Renderer {
     this.ctx.fillRect(0, 0, this.view.width, this.view.height);
   }
 
-  drawTile(id, x, y) { this.drawSprite(this.tiles[id] ?? tileSprite(id), x, y); }
+  drawTile(id, x, y) {
+    const spr = this.tiles[id] ?? tileSprite(id);
+    if (['G', 'J', 'U'].includes(id) && spr.w > TILE && spr.h > TILE) {
+      const sx = ((x % spr.w) + spr.w) % spr.w, sy = ((y % spr.h) + spr.h) % spr.h;
+      this.ctx.drawImage(spriteCanvas(spr), sx, sy, TILE, TILE, Math.round(x-this.cam.x), Math.round(y-this.cam.y), TILE, TILE);
+    } else this.drawSprite(spr, x, y);
+  }
 
   /** 맵 밖도 월드 좌표와 같은 위상의 잔디로 채운다. 반복 패턴은 타일 교체 때만 만든다. */
   drawBackdrop(id) {
@@ -80,7 +86,7 @@ export class Renderer {
       this.backdropPatterns.set(id, entry);
     }
     if (!entry.pattern) return;
-    const x = -(Math.round(this.cam.x) % TILE), y = -(Math.round(this.cam.y) % TILE);
+    const x = -(Math.round(this.cam.x) % (sprite.w ?? TILE)), y = -(Math.round(this.cam.y) % (sprite.h ?? TILE));
     ctx.save(); ctx.translate(x, y); ctx.fillStyle = entry.pattern;
     ctx.fillRect(-x, -y, this.view.width, this.view.height); ctx.restore();
   }

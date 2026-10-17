@@ -10,8 +10,7 @@ import { displayName } from '../config.js';
 // 타일: H 외곽 충돌 마스크(화면은 G), G/J/U 잔디 질감, N 모래 돌길(4~6열)
 // 이야기 길을 없애며 생긴 여유를 정원에 돌려줬다(정원 17행). 하객이 모이는 공간이 이 청첩장의 중심이다.
 const GARDEN_ROWS = 17;
-const grassAt = (tx, ty) => ['G', 'G', 'J', 'U'][((tx * 73856093 ^ ty * 19349663) >>> 16) % 4];
-const gardenRow = (ty) => 'H' + Array.from({ length: 9 }, (_, i) => i >= 3 && i <= 5 ? 'N' : grassAt(i + 1, ty)).join('') + 'H';
+const gardenRow = () => 'HGGGNNNGGGH'; // 128px 잔디 재질을 월드 좌표로 이어 그린다.
 const crossRow = 'HNNNNNNNNNH';
 const CROSS_A = GARDEN_ROWS + 1;   // 18 교차로
 const BLOCK_A = CROSS_A + 1;       // 19 문: 안내소/갤러리

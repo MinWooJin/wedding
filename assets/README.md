@@ -1,5 +1,11 @@
 # 에셋 가이드 (AI 생성 → 게임 적용)
 
+현재 잔디는 `tiles/lawn-v5.png`(128×128·8색) 한 장이다. G/J/U 모두 이 재질을 선택한다.
+이동 격자는32px이고 그림만128px로 이어 쓴다. 로더에서32px로 축소하지 마라. CSS 양옆 배경도 같은 카메라/배율에 맞춘다.
+들꽃 `objects/meadow-sprig-v2.png` 실제32×15, 낮고 풍성한 수국 `aisle-flower-airy-left/right-v2.png` 실제32×28. 각각 기존 ID의 files 매핑으로 선택한다.
+선택 변환 `python tools/prepare_lawn_review_assets.py`, 프롬프트 `lawn-review-prompts.json`, 규격 `lawn-review-report.json`, 비교 `lawn-review-preview.png`.
+아래의 v4 질감 조각 세 종류는 보존된 이전 버전이다.
+
 현재 나무는 `objects/tree-v4-cherry.png`: 64×96, 실제 그림 64×64, 32색·이진 알파의 연분홍 벚꽃나무다.
 manifest.files.objects.tree로 메인·방명록에 함께 적용한다. 기존 초록 tree-v3 PNG와 배치·발 위치는 보존한다.
 선택 변환 `python tools/prepare_cherry_tree_asset.py`. 프롬프트 `cherry-tree-prompts.json`, 규격 `cherry-tree-report.json`, 비교 `cherry-tree-preview.png`.

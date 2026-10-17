@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { computeCamera, cameraBounds } from '../js/game.js';
+import { computeCamera, cameraBounds, groundBackgroundStyle } from '../js/game.js';
 
 test('cameraBounds: 맵이 크면 [-pad, mapLen-avail-pad], 작으면 고정값', () => {
   const view = { width: 176, height: 300 };
@@ -29,4 +29,19 @@ test('맵이 뷰보다 작으면 가운데 정렬(음수 카메라)', () => {
   const view = { width: 176, height: 300 };
   assert.deepEqual(computeCamera(view, { pixelW: 176, pixelH: 160 }, { x: 88, y: 80 }), { x: 0, y: -70 });
   assert.deepEqual(computeCamera(view, { pixelW: 112, pixelH: 160 }, { x: 56, y: 80 }), { x: -32, y: -70 });
+});
+
+
+test('양옆 잔디는 소수 배율과 카메라 이동 중에도 캔버스와 같은 지점을 표시한다', () => {
+  for (const scale of [1, 2, 320/352]) {
+    const view = { width: 352, scale }, frameWidth = 430;
+    const left = (frameWidth - 352*scale)/2;
+    const a = groundBackgroundStyle(view, frameWidth, {x:0,y:45.4}, {w:128,h:128});
+    const b = groundBackgroundStyle(view, frameWidth, {x:0,y:82.4}, {w:128,h:128});
+    const [x,y] = a.position.split(' ').map(parseFloat);
+    assert.ok(Math.abs((left + 37*scale - x)/scale - 37) < 1e-10, '공유 경계의 같은 가로 원점');
+    assert.ok(Math.abs((100*scale-y)/scale - 145) < 1e-10, '캔버스와 같은 반올림 카메라');
+    assert.ok(Math.abs(parseFloat(b.position.split(' ')[1])-y + 37*scale) < 1e-10, '카메라와 같은 이동량');
+    assert.equal(a.size, `${128*scale}px ${128*scale}px`);
+  }
 });
