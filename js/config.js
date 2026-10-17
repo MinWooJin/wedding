@@ -16,10 +16,10 @@ export const DEFAULT_CONFIG = {
   gifts: { declineMoney: false, notice: '' },
 };
 
-/** 청첩장식 혼주 표기: "진영근 · 박순이의 아들 진민우" */
+/** 청첩장식 혼주 표기: "진영근 · 박순이 의 아들 진민우" */
 export function familyLine(person) {
   const parents = (person.parents ?? []).map((p) => p.name).filter(Boolean).join(' · ');
-  return parents ? `${parents}의 ${person.relation || ''} ${person.name}`.replace(/\s+/g, ' ').trim() : person.name;
+  return parents ? `${parents} 의 ${person.relation || ''} ${person.name}`.replace(/\s+/g, ' ').trim() : person.name;
 }
 
 /** 게임 안(HUD·이름표·인트로)에서 쓰는 호칭. shortName이 없으면 본명. 공적인 문구(예식 안내·연락처·계좌·공유·캘린더)는 name을 쓴다. */
