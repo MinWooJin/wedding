@@ -133,9 +133,13 @@ export class HubScene extends Scene {
 
     // 아치는 PNG 폭(160=5칸, 224=7칸 …)에 맞춰 돌길 중앙(5열)에 가운데 정렬한다
     const archTiles = Math.round((game.assets?.objects?.arch?.w ?? 160) / 32);
+    const treeCols = Math.ceil((game.assets?.objects?.tree?.w ?? 96) / 32);
     const objects = [
       // 버진로드는 단상보다 먼저 합성해 시작 부분이 단상 밑으로 자연스럽게 이어진다.
       ...ceremonyFloors(game.assets),
+      // 나무 한 쌍은 바깥 가장자리에 두어 꽃길·하객과 겹치지 않게 한다.
+      { id: 'tree-left', sprite: 'tree', tx: 0, ty: 5 },
+      { id: 'tree-right', sprite: 'tree', tx: 11 - treeCols, ty: 5 },
       { id: 'arch', sprite: 'arch', tx: 5 - Math.floor(archTiles / 2), ty: 0, solid: false },
       // 단상(160×64, 3~7열 × 4~5행): 바닥 장식이라 신랑신부 발밑에 깔리고 충돌 없음. assets/objects/platform.png가 있을 때만 표시
       ...(game.assets?.objects?.platform ? [{ id: 'platform', sprite: 'platform', tx: 3, ty: 4, floor: true }] : []),

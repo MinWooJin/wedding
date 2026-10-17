@@ -59,7 +59,11 @@ test('실제 PNG 크기로 광장에 하객이 충분히 모인다(30명 중 20�
   const entries = Array.from({ length: 30 }, (_, i) => ({ t: i, n: `손님${i}`, c: i % 10, m: '축하' }));
   const hub = createHub({ config: DEFAULT_CONFIG, profile: { nickname: '나' }, assets: { objects }, data: { messages: entries } });
   assert.ok(hub.guestMap.size >= 20, `배치된 하객 ${hub.guestMap.size}명`);
-  assert.equal(hub.objects.some((o) => ['tree', 'bush', 'bush-white'].includes(o.sprite)), false, '메인 장식은 아치와 꽃길로 정리');
+  const trees = hub.objects.filter((o) => o.sprite === 'tree');
+  assert.equal(trees.length, 2, '단상 양옆 나무 한 쌍');
+  assert.equal(trees[0].tx * 32, 0);
+  assert.equal(trees[1].tx * 32 + trees[1].spr.w, hub.pixelW);
+  assert.ok(trees[0].tx * 32 + trees[0].spr.w <= 96 && trees[1].tx * 32 >= 256, '꽃 바깥 나무');
   assert.ok([...hub.guestMap.values()].every((n) => ![3,4,5,6,7].includes(n.wander.home.tx)), '꽃과 길 바깥에만 배치');
 });
 
