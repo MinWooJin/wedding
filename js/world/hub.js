@@ -2,7 +2,7 @@ import { Scene, standPos } from './scene.js';
 import { Character } from '../entities/character.js';
 import { GROOM, BRIDE, presetSprites, PRESET_COUNT } from '../sprites/characters.js';
 import { showOverlay } from '../ui/overlay.js';
-import { characterSet } from '../assets.js';
+import { characterSet, EXTRA_GUEST_COUNT } from '../assets.js';
 import { freeTiles, pickTiles } from './guest-layout.js';
 import { findPath } from './movement.js';
 import { displayName } from '../config.js';
@@ -276,10 +276,15 @@ export class HubScene extends Scene {
       const key = guestKey(entry);
       if (previous.has(key)) { const n = previous.get(key); n.entry = entry; this.guestMap.set(key, n); return n; }
       const id = ((entry.c % PRESET_COUNT) + PRESET_COUNT) % PRESET_COUNT;
+      // 분위기용 하객은 정장·원피스 차림의 군중 전용 그림(guest-extra)을 먼저 쓰고, 셋 중 하나는 일반 프리셋을 섞어 색을 다양하게 한다.
+      // 군중 그림이 없으면 기존 프리셋으로 돌아간다.
+      const extraSlot = Math.floor((entry.extra ?? 0) / 3) * 2 + (entry.extra ?? 0) % 3; // 셋 중 둘만 세어 여섯 종류를 고르게 돈다
+      const extraName = entry.extra !== undefined && entry.extra % 3 !== 2 ? `guest-extra-${extraSlot % EXTRA_GUEST_COUNT}` : null;
+      const sprites = (extraName && this.assets?.characters?.[extraName]) || characterSet(this.assets, `preset-${id}`, presetSprites(id));
       // 칸 안에서 좌우 ±7px, 위아래 ±3px 흩뜨린다(발이 같은 타일 안에 남는 범위).
       const jitter = { x: Math.round(hash01(`${key}:x`) * 7), y: Math.round(hash01(`${key}:y`) * 3) };
       const home = standPos(tx, ty);
-      const c = new Character({ sprites: characterSet(this.assets, `preset-${id}`, presetSprites(id)), name: entry.n, speed: GUEST_SPEED, x: home.x + jitter.x, y: home.y + jitter.y });
+      const c = new Character({ sprites, name: entry.n, speed: GUEST_SPEED, x: home.x + jitter.x, y: home.y + jitter.y });
       c.dir = faceFront(tx);
       c.hideTag = entry.extra !== undefined; // 분위기용 하객은 이름 없이 군중으로 보인다
       const npc = {

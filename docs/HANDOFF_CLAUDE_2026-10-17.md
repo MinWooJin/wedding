@@ -331,3 +331,9 @@ Codex가 다음 작업 전에 읽을 문서다. 오늘 Claude가 바꾼 내용, 
 - 제작 내장 imagegen6종+단발 비율 수정1회, API 키 미사용. `raw/round7-guests-source/`는 Git 제외다. `.venv-assets/Scripts/python.exe tools/prepare_round7_guests.py`로 이6종만 재변환한다. 원본이 없으면 저장된 PNG를 사용한다.
 - 프롬프트/수정 내역 `assets/round7-guests-prompts.json`, 규격 `assets/round7-guests-report.json`, v3 대비2배 비교 `assets/round7-guests-comparison.png`, 투명 나열 `assets/round7-guests-strip.png`(걷기 시트 아님). 검토 보드 `tools/round7-art-review.html`.
 - HANDOFF21/22의 Claude 변경은 유지했다. 현 상태에서 테스트126개 통과. A~C 15종에 D6종까지 총21종이 준비됐으며 새6명의 군중 연결은 위 지침대로 이어가면 된다.
+
+## 24. 군중 하객 6종 연결 (Claude, 2026-10-17)
+
+- `js/assets.js`: `EXTRA_GUEST_COUNT = 6`, `CHARACTER_NAMES`에 `guest-extra-0~5`를 추가해 로드한다. 캐릭터 고르기(PRESET_COUNT 10)에는 나오지 않는다.
+- `HubScene.setGuests`: 분위기용 하객(`entry.extra`) 중 짝수 번째는 `guest-extra-(extra/2 % 6)`, 홀수 번째는 기존 프리셋을 쓴다. 전부 군중 그림으로 하니 검정·회색이 몰려 무거워 보여 반반으로 섞었다. 군중 그림이 없으면 프리셋으로 돌아간다. 실제 하객은 자기가 고른 프리셋 그대로.
+- 테스트 127개 통과(`tests/hub-guests.test.js`에 군중 그림 배정 테스트 추가).

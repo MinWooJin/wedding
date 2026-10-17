@@ -11,7 +11,10 @@ import { TILE } from './renderer.js';
 import { PRESET_COUNT } from './sprites/characters.js';
 
 export const CHAR_W = 48, CHAR_H = 72; // 화면(352px 폭 기준)에서 캐릭터가 폭 48px, 높이 72px로 보인다(타일 1.5칸 폭)
-export const CHARACTER_NAMES = [...Array.from({ length: PRESET_COUNT }, (_, i) => `preset-${i}`), 'groom', 'bride', 'couple'];
+/** 분위기용 군중 하객 그림 수(선택 프리셋 10종과 별개, 캐릭터 고르기에는 나오지 않는다) */
+export const EXTRA_GUEST_COUNT = 6;
+export const CHARACTER_NAMES = [...Array.from({ length: PRESET_COUNT }, (_, i) => `preset-${i}`), 'groom', 'bride', 'couple',
+  ...Array.from({ length: EXTRA_GUEST_COUNT }, (_, i) => `guest-extra-${i}`)];
 export const TILE_IDS = ['G', 'W', 'P', 'H', 'F', 'D', 'K', 'R', 'S', 'A', 'B', 'C', 'E', 'M', 'L', 'Q', 'Y', 'V', 'Z', 'N', 'J', 'U'];
 // N 모래빛 돌길, 현재 G/J/U는 같은 128px 연속 잔디 재질 v5. 들꽃은 별도 바닥 소품.
 // 맵 문자열은 한 글자가 한 칸이므로, 두 글자 파일명(X1~X4)은 한 글자 코드로 쓴다.
