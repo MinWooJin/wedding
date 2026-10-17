@@ -1,6 +1,6 @@
 import { TILE } from '../renderer.js';
 import { parseMap, tileAt, rectBlocked, tileKey } from './tilemap.js';
-import { findPath } from './movement.js';
+import { findPath, reachableTiles } from './movement.js';
 import { objectSprite } from '../sprites/objects.js';
 import { BOX_W, BOX_H, standPos } from '../entities/character.js';
 
@@ -158,8 +158,19 @@ export class Scene {
     const from = this.tileOf(player.x, player.y);
     const to = this.tileOf(x, y);
     const blocked = (tx, ty) => this.isSolidTile(tx, ty) || this.entrances.some((e) => e.tx === tx && e.ty === ty && (tx !== to.tx || ty !== to.ty));
-    const path = findPath(this.map.w, this.map.h, blocked, from, to);
-    if (!path || this.blockedFor()(x, y)) { player.stop(); player.say('그곳으로는 갈 수 없어요', 1.5); this.destination = null; return; }
+    let path = findPath(this.map.w, this.map.h, blocked, from, to);
+    if (!path || this.blockedFor()(x, y)) {
+      // 막힌 곳을 누르면 거절하지 않고, 걸어서 닿을 수 있는 칸 중 그 지점에 가장 가까운 곳으로 간다.
+      // 상호작용(onArrive)은 원래 목적지에 닿았을 때만 실행한다.
+      const near = reachableTiles(this.map.w, this.map.h, (tx, ty) => this.isSolidTile(tx, ty) || this.entrances.some((e) => e.tx === tx && e.ty === ty), from)
+        .reduce((best, t) => { const p = standPos(t.tx, t.ty); const d = Math.hypot(p.x - x, p.y - y); return d < best.d ? { t, d } : best; }, { t: from, d: Infinity }).t;
+      path = findPath(this.map.w, this.map.h, blocked, from, near);
+      if (!path || path.length === 0) { player.stop(); this.destination = null; this.face(player, x, y); return; }
+      const end = standPos(near.tx, near.ty);
+      this.destination = end;
+      player.followPath(path.map((t) => standPos(t.tx, t.ty)), () => { this.destination = null; this.face(player, x, y); });
+      return;
+    }
     this.destination = { x, y };
     const points = path.slice(0, -1).map((t) => standPos(t.tx, t.ty));
     points.push({ x, y });

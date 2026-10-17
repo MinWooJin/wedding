@@ -49,11 +49,15 @@ test('경유 입구는 피하고 목적지로 선택한 입구만 통과한다',
   assert.equal(entered, true);
 });
 
-test('막힌 목적지는 도착 콜백 없이 이동을 거절한다', () => {
-  const s = makeScene(); const p = player(); s.enter(p);
+test('막힌 곳을 누르면 거절 없이 가장 가까운 갈 수 있는 칸으로 가고, 도착 콜백은 부르지 않는다', () => {
+  const s = makeScene(); const p = player(); s.enter(p); // (3,2)에서 출발
   let called = false;
-  s.walkTo(p, 16, 16, () => { called = true; });
-  assert.equal(p.walking, false); assert.equal(called, false);
+  s.walkTo(p, 16, 16, () => { called = true; }); // (0,0)은 울타리
+  assert.equal(p.walking, true, '근처로 걸어감');
+  for (let i = 0; i < 60; i++) s.update(0.1, { player: p, goTo: () => {} });
+  assert.deepEqual(s.tileOf(p.x, p.y), { tx: 1, ty: 1 }, '울타리 안쪽 모서리');
+  assert.equal(called, false);
+  assert.equal(p.bubble, null, '"갈 수 없어요" 말풍선 없음');
 });
 
 test('enter는 플레이어를 spawn 타일 중앙 하단에 놓는다', () => {

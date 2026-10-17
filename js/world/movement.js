@@ -29,6 +29,23 @@ export function findPath(w, h, blocked, from, to) {
   return null;
 }
 
+/** from에서 걸어서 닿을 수 있는 모든 타일(BFS). */
+export function reachableTiles(w, h, blocked, from) {
+  const seen = new Set([from.ty * w + from.tx]);
+  const out = [from];
+  for (let i = 0; i < out.length; i++) {
+    const cur = out[i];
+    for (const [dx, dy] of [[0, 1], [0, -1], [-1, 0], [1, 0]]) {
+      const n = { tx: cur.tx + dx, ty: cur.ty + dy };
+      if (n.tx < 0 || n.ty < 0 || n.tx >= w || n.ty >= h) continue;
+      const k = n.ty * w + n.tx;
+      if (seen.has(k) || blocked(n.tx, n.ty)) continue;
+      seen.add(k); out.push(n);
+    }
+  }
+  return out;
+}
+
 export function dirOf(dx, dy) {
   if (Math.abs(dx) > Math.abs(dy)) return dx > 0 ? 'right' : 'left';
   return dy > 0 ? 'down' : 'up';

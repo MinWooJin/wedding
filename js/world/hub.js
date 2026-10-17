@@ -34,10 +34,10 @@ export const HUB_SPAWN = { tx: 5, ty: 10 }; // 돌길 중간에서 시작: 위�
 /** 각 방으로 가는 문 위치와, 그 방에서 돌아올 때 설 자리 */
 export const HUB_DOORS = {
   // sign은 64×64(2×2칸)라 문 옆 두 칸을 차지한다
-  info:      { door: { tx: 1, ty: BLOCK_A }, sign: { tx: 2, ty: BLOCK_A }, back: { tx: 1, ty: CROSS_A }, label: '예식 안내소' },
+  guestbook: { door: { tx: 1, ty: BLOCK_A }, sign: { tx: 2, ty: BLOCK_A }, back: { tx: 1, ty: CROSS_A }, label: '방명록 정원' },
   gallery:   { door: { tx: 9, ty: BLOCK_A }, sign: { tx: 7, ty: BLOCK_A }, back: { tx: 9, ty: CROSS_A }, label: '갤러리관' },
   gifts:     { door: { tx: 1, ty: BLOCK_B }, sign: { tx: 2, ty: BLOCK_B }, back: { tx: 1, ty: CROSS_B }, label: '마음 전하는 곳' },
-  guestbook: { door: { tx: 9, ty: BLOCK_B }, sign: { tx: 7, ty: BLOCK_B }, back: { tx: 9, ty: CROSS_B }, label: '방명록 정원' },
+  info:      { door: { tx: 9, ty: BLOCK_B }, sign: { tx: 7, ty: BLOCK_B }, back: { tx: 9, ty: CROSS_B }, label: '예식 안내소' },
 };
 
 /**
@@ -56,6 +56,17 @@ const DECOR = [ // 0~4행은 큰 아치(최대 7칸 폭) 자리라 비워 둔다
 export const GUEST_ZONE = { cols: [1, 2, 3, 4, 5, 6, 7, 8, 9], rowMin: 6, rowMax: GARDEN_ROWS };
 
 export const MAX_GUESTS = 30;
+/** 실제 하객이 이보다 적으면 이름이 "하객"인 분위기용 캐릭터로 채운다(방명록·메시지 수에는 포함하지 않는다). */
+export const MIN_CROWD = 10;
+const EXTRA_LINES = ['결혼 축하해요! 🎉', '두 분 정말 잘 어울려요', '행복하세요 🌸', '오늘 날씨도 축하하나 봐요'];
+
+/** 실제 하객 목록 뒤에 부족한 만큼 "하객"을 붙인다. 실제 하객이 늘면 그만큼 자리를 비켜 준다. */
+export function withExtras(guests) {
+  const need = Math.max(0, MIN_CROWD - guests.length);
+  const extras = Array.from({ length: need }, (_, i) => ({ t: -1 - i, n: '하객', c: (i * 3 + 1) % 10, m: '', extra: i }));
+  return [...guests, ...extras];
+}
+const guestKey = (e) => (e.extra !== undefined ? `extra:${e.extra}` : `${e.n}:${e.c}`);
 
 /**
  * 하객 두 명이 너무 붙었는지. 레퍼런스처럼 빽빽하게 서되 몸이 포개지지 않게:
@@ -161,15 +172,15 @@ export class HubScene extends Scene {
       reserved.add(`${d.back.tx},${d.back.ty}`);
     }
     const me = this.game?.profile?.nickname;
-    const others = uniqueGuests(entries).filter((e) => e.n !== me).slice(0, MAX_GUESTS); // 본인은 플레이어로 이미 있으므로 제외
+    const others = withExtras(uniqueGuests(entries).filter((e) => e.n !== me).slice(0, MAX_GUESTS)); // 본인은 플레이어로 이미 있으므로 제외
     const wanderReserved = new Set(reserved);
     const inZone = (tx, ty) => GUEST_ZONE.cols.includes(tx) && ty >= GUEST_ZONE.rowMin && ty <= GUEST_ZONE.rowMax && !wanderReserved.has(`${tx},${ty}`);
     const faceAisle = () => 'down'; // 레퍼런스처럼 모두 정면(카메라)을 본다
     const previous = this.guestMap ?? new Map();
     this.guestMap = new Map();
-    const retained = others.filter((entry) => previous.has(`${entry.n}:${entry.c}`));
+    const retained = others.filter((entry) => previous.has(guestKey(entry)));
     for (const entry of retained) {
-      const n = previous.get(`${entry.n}:${entry.c}`);
+      const n = previous.get(guestKey(entry));
       const current = this.tileOf(n.character.x, n.character.y);
       for (const center of [current, n.wander.home, n.wander.target].filter(Boolean)) {
         for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) {
@@ -178,11 +189,11 @@ export class HubScene extends Scene {
       }
     }
     const placements = [
-      ...retained.map((entry) => ({ entry, ...previous.get(`${entry.n}:${entry.c}`).wander.home })),
-      ...guestPlacements(others.filter((entry) => !previous.has(`${entry.n}:${entry.c}`)), reserved),
+      ...retained.map((entry) => ({ entry, ...previous.get(guestKey(entry)).wander.home })),
+      ...guestPlacements(others.filter((entry) => !previous.has(guestKey(entry))), reserved),
     ];
     const guests = placements.map(({ tx, ty, entry }) => {
-      const key = `${entry.n}:${entry.c}`;
+      const key = guestKey(entry);
       if (previous.has(key)) { const n = previous.get(key); n.entry = entry; this.guestMap.set(key, n); return n; }
       const id = ((entry.c % PRESET_COUNT) + PRESET_COUNT) % PRESET_COUNT;
       const c = new Character({ sprites: characterSet(this.assets, `preset-${id}`, presetSprites(id)), name: entry.n, ...standPos(tx, ty) });

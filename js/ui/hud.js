@@ -6,14 +6,14 @@ import { showIntro } from './intro.js';
 import { saveProfile } from '../state.js';
 import { characterSet } from '../assets.js';
 import { presetSprites } from '../sprites/characters.js';
-import { showShare, showAccounts } from '../world/gifts.js';
+import { showShare, showAccounts, showGiftsNotice } from '../world/gifts.js';
 
 export const SPACES = {
   hub: { icon: '⌂', name: '두 사람의 정원', text: '두 사람을 만나고, 따뜻한 축하를 꽃으로 남겨 주세요.' },
   guestbook: { icon: '✉', name: '축하가 피어나는 정원', text: '우체통을 누르면 편지를 쓸 수 있어요. 꽃에는 하객의 마음이 담겨요.' },
   gallery: { icon: '▧', name: '우리의 순간들', text: '사진 속 두 사람의 이야기를 천천히 만나 보세요.' },
   info: { icon: '♧', name: '결혼 소식', text: '예식 소식과 가족분들을 위한 안내를 모았어요.' },
-  gifts: { icon: '♥', name: '마음 전하는 곳', text: '양측 봉투함에서 마음을 전하고, 우리의 소식을 나눠 주세요.' },
+  gifts: { icon: '♥', name: '마음 전하는 곳', text: '보내주시는 축하의 마음만 감사히 받을게요.' },
 };
 
 export function createHud(root, config, game) {
@@ -52,8 +52,11 @@ export function createHud(root, config, game) {
     const addLink = (text, fn) => { const button = h(`<button class="text-button">${esc(text)}</button>`); button.onclick = fn; links.appendChild(button); };
     if (sceneId === 'hub') { addLink('탭하면 이동 · 끌어서 둘러보기', () => showOverlay(game, { title: '정원 산책 안내', html: '<p>빈 곳을 짧게 누르면 캐릭터가 걸어가요. 화면을 끌면 정원을 둘러볼 수 있어요.</p><p>이름이 적힌 표지판은 공간 입구예요. 꽃과 사람도 눌러 보세요.</p><p>걷기 대신 공간 메뉴와 아래 버튼을 사용해도 좋아요.</p>' })); }
     else if (sceneId === 'gifts') {
-      addLink('신랑측 마음 →', () => showAccounts(game, '신랑', config.groom));
-      addLink('신부측 마음 →', () => showAccounts(game, '신부', config.bride));
+      if (config.gifts?.declineMoney) addLink('두 사람의 편지 →', () => showGiftsNotice(game));
+      else {
+        addLink('신랑측 마음 →', () => showAccounts(game, '신랑', config.groom));
+        addLink('신부측 마음 →', () => showAccounts(game, '신부', config.bride));
+      }
       addLink('소식 공유 →', () => showShare(game));
     }
     addLink('내 위치로 ↗', () => { game.follow = true; });

@@ -63,18 +63,39 @@ export function showShare(game) {
   showOverlay(game, { title: '청첩장 공유', html: `<p class="muted">${esc(url)}</p>`, buttons });
 }
 
+/** 초대하지 못한 사과와 축의금 사양 안내 */
+export function showGiftsNotice(game) {
+  const text = game.config.gifts?.notice;
+  if (!text) return;
+  showOverlay(game, {
+    title: '마음 전하는 곳',
+    html: `<p class="gifts-notice">${esc(text)}</p>`,
+    buttons: [{ label: '축하 남기기', primary: true, onClick: () => { setTimeout(() => game.openGuestbook?.(), 0); } }, { label: '닫기' }],
+  });
+}
+
+let giftsShown = false;
+
 export function createGifts(game) {
   const cfg = game.config;
+  const decline = !!cfg.gifts?.declineMoney;
   return new Scene({
     id: 'gifts', rows: ROWS, bg: '#f6efe7', spawn: { tx: 5, ty: 10 }, assets: game.assets,
     entrances: [{ ...EXIT, to: 'hub', spawn: HUB_DOORS.gifts.back }],
     objects: [
       { id: 'door', sprite: 'door', floor: true, ...EXIT },
-      { id: 'groom-chest', sprite: 'chest', label: '신랑측 마음', tx: 2, ty: 3, interact: () => showAccounts(game, '신랑', cfg.groom) },
-      { id: 'bride-chest', sprite: 'chest', label: '신부측 마음', tx: 7, ty: 3, interact: () => showAccounts(game, '신부', cfg.bride) },
+      // 축의금을 사양하면 계좌 대신 두 사람의 편지(안내판)와 축하 우체통을 둔다
+      ...(decline ? [
+        { id: 'notice', sprite: 'welcome-board', label: '두 사람의 편지', tx: 2, ty: 2, interact: () => showGiftsNotice(game) },
+        { id: 'post', sprite: game.assets?.objects?.['wedding-mailbox'] ? 'wedding-mailbox' : 'mailbox', label: '축하 남기기', tx: 7, ty: 1, interact: () => game.openGuestbook?.() },
+      ] : [
+        { id: 'groom-chest', sprite: 'chest', label: '신랑측 마음', tx: 2, ty: 3, interact: () => showAccounts(game, '신랑', cfg.groom) },
+        { id: 'bride-chest', sprite: 'chest', label: '신부측 마음', tx: 7, ty: 3, interact: () => showAccounts(game, '신부', cfg.bride) },
+      ]),
       { id: 'share', sprite: game.assets?.objects?.['share-letter'] ? 'share-letter' : 'welcome-board', label: '소식 나누기', tx: 4, ty: 6, interact: () => showShare(game) },
       ...(game.assets?.objects?.plant ? [{ id: 'plantL', sprite: 'plant', tx: 1, ty: 8 }, { id: 'plantR', sprite: 'plant', tx: 9, ty: 8 }] : []),
       { id: 'lanternL', sprite: 'lantern', tx: 1, ty: 1 }, { id: 'lanternR', sprite: 'lantern', tx: 9, ty: 1 },
     ],
+    onEnter: (g) => { if (decline && !giftsShown) { giftsShown = true; showGiftsNotice(g); } },
   });
 }

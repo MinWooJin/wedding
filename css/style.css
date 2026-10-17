@@ -16,6 +16,7 @@ html, body {
   font-family: var(--font); color: var(--ink);
   overscroll-behavior: none; -webkit-user-select: none; user-select: none;
   -webkit-touch-callout: none; touch-action: manipulation;
+  word-break: keep-all; overflow-wrap: break-word; /* 한국어를 단어(어절) 단위로 줄바꿈 */
 }
 #frame {
   position: relative; margin: 0 auto; height: 100%;
@@ -133,7 +134,10 @@ label { display: block; font-size: 13px; font-weight: 600; margin: 12px 0 6px; }
 .cover-date { font-size: 13px; margin: 0 0 5px; }
 .cover .muted { font-size: 12px; margin: 0; }
 .cover-letter { font-size: 14px; line-height: 1.9; margin: 22px 0 18px; }
-.cover-notice { font-size: 12px; line-height: 1.8; padding: 14px 18px; color: #665d54; border-block: 1px solid #dfdace; white-space: pre-line; }
+.family-lines { text-align: center; margin: 2px 0 14px; padding-bottom: 12px; border-bottom: 1px solid var(--line); }
+.family-lines p { margin: 3px 0; font-size: 15px; }
+.gifts-notice { white-space: pre-line; text-align: center; line-height: 1.85; }
+.cover-notice { font-size: 12px; line-height: 1.8; padding: 14px 8px; color: #665d54; border-block: 1px solid #dfdace; white-space: pre-line; word-break: keep-all; text-wrap: balance; }
 .cover-enter { display: block; width: 100%; margin: 20px 0 14px; padding: 14px; }
 .cover-classic { display: block; color: #6a705a; font-size: 13px; padding: 8px; }
 .cover .cover-footnote { font-size: 10px; line-height: 1.6; margin-top: 18px; }

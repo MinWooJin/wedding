@@ -1,6 +1,6 @@
 export const DEFAULT_CONFIG = {
-  groom: { name: '신랑', shortName: '', phone: '', parents: [], account: { bank: '', number: '', holder: '', kakaopay: '' } },
-  bride: { name: '신부', shortName: '', phone: '', parents: [], account: { bank: '', number: '', holder: '', kakaopay: '' } },
+  groom: { name: '신랑', shortName: '', relation: '아들', phone: '', parents: [], account: { bank: '', number: '', holder: '', kakaopay: '' } },
+  bride: { name: '신부', shortName: '', relation: '딸', phone: '', parents: [], account: { bank: '', number: '', holder: '', kakaopay: '' } },
   wedding: {
     date: '2027-01-01T12:00:00+09:00',
     venue: '', hall: '', address: '',
@@ -13,7 +13,14 @@ export const DEFAULT_CONFIG = {
   kakaoJsKey: '',
   siteUrl: '',
   classicUrl: '',
+  gifts: { declineMoney: false, notice: '' },
 };
+
+/** 청첩장식 혼주 표기: "진영근 · 박순이의 아들 진민우" */
+export function familyLine(person) {
+  const parents = (person.parents ?? []).map((p) => p.name).filter(Boolean).join(' · ');
+  return parents ? `${parents}의 ${person.relation || ''} ${person.name}`.replace(/\s+/g, ' ').trim() : person.name;
+}
 
 /** 게임 안(HUD·이름표·인트로)에서 쓰는 호칭. shortName이 없으면 본명. 공적인 문구(예식 안내·연락처·계좌·공유·캘린더)는 name을 쓴다. */
 export const displayName = (person) => person.shortName || person.name;

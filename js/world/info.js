@@ -3,7 +3,7 @@ import { HUB_DOORS } from './hub.js';
 import { showOverlay, kv } from '../ui/overlay.js';
 import { toast } from '../ui/toast.js';
 import { esc, copyText } from '../ui/dom.js';
-import { formatDate } from '../config.js';
+import { formatDate, familyLine } from '../config.js';
 import { buildIcs } from '../ics.js';
 
 const ROWS = [
@@ -19,7 +19,8 @@ function infoHtml(cfg) {
   const notice = w.notice
     ? `<p class="notice">${esc(w.notice).split('\n').join('<br>')}</p>`
     : '';
-  return kv([['신랑', cfg.groom.name], ['신부', cfg.bride.name], ['일시', formatDate(w.date)], ['장소', [w.venue, w.hall].filter(Boolean).join(' ')], ['주소', w.address]]) + notice;
+  const family = `<div class="family-lines"><p>${esc(familyLine(cfg.groom))}</p><p>${esc(familyLine(cfg.bride))}</p></div>`;
+  return family + kv([['일시', formatDate(w.date)], ['장소', [w.venue, w.hall].filter(Boolean).join(' ')], ['주소', w.address]]) + notice;
 }
 
 function contactsHtml(cfg) {
