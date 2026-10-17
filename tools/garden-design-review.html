@@ -7,7 +7,8 @@
 </style>
 <main>
 <span class="badge">설계 검토용 · 실제 게임 미반영</span>
-<h1>큰 벚꽃나무로 공간의 비율부터 맞추기</h1>
+<h1>픽셀게스트북을 기준으로 정원과 참여 화면 맞추기</h1>
+<p><a href="https://pixelguestbook.com/260829">Pixel Guestbook 실제 화면</a>을 주 레퍼런스로 변경했습니다. 커플·꽃길·하객·메시지가 먼저 보이게 하고, 큰 나무와 꽃 군집은 외곽을 잡는 역할로 둡니다. 아래는 기존 나무 크기 비교 모형이며 새 꽃 군집과 참여 동선은 아직 구현하지 않았습니다.</p>
 <p>현재 나무의 실제 그림 높이는 64px, 하객은 약 60px입니다. 나무를 약 1.5배 키워 단상 양옆을 잡아주고, 케이크와 조명은 리셉션 구역으로 모으는 방향을 제안합니다.</p>
 <p class="alert">아래 나무는 기존 그림을 비율 비교용으로 확대했습니다. 최종 에셋은 같은 픽셀 밀도로 새로 제작해야 합니다. 배치와 HUD도 제안 모형이며 게임 동작이나 실제 충돌을 바꾸지 않습니다.</p>
 <div class="controls">
@@ -19,6 +20,7 @@
 <p class="legend">주황 점선: 보이는 수관 검토 범위 · 현재의 빨간 칸: 이미지 폭 전체 충돌 · 제안의 초록 칸: 줄기 충돌 32×32. 확대만 하는 안은 케이크가 나무에 가려집니다. 그림과 충돌의 분리는 별도 구현이 필요합니다.</p>
 <h2>수정 우선순위</h2>
 <table><thead><tr><th>순서</th><th>설계 방향</th><th>확인 조건</th></tr></thead><tbody>
+<tr><td>0 · 참여 화면</td><td>커플 → 꽃길 → 하객이 보이는 첫 구도. 축하 남기기 → 캐릭터/이름/메시지 → 내 하객 확인 → 메시지 읽기로 이어지기.</td><td>큰 안내가 정원을 가리지 않고, 네 공간의 빠른 메뉴를 유지. API 연결은 마지막 단계.</td></tr>
 <tr><td>1 · 비율</td><td>벚꽃나무 96×128, 실제 그림 높이 96~104px. 좌우 0/8열·3행을 기준으로 검토.</td><td>하객보다 높이가 1.6배 이상, 중앙 길 96px 유지. 단상·얼굴 가림 확인.</td></tr>
 <tr><td>2 · 공간</td><td>왼쪽 케이크는 9행, 왼쪽 조명은 7행으로 이동. 테이블과 시각적으로 묶기.</td><td>기본 하객 10명 유지. 기존 예약 방식의 보수적 계산으로 최대 표시 17명.</td></tr>
 <tr><td>3 · 가림</td><td>그림·줄기 충돌·하객 얼굴 예약 영역을 구분. 선택 가능한 인물이 수관에 가려지지 않게 처리.</td><td>나무 전체 폭을 벽으로 취급하지 않기. 가림 처리에서 주기적인 깜빡임 금지.</td></tr>
@@ -26,6 +28,8 @@
 <tr><td>5 · 마감</td><td>꽃은 같은 크기로 반복하기보다 단상 부근의 큰 군집과 아래쪽 작은 군집으로 리듬. 잔디는 현재 저대비 유지.</td><td>새 소품 수보다 크기·간격·우선순위 먼저 검토. PNG 전체 늘림 모션 재도입 금지.</td></tr>
 </tbody></table>
 <h2>다시 확인한 레퍼런스</h2>
+<p class="sources"><strong>주 레퍼런스:</strong> <a href="https://pixelguestbook.com/260829">Pixel Guestbook</a> — 실제 정원과 펼친 메뉴를 직접 확인했습니다. 아치와 단상의 커플, 밝은 꽃길, 외곽 큰 나무와 꽃 군집, 하객 이름과 말풍선이 보입니다. 원본 에셋 규격과 애니메이션 구현은 확인하지 않았습니다. 사진 업로드나 등록은 실행하지 않았습니다.</p>
+<p class="sources">적용 순서: 첫 구도/참여 동선 → 인물과 나무 비율 → 높이가 다른 꽃 군집 → 보조 파티 소품. 아래 자료는 미술 비율·기술 설계의 보조 참고입니다.</p>
 <ul class="sources"><li><a href="https://limezu.itch.io/modernexteriors">LimeZu Modern Exteriors</a> — 공식 갤러리의 공원 장면. 인물보다 큰 수목과 비워 둔 활동 공간을 시각적으로 검토했습니다.</li><li><a href="https://www.banyantree.com/south-korea/club-and-spa-seoul/wedding-venues/celeste">Banyan Tree Seoul · Celeste</a> — 공식 리셉션 사진의 테이블 그룹·가장자리 녹지·정돈된 조명을 참고했습니다.</li><li><a href="https://support.gather.town/articles/9253868124-sizes">Gather 크기 안내</a> · <a href="https://docs.mapeditor.org/en/stable/manual/objects/">Tiled 오브젝트 안내</a> — 32px 이동 격자를 유지하면서 그림 크기와 충돌 정보를 별도로 설계하는 근거입니다.</li></ul>
 <p class="note">제안한 픽셀 수치는 이 프로젝트를 측정해 정한 값이며 레퍼런스의 공식 규격이 아닙니다. 외부 이미지와 유료 에셋은 이 페이지에 복사하지 않았습니다.</p>
 <p><a href="../docs/superpowers/specs/2026-10-17-garden-scale-redesign.md">상세 설계 문서</a> · <a href="./garden-design-layouts.json">배치 계산 결과</a> · <a href="../">현재 게임</a></p>
