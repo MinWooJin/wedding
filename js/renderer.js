@@ -177,6 +177,16 @@ export class Renderer {
     ctx.fillStyle = '#4e5e3e'; ctx.textBaseline = 'middle'; ctx.textAlign = 'left'; ctx.fillText(text, x + 8, y + 12); ctx.restore();
   }
 
+  /** Make the small floor exit readable as a navigation target. */
+  drawExit(cx, topY) {
+    const ctx = this.ctx;
+    const x = Math.round(cx - this.cam.x - 48), y = Math.round(topY - this.cam.y - 12);
+    ctx.save(); ctx.fillStyle = '#fffaf0'; ctx.strokeStyle = '#aca98b';
+    ctx.fillRect(x, y, 96, 32); ctx.strokeRect(x + .5, y + .5, 95, 31);
+    ctx.font = '12px Galmuri11, sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillStyle = '#4e5e3e'; ctx.fillText('← 정원으로', x + 48, y + 16); ctx.restore();
+  }
+
   drawDestination(x, y) {
     const ctx = this.ctx; ctx.save(); ctx.strokeStyle = '#fff8dc'; ctx.lineWidth = 2;
     ctx.beginPath(); ctx.ellipse(x - this.cam.x, y - this.cam.y - 2, 10, 5, 0, 0, Math.PI * 2); ctx.stroke(); ctx.restore();

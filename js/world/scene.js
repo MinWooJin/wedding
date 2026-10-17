@@ -134,6 +134,13 @@ export class Scene {
     return this.entrances.find((e) => e.tx === tx && e.ty === ty) ?? null;
   }
 
+  /** Room exits are navigation targets, with a generous tap area around the floor marker. */
+  exitAt(wx, wy) {
+    return this.entrances.find((e) => e.to === 'hub'
+      && wx >= (e.tx - 1) * TILE && wx <= (e.tx + 2) * TILE
+      && wy >= e.ty * TILE - 24 && wy <= (e.ty + 1) * TILE + 16) ?? null;
+  }
+
   /**
    * 오브젝트/NPC 앞에 설 타일. 아래·위·왼쪽·오른쪽 이웃 중 비어 있고 from(플레이어 발 위치)에 가장 가까운 타일.
    * 모두 막혀 있으면 아래 타일.
@@ -204,10 +211,18 @@ export class Scene {
 
   onTap(wx, wy, game) {
     const player = game.player;
+    const exit = this.exitAt(wx, wy);
     let npc = this.hitNpc(wx, wy);
     let obj = this.hitObject(wx, wy);
     if (npc && obj) { if (!obj.floor && obj.bottom >= npc.character.y) npc = null; else obj = null; }
     const target = npc ?? obj;
+    if (exit && !target?.interact) {
+      this.pending = null;
+      this.destination = null;
+      player.stop();
+      game.goTo(exit.to, exit.spawn);
+      return;
+    }
     if (target && target.interact) {
       const c = npc ? npc.character : null;
       const ct = c ? this.tileOf(c.x, c.y) : null;
@@ -303,6 +318,7 @@ export class Scene {
     for (const it of items) it.draw();
     r.drawPlayerMarker?.(player.x, player.y);
     for (const o of this.objects) if (o.label) r.drawLabel?.(o.label, o.tx * TILE + o.spr.w / 2, o.drawY - 6);
+    for (const e of this.entrances) if (e.to === 'hub') r.drawExit?.((e.tx + .5) * TILE, e.ty * TILE);
     for (const c of chars) if (c.bubble) { const p = c.drawPos(); r.drawBubble(c.bubble, p.x + p.w / 2, p.y - 16); }
   }
 }

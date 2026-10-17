@@ -18,12 +18,12 @@ export const SPACES = {
 };
 
 /**
- * 지도 위에 상시로 보이는 것은 레퍼런스처럼 최소로 둔다: 왼쪽 위 작은 이름 칩, 아래의 "축하 남기기"와 둥근 메뉴 버튼.
+ * 지도 위에는 작은 이름 칩과 메뉴 버튼, 광장은 "축하 남기기"·각 방은 "정원으로"를 둔다.
  * 공간 설명·이동·메시지 보기·내 위치·캐릭터 바꾸기·공유는 모두 메뉴 팝업 안에 있다. 공간에 들어오면 이름을 토스트로 한 번 알린다.
  */
 export function createHud(root, config, game) {
   root.innerHTML = `<div class="garden-header"><strong>${esc(displayName(config.groom))}<i> ♥ </i>${esc(displayName(config.bride))}</strong><span class="date-chip">${esc(ddayLabel(config.wedding.date))}</span></div>
-    <nav class="garden-dock" aria-label="정원 메뉴"><button class="fab fab-write" data-action="write"><span aria-hidden="true">✉</span>축하 남기기</button><button class="fab fab-menu menu-button" aria-label="메뉴 열기">☰</button></nav>`;
+    <nav class="garden-dock" aria-label="정원 메뉴"><button class="fab fab-write" data-action="write"><span aria-hidden="true">✉</span>축하 남기기</button><button class="fab fab-write" data-action="exit" hidden>← 정원으로</button><button class="fab fab-menu menu-button" aria-label="메뉴 열기">☰</button></nav>`;
   root.hidden = false;
   let sceneId = 'hub';
   const navigate = (id) => { game.player.stop(); game.goTo(id, id === 'hub' ? HUB_SPAWN : null); };
@@ -63,6 +63,18 @@ export function createHud(root, config, game) {
   };
   root.querySelector('.menu-button').onclick = openMenu;
   root.querySelector('[data-action="write"]').onclick = () => game.openGuestbook();
+  const returnButton = root.querySelector('[data-action="exit"]');
+  const writeButton = root.querySelector('[data-action="write"]');
+  returnButton.onclick = () => {
+    const exit = game.scene?.entrances.find((e) => e.to === 'hub');
+    game.player.stop();
+    game.goTo('hub', exit?.spawn ?? HUB_SPAWN);
+  };
   const refresh = () => {}; // 지도 위에는 갱신할 글이 없다(메뉴는 열 때마다 새로 만든다)
-  return { onScene(id) { sceneId = id; const s = SPACES[id]; toast(`${s.icon} ${s.name}`, 1800); }, refresh, openMenu };
+  return { onScene(id) {
+    sceneId = id;
+    returnButton.hidden = id === 'hub';
+    writeButton.hidden = id !== 'hub';
+    const s = SPACES[id]; toast(`${s.icon} ${s.name}`, 1800);
+  }, refresh, openMenu };
 }
