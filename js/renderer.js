@@ -136,16 +136,9 @@ export class Renderer {
   drawSprite(spr, x, y, motion = null) {
     const sx = Math.round(x - this.cam.x), sy = Math.round(y - this.cam.y);
     if (sx + spr.w < 0 || sy + spr.h < 0 || sx > this.view.width || sy > this.view.height) return;
-    if (motion && !this.reducedMotion) {
-      const ctx = this.ctx;
-      ctx.save();
-      ctx.translate(sx + spr.w / 2, sy + spr.h - motion.lift);
-      ctx.transform(1, 0, motion.lean, motion.scaleY, 0, 0);
-      ctx.drawImage(spriteCanvas(spr), -spr.w / 2, -spr.h);
-      ctx.restore();
-    } else {
-      this.ctx.drawImage(spriteCanvas(spr), sx, sy);
-    }
+    // 픽셀 그림 전체의 비율·기울기를 바꾸면 얼굴과 윤곽이 일그러진다.
+    const lift = motion && !this.reducedMotion ? Math.round(motion.lift ?? 0) : 0;
+    this.ctx.drawImage(spriteCanvas(spr), sx, sy - lift);
   }
 
   /** 미리 그려둔 캔버스/이미지(썸네일, 맵 배경 등)를 월드 좌표에 그린다 */

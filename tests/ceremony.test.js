@@ -114,6 +114,7 @@ test('열 명의 하객은 좌우에서 시작하고 잔디의 좌우·대각선
   for (const n of hub.guestMap.values()) {
     assert.equal(n.wander.radius, 1);
     assert.equal(n.wander.roam, true);
+    assert.equal(n.character.speed,48,'하객은 천천히 걷는다');
     if (n.wander.home.ty === 9) {
       assert.equal(n.wander.allow(n.wander.home.tx === 2 ? 1 : 9, 9), true, '좌우 이동');
       assert.equal(n.wander.allow(n.wander.home.tx === 2 ? 1 : 9, 10), true, '대각선 이동');

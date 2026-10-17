@@ -80,29 +80,31 @@ test('say는 말풍선을 설정하고 시간이 지나면 사라진다', () => 
   assert.equal(c.bubble, null);
 });
 
-test('정지 호흡은 1px 이내이며 좌표·충돌·탭 영역을 움직이지 않는다', () => {
-  const c = mk(), box = c.box(), pos = c.drawPos(), first = c.motion();
-  c.update(1, () => true);
-  assert.notDeepEqual(c.motion(), first);
-  assert.ok(c.motion().scaleY >= 1 - 1 / c.sprite().h && c.motion().scaleY <= 1);
+test('대기 중에는 그림을 늘리거나 흔드는 모션 없이 좌표·충돌·탭 영역을 유지한다', () => {
+  const c = mk(), box = c.box(), pos = c.drawPos();
+  for (let i=0;i<20;i++) { c.update(0.2, () => true); assert.equal(c.motion(), null); }
   assert.deepEqual(c.box(), box);
   assert.deepEqual(c.drawPos(), pos);
   assert.deepEqual([c.x, c.y], [100, 100]);
 });
 
-test('단일 PNG도 걸을 때 흔들리고 막히거나 도착하면 정지 모션으로 돌아온다', () => {
+test('단일 PNG는 걸을 때만 정수 1px 움직이고 도착·충돌·모션 줄이기에서는 정지한다', () => {
   const spr = { w: 48, h: 72 };
   const c = new Character({ sprites: { down: [spr], right: [spr] }, name: '하객', x: 100, y: 100 });
   c.moveTo(1000, 100);
-  c.update(0.09, () => false);
+  c.update(0.1, () => false);
   assert.equal(c.sprite(), spr);
-  assert.ok(c.motion().lean > 0);
-  assert.equal(c.motion().lift, 1.5);
+  assert.deepEqual(c.motion(), {lift:1});
   assert.equal(c.motion(true), null);
+  for(let i=0;i<20;i++){ c.update(0.025,()=>false); assert.ok([0,1].includes(c.motion().lift)); }
   c.update(0.1, () => true);
   assert.equal(c.moving, false);
-  assert.equal(c.motion().lean, 0);
-  assert.equal(c.motion().lift, 0);
+  assert.equal(c.motion(), null);
+  const slow = new Character({ sprites: {right:[spr]}, name:'하객',x:100,y:100,speed:48 });
+  slow.moveTo(132,100); slow.update(0.25,()=>false);
+  assert.equal(slow.x,112,'하객 이동 속도 48px/s');
+  slow.update(1,()=>false);
+  assert.equal(slow.motion(),null,'도착 시 즉시 안정');
 });
 
 test('경유점에서도 보행 위상과 남은 프레임 시간을 유지한다', () => {
@@ -114,4 +116,5 @@ test('경유점에서도 보행 위상과 남은 프레임 시간을 유지한�
   assert.equal(c.frame, 1);
   assert.ok(Math.abs(c.animT - 0.02) < 1e-9);
   assert.equal(c.sprite(true), c.sprites.right[0]);
+  assert.equal(c.motion(),null,'보행 시트에 추가 흔들림을 겹치지 않는다');
 });

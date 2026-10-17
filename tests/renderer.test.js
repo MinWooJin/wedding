@@ -76,21 +76,19 @@ test('야외 경계의 H는 잔디로 합성하고 표시 정책 변경 시 바�
   assert.deepEqual(painted, ['G', 'G', 'H', 'G']);
 });
 
-test('모션 변환은 발 밑에 고정하고 매번 복원하며 reduced motion이면 생략한다', () => {
+test('캐릭터는 비율·기울기를 변형하지 않고 정수 픽셀로만 그린다', () => {
   const calls = [];
-  const ctx = Object.fromEntries(['save', 'translate', 'transform', 'drawImage', 'restore'].map((key) => [key, (...args) => calls.push([key, ...args])]));
-  const r = new Renderer({ getContext: () => ctx });
-  r.motionPreference = { matches: false };
-  const canvas = {}, spr = { w: 48, h: 72, canvas };
-  r.drawSprite(spr, 10, 20, { lean: 0.01, scaleY: 0.99, lift: 1 });
-  assert.deepEqual(calls, [
-    ['save'], ['translate', 34, 91], ['transform', 1, 0, 0.01, 0.99, 0, 0],
-    ['drawImage', canvas, -24, -72], ['restore'],
-  ]);
-  calls.length = 0;
+  const ctx = {drawImage:(...args)=>calls.push(args),transform:()=>assert.fail('캐릭터 변형 금지')};
+  const r = new Renderer({getContext:()=>ctx});
+  const canvas = {}, spr = {w:48,h:72,canvas};
+  r.motionPreference = {matches:false};
+  r.drawSprite(spr,10,20,{lift:1});
+  assert.deepEqual(calls.pop(),[canvas,10,19]);
+  r.drawSprite(spr,10,20,null);
+  assert.deepEqual(calls.pop(),[canvas,10,20]);
   r.motionPreference.matches = true;
-  r.drawSprite(spr, 10, 20, { lean: 0.01, scaleY: 0.99, lift: 1 });
-  assert.deepEqual(calls, [['drawImage', canvas, 10, 20]]);
+  r.drawSprite(spr,10,20,{lift:1});
+  assert.deepEqual(calls.pop(),[canvas,10,20]);
 });
 
 test('뷰 폭은 항상 352px, 352 이상이면 정수 배율, 더 좁으면 꽉 차는 소수 배율', () => {

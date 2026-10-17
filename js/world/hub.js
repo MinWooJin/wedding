@@ -226,7 +226,7 @@ export class HubScene extends Scene {
       const key = guestKey(entry);
       if (previous.has(key)) { const n = previous.get(key); n.entry = entry; this.guestMap.set(key, n); return n; }
       const id = ((entry.c % PRESET_COUNT) + PRESET_COUNT) % PRESET_COUNT;
-      const c = new Character({ sprites: characterSet(this.assets, `preset-${id}`, presetSprites(id)), name: entry.n, ...standPos(tx, ty) });
+      const c = new Character({ sprites: characterSet(this.assets, `preset-${id}`, presetSprites(id)), name: entry.n, speed: 48, ...standPos(tx, ty) });
       c.dir = faceAisle(tx);
       const npc = {
         entry, character: c, solid: false, // 돌아다니므로 플레이어가 지나갈 수 있다
