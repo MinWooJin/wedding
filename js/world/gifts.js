@@ -20,15 +20,32 @@ function accountHtml(label, acc) {
     ${acc.kakaopay ? `<a class="btn" target="_blank" rel="noopener" href="${esc(acc.kakaopay)}">카카오페이</a>` : ''}</p>`;
 }
 
-export function showAccounts(game, side, person) {
-  const html = [
+function personAccountsHtml(side, person) {
+  return [
     accountHtml(side, person.account),
-    ...person.parents.map((p) => accountHtml(`${side} ${p.role}`, p.account)),
+    ...(person.parents ?? []).map((p) => accountHtml(`${side} ${p.role}`, p.account)),
   ].join('') || '<p class="muted">계좌 정보가 아직 없어요.</p>';
-  const { card } = showOverlay(game, { title: `${side}측에 마음 전하기`, html });
+}
+
+function bindAccountCopy(card) {
   card.querySelectorAll('.copy').forEach((b) => {
     b.onclick = async () => toast((await copyText(b.dataset.num)) ? '계좌번호를 복사했어요' : '복사에 실패했어요');
   });
+}
+
+export function showAccounts(game, side, person) {
+  const { card } = showOverlay(game, { title: `${side}측에 마음 전하기`, html: personAccountsHtml(side, person) });
+  bindAccountCopy(card);
+}
+
+function showGiftAccounts(game) {
+  const { card, close } = showOverlay(game, {
+    title: '계좌 안내',
+    html: [['신랑', game.config.groom], ['신부', game.config.bride]]
+      .map(([side, person]) => `<section class="account-group"><h3>${side}측</h3>${personAccountsHtml(side, person)}</section>`).join(''),
+    buttons: [{ label: '이전으로', onClick: () => { close(true); showGiftsNotice(game); return true; } }, { label: '닫기' }],
+  });
+  bindAccountCopy(card);
 }
 
 async function loadKakao(key) {
@@ -69,10 +86,14 @@ export function showShare(game) {
 export function showGiftsNotice(game) {
   const text = game.config.gifts?.notice;
   if (!text) return;
-  showOverlay(game, {
+  const { close } = showOverlay(game, {
     title: '마음 전하는 곳',
     html: `<p class="gifts-notice">${esc(text)}</p>`,
-    buttons: [{ label: '축하 남기기', primary: true, onClick: () => { setTimeout(() => game.openGuestbook?.(), 0); } }, { label: '닫기' }],
+    buttons: [
+      { label: '축하 남기기', primary: true, onClick: () => { close(true); game.openGuestbook?.(); return true; } },
+      { label: '계좌 보기', onClick: () => { close(true); showGiftAccounts(game); return true; } },
+      { label: '닫기' },
+    ],
   });
 }
 

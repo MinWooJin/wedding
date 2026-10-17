@@ -183,6 +183,10 @@ label { display: block; font-size: 13px; font-weight: 600; margin: 12px 0 6px; }
 .share-preview p:last-child { font-size: 13px; color: #75665e; }
 .share-url { font-size: 16px; color: #59654e; background: #f4f5ec; }
 .card .share-help { margin-top: 8px; }
+.account-group + .account-group { margin-top: 18px; padding-top: 18px; border-top: 1px solid var(--border); }
+.account-group h3 { margin: 0 0 8px; color: var(--sage); font-size: 15px; font-weight: 650; }
+.account-group p { overflow-wrap: anywhere; }
+.account-group .copy { margin: 6px 0 6px 4px; }
 .message-item { padding: 15px 0; border-bottom: 1px solid #e8e5da; overflow-wrap: anywhere; }
 .message-item strong { font-size: 13px; color: #84556a; }
 .message-item p { white-space: pre-wrap; font-size: 14px; margin: 8px 0; }
