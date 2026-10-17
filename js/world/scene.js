@@ -20,7 +20,7 @@ const INTERACT_DIST = TILE * 1.6; // 이 거리 안이면 이동 없이 바로 �
  *   solid:false 면 플레이어가 지나갈 수 있다(움직이는 하객용). wander가 있으면 home 주변 radius 칸 안을 몇 초 간격으로 돌아다닌다.
  */
 export class Scene {
-  constructor({ id, rows, spawn, objects = [], entrances = [], npcs = [], bg = '#f6efe7', onEnter = null, assets = {} }) {
+  constructor({ id, rows, spawn, objects = [], entrances = [], npcs = [], bg = '#f6efe7', groundTile = null, onEnter = null, assets = {} }) {
     this.id = id;
     this.map = parseMap(rows);
     this.spawn = spawn;
@@ -29,6 +29,7 @@ export class Scene {
     this.entrances = entrances;
     this.npcs = npcs;
     this.bg = bg;
+    this.groundTile = groundTile; // 야외는 같은 잔디로 경계 H와 맵 밖 여백까지 이어 그린다. 충돌 ID는 유지.
     this.bgImage = assets.maps?.[id] ?? null; // 씬 배경 한 장(있으면 타일 대신 그림)
     this.onEnter = onEnter;
     this.pending = null;      // 도착 후 실행할 상호작용
@@ -260,14 +261,16 @@ export class Scene {
 
   /** @param r renderer: drawTile, drawSprite, drawCanvas, drawNameTag(text,cx,topY), drawBubble(text,cx,bottomY) */
   draw(r, player) {
+    if (this.groundTile) r.drawBackdrop?.(this.groundTile);
     const floors = this.objects.filter((o) => o.floor);
-    if (r.drawGround?.(this.map, this.bgImage, floors) !== true) {
+    if (r.drawGround?.(this.map, this.bgImage, floors, this.groundTile) !== true) {
       if (this.bgImage) {
         r.drawCanvas(this.bgImage, 0, 0);
       } else {
         for (let ty = 0; ty < this.map.h; ty++) {
           for (let tx = 0; tx < this.map.w; tx++) {
-            const id = tileAt(this.map, tx, ty);
+            const tile = tileAt(this.map, tx, ty);
+            const id = tile === 'H' && this.groundTile ? this.groundTile : tile;
             if (r.drawGardenTile) r.drawGardenTile(id, tx * TILE, ty * TILE, [[0, -1], [1, 0], [0, 1], [-1, 0]].map(([dx, dy]) => tileAt(this.map, tx + dx, ty + dy) === 'N'));
             else r.drawTile(id, tx * TILE, ty * TILE);
           }

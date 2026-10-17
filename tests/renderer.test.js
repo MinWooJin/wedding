@@ -41,6 +41,41 @@ test('기본 상수', () => {
   assert.equal(VIEW_TILES_W, 11);
 });
 
+test('잔디 배경은 패턴을 재사용하고 카메라와 같은 위상으로 맵 밖까지 채운다', () => {
+  const calls = [];
+  let patterns = 0;
+  const ctx = {
+    createPattern: () => { patterns++; return {}; },
+    save() {}, restore() {},
+    translate: (...args) => calls.push(['translate', ...args]),
+    fillRect: (...args) => calls.push(['fill', ...args]),
+  };
+  const r = new Renderer({ getContext: () => ctx });
+  r.tiles = { G: { canvas: {} } };
+  r.cam = { x: 17, y: -45 };
+  r.drawBackdrop('G'); r.drawBackdrop('G');
+  assert.equal(patterns, 1);
+  assert.deepEqual(calls.slice(0, 2), [['translate', -17, 13], ['fill', 17, -13, 352, 600]]);
+  r.tiles.G = { canvas: {} };
+  r.drawBackdrop('G');
+  assert.equal(patterns, 2, '실제 잔디 교체 시 패턴 갱신');
+});
+
+test('야외 경계의 H는 잔디로 합성하고 표시 정책 변경 시 바닥 캐시를 갱신한다', (t) => {
+  const previous = Object.getOwnPropertyDescriptor(globalThis, 'document');
+  Object.defineProperty(globalThis, 'document', { configurable: true, value: { createElement: () => ({ getContext: () => ({ drawImage() {} }) }) } });
+  t.after(() => { if (previous) Object.defineProperty(globalThis, 'document', previous); else delete globalThis.document; });
+  const r = new Renderer({ getContext: () => ({ drawImage() {} }) });
+  const painted = [];
+  r.drawGardenTile = (id) => painted.push(id);
+  const map = { w: 2, h: 1, rows: ['HG'] };
+  r.drawGround(map, null, [], 'G');
+  assert.deepEqual(painted, ['G', 'G']);
+  assert.equal(map.rows[0], 'HG', '실제 충돌 타일 ID는 보존');
+  r.drawGround(map, null, [], null);
+  assert.deepEqual(painted, ['G', 'G', 'H', 'G']);
+});
+
 test('모션 변환은 발 밑에 고정하고 매번 복원하며 reduced motion이면 생략한다', () => {
   const calls = [];
   const ctx = Object.fromEntries(['save', 'translate', 'transform', 'drawImage', 'restore'].map((key) => [key, (...args) => calls.push([key, ...args])]));

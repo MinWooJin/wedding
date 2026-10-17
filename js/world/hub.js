@@ -6,8 +6,8 @@ import { characterSet } from '../assets.js';
 import { freeTiles, pickTiles } from './guest-layout.js';
 import { displayName } from '../config.js';
 
-// 11열 × 27행(352×864px). 레퍼런스(@dding_one)처럼: 울타리 안 잔디 정원, 가운데 3칸 폭 모래 돌길, 가장자리 나무·덤불, 하객은 길 위까지 가득.
-// 타일: H 그늘진 잔디(막힘), G 잔디, J/U 꽃 섞인 잔디, N 모래 돌길(4~6열)
+// 11열 × 27행(352×864px). 잔디가 외곽까지 이어지는 정원, 가운데 3칸 버진로드, 나무·덤불과 길 양옆 하객.
+// 타일: H 외곽 충돌 마스크(화면은 G), G 잔디, J/U 꽃 섞인 잔디, N 모래 돌길(4~6열)
 // 이야기 길을 없애며 생긴 여유를 정원에 돌려줬다(정원 17행). 하객이 모이는 공간이 이 청첩장의 중심이다.
 const FLOWER_SEED = 7;
 const GARDEN_ROWS = 17;
@@ -161,7 +161,7 @@ export class HubScene extends Scene {
     }
 
     super({
-      id: 'hub', rows: HUB_ROWS, spawn: HUB_SPAWN, objects, entrances, assets: game.assets,
+      id: 'hub', rows: HUB_ROWS, spawn: HUB_SPAWN, objects, entrances, assets: game.assets, groundTile: 'G',
       npcs: [{ character: groom, interact: greet(groom) }, { character: bride, interact: greet(bride) }, guideNpc],
     });
     this.game = game;

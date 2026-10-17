@@ -8,7 +8,7 @@ import { buildIcs } from '../ics.js';
 
 const ROWS = [
   'KKKKKKKKKKK',
-  ...Array.from({ length: 10 }, (_, i) => i === 5 || i === 6 ? 'KDDDLLLLDDK' : 'KDDDDDDDDDK'),
+  ...Array.from({ length: 10 }, () => 'KDDDDDDDDDK'),
   'KKKKKDKKKKK',
 ];
 

@@ -33,7 +33,7 @@ let lastPostAt = 0;
 export class GuestbookScene extends Scene {
   constructor(game) {
     super({
-      id: 'guestbook', rows: ROWS, spawn: SPAWN, assets: game.assets,
+      id: 'guestbook', rows: ROWS, spawn: SPAWN, assets: game.assets, groundTile: 'G',
       entrances: [{ ...EXIT, to: 'hub', spawn: HUB_DOORS.guestbook.back }],
       objects: [
         { id: 'door', sprite: 'door', floor: true, ...EXIT },
