@@ -196,16 +196,19 @@ export class HubScene extends Scene {
     // 아치는 PNG 폭(160=5칸, 224=7칸 …)에 맞춰 돌길 중앙(5열)에 가운데 정렬한다
     const archTiles = Math.round((game.assets?.objects?.arch?.w ?? 160) / 32);
     const treeCols = Math.ceil((game.assets?.objects?.tree?.w ?? 96) / 32);
-    const objects = [
+    // 한 장의 배경 그림(assets.maps.hub)이 있으면 아치·단상·화분·나무·꽃띠·길이 모두 그 안에 있다(레퍼런스 방식).
+    // 그때는 눌러야 하는 문·표지판과 케이크만 오브젝트로 올린다. 배경이 없으면 예전처럼 타일 + 장식 오브젝트로 그린다.
+    const painted = !!game.assets?.maps?.hub;
+    const objects = painted ? [] : [
       // 버진로드·꽃띠는 단상보다 먼저 합성해 시작 부분이 단상 밑으로 자연스럽게 이어진다.
       ...ceremonyFloors(game.assets),
       ...gardenEdges(game.assets, treeCols),
       { id: 'arch', sprite: 'arch', tx: 5 - Math.floor(archTiles / 2), ty: 0, solid: false },
       // 계단 단상(160×64, 3~7열): 바닥 장식이라 두 사람 발밑에 깔리고 충돌 없음.
       ...(has(game.assets, 'platform') ? [{ id: 'platform', sprite: 'platform', tx: 3, ty: CEREMONY.stageTy, floor: true }] : []),
-      // 리셉션 케이크는 하객 자리를 줄이지 않게 아래 입구 광장 가운데(표지판 사이)로 옮긴다. 지나갈 수 있는 장식.
-      ...(has(game.assets, 'wedding-cake') ? [{ id: 'cake-display', sprite: 'wedding-cake', tx: 4.5, ty: BLOCK_A, solid: false }] : []),
     ];
+    // 리셉션 케이크는 하객 자리를 줄이지 않게 아래 입구 광장 가운데(표지판 사이)에 둔다. 지나갈 수 있는 장식.
+    if (has(game.assets, 'wedding-cake')) objects.push({ id: 'cake-display', sprite: 'wedding-cake', tx: 4.5, ty: BLOCK_A, solid: false });
     const entrances = [];
     for (const [id, d] of Object.entries(HUB_DOORS)) {
       objects.push({ id: `door-${id}`, sprite: 'door', floor: true, ...d.door });
@@ -218,6 +221,7 @@ export class HubScene extends Scene {
       npcs: [...hosts.map((character) => ({ character, interact: greet(character) })), guideNpc],
     });
     this.game = game;
+    this.painted = painted;
     this.hosts = hosts;
     this.guide = guide;
     this.baseNpcs = this.npcs.slice();
@@ -244,6 +248,10 @@ export class HubScene extends Scene {
     const guideTile = this.tileOf(this.guide.x, this.guide.y);
     for (let dy = -2; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) reserved.add(`${guideTile.tx + dx},${guideTile.ty + dy}`);
     reserved.add(`${HUB_SPAWN.tx},${HUB_SPAWN.ty}`);
+    if (this.painted) { // 배경 그림의 단상·화분(3~7열 × 4~5행)과 모서리 나무(0~2·8~10열 × 0~3행) 위에는 서지 않는다
+      for (let ty = 4; ty <= 5; ty++) for (let tx = 1; tx <= 9; tx++) reserved.add(`${tx},${ty}`);
+      for (let ty = 0; ty <= 3; ty++) for (const tx of [0, 1, 2, 8, 9, 10]) reserved.add(`${tx},${ty}`);
+    }
     for (const d of Object.values(HUB_DOORS)) {
       reserved.add(`${d.door.tx},${d.door.ty}`);
       reserved.add(`${d.back.tx},${d.back.ty}`);

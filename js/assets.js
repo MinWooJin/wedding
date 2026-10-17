@@ -26,6 +26,32 @@ export const OBJECT_IDS = ['arch', 'tree', 'sign', 'mailbox', 'frame', 'bench', 
   'aisle-runner', 'aisle-flower-left', 'aisle-flower-right', 'party-table', 'ribbon-lantern', 'meadow-sprig', 'aisle-flower-airy-left', 'aisle-flower-airy-right', 'wedding-cake',
   'planter-box', 'aisle-edge-left', 'aisle-edge-right', 'lavender', 'rose-bush-l', 'rose-bush-s', 'tree-green', 'birdbath'];
 export const SCENE_IDS = ['hub', 'info', 'gallery', 'guestbook', 'gifts'];
+/**
+ * 광장 배경은 레퍼런스처럼 세 조각(위·반복·아래)을 세로로 이어 한 장으로 쓴다. y는 조각이 시작하는 월드 좌표.
+ * 방명록 정원 배경은 한 장(guestbook-bg)이다.
+ */
+export const MAP_PIECES = {
+  hub: [{ id: 'hub-top', y: 0 }, { id: 'hub-repeat', y: 256 }, { id: 'hub-bottom', y: 544 }],
+  guestbook: [{ id: 'guestbook-bg', y: 0 }],
+};
+const MAP_IDS = [...SCENE_IDS, ...Object.values(MAP_PIECES).flat().map((p) => p.id)];
+
+/**
+ * 조각 그림들을 한 캔버스에 이어 붙인다. 조각이 하나라도 빠지면 null(타일 그리기로 폴백).
+ * @param {Record<string, {width:number,height:number}>} images id → 이미지
+ */
+export function composeMap(images, pieces, create = (w, h) => Object.assign(document.createElement('canvas'), { width: w, height: h })) {
+  if (!pieces.every((p) => images[p.id])) return null;
+  if (pieces.length === 1 && pieces[0].y === 0) return images[pieces[0].id];
+  const width = Math.max(...pieces.map((p) => images[p.id].width));
+  const height = Math.max(...pieces.map((p) => p.y + images[p.id].height));
+  const canvas = create(width, height);
+  const ctx = canvas.getContext('2d');
+  if (!ctx) return null;
+  ctx.imageSmoothingEnabled = false;
+  for (const p of pieces) ctx.drawImage(images[p.id], 0, p.y);
+  return canvas;
+}
 
 function loadImage(src) {
   return new Promise((resolve) => {
@@ -120,8 +146,14 @@ export async function loadAssets(base = 'assets') {
     const w = Math.max(TILE, Math.round(img.width / TILE) * TILE), h = Math.max(TILE, img.height);
     out.objects[id] = imgSprite(toCanvas(img, 0, 0, img.width, img.height, w, h));
   }));
-  for (const id of pick(manifest.maps, SCENE_IDS)) jobs.push(imageFor('maps', id).then((img) => { if (img) out.maps[id] = img; }));
+  const pieces = {};
+  for (const id of pick(manifest.maps, MAP_IDS)) jobs.push(imageFor('maps', id).then((img) => { if (img) (SCENE_IDS.includes(id) ? out.maps : pieces)[id] = img; }));
   await Promise.all(jobs);
+  for (const [scene, list] of Object.entries(MAP_PIECES)) {
+    if (out.maps[scene]) continue; // 씬 전체 한 장이 따로 있으면 그것을 우선한다
+    const composed = composeMap(pieces, list);
+    if (composed) out.maps[scene] = composed;
+  }
   return out;
 }
 

@@ -70,7 +70,8 @@ export class GuestbookScene extends Scene {
       entrances: [{ ...EXIT, to: 'hub', spawn: HUB_DOORS.guestbook.back }],
       objects: [
         { id: 'door', sprite: 'door', floor: true, ...EXIT },
-        ...gardenDecor(game.assets),
+        // 배경 그림(assets.maps.guestbook)에 나무·장미·라벤더·버드배스·길·꽃띠가 들어 있으면 장식 오브젝트는 올리지 않는다.
+        ...(game.assets?.maps?.guestbook ? [] : gardenDecor(game.assets)),
         { id: 'mailbox', sprite: game.assets?.objects?.['wedding-mailbox'] ? 'wedding-mailbox' : 'mailbox', label: '축하 편지 쓰기', ...MAILBOX, interact: () => this.openForm(game) },
       ],
     });
@@ -83,6 +84,11 @@ export class GuestbookScene extends Scene {
     for (const o of this.objects) {
       if (o.floor) continue;
       for (let y = -1; y < Math.ceil(o.spr.h / 32); y++) for (let x = 0; x < Math.ceil(o.spr.w / 32); x++) this.reserved.add(`${o.tx + x},${o.ty + y}`);
+    }
+    if (game.assets?.maps?.guestbook) { // 배경 그림의 가장자리 식생 위(바깥 열, 위쪽 모서리, 아래 모서리)에는 꽃을 피우지 않는다
+      for (let ty = 0; ty <= LAST; ty++) { this.reserved.add(`0,${ty}`); this.reserved.add(`${COLS - 1},${ty}`); }
+      for (let ty = 0; ty <= 3; ty++) for (const tx of [1, 2, 8, 9]) this.reserved.add(`${tx},${ty}`);
+      for (let ty = LAST - 3; ty <= LAST; ty++) for (const tx of [1, 9]) this.reserved.add(`${tx},${ty}`);
     }
     this.baseObjects = this.objects.slice();
     this.setEntries(game.data?.messages ?? []);

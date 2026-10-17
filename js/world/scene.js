@@ -264,7 +264,7 @@ export class Scene {
     }
   }
 
-  /** @param r renderer: drawTile, drawSprite, drawCanvas, drawNameTag(text,cx,topY), drawBubble(text,cx,bottomY) */
+  /** @param r renderer: drawTile, drawSprite, drawCanvas, drawNameTag(text,cx,feetY), drawBubble(text,cx,bottomY) */
   draw(r, player) {
     if (this.groundTile) r.drawBackdrop?.(this.groundTile);
     const floors = this.objects.filter((o) => o.floor);
@@ -295,7 +295,7 @@ export class Scene {
       items.push({ y: c.y, draw: () => {
         if (alpha < 1) r.setAlpha?.(alpha);
         r.drawSprite(c.sprite(r.reducedMotion), p.x, p.y, c.motion(r.reducedMotion));
-        if (tag) r.drawNameTag(c.name, p.x + p.w / 2, p.y - 2, c === player);
+        if (tag) r.drawNameTag(c.name, p.x + p.w / 2, c.y + 2, c === player); // 발밑
         if (alpha < 1) r.setAlpha?.(1);
       } });
     }

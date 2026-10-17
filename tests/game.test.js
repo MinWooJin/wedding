@@ -31,6 +31,13 @@ test('맵이 뷰보다 작으면 가운데 정렬(음수 카메라)', () => {
   assert.deepEqual(computeCamera(view, { pixelW: 112, pixelH: 160 }, { x: 56, y: 80 }), { x: -32, y: -70 });
 });
 
+test('배경 그림이 있는 짧은 야외 맵은 세로로 위에 붙인다(가로는 가운데)', () => {
+  const view = { width: 176, height: 300 };
+  const scene = { pixelW: 112, pixelH: 160, bgImage: {} };
+  assert.deepEqual(computeCamera(view, scene, { x: 56, y: 80 }, 56), { x: -32, y: -56 });
+  assert.deepEqual(cameraBounds(view, scene, 56), { minX: -32, maxX: -32, minY: -56, maxY: -56 });
+});
+
 
 test('양옆 잔디는 소수 배율과 카메라 이동 중에도 캔버스와 같은 지점을 표시한다', () => {
   for (const scale of [1, 2, 320/352]) {

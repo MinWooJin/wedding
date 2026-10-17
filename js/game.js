@@ -7,28 +7,31 @@ import { characterSet } from './assets.js';
 /** HUD(상단 이름·날짜)가 맵 위쪽을 가리지 않도록 비워 두는 높이(내부 px) */
 export const HUD_PAD = 56;
 
+/** 뷰보다 짧은 맵의 세로 정렬: 배경 그림이 있는 야외 씬은 위에 붙이고(그림 아래쪽만 잔디가 이어짐), 실내는 가운데. */
+const smallAxisOffset = (avail, mapLen, alignTop) => (alignTop ? 0 : Math.floor((avail - mapLen) / 2));
+
 /**
- * 카메라: 뷰보다 큰 축은 플레이어 중심 + 클램프, 작은 축은 가운데 정렬(음수).
+ * 카메라: 뷰보다 큰 축은 플레이어 중심 + 클램프, 작은 축은 가운데 정렬(음수) 또는 위 정렬.
  * topPad만큼은 화면 위를 비워 둔다(세로축 전용).
  */
 export function computeCamera(view, scene, player, topPad = 0) {
-  const axis = (viewLen, mapLen, p, pad) => {
+  const axis = (viewLen, mapLen, p, pad, alignTop = false) => {
     const avail = viewLen - pad;
-    if (mapLen <= avail) return 0 - pad - Math.floor((avail - mapLen) / 2); // 0 - 0 → +0
+    if (mapLen <= avail) return 0 - pad - smallAxisOffset(avail, mapLen, alignTop); // 0 - 0 → +0
     return Math.max(0, Math.min(mapLen - avail, Math.round(p - avail / 2))) - pad;
   };
-  return { x: axis(view.width, scene.pixelW, player.x, 0), y: axis(view.height, scene.pixelH, player.y, topPad) };
+  return { x: axis(view.width, scene.pixelW, player.x, 0), y: axis(view.height, scene.pixelH, player.y, topPad, !!scene.bgImage) };
 }
 
 /** 수동 스크롤로 갈 수 있는 카메라 범위. 맵이 뷰보다 작으면 min=max(고정). */
 export function cameraBounds(view, scene, topPad = 0) {
-  const range = (viewLen, mapLen, pad) => {
+  const range = (viewLen, mapLen, pad, alignTop = false) => {
     const avail = viewLen - pad;
-    if (mapLen <= avail) { const v = 0 - pad - Math.floor((avail - mapLen) / 2); return [v, v]; }
+    if (mapLen <= avail) { const v = 0 - pad - smallAxisOffset(avail, mapLen, alignTop); return [v, v]; }
     return [0 - pad, mapLen - avail - pad];
   };
   const [minX, maxX] = range(view.width, scene.pixelW, 0);
-  const [minY, maxY] = range(view.height, scene.pixelH, topPad);
+  const [minY, maxY] = range(view.height, scene.pixelH, topPad, !!scene.bgImage);
   return { minX, maxX, minY, maxY };
 }
 
@@ -84,8 +87,8 @@ export class Game {
     this.frameWidth = r.width;
     this.renderer.resize(r.width, r.height);
     const header = this.frame.querySelector?.('.garden-header')?.getBoundingClientRect();
-    // 아래 안내 카드(접힘·숨김 포함)와 버튼 중 화면에 보이는 가장 위쪽 요소까지를 정원 화면으로 본다.
-    const bottoms = [...(this.frame.querySelectorAll?.('.scene-panel, .garden-dock') ?? [])]
+    // 아래 버튼 줄처럼 화면에 보이는 가장 위쪽 요소까지를 정원 화면으로 본다.
+    const bottoms = [...(this.frame.querySelectorAll?.('.garden-dock') ?? [])]
       .map((el) => el.getBoundingClientRect()).filter((b) => b.height > 0).map((b) => b.top);
     const scale = this.renderer.view.scale;
     const uiTop = bottoms.length ? Math.min(...bottoms) : null;

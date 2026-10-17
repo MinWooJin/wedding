@@ -145,34 +145,18 @@ label { display: block; font-size: 13px; font-weight: 600; margin: 12px 0 6px; }
 .cover-classic { display: block; color: #6a705a; font-size: 13px; padding: 8px; }
 .cover .cover-footnote { font-size: 12px; line-height: 1.6; margin-top: 18px; }
 .boot-message { font-size: 13px; color: #716b61; text-align: center; }
-.garden-header { position: absolute; top: calc(12px + env(safe-area-inset-top)); left: 16px; right: 16px; height: 58px; display: flex; align-items: center; gap: 9px; padding: 9px 10px 9px 15px; border: 1px solid #fff9; background: #fffcf3ed; border-radius: 18px; box-shadow: 0 5px 20px #3a422614; pointer-events: auto; }
-.brand { display: flex; flex: 1; flex-direction: column; gap: 4px; }
-.brand strong { font-size: 16px; }
-.brand i { font-size: 12px; color: #ae6b7d; font-style: normal; }
-.brand .eyebrow { font-size: 10px; letter-spacing: .1em; }
-.date-chip { color: #94516a; background: #f4e5e9; border-radius: 10px; padding: 6px 9px; font-size: 12px; font-weight: 700; }
-.icon-button { border-radius: 12px; min-width: 44px; padding: 5px; font-size: 20px; background: #e9eedd; color: #566044; }
-.scene-panel { position: absolute; left: 16px; right: 16px; bottom: calc(91px + env(safe-area-inset-bottom)); padding: 14px 16px 10px; background: #fffcf5f5; border: 1px solid #dfdfd0; box-shadow: 0 4px 22px #4244280d; border-radius: 18px; pointer-events: auto; }
-.scene-panel .eyebrow { margin: 0 0 6px; font-size: 11px; letter-spacing: .02em; }
-.scene-panel h2 { font-size: 18px; line-height: 1.3; margin: 0; font-weight: 650; }
-.scene-panel .scene-description { font-size: 14px; line-height: 1.55; color: #615f55; margin: 6px 0 0; }
-.scene-panel .scene-extra { color: #95576a; font-size: 13px; margin: 6px 0 0; }
-.scene-extra:empty { display: none; }
-/* 안내 카드 제목 줄: 누르면 접고 펼친다. 접힌 카드는 제목 한 줄만 남아 정원을 가리지 않는다. */
-.scene-title { display: flex; width: 100%; align-items: center; justify-content: space-between; gap: 8px; padding: 0; min-height: 32px; background: none; border: 0; color: inherit; font: inherit; text-align: left; cursor: pointer; }
-.panel-chevron { flex: none; color: #8a8f78; transition: transform .2s; }
-.scene-panel.collapsed { padding: 6px 14px; border-radius: 16px; }
-.scene-panel.collapsed .scene-kicker, .scene-panel.collapsed .scene-body { display: none; }
-.scene-panel.collapsed h2 { font-size: 15px; }
-.scene-panel.collapsed .panel-chevron { transform: rotate(180deg); }
-
-.scene-links { display: flex; justify-content: space-between; align-items: center; gap: 6px; margin-top: 4px; }
-.text-button { padding: 8px 0; min-height: 44px; background: none; border: 0; color: #5b6946; font: 13px var(--font); cursor: pointer; text-align: left; }
-.garden-dock { position: absolute; bottom: calc(12px + env(safe-area-inset-bottom)); left: 16px; right: 16px; display: grid; grid-template-columns: 1fr 1.6fr 1.3fr; gap: 7px; pointer-events: auto; }
-.garden-dock button { border: 1px solid #dedfcf; border-radius: 16px; min-height: 64px; background: #fffcf5; color: #5c644c; font: 600 11px var(--font); display: flex; flex-direction: column; gap: 4px; justify-content: center; align-items: center; box-shadow: 0 3px 12px #353d2512; }
-.garden-dock button { font-size: 13px; }
-.garden-dock button span { font-size: 21px; line-height: 1; font-weight: 400; }
-.garden-dock .dock-write { background: #a95670; color: #fff; border-color: #a95670; }
+/* 지도 위 상시 UI는 레퍼런스처럼 최소: 왼쪽 위 이름 칩, 아래 "축하 남기기"와 둥근 메뉴 버튼. */
+.garden-header { position: absolute; top: calc(10px + env(safe-area-inset-top)); left: 12px; height: 36px; display: inline-flex; align-items: center; gap: 8px; padding: 0 10px 0 12px; border: 1px solid #fff9; background: #fffcf3e6; border-radius: 999px; box-shadow: 0 4px 14px #3a422614; pointer-events: auto; }
+.garden-header strong { font-size: 14px; }
+.garden-header i { font-size: 11px; color: #ae6b7d; font-style: normal; }
+.date-chip { color: #94516a; background: #f4e5e9; border-radius: 999px; padding: 3px 8px; font-size: 11px; font-weight: 700; }
+.garden-dock { position: absolute; bottom: calc(14px + env(safe-area-inset-bottom)); left: 14px; right: 14px; display: flex; justify-content: space-between; align-items: flex-end; pointer-events: none; }
+.fab { pointer-events: auto; border: 1px solid #dedfcf; border-radius: 999px; min-height: 52px; background: #fffcf5; color: #5c644c; font: 600 14px var(--font); display: inline-flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 14px #353d2522; cursor: pointer; }
+.fab span { font-size: 18px; line-height: 1; }
+.fab-write { padding: 0 20px 0 16px; background: #a95670; color: #fff; border-color: #a95670; }
+.fab-menu { width: 52px; height: 52px; padding: 0; font-size: 22px; }
+.menu-status { color: #95576a; font-size: 13px; margin: 6px 0 0; }
+.menu-actions { display: flex; flex-wrap: wrap; gap: 4px 16px; margin: 0 0 6px; }
 .space-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 18px 0; }
 .space-tile { border-radius: 15px; padding: 17px 8px; border: 1px solid #e4e4d8; background: #f7f8f0; color: #455638; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 9px; }
 .space-tile span { font-size: 24px; }
@@ -190,16 +174,14 @@ label { display: block; font-size: 13px; font-weight: 600; margin: 12px 0 6px; }
 .empty-state > span { font-size: 36px; color: #a2aa8e; }
 .empty-state h3 { font-size: 16px; }
 .empty-state p { font-size: 13px; color: #706a60; }
-@media (max-height: 680px) { .scene-description { display: none; } .scene-panel { padding: 10px 13px 4px; } .scene-panel .scene-extra { margin-top: 4px; } .scene-panel h2 { font-size: 15px; } .cover-garden { height: 170px; } }
+@media (max-height: 680px) { .cover-garden { height: 170px; } }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; animation: none !important; } }
 /* 화면이 짧으면 입장 버튼을 화면 아래에 붙여 스크롤 없이도 보이게 한다. */
 @media (max-height: 740px) { .cover-enter { position: sticky; bottom: max(12px, env(safe-area-inset-bottom)); z-index: 1; box-shadow: 0 6px 20px #6a3a4a33; } .cover-enter:disabled { opacity: 1; background: #cfa3b0; border-color: #cfa3b0; } }
 /* 가로 화면: 안내 카드를 숨기고 상단 바·아래 버튼을 낮게 줄여 정원을 최대한 보여 준다. */
 @media (orientation: landscape) and (max-height: 500px) {
-  .scene-panel { display: none; }
-  .garden-header { top: calc(6px + env(safe-area-inset-top)); height: 44px; padding: 4px 8px 4px 12px; }
-  .brand .eyebrow { display: none; }
-  .garden-dock { bottom: calc(6px + env(safe-area-inset-bottom)); }
-  .garden-dock button { min-height: 44px; flex-direction: row; gap: 6px; }
-  .garden-dock button span { font-size: 17px; }
+  .garden-header { top: calc(6px + env(safe-area-inset-top)); height: 32px; }
+  .garden-dock { bottom: calc(8px + env(safe-area-inset-bottom)); }
+  .fab { min-height: 44px; }
+  .fab-menu { width: 44px; height: 44px; }
 }

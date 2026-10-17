@@ -1,12 +1,16 @@
 import { tileSprite } from './sprites/tiles.js';
 
 export const TILE = 32;
-export const VIEW_TILES_W = 11;
-export const VIEW_W = TILE * VIEW_TILES_W; // 352
+// 화면에는 10칸(320px)만 채운다. 지도는 11칸(352px)이라 좌우 끝이 조금 잘리고 카메라가 가로로도 따라간다.
+// 그만큼 캐릭터와 글씨가 10% 커진다(390폭 폰에서 1.22배). 레퍼런스도 화면보다 넓은 지도를 쓴다.
+export const VIEW_TILES_W = 10;
+export const VIEW_W = TILE * VIEW_TILES_W; // 320
+/** 지도 폭(11칸). 배율을 정한 뒤 화면에 여유가 있으면(데스크톱) 이 폭까지 더 보여 준다. */
+export const MAX_VIEW_W = TILE * 11; // 352
 
 /**
  * 컨테이너 CSS 크기 → 배율과 내부 해상도.
- * 내부 폭 352px을 화면 폭에 꽉 채운다(390폭 1.11배, 430폭 1.22배). 정수 배율로 묶으면 큰 폰일수록
+ * 내부 폭 320px을 화면 폭에 꽉 채운다(390폭 1.22배, 430폭 1.34배). 정수 배율로 묶으면 큰 폰일수록
  * 좌우가 비고 글씨가 작아진다. 캔버스는 기기 해상도로 그려서(resize) 소수 배율의 픽셀 불균일이 보이지 않는다.
  */
 export function computeViewport(cssW, cssH, dpr = 1) {
@@ -14,7 +18,8 @@ export function computeViewport(cssW, cssH, dpr = 1) {
   // 기기 픽셀 비율이 낮은 화면(데스크톱)에서는 소수 배율이 픽셀을 1칸·2칸으로 들쭉날쭉 늘려 그림이 울퉁불퉁해진다.
   // 그런 화면에서는 정수 배율로 내리고 남는 좌우는 잔디 배경으로 채운다. 고해상도 폰(2~3배)에서는 티가 나지 않아 꽉 채운다.
   if (dpr < 2 && scale >= 1) scale = Math.floor(scale);
-  return { scale, width: VIEW_W, height: Math.ceil(cssH / scale) };
+  const width = Math.max(VIEW_W, Math.min(MAX_VIEW_W, Math.floor(cssW / scale)));
+  return { scale, width, height: Math.ceil(cssH / scale) };
 }
 
 /** 이름표·말풍선·문 이름표 글씨(내부 px). 화면 배율이 곱해져 390폭에서 약 13·16·13px. */
@@ -183,13 +188,13 @@ export class Renderer {
     ctx.fillRect(Math.round(x - this.cam.x - 7), Math.round(y - this.cam.y + 1), 14, 2); ctx.restore();
   }
 
-  /** 상자 없는 흰 글씨 + 어두운 외곽선(레퍼런스). 사람이 많아도 화면이 덜 답답하다. 플레이어는 연노랑. */
-  drawNameTag(text, cx, topY, highlight = false) {
+  /** 발밑에 상자 없는 흰 글씨 + 어두운 외곽선(레퍼런스). 머리 위보다 겹친 얼굴을 덜 가린다. 플레이어는 연노랑. */
+  drawNameTag(text, cx, feetY, highlight = false) {
     const ctx = this.ctx;
     ctx.save();
     ctx.font = `${TEXT.name}px Galmuri11, Galmuri9, sans-serif`;
-    ctx.textBaseline = 'bottom'; ctx.textAlign = 'center';
-    const x = Math.round(cx - this.cam.x), y = Math.round(topY - this.cam.y);
+    ctx.textBaseline = 'top'; ctx.textAlign = 'center';
+    const x = Math.round(cx - this.cam.x), y = Math.round(feetY - this.cam.y);
     ctx.lineJoin = 'round'; ctx.lineWidth = 3; ctx.strokeStyle = 'rgba(38,30,24,.85)';
     ctx.strokeText(text, x, y);
     ctx.fillStyle = highlight ? '#fff5b5' : '#fff';
