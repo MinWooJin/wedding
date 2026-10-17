@@ -216,7 +216,7 @@ export class HubScene extends Scene {
       // 계단 단상(160×64, 3~7열): 바닥 장식이라 두 사람 발밑에 깔리고 충돌 없음.
       ...(has(game.assets, 'platform') ? [{ id: 'platform', sprite: 'platform', tx: 3, ty: CEREMONY.stageTy, floor: true }] : []),
     ];
-    // 리셉션은 하객 구역 아래, 표지판 사이에 모으고 소품의 발자국은 피해서 걷는다.
+    // 리셉션은 표지판 사이에 모으되, 가운데 통로를 막지 않는 통행 가능한 장식으로 둔다.
     if (painted) objects.push(...WEDDING_RECEPTION.filter((o) => has(game.assets, o.sprite)));
     else if (has(game.assets, 'wedding-cake')) objects.push({ id: 'cake-display', sprite: 'wedding-cake', tx: 4.5, ty: BLOCK_A, solid: false });
     const entrances = [];

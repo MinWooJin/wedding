@@ -36,7 +36,7 @@ export function decorateWeddingHub(map, { top, guestbook, objects }, create = (w
 
 /** A single reception vignette between the upper and lower pairs of signs. */
 export const WEDDING_RECEPTION = [
-  { id: 'reception-lantern', sprite: 'ribbon-lantern', tx: 3, ty: 20 },
-  { id: 'reception-table', sprite: 'party-table', tx: 4, ty: 20 },
-  { id: 'cake-display', sprite: 'wedding-cake', tx: 5, ty: 19 },
+  { id: 'reception-lantern', sprite: 'ribbon-lantern', tx: 3, ty: 20, solid: false },
+  { id: 'reception-table', sprite: 'party-table', tx: 4, ty: 20, solid: false },
+  { id: 'cake-display', sprite: 'wedding-cake', tx: 5, ty: 19, solid: false },
 ];

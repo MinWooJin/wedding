@@ -27,7 +27,7 @@ test('광장 배경은 세 조각을 0/256/544에 이어 붙여 352×864 한 장
   assert.deepEqual([gb.width, gb.height], [352, 448]);
 });
 
-test('그려진 광장의 리셉션 소품을 피해서 네 문까지 이동하고 두 사람은 단상에 선다', () => {
+test('그려진 광장의 리셉션을 그대로 통과해 네 문까지 이동하고 두 사람은 단상에 선다', () => {
   const hubBg = { width: 352, height: 864 };
   const hub = createHub({ config: DEFAULT_CONFIG, profile: { nickname: '나' }, assets: { objects, maps: { hub: hubBg } }, data: { messages: [] } });
   assert.equal(hub.bgImage, hubBg);
@@ -40,9 +40,14 @@ test('그려진 광장의 리셉션 소품을 피해서 네 문까지 이동하�
   }
   for (const e of hub.entrances) assert.ok(findPath(hub.map.w, hub.map.h, (x, y) => hub.isSolidTile(x, y), hub.spawn, e), '문 접근');
   for (const prop of hub.objects.filter((o) => ['party-table', 'ribbon-lantern', 'wedding-cake'].includes(o.sprite))) {
-    assert.equal(prop.solid, true, '테이블과 케이크를 관통하지 않는다');
+    assert.equal(prop.solid, false, '리셉션 소품은 위치를 유지하고 통행을 허용한다');
     const foot = prop.ty + Math.ceil(prop.spr.h / 32) - 1;
-    assert.equal(hub.isSolidTile(prop.tx, foot), true);
+    assert.equal(hub.isSolidTile(prop.tx, foot), false);
+  }
+  // 출입구까지 우회 경로가 있는 것만으로는 부족하다. 중앙을 직진할 수 있어야 한다.
+  for (let row = 18; row <= 25; row++) {
+    assert.equal(hub.isSolidTile(5, row), false, `중앙 통로 ${row}행`);
+    assert.equal(hub.blockedStatic()(176, (row + 1) * 32), false, '실제 캐릭터 충돌 박스도 통과');
   }
   const crowd = [...hub.guestMap.values()];
   assert.equal(crowd.length, 20);
