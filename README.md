@@ -67,6 +67,9 @@ python tools/prepare_v2_assets.py  # v2 소품 2종만, raw/v2-source 원본이 
 현재 잔디는 풀잎 질감 3종(v4)을 섞고 작은 들꽃을 흩어 배치한다. 버진로드 장미와 수국 장식을 번갈아 놓고 케이크도 추가했다.
 [잔디·장식 비교](assets/garden-detail-preview.png) · [생성 프롬프트](assets/garden-detail-prompts.json). 선택 변환은 `python tools/prepare_garden_detail_assets.py`.
 
+메인과 방명록의 나무는 연분홍 벚꽃나무로 맞췄다. 기존 64×96 프레임과 동선은 유지한다.
+[벚꽃나무 전후 비교](assets/cherry-tree-preview.png) · [생성 프롬프트](assets/cherry-tree-prompts.json).
+
 ## 방명록(Google 스프레드시트) 연결
 
 1. 새 스프레드시트 → 확장 프로그램 → Apps Script → `apps-script/Code.gs` 내용 붙여넣기

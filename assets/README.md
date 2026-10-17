@@ -1,5 +1,9 @@
 # 에셋 가이드 (AI 생성 → 게임 적용)
 
+현재 나무는 `objects/tree-v4-cherry.png`: 64×96, 실제 그림 64×64, 32색·이진 알파의 연분홍 벚꽃나무다.
+manifest.files.objects.tree로 메인·방명록에 함께 적용한다. 기존 초록 tree-v3 PNG와 배치·발 위치는 보존한다.
+선택 변환 `python tools/prepare_cherry_tree_asset.py`. 프롬프트 `cherry-tree-prompts.json`, 규격 `cherry-tree-report.json`, 비교 `cherry-tree-preview.png`.
+
 현재 잔디: `tiles/G-v4.png`, `J-v4.png`, `U-v4.png`(32×32·12색). 현재 J/U는 같은 톤의 잔디 질감 변형이다.
 작은 들꽃 `objects/meadow-sprig.png`(32×32)를 잔디 12곳에 놓고, 새 `aisle-flower-airy-left/right.png`(32×48)를 기존 장미와 교차 배치한다.
 `objects/wedding-cake.png`(64×80)는 0열·2행. 나무·테이블·리본 조명·중앙 96px 통로는 유지한다.

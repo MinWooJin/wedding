@@ -1,0 +1,18 @@
+{
+  "file": "tree-v4-cherry.png",
+  "size": [
+    64,
+    96
+  ],
+  "bbox": [
+    0,
+    32,
+    64,
+    96
+  ],
+  "colors": 32,
+  "alpha_values": [
+    0,
+    255
+  ]
+}

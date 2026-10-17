@@ -1,5 +1,9 @@
 # 에셋 작업 인수인계 프롬프트 (Codex / Claude)
 
+> **최신: 벚꽃나무(2026-10-17).** HANDOFF 16절 / 설계 23절 참고.
+> tree ID는 `tree-v4-cherry.png`(64×96)를 선택한다. 메인·방명록 모두 연분홍 벚꽃나무이며 기존 초록 나무 파일은 보존한다.
+> 배치·충돌은 그대로다. 프롬프트 `assets/cherry-tree-prompts.json`, 선택 변환 `tools/prepare_cherry_tree_asset.py`.
+
 > **최신: 잔디 질감과 꽃 다양화(2026-10-17).** HANDOFF 15절 / 설계 22절을 우선한다.
 > G/J/U는 새 12색 잔디 v4다. 작은 들꽃은 별도 비충돌 소품 12곳이며 장미와 새 수국 꽃을 교차 배치한다.
 > 나무·리셉션 소품·자유 배회를 유지하고 케이크를 추가했다. 프롬프트 `assets/garden-detail-prompts.json`.

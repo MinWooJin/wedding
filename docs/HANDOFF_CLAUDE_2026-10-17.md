@@ -228,3 +228,11 @@ Codex가 다음 작업 전에 읽을 문서다. 오늘 Claude가 바꾼 내용, 
 - 프롬프트·참조 역할·보정 기준은 `assets/garden-detail-prompts.json`, 규격·bbox·알파는 `garden-detail-report.json`, 이전/새 잔디와 소품 확대는 `garden-detail-preview.png`다. 현재 13 캐릭터 ID·22 타일 ID·35 오브젝트 ID다.
 - 테스트 119개 통과. 장미/수국 교차 배치, 작은 꽃의 비충돌·잔디 한정, 케이크가 길 밖인 점, 기존 96px 길과 네 문 경로·하객 자유 배회를 확인했다. 390px·320px 실제 화면, 방명록 잔디 연결과 콘솔 오류도 확인했다.
 - API·실사진 연결은 계속 마지막 단계로 보류한다.
+
+## 16. 벚꽃나무 적용 (2026-10-17)
+
+- 사용자 요청으로 초록 나무를 연분홍·아이보리 꽃이 핀 벚꽃나무로 교체했다. 꽃 사이에 갈색 가지·줄기와 세이지 잎을 남겨 나무 실루엣을 유지했다.
+- 내장 imagegen으로 원본 한 장을 생성하고 `assets/objects/tree-v4-cherry.png`로 준비했다. 64×96 RGBA, 실제 bbox (0,32,64,96), 32색·이진 알파다. 기존 tree-v3와 같은 폭/프레임/발 위치라 메인 양옆과 방명록 나무 위치·충돌·하객 배치를 바꾸지 않는다.
+- manifest.files.objects.tree가 새 파일을 선택한다. tree ID를 사용하는 메인과 방명록에 함께 적용된다. 기존 tree.png/tree-v3.png는 보존하고 다른 PNG는 수정하지 않았다. 캐릭터 ID·타일/소품 ID 수는 그대로다.
+- 선택 재변환 `python tools/prepare_cherry_tree_asset.py`, 생성 원본 `raw/cherry-tree-source/tree.png`(Git 제외). 프롬프트와 참조 역할은 `assets/cherry-tree-prompts.json`, 규격은 `cherry-tree-report.json`, 전후 2배 확대는 `cherry-tree-preview.png`다. API 키는 사용하지 않았다.
+- 테스트 119개 통과. 메인·방명록 실제 화면에서 꽃길/인물을 가리지 않는 배치와 콘솔 오류 없음을 확인했다. 잔디 질감·들꽃·장미/수국 교차 배치·케이크·하객 자유 배회는 유지한다.

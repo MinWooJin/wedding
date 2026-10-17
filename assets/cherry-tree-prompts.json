@@ -1,0 +1,15 @@
+{
+  "mode": "built-in image_gen; no API key",
+  "prompt": "Create ONE isolated pixel-art flowering cherry blossom tree sprite for a romantic Korean garden wedding RPG. First image is a SHAPE/SCALE reference only: keep a compact roughly rounded but organically asymmetric canopy and a visible short branching brown trunk, entire tree fitting a final 64x96 frame with visible ink about64px wide and74px high at bottom center. Second image is a PALETTE/STYLE reference: warm ivory and muted blush wedding flowers. This is a new sibling tree design, not an edit of the original. Replace most green leaf masses with delicate clusters of pale blush-pink and ivory cherry blossoms; include a few deeper dusty-rose shadows, small sage leaf pockets and visible brown branching structure so it clearly reads as a flowering tree instead of a solid pink cloud or cotton candy. Elevated frontal RPG perspective, crisp readable handmade pixel clusters, thin warm brown outlines, restrained shading, soft festive garden wedding atmosphere. Show complete trunk base, no pot, no text, no people, no hanging decorations, no large falling petals, no surrounding grass patch, no ground disk or external shadow. Transparent background. Simple detail density readable at final64px width. Do not include either reference object as a separate item. Exactly one full flowering tree, centered, no clipping.",
+  "references": [
+    {
+      "path": "assets/objects/tree-v3.png",
+      "role": "shape and scale reference"
+    },
+    {
+      "path": "assets/objects/aisle-flower-left-v2.png",
+      "role": "palette and style reference"
+    }
+  ],
+  "preparation": "tools/prepare_cherry_tree_asset.py; trim alpha160, fit64x74 BOX,32colors,binary alpha128,bottom center64x96. Prior assets preserved."
+}
