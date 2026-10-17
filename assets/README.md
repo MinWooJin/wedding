@@ -1,5 +1,11 @@
 # 에셋 가이드 (AI 생성 → 게임 적용)
 
+최신 예식 장면: `objects/aisle-runner.png`(96×32), `aisle-flower-left.png`·`aisle-flower-right.png`(각 32×32).
+꽃의 실제 폭은 각 16px이고 중앙 64px를 비운다. 충돌 없는 바닥 장식이며 단상 아래에서 길게 연결한다.
+생성 프롬프트 `ceremony-prompts.json`, 규격 `ceremony-report.json`, 미리보기 `ceremony-preview.png`.
+안전한 재변환은 `python tools/prepare_ceremony_assets.py`(원본 `raw/ceremony-source/` 필요).
+신랑·신부 PNG는 그대로이고, 월드 배치와 커버만 중심 간격 35px로 맞췄다.
+
 게임은 `assets/manifest.json`에 적힌 PNG만 읽고, 없는 것은 코드로 그린 기본 그림을 씁니다.
 현재 선택된 그림은 manifest의 **`files`**를 우선합니다. 2026-10-17 레퍼런스 고도화는
 캐릭터 12종·정원 타일 6종·나무를 `*-v3.png`로 추가했습니다. 기존 PNG는 덮어쓰지 않았습니다.

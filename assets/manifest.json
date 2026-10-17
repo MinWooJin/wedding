@@ -63,7 +63,10 @@
     "plant",
     "platform",
     "wedding-mailbox",
-    "share-letter"
+    "share-letter",
+    "aisle-runner",
+    "aisle-flower-left",
+    "aisle-flower-right"
   ],
   "maps": [],
   "files": {

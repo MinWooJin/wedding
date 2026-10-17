@@ -29,7 +29,26 @@ export const HUB_ROWS = [
   'HHHHHHHHHHH',
 ];
 
-export const HUB_SPAWN = { tx: 5, ty: 10 }; // 돌길 중간에서 시작: 위로 신랑신부, 주변에 하객들
+export const HUB_SPAWN = { tx: 5, ty: 8 }; // 단상 앞에서 시작해 두 사람의 얼굴이 상단 HUD에 가리지 않게 한다.
+
+// 발은 단상 윗면 위에, 두 사람의 실제 그림 사이에는 몇 px만 남긴다.
+export const CEREMONY = { groomX: 157, brideX: 192, feetY: 176, aisleStart: 5, aisleEnd: BLOCK_B + 2, flowerStart: 6, flowerEnd: GARDEN_ROWS };
+
+function ceremonyFloors(assets) {
+  const objects = [];
+  if (assets?.objects?.['aisle-runner']) {
+    for (let ty = CEREMONY.aisleStart; ty <= CEREMONY.aisleEnd; ty++) {
+      objects.push({ id: `aisle-${ty}`, sprite: 'aisle-runner', tx: 4, ty, floor: true });
+    }
+  }
+  for (const [sprite, tx] of [['aisle-flower-left', 4], ['aisle-flower-right', 6]]) {
+    if (!assets?.objects?.[sprite]) continue;
+    for (let ty = CEREMONY.flowerStart; ty <= CEREMONY.flowerEnd; ty++) {
+      objects.push({ id: `${sprite}-${ty}`, sprite, tx, ty, floor: true });
+    }
+  }
+  return objects;
+}
 
 /** 각 방으로 가는 문 위치와, 그 방에서 돌아올 때 설 자리 */
 export const HUB_DOORS = {
@@ -52,8 +71,8 @@ const DECOR = [ // 0~4행은 큰 아치(최대 7칸 폭) 자리라 비워 둔다
   { sprite: 'bush', tx: 3, ty: BLOCK_B + 1 }, { sprite: 'bush', tx: 6, ty: BLOCK_B + 1 },
 ];
 
-/** 하객이 서는 구역: 신랑신부(5행) 아래부터 정원 끝까지, 돌길 위를 포함한 정원 전체(1~9열) */
-export const GUEST_ZONE = { cols: [1, 2, 3, 4, 5, 6, 7, 8, 9], rowMin: 6, rowMax: GARDEN_ROWS };
+/** 하객은 버진로드 바깥 잔디 양쪽에 모인다. 중앙 세 칸은 행진·이동 공간이다. */
+export const GUEST_ZONE = { cols: [1, 2, 3, 7, 8, 9], rowMin: 6, rowMax: GARDEN_ROWS };
 
 export const MAX_GUESTS = 30;
 /** 실제 하객이 이보다 적으면 이름이 "하객"인 분위기용 캐릭터로 채운다(방명록·메시지 수에는 포함하지 않는다). */
@@ -110,12 +129,12 @@ export function uniqueGuests(entries) {
 export class HubScene extends Scene {
   constructor(game) {
     const cfg = game.config;
-    // 아치(224×160, 0~4행) 바로 앞 5행, 돌길 한가운데(x=176)에 어깨를 맞대고 나란히. 예식이 진행 중인 장면.
-    const groom = new Character({ sprites: characterSet(game.assets, 'groom', GROOM), name: displayName(cfg.groom), x: 176 - 24, y: standPos(5, 5).y });
-    const bride = new Character({ sprites: characterSet(game.assets, 'bride', BRIDE), name: displayName(cfg.bride), x: 176 + 24, y: standPos(5, 5).y });
+    // 아치와 단상 중앙에서 두 사람이 행진을 앞두고 가까이 나란히 선다.
+    const groom = new Character({ sprites: characterSet(game.assets, 'groom', GROOM), name: displayName(cfg.groom), x: CEREMONY.groomX, y: CEREMONY.feetY });
+    const bride = new Character({ sprites: characterSet(game.assets, 'bride', BRIDE), name: displayName(cfg.bride), x: CEREMONY.brideX, y: CEREMONY.feetY });
     groom.dir = 'down'; bride.dir = 'down';
     const greet = (c) => () => c.say(pick(cfg.greetings));
-    const guide = new Character({ sprites: characterSet(game.assets, 'preset-4', presetSprites(4)), name: '정원 안내인', ...standPos(3, 11) });
+    const guide = new Character({ sprites: characterSet(game.assets, 'preset-4', presetSprites(4)), name: '정원 안내인', ...standPos(3, CROSS_A) });
     const guideNpc = { character: guide, solid: false, interact: () => showOverlay(game, {
       title: '작은 정원에 오신 걸 환영해요',
       html: '<p>두 사람에게 축하 편지를 남기면 정원에 꽃이 피어요.</p><p>꽃과 하객을 누르면 남겨진 마음을 읽을 수 있어요. 공간 메뉴에서는 사진과 결혼 소식도 만나 보세요.</p>',
@@ -126,6 +145,8 @@ export class HubScene extends Scene {
     const archTiles = Math.round((game.assets?.objects?.arch?.w ?? 160) / 32);
     const treeRight = 10 - Math.ceil((game.assets?.objects?.tree?.w ?? 96) / 32);
     const objects = [
+      // 버진로드는 단상보다 먼저 합성해 시작 부분이 단상 밑으로 자연스럽게 이어진다.
+      ...ceremonyFloors(game.assets),
       { id: 'arch', sprite: 'arch', tx: 5 - Math.floor(archTiles / 2), ty: 0, solid: false },
       // 단상(160×64, 3~7열 × 4~5행): 바닥 장식이라 신랑신부 발밑에 깔리고 충돌 없음. assets/objects/platform.png가 있을 때만 표시
       ...(game.assets?.objects?.platform ? [{ id: 'platform', sprite: 'platform', tx: 3, ty: 4, floor: true }] : []),
@@ -155,7 +176,7 @@ export class HubScene extends Scene {
     this.rebuildSolid(); // 오브젝트 발자국 + 신랑신부 자리
     const reserved = new Set(this.extraSolid);
     for (const o of this.objects) { // 오브젝트가 덮는 타일(표지판은 주변 1칸까지)
-      if (o.spr.missing) continue;
+      if (o.spr.missing || o.floor) continue; // 얇은 바닥 꽃장식을 32px 전체 장애물로 예약하지 않는다.
       const w = Math.ceil(o.spr.w / 32), h = Math.ceil(o.spr.h / 32);
       const m = o.sprite === 'sign' ? 1 : 0;
       for (let dy = -m; dy < h + m; dy++) for (let dx = -m; dx < w + m; dx++) reserved.add(`${o.tx + dx},${o.ty + dy}`);

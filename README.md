@@ -37,13 +37,16 @@ npm run serve     # http://localhost:5173
 
 ## 그래픽 교체 (AI 생성 PNG)
 
-현재는 PNG 캐릭터 12종, 타일 22종, 오브젝트 26종을 사용한다. 코드 픽셀 아트는 로드 실패 시의 폴백이다.
+현재는 PNG 캐릭터 12종, 타일 22종, 오브젝트 29종을 사용한다. 코드 픽셀 아트는 로드 실패 시의 폴백이다.
 기존 캐릭터를 전체 변환 명령으로 다시 축소하지 말고 `assets/README.md`의 선택 변환 지침을 따른다.
 
 2026-10-17 레퍼런스 고도화로 캐릭터 12종·정원 타일 6종·나무의 새 버전을 적용했다.
 이전 PNG는 보존하며 `assets/manifest.json`의 `files`가 현재 버전을 선택한다.
 [비교 페이지](tools/art-review.html), [생성 프롬프트](assets/reference-v3-prompts.json),
 [크기·투명도 기록](assets/reference-v3-report.json)을 참고한다.
+
+단상 위 두 사람의 간격을 좁히고, 길게 이어지는 아이보리 버진로드와 양옆 꽃장식을 추가했다.
+하객은 길 밖 잔디에 모인다. 새 바닥 조각만 변환할 때는 `python tools/prepare_ceremony_assets.py`를 사용한다.
 
 ```
 pip install pillow

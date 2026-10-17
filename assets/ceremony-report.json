@@ -1,0 +1,49 @@
+{
+  "aisle-runner": {
+    "size": [
+      96,
+      32
+    ],
+    "bbox": [
+      0,
+      0,
+      96,
+      32
+    ],
+    "alpha_values": [
+      255
+    ]
+  },
+  "aisle-flower-left": {
+    "size": [
+      32,
+      32
+    ],
+    "bbox": [
+      0,
+      0,
+      16,
+      32
+    ],
+    "alpha_values": [
+      0,
+      255
+    ]
+  },
+  "aisle-flower-right": {
+    "size": [
+      32,
+      32
+    ],
+    "bbox": [
+      16,
+      0,
+      32,
+      32
+    ],
+    "alpha_values": [
+      0,
+      255
+    ]
+  }
+}

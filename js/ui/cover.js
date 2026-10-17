@@ -7,6 +7,7 @@ export function showCover(root, config, assetsReady, returning = false) {
       <p class="eyebrow">A LITTLE GARDEN, FULL OF LOVE</p>
       <div class="cover-garden" aria-hidden="true">
         <img class="cover-arch" src="assets/objects/arch.png" alt="">
+        <img class="cover-platform" alt="" hidden>
         <img class="cover-groom" src="assets/characters/groom.png" alt="">
         <img class="cover-bride" src="assets/characters/bride.png" alt="">
       </div>
@@ -23,6 +24,11 @@ export function showCover(root, config, assetsReady, returning = false) {
     root.replaceChildren(card); root.hidden = false;
     const button = card.querySelector('button');
     assetsReady.then((assets) => {
+      const stageUrl = assets?.urls?.['objects/platform'];
+      if (stageUrl) {
+        const stage = card.querySelector('.cover-platform');
+        stage.src = stageUrl; stage.hidden = false;
+      }
       for (const name of ['groom', 'bride']) {
         const url = assets?.urls?.[`characters/${name}`];
         if (url) card.querySelector(`.cover-${name}`).src = url;

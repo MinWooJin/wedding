@@ -1,0 +1,20 @@
+{
+  "date": "2026-10-17",
+  "mode": "Codex built-in imagegen; no OPENAI_API_KEY",
+  "jobs": [
+    {
+      "name": "aisle-runner",
+      "transparent_background": false,
+      "prompt": "Original production game asset: ONE seamless vertically repeating ivory wedding aisle runner segment for a cozy pixel-art mobile wedding garden. Top down flat orthographic view. A wide rectangular strip, intended final size 96 pixels wide by 32 pixels tall. Fabric fills entire image opaque edge to edge, no grass or surrounding scene. Warm ivory/cream cloth with extremely faint two-tone weave; two very thin muted champagne-gold stitched lines run vertically close to left and right outer edges ONLY. No horizontal lines, crossbars, tile outlines, edge shadows, large motifs, flowers, vignette or perspective. Identical design and color at top and bottom so vertically stacking many copies makes one continuous long carpet. Restrained low resolution pixel art, crisp square clusters, 6 colors maximum, no photographic detail, no text. Horizontal panoramic aspect 3:1.",
+      "source": "raw/ceremony-source/aisle-runner.png"
+    },
+    {
+      "name": "aisle-flowers",
+      "transparent_background": true,
+      "prompt": "Original production game sprite: ONE long thin vertical wedding floral garland, viewed from slightly overhead in cozy pixel RPG style. Transparent background. Intended final sprite is only 12 pixels wide by 32 pixels tall: prioritize large clear clustered pixels, not detailed illustration. An uninterrupted narrow connected strip of sage green leaves with 3-4 simple ivory roses and 1-2 blush pink roses, all flowers face up. Slender rectangular silhouette with foliage reaching both top and bottom edges so repeated vertical segments visually connect into continuous low wedding aisle side decor. Uniform width along the entire length; no pot, stand, pedestal, ribbons, ground, floor, cast shadow or scene. 12-16 color palette, chunky hard pixel clusters, dark muted green outline, flat two-tone shading. No glossy or photographic texture, no text, no watermark. One garland only, not a sheet, front and back same width. Portrait aspect.",
+      "source": "raw/ceremony-source/aisle-flowers.png"
+    }
+  ],
+  "preparation": "tools/prepare_ceremony_assets.py: 96x32 runner from horizontal image, average along vertical axis to eliminate seams, 6-color palette. Flower alpha threshold160 then crop/resample to16x32 (wider than prompt for readability), quantize16colors, final alpha binary. Left32x32 frame holds ink at x0..15; right exact mirror holds x16..31. Keep generated originals and all previous PNGs.",
+  "layout": "World remains352x864. Groom(157,176), bride(192,176); platform160x64 at(3,4), feet16px above platform bottom. Runner tx4, ty5..25; flowers tx4/6,ty6..17. Clear center64px. Floors cached before platform, no collision. Guests cols1,2,3,7,8,9; guide(3,CROSS_A), start(5,8). Preserve Claude door positions, decline-money notice, extras and nearest-reachable movement."
+}
