@@ -193,7 +193,11 @@ export class HubScene extends Scene {
     }) : null;
     const hosts = joined ? [joined] : [groom, bride];
     const greet = (c) => () => c.say(pick(cfg.greetings));
-    const guide = new Character({ sprites: characterSet(game.assets, 'preset-4', presetSprites(4)), name: '정원 안내인', ...standPos(3, CROSS_A) });
+    // Keep the guide in the open gap between the two entrance signs, with the
+    // name below their captions rather than hidden behind the guestbook plaque.
+    const guidePos = standPos(5, CROSS_A);
+    guidePos.y += 8; // Leave a clear gap below the plaques for the name tag.
+    const guide = new Character({ sprites: characterSet(game.assets, 'preset-4', presetSprites(4)), name: '정원 안내인', ...guidePos });
     const guideNpc = { character: guide, solid: false, interact: () => showOverlay(game, {
       title: '작은 정원에 오신 걸 환영해요',
       html: '<p>두 사람에게 축하 편지를 남기면 정원에 꽃이 피어요.</p><p>꽃과 하객을 누르면 남겨진 마음을 읽을 수 있어요. 공간 메뉴에서는 사진과 결혼 소식도 만나 보세요.</p>',

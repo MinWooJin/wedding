@@ -34,6 +34,13 @@ test('그려진 광장의 리셉션을 그대로 통과해 네 문까지 이동�
   const sprites = new Set(hub.objects.map((o) => o.sprite));
   assert.deepEqual([...sprites].sort(), ['door', 'party-table', 'ribbon-lantern', 'sign', 'wedding-cake', 'welcome-board']);
   assert.ok(hub.hosts.every((c) => c.y === CEREMONY.feetY && c.y >= 128 + 15 && c.y <= 164), '발이 단상 윗면(y128~164) 안');
+  const leftSign = hub.objects.find((o) => o.id === 'sign-guestbook');
+  const rightSign = hub.objects.find((o) => o.id === 'sign-gallery');
+  const guideBounds = hub.guide.drawPos();
+  assert.ok(guideBounds.x > leftSign.tx * 32 + leftSign.spr.w, '안내인은 왼쪽 표지판 바깥');
+  assert.ok(guideBounds.x + guideBounds.w < rightSign.tx * 32, '오른쪽 표지판도 가리지 않는다');
+  assert.ok(hub.guide.y + 2 > leftSign.drawY, '이름은 표지판 캡션 아래에 표시');
+  assert.equal(hub.npcs.find((n) => n.character === hub.guide).solid, false, '안내인이 중앙 통행을 막지 않는다');
   for (const n of hub.guestMap.values()) {
     const { ty, tx } = n.wander.home;
     assert.ok(ty >= 6, `하객은 단상·화분 아래(${tx},${ty})`);
