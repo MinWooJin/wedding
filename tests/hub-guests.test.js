@@ -110,13 +110,13 @@ test('withExtras: 실제 하객이 20명보다 적으면 "하객"으로 채우�
   assert.ok(withExtras(real(0)).every((e) => e.m === '' && e.extra !== undefined), '메시지 없음 → 축하 개수에 안 잡힘');
 });
 
-test('분위기용 하객은 군중 전용 그림을 먼저 쓰고 일부는 일반 프리셋을 섞으며, 그림이 없으면 프리셋으로 돌아간다', () => {
+test('분위기용 하객은 군중 전용 그림과 일반 프리셋을 반반 섞으며, 그림이 없으면 프리셋으로 돌아간다', () => {
   const sheet = (tag) => ({ down: [{ w: 48, h: 72, tag }], up: [{ w: 48, h: 72, tag }], left: [{ w: 48, h: 72, tag }], right: [{ w: 48, h: 72, tag }] });
   const characters = Object.fromEntries(Array.from({ length: 6 }, (_, i) => [`guest-extra-${i}`, sheet(`extra${i}`)]));
   const hub = createHub({ config: DEFAULT_CONFIG, profile: { nickname: '나' }, assets: { characters }, data: { messages: [{ t: 1, n: '친구', c: 3, m: '축하' }] } });
   const extras = [...hub.guestMap.entries()].filter(([k]) => k.startsWith('extra:'));
   const usingExtra = extras.filter(([, n]) => n.character.sprites.down[0].tag?.startsWith('extra'));
-  assert.ok(usingExtra.length >= extras.length * 0.6 && usingExtra.length < extras.length, `군중 그림 ${usingExtra.length}/${extras.length}`);
+  assert.equal(usingExtra.length, Math.ceil(extras.length / 2), `군중 그림 ${usingExtra.length}/${extras.length}`);
   assert.equal(new Set(usingExtra.map(([, n]) => n.character.sprites.down[0].tag)).size, 6, '여섯 종류를 모두 쓴다');
   assert.equal(hub.guestMap.get('친구:3').character.sprites.down[0].tag, undefined, '실제 하객은 자기가 고른 프리셋');
   const plain = createHub({ config: DEFAULT_CONFIG, profile: { nickname: '나' }, assets: {}, data: { messages: [] } });

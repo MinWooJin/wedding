@@ -276,10 +276,9 @@ export class HubScene extends Scene {
       const key = guestKey(entry);
       if (previous.has(key)) { const n = previous.get(key); n.entry = entry; this.guestMap.set(key, n); return n; }
       const id = ((entry.c % PRESET_COUNT) + PRESET_COUNT) % PRESET_COUNT;
-      // 분위기용 하객은 정장·원피스 차림의 군중 전용 그림(guest-extra)을 먼저 쓰고, 셋 중 하나는 일반 프리셋을 섞어 색을 다양하게 한다.
-      // 군중 그림이 없으면 기존 프리셋으로 돌아간다.
-      const extraSlot = Math.floor((entry.extra ?? 0) / 3) * 2 + (entry.extra ?? 0) % 3; // 셋 중 둘만 세어 여섯 종류를 고르게 돈다
-      const extraName = entry.extra !== undefined && entry.extra % 3 !== 2 ? `guest-extra-${extraSlot % EXTRA_GUEST_COUNT}` : null;
+      // 분위기용 하객은 정장·원피스 차림의 군중 전용 그림(guest-extra)과 일반 프리셋을 반반 섞는다.
+      // 군중 그림만 쓰면 검정·회색이 몰려 무거워 보이고, 프리셋만 쓰면 실제 하객과 구분되지 않는다. 군중 그림이 없으면 프리셋으로 돌아간다.
+      const extraName = entry.extra !== undefined && entry.extra % 2 === 0 ? `guest-extra-${(entry.extra / 2) % EXTRA_GUEST_COUNT}` : null;
       const sprites = (extraName && this.assets?.characters?.[extraName]) || characterSet(this.assets, `preset-${id}`, presetSprites(id));
       // 칸 안에서 좌우 ±7px, 위아래 ±3px 흩뜨린다(발이 같은 타일 안에 남는 범위).
       const jitter = { x: Math.round(hash01(`${key}:x`) * 7), y: Math.round(hash01(`${key}:y`) * 3) };
