@@ -1,0 +1,157 @@
+{
+  "hub-top": {
+    "file": "hub-top.png",
+    "size": [
+      352,
+      256
+    ],
+    "bbox": [
+      0,
+      0,
+      352,
+      256
+    ],
+    "colors": 57,
+    "alpha_values": [
+      255
+    ]
+  },
+  "hub-repeat": {
+    "file": "hub-repeat.png",
+    "size": [
+      352,
+      288
+    ],
+    "bbox": [
+      0,
+      0,
+      352,
+      288
+    ],
+    "colors": 52,
+    "alpha_values": [
+      255
+    ]
+  },
+  "hub-bottom": {
+    "file": "hub-bottom.png",
+    "size": [
+      352,
+      320
+    ],
+    "bbox": [
+      0,
+      0,
+      352,
+      320
+    ],
+    "colors": 56,
+    "alpha_values": [
+      255
+    ]
+  },
+  "guestbook-bg": {
+    "file": "guestbook-bg.png",
+    "size": [
+      352,
+      448
+    ],
+    "bbox": [
+      0,
+      0,
+      352,
+      448
+    ],
+    "colors": 57,
+    "alpha_values": [
+      255
+    ]
+  },
+  "joins": {
+    "top_repeat": true,
+    "repeat_repeat": true,
+    "repeat_bottom": true,
+    "shared_row_sha256": "e9b2137fe317aae930e6aa57542f85ea3d9196b94a0f3aee156af39db2bd1e42"
+  },
+  "geometry": {
+    "aisle": [
+      128,
+      224
+    ],
+    "flower_bands": [
+      [
+        88,
+        128
+      ],
+      [
+        224,
+        264
+      ]
+    ],
+    "stage_top": [
+      101,
+      128,
+      251,
+      164
+    ],
+    "steps": [
+      101,
+      164,
+      251,
+      184
+    ],
+    "planters": [
+      [
+        45,
+        140,
+        101,
+        184
+      ],
+      [
+        251,
+        140,
+        307,
+        184
+      ]
+    ],
+    "bottom_global_y": 544,
+    "door_local_rects": [
+      [
+        32,
+        64,
+        64,
+        96
+      ],
+      [
+        288,
+        64,
+        320,
+        96
+      ],
+      [
+        32,
+        192,
+        64,
+        224
+      ],
+      [
+        288,
+        192,
+        320,
+        224
+      ]
+    ],
+    "guestbook_mailbox": [
+      128,
+      64,
+      192,
+      160
+    ],
+    "guestbook_path": [
+      160,
+      160,
+      192,
+      448
+    ]
+  }
+}

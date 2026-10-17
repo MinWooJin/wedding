@@ -337,3 +337,14 @@ Codex가 다음 작업 전에 읽을 문서다. 오늘 Claude가 바꾼 내용, 
 - `js/assets.js`: `EXTRA_GUEST_COUNT = 6`, `CHARACTER_NAMES`에 `guest-extra-0~5`를 추가해 로드한다. 캐릭터 고르기(PRESET_COUNT 10)에는 나오지 않는다.
 - `HubScene.setGuests`: 분위기용 하객(`entry.extra`) 중 짝수 번째는 `guest-extra-(extra/2 % 6)`, 홀수 번째는 기존 프리셋을 쓴다. 전부 군중 그림으로 하니 검정·회색이 몰려 무거워 보여 반반으로 섞었다. 군중 그림이 없으면 프리셋으로 돌아간다. 실제 하객은 자기가 고른 프리셋 그대로.
 - 테스트 127개 통과(`tests/hub-guests.test.js`에 군중 그림 배정 테스트 추가).
+
+
+## 25. 8차 연결 배경4종 완료 (Codex, 2026-10-17)
+
+- REVIEW_MAP과 비교 이미지를 읽고 내장 imagegen으로 광장3조각 + 선택 방명록1장을 새로 제작했다. 외부 그림 픽셀 복사/소품 콜라주가 아니며 기존 모든 PNG는 그대로다. JS/CSS는 수정하지 않았다.
+- `assets/maps/hub-top.png`352×256, `hub-repeat.png`352×288, `hub-bottom.png`352×320. 연결시352×864, 시작y0/256/544다. 꽃띠는각40px(x88~128,224~264), 길96px(x128~224). 단상윗면y128~164, 두 사람 발(176,160), 계단y164~184다. 과거 발176/별도 단상y144 기록을 새 배경에 적용하지 마라.
+- `guestbook-bg.png`352×448도 제작했다. 우체통4~5열·2~4행, 두 사람3/6열·4행은 별도로 올릴 위치다. 중앙길5열·5~13행을 유지한다. 큰 장식은 그림에 있으므로 기존 방명록 장식 오브젝트를 중복해서 그리지 않게 한다.
+- 4장 모두 RGBA 불투명/64색 이하(각57/52/56/57색), 공통 팔레트다. top 끝=repeat 처음=repeat 끝=bottom 처음의 RGBA 행1408바이트가 동일하다. 네 문 자리는 모래색 픽셀로 검사했다. 현재 G/N 바탕색을 기준으로 질감을 정리하고 생성 원본을 구간별 비율 보정했다. 상세 프롬프트/보정 절차는 `assets/round8-prompts.json`이다.
+- **Claude 후속:** manifest.maps와 files.maps에4종을 등록했지만 현재 SCENE_IDS가 조각 이름을 허용하지 않아 로드하지 않는다. 원본 크기로 읽고0/256/544에 합성해 hub 배경으로 사용한다. 아치/단상/화분/나무/꽃띠와 광장 바닥은 배경에 포함되니 중복 그리기를 없앤다. 문 클릭/표지판/필요한 케이크/인물/충돌 격자는 별도로 유지한다. 아래 광장 시작 전역576, 문 전역 y608/736에 맞춘다. 합성만으로 충돌이 생기지는 않는다.
+- 선택 변환 `.venv-assets/Scripts/python.exe tools/prepare_round8_maps.py`; `raw/round8-source/`는 Git 제외다. PNG는 원본 없이 사용 가능하다. 보고서 `assets/round8-report.json`, 전체 미리보기 `assets/round8-hub-preview.png`, 격자 `assets/round8-hub-grid.png`, 대화형 검토 `tools/round8-map-review.html`.
+- npm test127개 통과. 보드390/320px 첫 구도·커플 접지·격자 토글·이미지 정상 로드/콘솔 오류 없음을 확인했다. 재변환 결과도 동일하다. 실제 앱 합성과320 내부 폭 확대안/충돌/메시지 꽃 배치는 Claude 연결 후 검증해야 한다. API·실사진은 계속 마지막 단계다.

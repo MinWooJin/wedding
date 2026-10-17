@@ -89,7 +89,12 @@
     "tree-green",
     "birdbath"
   ],
-  "maps": [],
+  "maps": [
+    "hub-top",
+    "hub-repeat",
+    "hub-bottom",
+    "guestbook-bg"
+  ],
   "files": {
     "characters": {
       "preset-0": "preset-0-v3.png",
@@ -136,6 +141,12 @@
       "U": "U-v5.png",
       "W": "W-v3.png",
       "N": "N-v4.png"
+    },
+    "maps": {
+      "hub-top": "hub-top.png",
+      "hub-repeat": "hub-repeat.png",
+      "hub-bottom": "hub-bottom.png",
+      "guestbook-bg": "guestbook-bg.png"
     }
   }
 }
