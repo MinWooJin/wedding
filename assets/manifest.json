@@ -143,10 +143,10 @@
       "N": "N-v4.png"
     },
     "maps": {
-      "hub-top": "hub-top.png",
+      "hub-top": "hub-top-v2.png",
       "hub-repeat": "hub-repeat.png",
       "hub-bottom": "hub-bottom.png",
-      "guestbook-bg": "guestbook-bg.png"
+      "guestbook-bg": "guestbook-bg-v2.png"
     }
   }
 }

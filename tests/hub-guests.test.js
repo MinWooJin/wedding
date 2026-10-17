@@ -3,8 +3,34 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { guestPlacements, HUB_ROWS, HUB_DOORS, GUEST_ZONE, createHub, uniqueGuests, MAX_GUESTS } from '../js/world/hub.js';
 import { MIN_CROWD, withExtras, AISLE_OPEN_FROM } from '../js/world/hub.js';
+import { inPaintedFlowerBed } from '../js/world/hub.js';
+import { findPath } from '../js/world/movement.js';
 import { DEFAULT_CONFIG } from '../js/config.js';
 import { assetFilename } from '../js/assets.js';
+
+test('그려진 광장의 꽃띠는 배치·배회·입장 경로에서 피하고 하객20명은 유지한다', () => {
+  const hub=createHub({config:DEFAULT_CONFIG,profile:{nickname:'나'},assets:{maps:{hub:{}}},data:{messages:[]}});
+  assert.ok(hub.guestMap.size>=MIN_CROWD);
+  assert.ok([...hub.guestMap.values()].filter(n=>[4,5,6].includes(n.wander.home.tx)).length>=3,'중앙 길도 하객이 자연스럽게 채운다');
+  for(const n of hub.guestMap.values()) {
+    const {tx,ty}=n.wander.home;
+    assert.equal(inPaintedFlowerBed(tx,ty),false);
+    assert.equal(n.wander.allow(3,10),false);
+    assert.equal(n.wander.allow(7,10),false);
+  }
+  for(const tx of [3,7]) for(let ty=6;ty<=17;ty++) assert.equal(hub.isSolidTile(tx,ty),true);
+  assert.equal(hub.isSolidTile(3,18),false,'꽃띠 아래 교차로는 열린다');
+  for(const door of Object.values(HUB_DOORS)) assert.ok(findPath(hub.map.w,hub.map.h,(x,y)=>hub.isSolidTile(x,y),hub.spawn,door.back),'네 공간으로 가는 길은 유지한다');
+  const guests=[...hub.guestMap.values()];
+  for(let i=0;i<2400&&guests.some(n=>n.arrival);i++) {
+    hub.updateArrivals(.05,false);
+    for(const n of guests) {
+      n.character.update(.05,hub.blockedStatic());
+      if(!n.character.hidden){const t=hub.tileOf(n.character.x,n.character.y);assert.equal(inPaintedFlowerBed(t.tx,t.ty),false);}
+    }
+  }
+  assert.ok(guests.every(n=>!n.arrival),'꽃띠 옆 자리까지 충돌 없이 모두 도착한다');
+});
 
 test('여러 글과 방문 기록이 섞여도 한 하객을 한 번만 업데이트한다', () => {
   const entries = [

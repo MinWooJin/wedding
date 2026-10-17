@@ -1,16 +1,15 @@
 import { tileSprite } from './sprites/tiles.js';
 
 export const TILE = 32;
-// 화면에는 10칸(320px)만 채운다. 지도는 11칸(352px)이라 좌우 끝이 조금 잘리고 카메라가 가로로도 따라간다.
-// 그만큼 캐릭터와 글씨가 10% 커진다(390폭 폰에서 1.22배). 레퍼런스도 화면보다 넓은 지도를 쓴다.
-export const VIEW_TILES_W = 10;
-export const VIEW_W = TILE * VIEW_TILES_W; // 320
+// 그려진 정원의 양끝을 보존한다. 320px만 확대하면 나무가 다시 잘리고 가로 카메라도 흔들린다.
+export const VIEW_TILES_W = 11;
+export const VIEW_W = TILE * VIEW_TILES_W; // 352
 /** 지도 폭(11칸). 배율을 정한 뒤 화면에 여유가 있으면(데스크톱) 이 폭까지 더 보여 준다. */
 export const MAX_VIEW_W = TILE * 11; // 352
 
 /**
  * 컨테이너 CSS 크기 → 배율과 내부 해상도.
- * 내부 폭 320px을 화면 폭에 꽉 채운다(390폭 1.22배, 430폭 1.34배). 정수 배율로 묶으면 큰 폰일수록
+ * 내부 폭352px 전체를 화면에 맞춘다(390폭 약1.11배, 430폭 약1.22배). 정수 배율로 묶으면 큰 폰일수록
  * 좌우가 비고 글씨가 작아진다. 캔버스는 기기 해상도로 그려서(resize) 소수 배율의 픽셀 불균일이 보이지 않는다.
  */
 export function computeViewport(cssW, cssH, dpr = 1) {
@@ -70,7 +69,7 @@ export class Renderer {
     this.view = computeViewport(cssW, cssH, dpr);
     this.pixelRatio = this.view.scale * dpr;
     this.canvas.width = Math.round(this.view.width * this.pixelRatio);
-    this.canvas.height = Math.round(this.view.height * this.pixelRatio);
+    this.canvas.height = Math.round(cssH * dpr);
     this.canvas.style.width = `${this.view.width * this.view.scale}px`;
     this.canvas.style.height = `${this.view.height * this.view.scale}px`;
     this.ctx.setTransform?.(this.pixelRatio, 0, 0, this.pixelRatio, 0, 0);

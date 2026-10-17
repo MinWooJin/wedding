@@ -38,7 +38,7 @@ test('정적 바닥은 카메라 이동 중 재사용하고 자산·바닥 변�
 
 test('기본 상수', () => {
   assert.equal(TILE, 32);
-  assert.equal(VIEW_TILES_W, 10);
+  assert.equal(VIEW_TILES_W, 11);
 });
 
 test('잔디 배경은 패턴을 재사용하고 카메라와 같은 위상으로 맵 밖까지 채운다', () => {
@@ -55,7 +55,7 @@ test('잔디 배경은 패턴을 재사용하고 카메라와 같은 위상으�
   r.cam = { x: 17, y: -45 };
   r.drawBackdrop('G'); r.drawBackdrop('G');
   assert.equal(patterns, 1);
-  assert.deepEqual(calls.slice(0, 2), [['translate', -17, 13], ['fill', 17, -13, 320, 600]]);
+  assert.deepEqual(calls.slice(0, 2), [['translate', -17, 13], ['fill', 17, -13, 352, 600]]);
   r.tiles.G = { canvas: {} };
   r.drawBackdrop('G');
   assert.equal(patterns, 2, '실제 잔디 교체 시 패턴 갱신');
@@ -91,13 +91,16 @@ test('캐릭터는 비율·기울기를 변형하지 않고 정수 픽셀로만 
   assert.deepEqual(calls.pop(),[canvas,10,20]);
 });
 
-test('뷰 폭은 항상 320px(지도 352보다 좁아 좌우가 조금 잘림). 고해상도 폰은 꽉 차는 소수 배율, 저해상도 화면은 정수 배율(최대 4배)', () => {
-  assert.deepEqual(computeViewport(320, 700, 3), { scale: 1, width: 320, height: 700 });
-  assert.deepEqual(computeViewport(400, 880, 3), { scale: 1.25, width: 320, height: 704 });
+test('모바일에서도 정원 전체352px를 보여 주며 낮은 DPI의 정수 배율은 유지한다', () => {
+  for (const cssW of [320,390,400,430]) {
+    const view=computeViewport(cssW,844,3);
+    assert.equal(view.width,352,'모서리 나무를 잘라 확대하지 않는다');
+    assert.ok(Math.abs(view.width*view.scale-cssW)<1e-8);
+  }
   assert.deepEqual(computeViewport(2000, 900, 2), { scale: 4, width: 352, height: 225 }, '넓은 화면은 4배 상한 뒤 지도 전체(352)');
-  assert.deepEqual(computeViewport(160, 300, 1), { scale: 0.5, width: 320, height: 600 }, '좁은 화면은 비율과 상관없이 꽉 채운다');
+  assert.deepEqual(computeViewport(160, 300, 1), { scale: 160/352, width: 352, height: 660 }, '좁은 화면도 정원 전체를 보존한다');
   const v = computeViewport(390, 844, 3);
-  assert.ok(v.scale > 1.2 && v.width * v.scale === 390, '390폭 폰은 좌우 여백 없이 1.2배 이상');
+  assert.ok(v.scale > 1.1 && v.width * v.scale === 390, '390폭 폰은 지도 전체를 보여 준다');
   assert.deepEqual(computeViewport(430, 932, 1), { scale: 1, width: 352, height: 932 }, '데스크톱(비율 1)은 정수 배율이고 남는 폭에는 지도 전체(352)를 보여 준다');
   assert.deepEqual(computeViewport(800, 600, 1), { scale: 2, width: 352, height: 300 });
 });
@@ -109,10 +112,10 @@ test('캔버스는 기기 픽셀 비율로 그리고 내부 좌표는 변환 행
   const dpr = globalThis.devicePixelRatio;
   globalThis.devicePixelRatio = 3;
   try { r.resize(400, 880); } finally { globalThis.devicePixelRatio = dpr; }
-  assert.equal(canvas.width, 320 * 3.75);
-  assert.equal(canvas.height, 704 * 3.75);
-  assert.equal(canvas.style.width, '400px');
-  assert.deepEqual(transforms.at(-1), [3.75, 0, 0, 3.75, 0, 0]);
+  assert.equal(canvas.width, 400 * 3);
+  assert.equal(canvas.height, 880 * 3, '논리 높이 올림 때문에 CSS 높이를 다시 늘리지 않는다');
+  assert.ok(Math.abs(parseFloat(canvas.style.width)-400)<1e-8);
+  assert.deepEqual(transforms.at(-1), [400/352*3, 0, 0, 400/352*3, 0, 0]);
 });
 
 

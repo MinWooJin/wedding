@@ -1,0 +1,48 @@
+{
+  "hub-top": {
+    "file": "hub-top-v2.png",
+    "size": [
+      352,
+      256
+    ],
+    "tree_bounds": [
+      [
+        6,
+        22,
+        86,
+        116
+      ],
+      [
+        266,
+        22,
+        346,
+        116
+      ]
+    ],
+    "colors": 57,
+    "original": "hub-top.png"
+  },
+  "guestbook-bg": {
+    "file": "guestbook-bg-v2.png",
+    "size": [
+      352,
+      448
+    ],
+    "tree_bounds": [
+      [
+        6,
+        22,
+        86,
+        116
+      ],
+      [
+        266,
+        24,
+        346,
+        116
+      ]
+    ],
+    "colors": 59,
+    "original": "guestbook-bg.png"
+  }
+}

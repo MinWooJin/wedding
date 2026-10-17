@@ -1,5 +1,10 @@
 # 에셋 작업 인수인계 프롬프트 (Codex / Claude)
 
+> **최신: 잘린 나무·가로 구도·꽃띠 동선 보정 적용(2026-10-17).** 사용자의 후속 개선 요청으로 이번에는 JS도 수정했다. `docs/REVIEW_GARDEN_FRAMING_2026-10-17.md` / HANDOFF27절을 우선한다.
+> VIEW_W352로 전체 지도를 표시한다. 320px 확대/가로 추적으로 되돌리지 마라. 나무는 안쪽에 온전하게 그린 `hub-top-v2.png`, `guestbook-bg-v2.png`를 선택한다.
+> 그려진 광장 꽃띠3/7열·6~17행은 충돌/하객 예약으로 피한다. 옆 잔디 입장은 아래 광장에서 갈라지고, 초기 인원 일부는9행 이후 길에 배치한다.
+> 실제 앱 비교 `tools/garden-framing-review.html`, 생성 프롬프트 `assets/garden-framing-prompts.json`, 선택 변환 `tools/prepare_garden_framing.py`. 이전 PNG는 모두 보존했다.
+
 > **최신: 8차 광장 연결 배경3장 + 선택 방명록 배경 제작 완료(2026-10-17).** 맨 아래 완료 기록과 HANDOFF25절을 읽는다.
 > `assets/maps/hub-top.png`352×256, `hub-repeat.png`352×288, `hub-bottom.png`352×320. 연결하면352×864이며 세 접합부 행 픽셀이 동일하다.
 > 선택 `guestbook-bg.png`352×448도 만들었다. manifest.maps/files.maps에 등록만 했고 JS는 변경하지 않았다. 로더의 조각 허용 목록·합성·충돌·기존 장식 중복 제거는 Claude 담당이다.

@@ -1,6 +1,16 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { computeCamera, cameraBounds, groundBackgroundStyle } from '../js/game.js';
+import { computeViewport } from '../js/renderer.js';
+
+test('모바일 정원에서 플레이어가 좌우로 걸어도 배경의 가로 구도는 고정된다', () => {
+  for (const width of [320,390,430]) {
+    const view=computeViewport(width,844,3),scene={pixelW:352,pixelH:864,bgImage:{}};
+    for (const x of [48,176,304]) assert.equal(computeCamera(view,scene,{x,y:240},48).x,0);
+    const bounds=cameraBounds(view,scene,48);
+    assert.equal(bounds.minX,0);assert.equal(bounds.maxX,0);
+  }
+});
 
 test('cameraBounds: 맵이 크면 [-pad, mapLen-avail-pad], 작으면 고정값', () => {
   const view = { width: 176, height: 300 };
