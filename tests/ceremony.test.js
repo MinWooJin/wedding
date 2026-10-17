@@ -42,7 +42,9 @@ test('버진로드는 단상 밑에서 끝까지 이어지고 양쪽 꽃장식�
   assert.equal(leftFlowers.length, 6, '한쪽에 큰 꽃장식 여섯 개');
   assert.ok(flowers.every((o) => o.spr.w === 32 && o.spr.h === 48), '선택된 새 꽃 PNG 규격');
   const left = leftFlowers[0], right = flowers.find((o) => o.sprite === 'aisle-flower-right');
-  assert.equal(right.tx * 32 - (left.tx * 32 + left.spr.w), 32, '꽃 사이 중앙 한 칸 유지');
+  assert.equal(left.tx * 32 + left.spr.w, strips[0].tx * 32, '왼쪽 꽃은 버진로드 바깥');
+  assert.equal(right.tx * 32, strips[0].tx * 32 + strips[0].spr.w, '오른쪽 꽃은 버진로드 바깥');
+  assert.equal(right.tx * 32 - (left.tx * 32 + left.spr.w), 96, '버진로드 전체 폭 유지');
   for (let i = 1; i < leftFlowers.length; i++) {
     assert.ok(leftFlowers[i].drawY > leftFlowers[i - 1].bottom, '큰 꽃송이를 포개지 않고 간격을 둔다');
   }
@@ -58,9 +60,9 @@ test('버진로드는 단상 밑에서 끝까지 이어지고 양쪽 꽃장식�
 test('실제 하객과 분위기용 하객은 버진로드를 비우고 양옆에만 서고 배회한다', () => {
   const hub = make();
   for (const npc of hub.guestMap.values()) {
-    assert.ok(![4, 5, 6].includes(npc.wander.home.tx));
+    assert.ok(![3, 4, 5, 6, 7].includes(npc.wander.home.tx));
     for (let ty = GUEST_ZONE.rowMin; ty <= GUEST_ZONE.rowMax; ty++) {
-      for (const tx of [4, 5, 6]) assert.equal(npc.wander.allow(tx, ty), false);
+      for (const tx of [3, 4, 5, 6, 7]) assert.equal(npc.wander.allow(tx, ty), false);
     }
   }
   assert.equal(hub.guestMap.size, 10, '클로드의 분위기용 하객 유지');
@@ -87,4 +89,17 @@ test('팔짱 커플이 있으면 단상에는 한 쌍만 그리고 하객 갱신
   assert.ok(hub.npcs.some((n) => n.character === guide));
   hub.baseNpcs[0].interact();
   assert.ok(hub.hosts[0].bubble);
+});
+
+test('열 명의 하객은 꽃 바깥 좌우에 다섯 쌍으로 서고 각자 열 안에서만 움직인다', () => {
+  const hub = make();
+  const homes = [...hub.guestMap.values()].map((n) => n.wander.home);
+  for (const ty of [7, 9, 11, 13, 15]) {
+    assert.ok(homes.some((t) => t.tx === 2 && t.ty === ty));
+    assert.ok(homes.some((t) => t.tx === 8 && t.ty === ty));
+  }
+  for (const n of hub.guestMap.values()) {
+    assert.equal(n.wander.radius, 1);
+    assert.equal(n.wander.allow(n.wander.home.tx === 2 ? 1 : 9, n.wander.home.ty), false);
+  }
 });

@@ -6,13 +6,11 @@ import { characterSet } from '../assets.js';
 import { freeTiles, pickTiles } from './guest-layout.js';
 import { displayName } from '../config.js';
 
-// 11열 × 27행(352×864px). 잔디가 외곽까지 이어지는 정원, 가운데 3칸 버진로드, 나무·덤불과 길 양옆 하객.
-// 타일: H 외곽 충돌 마스크(화면은 G), G 잔디, J/U 꽃 섞인 잔디, N 모래 돌길(4~6열)
+// 11열 × 27행(352×864px). 잔디가 외곽까지 이어지는 정원, 가운데 3칸 버진로드, 바깥 꽃장식과 양옆 하객.
+// 타일: H 외곽 충돌 마스크(화면은 G), G 잔디, N 모래 돌길(4~6열)
 // 이야기 길을 없애며 생긴 여유를 정원에 돌려줬다(정원 17행). 하객이 모이는 공간이 이 청첩장의 중심이다.
-const FLOWER_SEED = 7;
 const GARDEN_ROWS = 17;
-const grassAt = (tx, ty) => { const v = (tx * 73856093 ^ ty * 19349663 ^ FLOWER_SEED) >>> 0; return v % 7 === 0 ? 'J' : v % 11 === 0 ? 'U' : 'G'; };
-const gardenRow = (ty) => 'H' + Array.from({ length: 9 }, (_, i) => { const tx = i + 1; return tx >= 4 && tx <= 6 ? 'N' : grassAt(tx, ty); }).join('') + 'H';
+const gardenRow = () => 'HGGGNNNGGGH'; // 꽃무늬를 섞지 않고 단상·꽃길에 시선을 모은다.
 const crossRow = 'HNNNNNNNNNH';
 const CROSS_A = GARDEN_ROWS + 1;   // 18 교차로
 const BLOCK_A = CROSS_A + 1;       // 19 문: 안내소/갤러리
@@ -38,7 +36,7 @@ function ceremonyFloors(assets) {
       objects.push({ id: `aisle-${ty}`, sprite: 'aisle-runner', tx: 4, ty, floor: true });
     }
   }
-  for (const [sprite, tx] of [['aisle-flower-left', 4], ['aisle-flower-right', 6]]) {
+  for (const [sprite, tx] of [['aisle-flower-left', 3], ['aisle-flower-right', 7]]) {
     if (!assets?.objects?.[sprite]) continue;
     for (let ty = CEREMONY.flowerStart; ty <= CEREMONY.flowerEnd; ty += CEREMONY.flowerStep) {
       objects.push({ id: `${sprite}-${ty}`, sprite, tx, ty, floor: true });
@@ -56,20 +54,8 @@ export const HUB_DOORS = {
   info:      { door: { tx: 9, ty: BLOCK_B }, sign: { tx: 7, ty: BLOCK_B }, back: { tx: 9, ty: CROSS_B }, label: '예식 안내소' },
 };
 
-/**
- * 장식: 나무는 아치 바로 아래 한 쌍만 두어 정원 윗부분의 경계를 만들고,
- * 그 아래는 2칸 폭 덤불만 가장자리에 둬서 하객이 설 자리를 넉넉히 남긴다.
- */
-const DECOR = [ // 0~4행은 큰 아치(최대 7칸 폭) 자리라 비워 둔다
-  { sprite: 'tree', tx: 1, ty: 5 }, { sprite: 'tree', tx: 7, ty: 5 },
-  { sprite: 'bush-white', tx: 1, ty: 11 }, { sprite: 'bush', tx: 8, ty: 11 },
-  { sprite: 'bush', tx: 1, ty: 15 }, { sprite: 'bush-white', tx: 8, ty: 15 },
-  { sprite: 'bush', tx: 3, ty: BLOCK_A + 1 }, { sprite: 'bush', tx: 6, ty: BLOCK_A + 1 },
-  { sprite: 'bush', tx: 3, ty: BLOCK_B + 1 }, { sprite: 'bush', tx: 6, ty: BLOCK_B + 1 },
-];
-
-/** 하객은 버진로드 바깥 잔디 양쪽에 모인다. 중앙 세 칸은 행진·이동 공간이다. */
-export const GUEST_ZONE = { cols: [1, 2, 3, 7, 8, 9], rowMin: 6, rowMax: GARDEN_ROWS };
+/** 꽃은 3/7열, 하객은 그 바깥 잔디에 모인다. 중앙 세 칸은 전부 버진로드다. */
+export const GUEST_ZONE = { cols: [1, 2, 8, 9], rowMin: 6, rowMax: GARDEN_ROWS };
 
 export const MAX_GUESTS = 30;
 /** 실제 하객이 이보다 적으면 이름이 "하객"인 분위기용 캐릭터로 채운다(방명록·메시지 수에는 포함하지 않는다). */
@@ -100,7 +86,9 @@ export function tooClose(a, b) {
 export function guestPlacements(entries, reserved) {
   const list = entries.slice(0, MAX_GUESTS);
   const zone = freeTiles(HUB_ROWS, reserved).filter((t) => GUEST_ZONE.cols.includes(t.tx) && t.ty >= GUEST_ZONE.rowMin && t.ty <= GUEST_ZONE.rowMax);
-  const shuffled = pickTiles(zone, Infinity, 2026);
+  const preferred = [7, 9, 11, 13, 15].flatMap((ty) => [2, 8].map((tx) => ({ tx, ty })));
+  const available = new Set(zone.map((t) => `${t.tx},${t.ty}`));
+  const shuffled = [...preferred.filter((t) => available.has(`${t.tx},${t.ty}`)), ...pickTiles(zone, Infinity, 2026)];
   const chosen = [];
   for (const t of shuffled) {
     if (chosen.length >= list.length) break;
@@ -145,15 +133,12 @@ export class HubScene extends Scene {
 
     // 아치는 PNG 폭(160=5칸, 224=7칸 …)에 맞춰 돌길 중앙(5열)에 가운데 정렬한다
     const archTiles = Math.round((game.assets?.objects?.arch?.w ?? 160) / 32);
-    const treeRight = 10 - Math.ceil((game.assets?.objects?.tree?.w ?? 96) / 32);
     const objects = [
       // 버진로드는 단상보다 먼저 합성해 시작 부분이 단상 밑으로 자연스럽게 이어진다.
       ...ceremonyFloors(game.assets),
       { id: 'arch', sprite: 'arch', tx: 5 - Math.floor(archTiles / 2), ty: 0, solid: false },
       // 단상(160×64, 3~7열 × 4~5행): 바닥 장식이라 신랑신부 발밑에 깔리고 충돌 없음. assets/objects/platform.png가 있을 때만 표시
       ...(game.assets?.objects?.platform ? [{ id: 'platform', sprite: 'platform', tx: 3, ty: 4, floor: true }] : []),
-      // 나무 버전의 폭이 달라도 좌우 바깥 여백은 한 칸으로 맞춘다.
-      ...DECOR.map((d, i) => ({ id: `decor${i}`, ...d, tx: d.sprite === 'tree' && d.tx === 7 ? treeRight : d.tx })),
     ];
     const entrances = [];
     for (const [id, d] of Object.entries(HUB_DOORS)) {
@@ -225,7 +210,7 @@ export class HubScene extends Scene {
       c.dir = faceAisle(tx);
       const npc = {
         entry, character: c, solid: false, // 돌아다니므로 플레이어가 지나갈 수 있다
-        wander: { home: { tx, ty }, radius: 2, allow: inZone, faceDir: faceAisle, timer: 1 + Math.random() * 6 },
+        wander: { home: { tx, ty }, radius: 1, allow: (x, y) => x === tx && inZone(x, y), faceDir: faceAisle, timer: 1 + Math.random() * 6 },
         interact: () => { c.stop(); c.say(npc.entry.m || '결혼 축하해요! 🎉', 4); },
       };
       this.guestMap.set(key, npc); return npc;

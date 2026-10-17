@@ -50,7 +50,7 @@ test('반복 갱신과 새 하객 추가 시 기존 캐릭터·배회 상태를 
 });
 
 test('실제 PNG 크기로 광장에 하객이 충분히 모인다(30명 중 20명 이상)', () => {
-  // 코드 대체 그림은 실제 PNG(나무 96×128 등)보다 작아 수용 인원을 부풀린다. 반드시 실제 크기로 잰다.
+  // 단상·아치·표지판 등 현재 선택된 PNG 크기로 여유 공간을 확인한다.
   const manifest = JSON.parse(readFileSync(new URL('../assets/manifest.json', import.meta.url)));
   const objects = Object.fromEntries(manifest.objects.map((name) => {
     const png = readFileSync(new URL(`../assets/objects/${assetFilename(manifest, 'objects', name)}`, import.meta.url));
@@ -59,9 +59,8 @@ test('실제 PNG 크기로 광장에 하객이 충분히 모인다(30명 중 20�
   const entries = Array.from({ length: 30 }, (_, i) => ({ t: i, n: `손님${i}`, c: i % 10, m: '축하' }));
   const hub = createHub({ config: DEFAULT_CONFIG, profile: { nickname: '나' }, assets: { objects }, data: { messages: entries } });
   assert.ok(hub.guestMap.size >= 20, `배치된 하객 ${hub.guestMap.size}명`);
-  const trees = hub.objects.filter((o) => o.sprite === 'tree');
-  assert.equal(trees[0].tx * 32, 32);
-  assert.equal(trees[1].tx * 32 + trees[1].spr.w, 320, '새 나무도 좌우 여백이 대칭');
+  assert.equal(hub.objects.some((o) => ['tree', 'bush', 'bush-white'].includes(o.sprite)), false, '메인 장식은 아치와 꽃길로 정리');
+  assert.ok([...hub.guestMap.values()].every((n) => ![3,4,5,6,7].includes(n.wander.home.tx)), '꽃과 길 바깥에만 배치');
 });
 
 test('문 배치: 방명록 왼쪽 위, 갤러리 오른쪽 위, 마음 전하기 왼쪽 아래, 예식 안내소 오른쪽 아래', () => {
