@@ -24,6 +24,15 @@ export function computeViewport(cssW, cssH, dpr = 1) {
 /** 이름표·말풍선·문 이름표 글씨(내부 px). 화면 배율이 곱해져 390폭에서 약 13·16·13px. */
 export const TEXT = { name: 12, bubble: 14, bubbleLine: 18, label: 12 };
 
+/** A shared warm paper surface for map labels, exits and speech bubbles. */
+function paperBox(ctx, x, y, w, h, radius = 5) {
+  ctx.beginPath(); ctx.roundRect(x, y + 2, w, h, radius);
+  ctx.fillStyle = '#45372120'; ctx.fill();
+  ctx.beginPath(); ctx.roundRect(x + .5, y + .5, w - 1, h - 1, radius);
+  ctx.fillStyle = '#fffaf2'; ctx.fill();
+  ctx.strokeStyle = '#c8bda9'; ctx.lineWidth = 1; ctx.stroke();
+}
+
 /** 코드 Sprite({w,h,px}) → 오프스크린 캔버스(캐시). 브라우저 전용. */
 const spriteCache = new WeakMap();
 export function spriteCanvas(sprite) {
@@ -168,23 +177,22 @@ export class Renderer {
 
   drawLabel(text, cx, topY) {
     const ctx = this.ctx;
-    ctx.save(); ctx.font = `bold ${TEXT.label}px Galmuri11, sans-serif`;
-    const w = Math.ceil(ctx.measureText(text).width) + 16;
+    ctx.save(); ctx.font = `${TEXT.label}px Galmuri11, sans-serif`;
+    const w = Math.min(this.view.width - 12, Math.ceil(ctx.measureText(text).width) + 24);
     const x = Math.max(3, Math.min(this.view.width - w - 3, Math.round(cx - this.cam.x - w / 2)));
-    const y = Math.round(topY - this.cam.y - 20);
-    ctx.fillStyle = '#fffaf0'; ctx.fillRect(x, y, w, 23);
-    ctx.strokeStyle = '#aca98b'; ctx.strokeRect(x + .5, y + .5, w - 1, 22);
-    ctx.fillStyle = '#4e5e3e'; ctx.textBaseline = 'middle'; ctx.textAlign = 'left'; ctx.fillText(text, x + 8, y + 12); ctx.restore();
+    const y = Math.round(topY - this.cam.y - 24);
+    paperBox(ctx, x, y, w, 28);
+    ctx.fillStyle = '#46513b'; ctx.textBaseline = 'middle'; ctx.textAlign = 'center';
+    ctx.fillText(text, x + w / 2, y + 14, w - 20); ctx.restore();
   }
 
   /** Make the small floor exit readable as a navigation target. */
   drawExit(cx, topY) {
     const ctx = this.ctx;
     const x = Math.round(cx - this.cam.x - 48), y = Math.round(topY - this.cam.y - 12);
-    ctx.save(); ctx.fillStyle = '#fffaf0'; ctx.strokeStyle = '#aca98b';
-    ctx.fillRect(x, y, 96, 32); ctx.strokeRect(x + .5, y + .5, 95, 31);
-    ctx.font = '12px Galmuri11, sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-    ctx.fillStyle = '#4e5e3e'; ctx.fillText('← 정원으로', x + 48, y + 16); ctx.restore();
+    ctx.save(); paperBox(ctx, x, y, 96, 32);
+    ctx.font = `${TEXT.label}px Galmuri11, sans-serif`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillStyle = '#46513b'; ctx.fillText('← 정원으로', x + 48, y + 16); ctx.restore();
   }
 
   drawDestination(x, y) {
@@ -214,25 +222,26 @@ export class Renderer {
   /** 흰 말풍선 + 꼬리, 폭 200px에서 줄바꿈 */
   drawBubble(text, cx, bottomY) {
     const ctx = this.ctx;
+    ctx.save();
     ctx.font = `${TEXT.bubble}px Galmuri11, Galmuri9, sans-serif`;
-    const maxW = 220, lineH = TEXT.bubbleLine, lines = [];
+    const maxW = Math.min(220, this.view.width - 32), lineH = TEXT.bubbleLine, lines = [];
     let line = '';
     for (const ch of text) {
       if (ctx.measureText(line + ch).width > maxW) { lines.push(line); line = ch; } else line += ch;
     }
     if (line) lines.push(line);
-    const w = Math.ceil(Math.max(...lines.map((l) => ctx.measureText(l).width))) + 16;
-    const h = lines.length * lineH + 10;
+    const w = Math.ceil(Math.max(0, ...lines.map((l) => ctx.measureText(l).width))) + 24;
+    const h = lines.length * lineH + 16;
     let x = Math.round(cx - this.cam.x - w / 2);
     x = Math.max(4, Math.min(this.view.width - w - 4, x));
     const y = Math.max(this.topInset ?? 84, Math.round(bottomY - this.cam.y - h - 8)); // 상단 바 밑으로는 숨지 않게
-    ctx.fillStyle = '#2b1d14'; ctx.fillRect(x - 2, y - 2, w + 4, h + 4);
-    ctx.fillStyle = '#fff'; ctx.fillRect(x, y, w, h);
-    const tx = Math.round(cx - this.cam.x);
-    ctx.fillStyle = '#2b1d14'; ctx.fillRect(tx - 4, y + h, 8, 4); ctx.fillRect(tx - 2, y + h + 4, 4, 4);
-    ctx.fillStyle = '#fff'; ctx.fillRect(tx - 2, y + h, 4, 2);
-    ctx.fillStyle = '#2b1d14'; ctx.textBaseline = 'top'; ctx.textAlign = 'left';
-    lines.forEach((l, i) => ctx.fillText(l, x + 8, y + 5 + i * lineH));
+    paperBox(ctx, x, y, w, h, 6);
+    const tx = Math.max(x + 8, Math.min(x + w - 8, Math.round(cx - this.cam.x)));
+    ctx.fillStyle = '#c8bda9'; ctx.fillRect(tx - 4, y + h - 1, 8, 4); ctx.fillRect(tx - 2, y + h + 3, 4, 3);
+    ctx.fillStyle = '#fffaf2'; ctx.fillRect(tx - 3, y + h - 2, 6, 4); ctx.fillRect(tx - 1, y + h + 2, 2, 2);
+    ctx.fillStyle = '#393c32'; ctx.textBaseline = 'top'; ctx.textAlign = 'left';
+    lines.forEach((l, i) => ctx.fillText(l, x + 12, y + 8 + i * lineH));
+    ctx.restore();
   }
 
   /** 전환 페이드 */

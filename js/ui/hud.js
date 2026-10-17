@@ -52,7 +52,7 @@ export function createHud(root, config, game) {
         <div class="space-grid">${Object.entries(SPACES).map(([id, sp]) => `<button class="space-tile" data-space="${id}" ${id === sceneId ? 'aria-current="page"' : ''}><span>${sp.icon}</span><strong>${sp.name}</strong></button>`).join('')}</div>
         <div class="menu-actions">${actions.map(([id, label]) => `<button class="text-button" data-menu="${id}">${esc(label)}</button>`).join('')}</div>
         ${config.classicUrl ? `<a class="classic-link" href="${esc(config.classicUrl)}">일반 청첩장 보기 →</a>` : ''}`,
-      buttons: [{ label: '내 캐릭터 바꾸기', onClick: () => { close(true); game.paused = true; changeProfile(); return true; } }, { label: '소식 공유', onClick: () => { close(true); showShare(game); return true; } }, { label: '닫기' }],
+      buttons: [{ label: '내 캐릭터 바꾸기', onClick: () => { close(true); game.paused = true; changeProfile(); return true; } }, { label: '소식 나누기', onClick: () => { close(true); showShare(game); return true; } }, { label: '닫기' }],
     });
     card.querySelectorAll('[data-space]').forEach((b) => { b.onclick = () => { close(); if (b.dataset.space !== sceneId) navigate(b.dataset.space); }; });
     const run = {

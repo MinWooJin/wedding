@@ -4,6 +4,7 @@ import { showOverlay } from '../ui/overlay.js';
 import { toast } from '../ui/toast.js';
 import { esc, copyText } from '../ui/dom.js';
 import { makeHostNpc } from './host-npc.js';
+import { formatDate } from '../config.js';
 
 const ROWS = [
   'KKKKKKKKKKK',
@@ -47,7 +48,7 @@ export function showShare(game) {
   const url = cfg.siteUrl || location.href.split('#')[0];
   const title = `${cfg.groom.name} ♥ ${cfg.bride.name} 결혼합니다`;
   const buttons = [
-    { label: '링크 복사', onClick: async () => { toast((await copyText(url)) ? '링크를 복사했어요' : '복사에 실패했어요'); return true; } },
+    { label: '링크 복사', primary: !cfg.kakaoJsKey, onClick: async () => { toast((await copyText(url)) ? '링크를 복사했어요' : '복사에 실패했어요'); return true; } },
   ];
   if (navigator.share) buttons.push({ label: '공유하기', onClick: async () => { try { await navigator.share({ title, url }); } catch {} return true; } });
   if (cfg.kakaoJsKey) buttons.push({ label: '카카오톡', primary: true, onClick: async () => {
@@ -61,7 +62,7 @@ export function showShare(game) {
     return true;
   } });
   buttons.push({ label: '닫기' });
-  showOverlay(game, { title: '청첩장 공유', html: `<p class="muted">${esc(url)}</p>`, buttons });
+  showOverlay(game, { title: '소식 나누기', html: `<div class="share-preview"><span class="share-heart" aria-hidden="true">♥</span><p class="share-title">${esc(title)}</p><p>${esc(formatDate(cfg.wedding.date))}</p></div><label for="share-url">청첩장 링크</label><input id="share-url" class="share-url" readonly value="${esc(url)}"><p class="muted share-help">링크를 복사해 소중한 분들께 전해 주세요.</p>`, buttons });
 }
 
 /** 초대하지 못한 사과와 축의금 사양 안내 */

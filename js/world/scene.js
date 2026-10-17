@@ -195,9 +195,9 @@ export class Scene {
     for (let i = ordered.length - 1; i >= 0; i--) {
       const o = ordered[i];
       if (o.spr.missing && !o.interact) continue;
-      const width = o.label ? Math.max(o.spr.w, o.label.length * 12 + 16) : o.spr.w;
+      const width = o.label ? Math.max(o.spr.w, o.label.length * 12 + 24) : o.spr.w;
       const x0 = o.tx * TILE + (o.spr.w - width) / 2;
-      if (wx >= x0 && wx < x0 + width && wy >= o.drawY - (o.label ? 26 : 0) && wy < o.drawY + o.spr.h) return o;
+      if (wx >= x0 && wx < x0 + width && wy >= o.drawY - (o.label ? 32 : 0) && wy < o.drawY + o.spr.h) return o;
     }
     return null;
   }

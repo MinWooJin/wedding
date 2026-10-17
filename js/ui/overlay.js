@@ -7,6 +7,9 @@ import { esc, h } from './dom.js';
 const active = new WeakMap();
 export function showOverlay(game, { title = '', html = '', buttons = [{ label: '닫기' }], onClose = null }) {
   active.get(game)?.();
+  // Dismiss the scene-entry toast before opening a card; later action feedback still appears.
+  const toast = document.getElementById('toast');
+  if (toast) toast.hidden = true;
   const root = document.getElementById('overlay');
   const previousFocus = document.activeElement;
   const hud = document.getElementById('hud'), previousInert = hud?.inert ?? false;
