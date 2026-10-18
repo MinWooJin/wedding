@@ -228,7 +228,8 @@ label { display: block; font-size: 13px; font-weight: 600; margin: 12px 0 6px; }
 .claim-box .muted { margin: 8px 0 0; font-size: 13px; }
 .claim-box .row { display: flex; gap: 8px; flex-wrap: wrap; }
 /* 예식 안내관: 장면 캔버스 바로 아래부터 하단 버튼 위까지 안내 카드(스크롤) */
-.ceremony-panel { position: absolute; left: 0; right: 0; bottom: calc(76px + env(safe-area-inset-bottom)); z-index: 1; overflow-y: auto; overscroll-behavior: contain; padding: 0 14px 12px; background: linear-gradient(#faf6ee, #f6efe4); -webkit-overflow-scrolling: touch; }
+/* 카드 배경은 화면 맨 아래까지 이어 하단 버튼("정원으로"·메뉴)이 카드 위에 놓이게 하고, 마지막 내용은 버튼에 가리지 않도록 아래 여백을 둔다 */
+.ceremony-panel { position: absolute; left: 0; right: 0; bottom: 0; z-index: 1; overflow-y: auto; overscroll-behavior: contain; padding: 0 14px calc(92px + env(safe-area-inset-bottom)); background: linear-gradient(#faf6ee, #f6efe4); -webkit-overflow-scrolling: touch; }
 .ceremony-line { position: sticky; top: 0; z-index: 1; margin: 0 -14px 10px; padding: 12px 18px; background: #26211c; color: #fff8e8; font: 15px/1.5 Galmuri11, var(--font); border-top: 3px solid #e9dcc2; border-bottom: 3px solid #e9dcc2; min-height: 48px; }
 .ceremony-line::before { content: '▸ '; color: #e8b9c5; }
 .ceremony-card { max-width: 440px; margin: 0 auto; }
@@ -238,8 +239,10 @@ label { display: block; font-size: 13px; font-weight: 600; margin: 12px 0 6px; }
 .ceremony-map img { display: block; width: 100%; height: auto; image-rendering: pixelated; }
 .map-label { position: absolute; transform: translate(-50%, 0); padding: 2px 7px; border-radius: 8px; background: #fffcf5ee; color: #3f3a35; font-size: 11px; font-weight: 650; white-space: nowrap; box-shadow: 0 1px 4px #0002; }
 .ceremony-address { margin: 0 0 8px; font-size: 15px; text-align: center; }
-.ceremony-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin: 8px 0 12px; }
-.ceremony-actions .btn { min-height: 44px; font-size: 14px; }
+/* 버튼은 같은 폭 격자로: 지도 줄은 한 줄에 최대 3개, 아래 기능 버튼 4개는 2×2. 하나만 다음 줄로 밀리지 않게 한다 */
+.ceremony-actions { display: grid; grid-template-columns: repeat(auto-fit, minmax(96px, 1fr)); gap: 8px; margin: 8px 0 12px; }
+.ceremony-actions.two-col { grid-template-columns: 1fr 1fr; }
+.ceremony-actions .btn { min-height: 44px; font-size: 14px; margin: 0; display: inline-flex; align-items: center; justify-content: center; text-align: center; }
 .ceremony-transport { margin: 0 0 8px; padding: 12px 14px; border-radius: 14px; background: #fffcf5; border: 1px solid #e3dccd; font-size: 14px; }
 .ceremony-transport div { display: flex; gap: 10px; padding: 4px 0; }
 .ceremony-transport dt { flex: none; width: 48px; font-weight: 650; color: #95576a; }

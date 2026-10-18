@@ -579,3 +579,8 @@ Codex가 다음 작업 전에 읽을 문서다. 오늘 Claude가 바꾼 내용, 
 - 내장 image_gen 2회(API 키 사용 없음). 프롬프트·참조·원본 경로 `assets/round11-prompts.json`, 규격·알파·해시 `assets/round11-report.json`, 선택 규격 변환 `tools/prepare_round11_assets.py`, 원본 `raw/round11-source/`(Git 제외).
 - 비교 `assets/round11-landmarks-comparison.png`(96×112 칸2×2), `round11-landmarks-comparison-3x.png`. `/tools/round11-art-review.html`은 실제 loadAssets/createHub/Renderer/Scene.onTap으로 광장을 그리되 API와 저장소를 사용하지 않는다.
 - 브라우저4/4종96×112 로드·새 방명록v1 선택·네 입구 이동 요청·콘솔 오류 없음·390/320px 가로 넘침 없음·그림 잘림/안내인 가림 없음을 확인했다. 화면 `docs/round11-landmarks-390-2026-10-18.png`. 테스트174개 통과. 운영 API·Google 배포는 변경하지 않았고 원격 게시하지 않았다.
+
+## 48. 예식 안내관 하단 버튼 정리 (Claude, 2026-10-18)
+
+- 사용자 지적: 예식장 맵 맨 아래 버튼 배치가 내려가 있음. 원인 ① 기능 버튼 4개가 한 줄에 다 들어가지 않아 "캘린더 저장"만 다음 줄로 밀림 ② 카드가 하단 버튼 줄 위에서 끝나 "정원으로"·메뉴 버튼이 어두운 띠 위에 떠 보임.
+- `.ceremony-actions`를 같은 폭 격자로(지도 앱 줄은 최대 3개, 기능 버튼은 `.two-col` 2×2). `.ceremony-panel`은 화면 맨 아래까지 이어지고 아래 여백(92px+안전 영역)으로 마지막 내용이 하단 버튼에 가리지 않게 했다.

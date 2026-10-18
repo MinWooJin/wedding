@@ -63,7 +63,7 @@ export class CeremonyScene extends Scene {
         ${w.address ? `<p class="ceremony-address">${esc(w.address)}</p>` : ''}
         <div class="ceremony-actions">${w.address ? '<button class="btn" data-act="copy">주소 복사</button>' : ''}${maps.map(([l, u]) => `<a class="btn" target="_blank" rel="noopener" href="${esc(u)}">${esc(l)}</a>`).join('')}</div>
         ${transport.length ? `<dl class="ceremony-transport">${transport.map(([k, v]) => `<div><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join('')}</dl>` : ''}
-        <div class="ceremony-actions">
+        <div class="ceremony-actions two-col">
           <button class="btn" data-act="replay">예식 다시 보기</button>
           <button class="btn" data-act="family">가족 안내</button>
           <button class="btn" data-act="contact">연락하기</button>
