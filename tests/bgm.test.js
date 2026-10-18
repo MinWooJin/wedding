@@ -86,12 +86,16 @@ test('예식장 결혼 행진곡: "빰 빰-빠-밤" 첫 동기와 길이', () =>
   const ev = marchEvents();
   const lead = ev.filter((e) => e.kind === 'lead');
   const near = (a, b) => Math.abs(a - b) < 1e-6;
-  assert.ok(['G4', 'C5', 'C5', 'C5'].every((n, i) => near(lead[i].f, freq(n))), '솔-도-도-도');
-  assert.ok(near(lead[1].dur / lead[2].dur, 3), '점음표 리듬(1.5박 : 0.5박)');
-  assert.ok(Math.abs(MARCH_SECONDS - 80 * 60 / MARCH_TEMPO) < 1e-9, '8프레이즈 × 2회');
-  assert.ok(MARCH_TEMPO >= 100, '신나는 빠르기');
-  assert.equal(ev.filter((e) => e.kind === 'bass').length, 8 * 5 * 2, '박마다 쿵');
-  assert.equal(ev.filter((e) => e.kind === 'tick').length, 8 * 5 * 2, '엇박마다 짝');
+  assert.ok(['C5', 'C5', 'C5', 'G4', 'D5', 'B4', 'C5'].every((n, i) => near(lead[i].f, freq(n))), '도.도 도 솔 | 레.시 도');
+  assert.ok(near(lead[0].dur / lead[1].dur, 3), '점음표 리듬(1.5박 : 0.5박)');
+  assert.ok(Math.abs(MARCH_SECONDS - 72 * 60 / MARCH_TEMPO) < 1e-9, '9마디 × 4박 × 2회');
+  assert.ok(MARCH_TEMPO >= 110, '신나는 빠르기');
+  // 모든 마디가 정확히 4박(5박 마디 때문에 박자가 절뚝거리던 문제 방지)
+  const beat = 60 / MARCH_TEMPO, starts = lead.map((e) => Math.round(e.t / beat * 2) / 2);
+  for (let bar = 0; bar < 18; bar++) assert.ok(starts.includes(bar * 4), `${bar + 1}마디 첫 박에 선율이 있다`);
+  const bass = ev.filter((e) => e.kind === 'bass').map((e) => Math.round(e.t / beat) % 4);
+  assert.ok(bass.every((b) => b === 0 || b === 2), '저음은 1·3박');
+  assert.ok(ev.some((e) => e.kind === 'crash') && ev.some((e) => e.kind === 'brass'), '심벌과 브라스 화음');
   const second = lead.slice(lead.length / 2);
   assert.ok(second.every((e, i) => Math.abs(e.f / lead[i].f - 2) < 1e-6), '두 번째 반복은 선율이 한 옥타브 위');
   assert.ok(ev.every((e) => e.t >= 0 && e.t < MARCH_SECONDS));
@@ -109,7 +113,7 @@ test('곡 바꾸기: 예식장에 들어가면 행진곡으로, 지금 곡은 �
     bgm.play('march');
     assert.equal(bgm.track, 'march');
     assert.ok(log.stops.some((t) => Math.abs(t - 5.65) < 1e-9), '정원 곡 소리를 멈춘다');
-    assert.ok(log.notes.length - before >= marchEvents().filter((e) => e.kind !== 'tick').length, '행진곡 한 바퀴를 예약(박자 잡음 제외)');
+    assert.ok(log.notes.length - before >= marchEvents().filter((e) => e.kind !== 'tick' && e.kind !== 'crash').length, '행진곡 한 바퀴를 예약(타악 잡음 제외)');
     assert.ok(Math.abs(bgm.loopSeconds - MARCH_SECONDS) < 1e-9);
     const n = log.notes.length;
     bgm.play('march');

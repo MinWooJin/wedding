@@ -58,53 +58,63 @@ export function canonEvents() {
 export const LOOP_SECONDS = VOICES.length * BASS.length * 2 * BEAT;
 
 /**
- * 예식장 BGM: 바그너 '로엔그린' 중 결혼 행진곡(신부 입장곡, 1850년, 퍼블릭 도메인 작품)을 직접 편곡.
- * 다장조, 경쾌한 행진(104bpm). 선율은 "빰 빰-빠-밤" 동기, 반주는 "쿵-짝" 행진 저음 + 엇박 화음 + 가벼운 박자.
- * 두 번째 반복은 선율을 한 옥타브 올리고 종소리를 겹쳐 더 화려하게 끝난다.
- * 한 프레이즈 = [못갖춘마디 1박][4박]. 시간은 박 단위로 적고 아래에서 초로 바꾼다.
+ * 예식장 BGM: 바그너 '로엔그린' 중 결혼 행진곡(1850년, 퍼블릭 도메인 작품)을 신나는 행진으로 직접 편곡.
+ * 다장조 4/4, 112bpm. "빰 | 빰.빠 빰 빰" 동기(못갖춘마디는 앞 마디 4박째).
+ * 반주는 전형적인 행진: 1·3박 저음, 2·4박 브라스 같은 짧은 화음 + 스네어, 큰 마디 첫 박 심벌. 선율 위로 종소리 한 옥타브.
+ * 두 번째 반복은 선율이 한 옥타브 위로 올라가 더 화려하다.
  */
-export const MARCH_TEMPO = 104; // 신나는 행진(처음 72에서 올림)
-const MARCH_PHRASES = [
-  // [선율(음, 박)], 화음(프레이즈 앞·뒤 2박씩)
-  { lead: [['G4', 1], ['C5', 1.5], ['C5', 0.5], ['C5', 2]], chords: [['C4', 'E4', 'G4'], ['C4', 'E4', 'G4']], bass: ['C3', 'C3'] },
-  { lead: [['G4', 1], ['D5', 1.5], ['B4', 0.5], ['C5', 2]], chords: [['B3', 'D4', 'G4'], ['C4', 'E4', 'G4']], bass: ['G2', 'C3'] },
-  { lead: [['G4', 1], ['C5', 1.5], ['F5', 0.5], ['F5', 2]], chords: [['C4', 'E4', 'G4'], ['C4', 'F4', 'A4']], bass: ['C3', 'F2'] },
-  { lead: [['E5', 1.5], ['D5', 0.5], ['C5', 1], ['B4', 1], ['C5', 0.5], ['D5', 0.5]], chords: [['C4', 'E4', 'G4'], ['B3', 'D4', 'G4']], bass: ['C3', 'G2'] },
-  { lead: [['G4', 1], ['C5', 1.5], ['C5', 0.5], ['C5', 2]], chords: [['C4', 'E4', 'G4'], ['C4', 'E4', 'G4']], bass: ['C3', 'C3'] },
-  { lead: [['G4', 1], ['D5', 1.5], ['B4', 0.5], ['C5', 2]], chords: [['B3', 'D4', 'G4'], ['C4', 'E4', 'G4']], bass: ['G2', 'C3'] },
-  { lead: [['G4', 1], ['C5', 1.5], ['F5', 0.5], ['E5', 1], ['D5', 1]], chords: [['C4', 'E4', 'G4'], ['B3', 'D4', 'G4']], bass: ['C3', 'G2'] },
-  { lead: [['C5', 1.5], ['B4', 0.5], ['C5', 3]], chords: [['B3', 'D4', 'G4'], ['C4', 'E4', 'G4']], bass: ['G2', 'C3'] },
+export const MARCH_TEMPO = 112;
+/** 마디별 선율(음, 박) — 각 마디 정확히 4박. 마디 끝 'G4' 1박은 다음 마디로 들어가는 못갖춘마디 */
+const MARCH_BARS = [
+  { lead: [['C5', 1.5], ['C5', 0.5], ['C5', 1], ['G4', 1]], chords: ['C', 'C'] },
+  { lead: [['D5', 1.5], ['B4', 0.5], ['C5', 1], ['G4', 1]], chords: ['G', 'C'] },
+  { lead: [['C5', 1.5], ['F5', 0.5], ['F5', 2]], chords: ['C', 'F'] },
+  { lead: [['E5', 1.5], ['D5', 0.5], ['C5', 1], ['B4', 1]], chords: ['C', 'G'] },
+  { lead: [['C5', 1], ['D5', 1], ['E5', 1], ['G4', 1]], chords: ['C', 'G'] },
+  { lead: [['C5', 1.5], ['C5', 0.5], ['C5', 1], ['G4', 1]], chords: ['C', 'C'] },
+  { lead: [['D5', 1.5], ['B4', 0.5], ['C5', 1], ['G4', 1]], chords: ['G', 'C'] },
+  { lead: [['C5', 1.5], ['F5', 0.5], ['E5', 1], ['D5', 1]], chords: ['F', 'G'] },
+  { lead: [['C5', 1.5], ['B4', 0.5], ['C5', 1], ['G4', 1]], chords: ['G', 'C'] },
 ];
-
+/** 화음: 저음 근음·5도, 브라스 화음 세 음 */
+const MARCH_CHORDS = {
+  C: { root: 'C3', fifth: 'G3', tones: ['E4', 'G4', 'C5'] },
+  F: { root: 'F2', fifth: 'C3', tones: ['F4', 'A4', 'C5'] },
+  G: { root: 'G2', fifth: 'D3', tones: ['D4', 'G4', 'B4'] },
+};
 const MARCH_PASSES = 2;
 const upOctave = (n) => n.replace(/\d$/, (d) => String(Number(d) + 1));
 
-/** 결혼 행진곡 한 바퀴(프레이즈 8개 × 5박 × 2회 = 80박) */
+/** 결혼 행진곡 한 바퀴(9마디 × 4박 × 2회 = 72박) */
 export function marchEvents() {
   const beat = 60 / MARCH_TEMPO, out = [];
   for (let pass = 0; pass < MARCH_PASSES; pass++) {
-    MARCH_PHRASES.forEach((ph, i) => {
-      const base = (pass * MARCH_PHRASES.length + i) * 5 * beat;
-      // 선율: 짧게 끊어 또렷하게. 두 번째 반복은 한 옥타브 위 + 종소리 겹침
+    MARCH_BARS.forEach((bar, i) => {
+      const base = (pass * MARCH_BARS.length + i) * 4 * beat;
+      // 선율: 또렷하게 끊고, 종소리를 한 옥타브 위에 겹친다. 두 번째 반복은 선율 자체도 한 옥타브 위
       let t = base;
-      for (const [n, b] of ph.lead) {
+      for (const [n, b] of bar.lead) {
         const note = pass ? upOctave(n) : n;
-        out.push({ t, dur: b * beat * 0.82, f: freq(note), kind: 'lead', vol: 0.3 });
-        if (pass) out.push({ t, dur: b * beat * 1.1, f: freq(upOctave(note)), kind: 'bell', vol: 0.12 });
+        out.push({ t, dur: b * beat * 0.8, f: freq(note), kind: 'lead', vol: 0.3 });
+        out.push({ t, dur: b * beat * 1.2, f: freq(upOctave(note)), kind: 'bell', vol: pass ? 0.12 : 0.1 });
         t += b * beat;
       }
-      // 반주: 박마다 "쿵"(근음·옥타브 번갈아), 엇박마다 "짝"(짧은 화음) + 가벼운 박자
-      for (let b = 0; b < 5; b++) {
-        const k = b < 3 ? 0 : 1, at = base + b * beat, root = ph.bass[k];
-        out.push({ t: at, dur: beat * 0.45, f: freq(b % 2 ? upOctave(root) : root), kind: 'bass', vol: 0.45 });
-        ph.chords[k].forEach((n) => out.push({ t: at + beat / 2, dur: beat * 0.3, f: freq(n), kind: 'organ', vol: 0.1 }));
-        out.push({ t: at + beat / 2, dur: 0.05, f: 0, kind: 'tick', vol: 0.09 });
+      // 반주: 쿵(1박 근음) 짝(2박 화음+스네어) 쿵(3박 5도) 짝(4박 화음+스네어)
+      for (let b = 0; b < 4; b++) {
+        const ch = MARCH_CHORDS[bar.chords[b < 2 ? 0 : 1]], at = base + b * beat;
+        if (b % 2 === 0) out.push({ t: at, dur: beat * 0.6, f: freq(b === 0 ? ch.root : ch.fifth), kind: 'bass', vol: 0.5 });
+        else {
+          ch.tones.forEach((n) => out.push({ t: at, dur: beat * 0.35, f: freq(n), kind: 'brass', vol: 0.07 }));
+          out.push({ t: at, dur: 0.07, f: 0, kind: 'tick', vol: 0.13 });
+        }
+        out.push({ t: at + beat / 2, dur: 0.04, f: 0, kind: 'tick', vol: 0.05 }); // 8분 하이햇
       }
+      if (i % 4 === 0) out.push({ t: base, dur: 0.5, f: 0, kind: 'crash', vol: 0.1 }); // 큰 마디 첫 박 심벌
     });
   }
   return out;
 }
-export const MARCH_SECONDS = MARCH_PASSES * MARCH_PHRASES.length * 5 * 60 / MARCH_TEMPO;
+export const MARCH_SECONDS = MARCH_PASSES * MARCH_BARS.length * 4 * 60 / MARCH_TEMPO;
 
 /** 곡 목록: 정원은 밝은 캐논, 예식장은 결혼 행진곡 */
 export const TRACKS = {
@@ -113,7 +123,7 @@ export const TRACKS = {
 };
 
 const PREF_KEY = 'pixel-wedding-bgm';
-const WAVES = { bass: 'triangle', bell: 'sine', lead: 'square', organ: 'triangle' };
+const WAVES = { bass: 'triangle', bell: 'sine', lead: 'square', organ: 'triangle', brass: 'square' };
 
 export class Bgm {
   /**
@@ -190,7 +200,7 @@ export class Bgm {
   }
 
   playNote(at, e) {
-    if (e.kind === 'tick') { this.playTick(at, e); return; }
+    if (e.kind === 'tick' || e.kind === 'crash') { this.playTick(at, e); return; }
     const o = this.ctx.createOscillator(), g = this.ctx.createGain();
     o.type = WAVES[e.kind]; o.frequency.value = e.f;
     g.gain.setValueAtTime(0, at);
@@ -213,13 +223,16 @@ export class Bgm {
   playTick(at, e) {
     if (!this.ctx.createBuffer || !this.ctx.createBufferSource) return;
     if (!this.noise) {
-      const len = Math.floor((this.ctx.sampleRate || 44100) * 0.05);
+      const len = Math.floor((this.ctx.sampleRate || 44100) * 0.5); // 심벌까지 쓰도록 0.5초
       this.noise = this.ctx.createBuffer(1, len, this.ctx.sampleRate || 44100);
       const data = this.noise.getChannelData(0);
-      for (let i = 0; i < len; i++) data[i] = (Math.random() * 2 - 1) * (1 - i / len);
+      for (let i = 0; i < len; i++) data[i] = Math.random() * 2 - 1;
     }
     const src = this.ctx.createBufferSource(), g = this.ctx.createGain();
-    src.buffer = this.noise; g.gain.value = e.vol;
+    src.buffer = this.noise;
+    // 짧게 사라지는 소리(스네어·하이햇은 빨리, 심벌은 길게)
+    g.gain.setValueAtTime(e.vol, at);
+    g.gain.setTargetAtTime(0, at, e.kind === 'crash' ? 0.15 : 0.015);
     src.connect(g); g.connect(this.bus ?? this.master);
     src.start(at); src.stop?.(at + e.dur);
     src.endsAt = at + e.dur; this.voices.push(src);
