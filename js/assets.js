@@ -76,7 +76,7 @@ function loadImage(src) {
 }
 
 /** 이미지(또는 일부)를 w×h 캔버스로. 크기가 같으면 그대로, 다르면 리샘플(축소는 부드럽게, 확대는 픽셀 유지). */
-export const LANDMARK_SCALE = 0.75;
+export const LANDMARK_SCALE = 0.4;
 /** 그림을 scale배로 부드럽게 줄여 원래 폭의 투명 캔버스 아래 가운데에 놓는다 */
 function shrinkCentered(src, scale) {
   const w = Math.round(src.width * scale), h = Math.round(src.height * scale);
@@ -183,7 +183,7 @@ export async function loadAssets(base = 'assets') {
     const board = out.objects['welcome-board'].canvas, scale = 96 / board.width;
     out.objects['landmark-guestbook'] = imgSprite(toCanvas(board, 0, 0, board.width, board.height, 96, Math.round(board.height * scale)));
   }
-  // 광장 입구 그림은 조금 작게(0.75배). 칸 폭(96)은 그대로 두고 가운데에 그려 충돌·배치 계산이 바뀌지 않게 한다.
+  // 광장 입구 그림은 작게(0.4배). 칸 폭(96)은 그대로 두고 가운데에 그려 충돌·배치 계산이 바뀌지 않게 한다.
   for (const id of ['landmark-guestbook', 'landmark-gallery', 'landmark-gifts', 'landmark-info']) {
     const src = out.objects[id]?.canvas;
     if (src) out.objects[`${id}-small`] = imgSprite(shrinkCentered(src, LANDMARK_SCALE));

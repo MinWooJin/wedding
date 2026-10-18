@@ -251,7 +251,7 @@ export class HubScene extends Scene {
       // 공간을 보여 주는 그림을 같은 칸에 놓는다. 그림이 하나도 없으면(코드 그림만 있을 때) 예전 표지판+이름표.
       const slot = LANDMARKS[id];
       const found = [slot.sprite, slot.fallback].find((s) => s && has(game.assets, s));
-      // 광장 그림은 0.75배로 줄인 판(칸 폭 96에 가운데 맞춤, assets.js)을 쓴다. 없으면 원래 크기.
+      // 광장 그림은 0.4배로 줄인 판(칸 폭 96에 가운데 맞춤, assets.js)을 쓴다. 없으면 원래 크기.
       const art = found && has(game.assets, `${found}-small`) ? `${found}-small` : found;
       if (art) objects.push({ id: `sign-${id}`, sprite: art, ...slotPlace(game.assets.objects[art], slot), instant: true, interact: (g) => g.goTo(id), name: d.label, caption: slot.caption });
       else objects.push({ id: `sign-${id}`, sprite: id === 'guestbook' ? 'welcome-board' : 'sign', label: d.label, ...d.sign, instant: true, interact: (g) => g.goTo(id) });
