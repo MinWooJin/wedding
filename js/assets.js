@@ -12,7 +12,7 @@ import { PRESET_COUNT } from './sprites/characters.js';
 import { decorateWeddingHub } from './world/wedding-decor.js';
 
 export const CHAR_W = 48, CHAR_H = 72; // 화면(352px 폭 기준)에서 캐릭터가 폭 48px, 높이 72px로 보인다(타일 1.5칸 폭)
-/** 분위기용 군중 하객 그림 수(선택 프리셋 10종과 별개, 캐릭터 고르기에는 나오지 않는다) */
+/** 분위기용 군중 하객 그림 수(선택 프리셋 30종과 별개, 캐릭터 고르기에는 나오지 않는다) */
 export const EXTRA_GUEST_COUNT = 6;
 export const CHARACTER_NAMES = [...Array.from({ length: PRESET_COUNT }, (_, i) => `preset-${i}`), 'groom', 'bride', 'couple',
   ...Array.from({ length: EXTRA_GUEST_COUNT }, (_, i) => `guest-extra-${i}`)];

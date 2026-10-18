@@ -519,3 +519,15 @@ Codex가 다음 작업 전에 읽을 문서다. 오늘 Claude가 바꾼 내용, 
 - 검토 도구 `/tools/round10-art-review.html`: 기존 표지판 비교, 390px 광장 제안, 착석·마주 보기·행진3장, 보행·박수·맞절 재생, 약도. 세 정지 그림 `tools/round10-ceremony-{seated,facing,march}.png`, 광장 `tools/round10-hub-proposal.png`, 비교 보드 `assets/round10-{landmarks,characters}-comparison.png`다.
 - 제안 랜드마크 발 기준: 갤러리(240,668), 마음 전하기(112,796), 예식 안내(240,796). 기존 문19/23행과 새 랜드마크20/24행을 구별한다. 실제 PNG 알파로 네 문·케이크와 겹침이 없는지 검사했고, front 레이어의 버진로드·단상·하객32명 머리 영역도 투명하다.
 - `npm test`163개 통과, 보정 도구 좌표·팔레트·프레임 assertions 통과. 브라우저에서390px 카드/내부352px, 모바일390px 가로 넘침 없음·모든 이미지 로드·대사 상자 분리·재생/정지/맞절·콘솔 오류 없음을 확인했다. 화면 기록은 `docs/round10-{ceremony-review,mobile-390,motion-review,map-390}-2026-10-18.jpg`. 실앱 연결이 끝났다는 뜻이 아니며 Claude 연결 후 동선과 전체 연출을 재검증한다.
+
+
+## 42. 선택 캐릭터30종 확장 (Codex, 2026-10-18)
+
+- 사용자가 선택 캐릭터를10개에서30개로 늘리도록 명시 요청했다. 과거 ‘선택10종 유지’ 지침보다 이 요청을 우선한다. 군중 전용 하객6종·예식관 착석6종은 별개다. 상세 변경·재배포 안내는 `docs/SELECTABLE_CHARACTERS_30_2026-10-18.md`.
+- 기존 ID0~9의 PNG·번호·색은 보존했다. 새20종 `assets/characters/preset-10-v1.png`~`preset-29-v1.png`를 생성해 manifest.characters·files.characters에 등록했다. 48×72·이진 알파·32색 이하·발y72, 머리·복장·연령대·피부색으로 구별한다. 새20종 모두 해시가 다르며 기존10종은 HEAD의 PNG 해시와 일치한다.
+- 내장 image_gen으로 에셋별20회 생성했다(API 키 사용 없음). 프롬프트·설정·원본 경로 `assets/selectable-guests-prompts.json`, 원본 `raw/selectable-guests-source/`(Git 제외), 규격/해시 `assets/selectable-guests-report.json`, 전체 비교 `assets/selectable-guests-comparison.png`. 선택 보정 `.venv-assets/Scripts/python.exe tools/prepare_selectable_guests.py`.
+- PRESET_COUNT30과 새20종 폴백 팔레트를 추가해 선택·로딩·플레이어 변경·프로필·API 검증·광장 하객이 같은 범위를 쓴다. 좌우 순환1↔30과44px 이상 버튼의 ‘30종 한눈에 보기’를 제공하고, 작은 화면에서는 목록 열 수를 줄인다. 기존 캐릭터 변경의 ‘그대로 돌아가기’가 숨겨진 본인 확인 버튼 줄에 붙던 문제도 수정했다.
+- `apps-script/Code.gs`도 PRESET_COUNT30·ID0~29를 허용한다. **이미 배포된 Google 웹앱은 자동 갱신되지 않는다. 사용자 재배포 필요:** 수정된 Code.gs 전체를 편집기에 붙여넣고 저장 → 배포 관리 → 연필 → 새 버전 → 배포(URL 유지). 이전 서버는 새 ID의 입장/글쓰기를 거절할 수 있다. 원격 push·사이트 게시·Google 재배포는 하지 않았다.
+- 기존 공용 prepare_assets.py도30종을 인식하고 예식관 등 기존 manifest 메타데이터를 보존·중복 제거하도록 했다. 원본이 없는 격리 임시 폴더에서 실행해 현재 등록값이 그대로 유지됨을 확인했다. 실제 기존 PNG 재변환은 하지 않았다.
+- `npm test`166개 통과. 브라우저/서버 개수 일치, 새ID10/29 저장·조회, 범위밖ID30/음수/소수 거절, 마지막 프로필 복원, 광장에서29가9로 잘못 표시되지 않는 회귀 검증을 포함한다.
+- `/tools/characters-review.html`은 실제 loadAssets·showIntro·state 함수를 쓰되 메모리 저장소만 사용한다.30/30 PNG 로드,30→1→30, 목록30개,11번/30번 선택·복원을 확인했다.390×844와320×568에서 가로 넘침 없음·44px 이상 터치 영역·콘솔 오류 없음을 확인했다. 실제 방명록에는 테스트 글이나 입장 기록을 쓰지 않았다. 화면 기록 `docs/selectable-30-grid-390-2026-10-18.jpg`, `selectable-30-picker-320-2026-10-18.jpg`.

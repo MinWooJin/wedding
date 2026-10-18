@@ -2,8 +2,8 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { PRESET_COUNT, makeCharacter, presetSprites, presetColors, GROOM, BRIDE } from '../js/sprites/characters.js';
 
-test('프리셋은 10종', () => {
-  assert.equal(PRESET_COUNT, 10);
+test('프리셋은 30종', () => {
+  assert.equal(PRESET_COUNT, 30);
 });
 
 test('각 프리셋은 4방향 × 3프레임(idle+걷기2), 32×48', () => {

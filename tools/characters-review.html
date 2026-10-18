@@ -1,0 +1,17 @@
+<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>선택 캐릭터30종 · 검토</title><link rel="stylesheet" href="../css/style.css"><style>body{height:auto;min-height:100vh;padding:20px;overflow:auto}main{max-width:760px;margin:auto}main img{max-width:100%;height:auto;image-rendering:pixelated}#intro{position:fixed}#result{white-space:pre-line;padding:16px;border-radius:12px;background:#fffdf8}button{min-height:44px}</style></head><body>
+<main><h1>선택 캐릭터30종</h1><p>실제 선택창과 에셋 로더를 사용하는 검토 화면입니다. 선택·복원은 이 화면의 메모리에서만 확인하며 방명록 API나 브라우저의 기존 프로필에는 기록하지 않습니다.</p><p id="asset-status" role="status">캐릭터 그림을 불러오고 있어요.</p><button class="btn" id="reopen" disabled>선택 화면 다시 열기</button><p id="result" role="status">선택을 기다리고 있어요.</p><img src="../assets/selectable-guests-comparison.png" width="720" height="630" alt="기존 캐릭터10종과 새 캐릭터20종을 번호순으로 비교한 그림"></main>
+<div id="hud" hidden></div><div id="intro" hidden></div>
+<script type="module">
+import {loadAssets} from '../js/assets.js';
+import {PRESET_COUNT} from '../js/sprites/characters.js';
+import {showIntro} from '../js/ui/intro.js';
+import {saveProfile,loadProfile} from '../js/state.js';
+(async()=>{
+ const assets=await loadAssets('../assets'),values=new Map(),storage={getItem:k=>values.get(k)??null,setItem:(k,v)=>values.set(k,v)};
+ const count=Object.keys(assets.characters).filter(id=>/^preset-\d+$/.test(id)).length;
+ document.getElementById('asset-status').textContent=`${count} / ${PRESET_COUNT}종 PNG 로드 완료`;
+ const reopen=document.getElementById('reopen');let profile={nickname:'확인하객',charId:29};
+ const open=async()=>{reopen.disabled=true;profile=await showIntro(document.getElementById('intro'),{groom:{name:'민우'},bride:{name:'새암'}},assets,profile);saveProfile(profile,storage);const saved=loadProfile(storage);document.getElementById('result').textContent=`캐릭터 ${saved.charId+1} / ${PRESET_COUNT} 선택·저장·복원 확인\n저장 ID: ${saved.charId}`;reopen.disabled=false;};
+ reopen.onclick=open;reopen.disabled=false;await open();
+})().catch(()=>{document.getElementById('asset-status').textContent='그림을 불러오지 못했습니다.';});
+</script></body></html>

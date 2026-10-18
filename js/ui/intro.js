@@ -31,6 +31,8 @@ export function showIntro(root, config, assets = {}, current = null, { checkNick
           <button class="btn" id="next" aria-label="다음 캐릭터">▶</button>
         </div>
         <p class="muted" id="count"></p>
+        <button class="btn picker-all" id="show-characters" aria-expanded="false" aria-controls="character-grid">${PRESET_COUNT}종 한눈에 보기</button>
+        <div class="character-grid" id="character-grid" role="group" aria-label="캐릭터 목록" hidden></div>
         <p id="err" style="color:#c0392b;min-height:1.5em"></p>
         <div class="claim-box" id="claim" hidden>
           <p><b id="claim-name"></b> 님은 이미 정원에 다녀가셨어요.<br>같은 분이세요?</p>
@@ -41,6 +43,10 @@ export function showIntro(root, config, assets = {}, current = null, { checkNick
       </div>`);
     const cv = card.querySelector('canvas'), ctx = cv.getContext('2d');
     const count = card.querySelector('#count'), err = card.querySelector('#err'), nick = card.querySelector('#nick');
+    const grid = card.querySelector('#character-grid'), showCharacters = card.querySelector('#show-characters');
+    let selectedButton;
+    const closeGrid = () => { grid.hidden = true; showCharacters.setAttribute('aria-expanded','false'); };
+    showCharacters.onclick = () => { grid.hidden = !grid.hidden; showCharacters.setAttribute('aria-expanded',String(!grid.hidden)); };
     const hud = document.getElementById('hud'), previousFocus = document.activeElement;
     hud.inert = true;
     const finish = (profile) => {
@@ -58,7 +64,21 @@ export function showIntro(root, config, assets = {}, current = null, { checkNick
       ctx.imageSmoothingEnabled = false;
       ctx.drawImage(spriteCanvas(spr), 0, 0);
       count.textContent = `캐릭터 ${charId + 1} / ${PRESET_COUNT}`;
+      const nextButton = grid.children[charId];
+      if (nextButton && nextButton !== selectedButton) {
+        selectedButton?.setAttribute('aria-pressed','false');
+        nextButton.setAttribute('aria-pressed','true'); selectedButton = nextButton;
+      }
     };
+    for (let id = 0; id < PRESET_COUNT; id++) {
+      const button = h(`<button class="character-option" type="button" aria-label="캐릭터 ${id + 1} 선택" aria-pressed="false"><canvas width="48" height="72" aria-hidden="true"></canvas><span>${id + 1}</span></button>`);
+      const sprite = characterSet(assets,`preset-${id}`,presetSprites(id)).down[0];
+      const canvas = button.querySelector('canvas'), context = canvas.getContext('2d');
+      canvas.width = sprite.w; canvas.height = sprite.h; context.imageSmoothingEnabled = false;
+      context.drawImage(spriteCanvas(sprite),0,0);
+      button.onclick = () => { charId = id; frame = 0; render(); closeGrid(); showCharacters.focus({preventScroll:true}); };
+      grid.appendChild(button);
+    }
     const timer = setInterval(() => { frame = frame ? 0 : 2; render(); }, 300);
     card.querySelector('#prev').onclick = () => { charId = (charId + PRESET_COUNT - 1) % PRESET_COUNT; render(); };
     card.querySelector('#next').onclick = () => { charId = (charId + 1) % PRESET_COUNT; render(); };
@@ -91,7 +111,7 @@ export function showIntro(root, config, assets = {}, current = null, { checkNick
     if (current) {
       const cancel = h('<button class="btn">그대로 돌아가기</button>');
       cancel.onclick = () => finish(current);
-      card.querySelector('.row').appendChild(cancel);
+      card.querySelector('#main-row').appendChild(cancel);
     }
     nick.addEventListener('keydown', (e) => { if (e.key === 'Enter') go(); });
     card.addEventListener('keydown', (e) => {

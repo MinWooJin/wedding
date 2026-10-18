@@ -1,0 +1,423 @@
+{
+  "count": 30,
+  "newIds": [
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29
+  ],
+  "frameSize": [
+    48,
+    72
+  ],
+  "originalPresetsSha256": {
+    "0": "ff7b81dfac4ef19e956de71d86a9a107a4f43d0973f5369b98b86dc8c2dd3d97",
+    "1": "e1c40c13155219ea7d09f18b43dee2a8fabbe2ae3b0dc0d180821cc6f29f7fb9",
+    "2": "4f533b69336f409ee252009f6b4bd473b982d48537f87c4e33651cf7d648f5ec",
+    "3": "7437bcc7611557b96911dd889744a4062d6c9b6cedcadda802ea28e5061b6ce9",
+    "4": "206cd72e06410b33b120b6eeba746f58f97ec76385601541465ebed68d954a90",
+    "5": "d211bdfa755a37fd78a7f6190516b045d832ae1edc4299caa808a8234d98c1fe",
+    "6": "e58c5a78c872f3d505138641c92b85a536b3bed327e3e8f47d9a44dc9d5aa83f",
+    "7": "2a1040c89b0a4e64d734e569aed191d477a0874d284baef33202490ad64970a9",
+    "8": "a771dfc6024185eb8a81a436748af37bf5721e9c1bfaba61c9899c8f77d44f7b",
+    "9": "3301298adba4c260438e0f642471c250ae396f1640c7303ef2a6134014101a40"
+  },
+  "files": {
+    "preset-10": {
+      "file": "preset-10-v1.png",
+      "size": [
+        48,
+        72
+      ],
+      "bbox": [
+        8,
+        10,
+        40,
+        72
+      ],
+      "rgbaColors": 31,
+      "alpha": [
+        0,
+        255
+      ],
+      "sha256": "3700b3966a23d19322e9ae8d49dc77fb5679720149659b3b40babdd4cbd960da"
+    },
+    "preset-11": {
+      "file": "preset-11-v1.png",
+      "size": [
+        48,
+        72
+      ],
+      "bbox": [
+        8,
+        10,
+        40,
+        72
+      ],
+      "rgbaColors": 32,
+      "alpha": [
+        0,
+        255
+      ],
+      "sha256": "e846ad42e9d64e4734959353fd07d1ba01ed4f268eb99e9ca5c8dac951fa8878"
+    },
+    "preset-12": {
+      "file": "preset-12-v1.png",
+      "size": [
+        48,
+        72
+      ],
+      "bbox": [
+        8,
+        10,
+        39,
+        72
+      ],
+      "rgbaColors": 31,
+      "alpha": [
+        0,
+        255
+      ],
+      "sha256": "86bcef8495bade8392a885953dc2d7829060a5eebef5856eb19ecfd1f1a9d33c"
+    },
+    "preset-13": {
+      "file": "preset-13-v1.png",
+      "size": [
+        48,
+        72
+      ],
+      "bbox": [
+        8,
+        10,
+        40,
+        72
+      ],
+      "rgbaColors": 31,
+      "alpha": [
+        0,
+        255
+      ],
+      "sha256": "7707cb5a7cdd469bad16f7781d8c722ff82061eca5aeee3d2754b9a67eda694b"
+    },
+    "preset-14": {
+      "file": "preset-14-v1.png",
+      "size": [
+        48,
+        72
+      ],
+      "bbox": [
+        8,
+        10,
+        40,
+        72
+      ],
+      "rgbaColors": 32,
+      "alpha": [
+        0,
+        255
+      ],
+      "sha256": "5275e55aa1dc91496089158d8ec73d1646fc51fa2733bd106c34f89ac714aa70"
+    },
+    "preset-15": {
+      "file": "preset-15-v1.png",
+      "size": [
+        48,
+        72
+      ],
+      "bbox": [
+        8,
+        10,
+        40,
+        72
+      ],
+      "rgbaColors": 31,
+      "alpha": [
+        0,
+        255
+      ],
+      "sha256": "84433589e894a691fa8ad531e8a55e07c43a1ae5d17116985f2c5a8bad0d0735"
+    },
+    "preset-16": {
+      "file": "preset-16-v1.png",
+      "size": [
+        48,
+        72
+      ],
+      "bbox": [
+        8,
+        10,
+        39,
+        72
+      ],
+      "rgbaColors": 32,
+      "alpha": [
+        0,
+        255
+      ],
+      "sha256": "cdacea2af95482446f2872ba5743b7d84c2b730afa387972150964dc95241c5c"
+    },
+    "preset-17": {
+      "file": "preset-17-v1.png",
+      "size": [
+        48,
+        72
+      ],
+      "bbox": [
+        8,
+        10,
+        40,
+        72
+      ],
+      "rgbaColors": 31,
+      "alpha": [
+        0,
+        255
+      ],
+      "sha256": "0e949e091adfe088a6eb0d6a9fd311cb2fd8002e23a579ae158fb0ae2c933066"
+    },
+    "preset-18": {
+      "file": "preset-18-v1.png",
+      "size": [
+        48,
+        72
+      ],
+      "bbox": [
+        8,
+        10,
+        40,
+        72
+      ],
+      "rgbaColors": 31,
+      "alpha": [
+        0,
+        255
+      ],
+      "sha256": "bff3a0e17f63af5ce3eaa594bae1e33c1408809fdb151f2ebfdb424855c9660b"
+    },
+    "preset-19": {
+      "file": "preset-19-v1.png",
+      "size": [
+        48,
+        72
+      ],
+      "bbox": [
+        8,
+        10,
+        40,
+        72
+      ],
+      "rgbaColors": 30,
+      "alpha": [
+        0,
+        255
+      ],
+      "sha256": "bc1449a52cecc881020a64b5bac8dc0768a9f2ca79a59037c77a14c8acdbf73e"
+    },
+    "preset-20": {
+      "file": "preset-20-v1.png",
+      "size": [
+        48,
+        72
+      ],
+      "bbox": [
+        8,
+        10,
+        40,
+        72
+      ],
+      "rgbaColors": 32,
+      "alpha": [
+        0,
+        255
+      ],
+      "sha256": "ab616b92175415cf91075d97259b796a18979e3a33b795e730be7fe90fad2b51"
+    },
+    "preset-21": {
+      "file": "preset-21-v1.png",
+      "size": [
+        48,
+        72
+      ],
+      "bbox": [
+        8,
+        10,
+        40,
+        72
+      ],
+      "rgbaColors": 32,
+      "alpha": [
+        0,
+        255
+      ],
+      "sha256": "71718ec4b161711df54841d282fa25a75f0239e40bc1c21f0f7464297e9eb1df"
+    },
+    "preset-22": {
+      "file": "preset-22-v1.png",
+      "size": [
+        48,
+        72
+      ],
+      "bbox": [
+        8,
+        10,
+        40,
+        72
+      ],
+      "rgbaColors": 31,
+      "alpha": [
+        0,
+        255
+      ],
+      "sha256": "d28c073df9e9050c759b3c8b1c626c80809d44734b556c8cd721d9b4bdf06344"
+    },
+    "preset-23": {
+      "file": "preset-23-v1.png",
+      "size": [
+        48,
+        72
+      ],
+      "bbox": [
+        8,
+        10,
+        40,
+        72
+      ],
+      "rgbaColors": 32,
+      "alpha": [
+        0,
+        255
+      ],
+      "sha256": "ec2c6f600bafe98ed39ddd639f6f6aa76c61bf0b6bbf5da182cac84991d32131"
+    },
+    "preset-24": {
+      "file": "preset-24-v1.png",
+      "size": [
+        48,
+        72
+      ],
+      "bbox": [
+        8,
+        10,
+        40,
+        72
+      ],
+      "rgbaColors": 31,
+      "alpha": [
+        0,
+        255
+      ],
+      "sha256": "9759e1ab224ae2f3c8b548e91058813e19fcab41899c2a7daae14058af9f5a7d"
+    },
+    "preset-25": {
+      "file": "preset-25-v1.png",
+      "size": [
+        48,
+        72
+      ],
+      "bbox": [
+        8,
+        10,
+        39,
+        72
+      ],
+      "rgbaColors": 27,
+      "alpha": [
+        0,
+        255
+      ],
+      "sha256": "5c543ac0cc1c29caa739017c5f4c0b9a3cf2f56adb36da0a2dbd382edf021cab"
+    },
+    "preset-26": {
+      "file": "preset-26-v1.png",
+      "size": [
+        48,
+        72
+      ],
+      "bbox": [
+        8,
+        10,
+        40,
+        72
+      ],
+      "rgbaColors": 31,
+      "alpha": [
+        0,
+        255
+      ],
+      "sha256": "79dfceea912c030de975b6fb47773e77d97a2629d5cd486244f5d1ee3eb9ce94"
+    },
+    "preset-27": {
+      "file": "preset-27-v1.png",
+      "size": [
+        48,
+        72
+      ],
+      "bbox": [
+        8,
+        10,
+        40,
+        72
+      ],
+      "rgbaColors": 31,
+      "alpha": [
+        0,
+        255
+      ],
+      "sha256": "cb2437edf8dbb96aa144266cf446a929135c96ce6449bd9b292d43aef694466a"
+    },
+    "preset-28": {
+      "file": "preset-28-v1.png",
+      "size": [
+        48,
+        72
+      ],
+      "bbox": [
+        8,
+        10,
+        40,
+        72
+      ],
+      "rgbaColors": 32,
+      "alpha": [
+        0,
+        255
+      ],
+      "sha256": "a053450fdcc3c77e9f029a1e6ddec83bfea856e5a23f1f8f4cebcda401b7d56f"
+    },
+    "preset-29": {
+      "file": "preset-29-v1.png",
+      "size": [
+        48,
+        72
+      ],
+      "bbox": [
+        8,
+        10,
+        40,
+        72
+      ],
+      "rgbaColors": 32,
+      "alpha": [
+        0,
+        255
+      ],
+      "sha256": "c6e14e771efca342d4007be2db35cd3a8041735e540d13221558b1e365176787"
+    }
+  }
+}

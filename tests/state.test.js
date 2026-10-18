@@ -32,3 +32,10 @@ test('스토리지가 예외를 던져도 조용히 실패', () => {
   assert.equal(loadProfile(brokenStorage), null);
   assert.equal(saveProfile({ nickname: '민우', charId: 0 }, brokenStorage), false);
 });
+
+
+test('30번째 캐릭터를 저장·복원하고 범위를 벗어난 ID는 복원하지 않는다',()=>{
+  const s=memStorage();saveProfile({nickname:'하객삼십',charId:29},s);
+  assert.deepEqual(loadProfile(s),{nickname:'하객삼십',charId:29});
+  for(const charId of [-1,30,1.5]){saveProfile({nickname:'하객삼십',charId},s);assert.equal(loadProfile(s),null);}
+});

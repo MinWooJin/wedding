@@ -106,9 +106,133 @@ const SKIN = ['#f6d3b3', '#c58c5a'];
 const CLOTH = ['#e74c3c', '#3498db', '#2ecc71', '#f1c40f', '#9b59b6', '#e67e22', '#1abc9c', '#e84393', '#34495e', '#f8f8f8'];
 const PANTS = ['#2c3e50', '#4a3b2a', '#5d6d7e'];
 
-export const PRESET_COUNT = 10;
+const EXTRA_PRESETS = [
+  {
+    "hair": "#242e3e",
+    "skin": "#f6d3b3",
+    "cloth": "#76896b",
+    "pants": "#554737"
+  },
+  {
+    "hair": "#a5a5a3",
+    "skin": "#e9c6a4",
+    "cloth": "#54555c",
+    "pants": "#393a43"
+  },
+  {
+    "hair": "#65452f",
+    "skin": "#ddb28c",
+    "cloth": "#557e79",
+    "pants": "#ad9570"
+  },
+  {
+    "hair": "#252521",
+    "skin": "#f1c49e",
+    "cloth": "#ad865e",
+    "pants": "#555c3f"
+  },
+  {
+    "hair": "#282423",
+    "skin": "#885a40",
+    "cloth": "#8eafbf",
+    "pants": "#4c5055"
+  },
+  {
+    "hair": "#795137",
+    "skin": "#f6d3b3",
+    "cloth": "#aa8db3",
+    "pants": "#89718e"
+  },
+  {
+    "hair": "#4e372c",
+    "skin": "#efc5a3",
+    "cloth": "#91ae9c",
+    "pants": "#708a75"
+  },
+  {
+    "hair": "#28282c",
+    "skin": "#efc3a7",
+    "cloth": "#39465a",
+    "pants": "#303d51"
+  },
+  {
+    "hair": "#93908d",
+    "skin": "#dfb995",
+    "cloth": "#b3838d",
+    "pants": "#55545a"
+  },
+  {
+    "hair": "#47312b",
+    "skin": "#f4c9ab",
+    "cloth": "#d7a085",
+    "pants": "#a67862"
+  },
+  {
+    "hair": "#6b5b50",
+    "skin": "#edc4a3",
+    "cloth": "#8e4b59",
+    "pants": "#42434b"
+  },
+  {
+    "hair": "#676563",
+    "skin": "#d9aa86",
+    "cloth": "#43576a",
+    "pants": "#55616b"
+  },
+  {
+    "hair": "#8b684a",
+    "skin": "#f2c6a4",
+    "cloth": "#b49d7e",
+    "pants": "#c3b497"
+  },
+  {
+    "hair": "#bd9658",
+    "skin": "#f1ceb0",
+    "cloth": "#745268",
+    "pants": "#4a3c46"
+  },
+  {
+    "hair": "#392b27",
+    "skin": "#b9825d",
+    "cloth": "#ba795f",
+    "pants": "#7e5143"
+  },
+  {
+    "hair": "#27252a",
+    "skin": "#edc2a1",
+    "cloth": "#8eaebc",
+    "pants": "#7695a5"
+  },
+  {
+    "hair": "#2e2c30",
+    "skin": "#f0c8aa",
+    "cloth": "#9eaaa5",
+    "pants": "#76837f"
+  },
+  {
+    "hair": "#bdb8af",
+    "skin": "#e5c2a3",
+    "cloth": "#b4bea2",
+    "pants": "#d8c9b5"
+  },
+  {
+    "hair": "#8b8881",
+    "skin": "#d4a681",
+    "cloth": "#c7b99a",
+    "pants": "#505b65"
+  },
+  {
+    "hair": "#724031",
+    "skin": "#ebbf9d",
+    "cloth": "#d8c593",
+    "pants": "#725844"
+  }
+];
+
+export const PRESET_COUNT = 10 + EXTRA_PRESETS.length;
 
 export function presetColors(i) {
+  if (i >= 10 && i < PRESET_COUNT) return { ...EXTRA_PRESETS[i - 10] };
   return { hair: HAIR[i % 5], skin: SKIN[Math.floor(i / 5) % 2], cloth: CLOTH[i % CLOTH.length], pants: PANTS[i % 3] };
 }
 

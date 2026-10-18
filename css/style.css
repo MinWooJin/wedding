@@ -104,6 +104,13 @@ input::placeholder, textarea::placeholder { color: #888477; }
   background: linear-gradient(180deg, #e9f2dc, #d7e8c6); border-radius: 16px;
 }
 .picker .btn { width: 44px; height: 44px; padding: 0; display: inline-flex; align-items: center; justify-content: center; }
+.picker-all { display: block; width: 100%; margin: 10px 0; }
+.character-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(44px, 1fr)); gap: 6px; max-height: 248px; overflow-y: auto; padding: 8px; margin: 10px 0; border: 1px solid var(--border); border-radius: 14px; background: #f5f0e6; }
+.character-option { min-width: 44px; min-height: 76px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; padding: 4px 0; border: 1px solid transparent; border-radius: 10px; background: #fffdf8; color: #59694e; font: inherit; cursor: pointer; }
+.character-option canvas { display: block; width: 32px; height: 48px; image-rendering: pixelated; }
+.character-option span { font-size: 13px; line-height: 1.3; }
+.character-option[aria-pressed="true"] { border-color: #a95670; background: #f5e5e9; box-shadow: inset 0 0 0 1px #a95670; }
+.character-option:focus-visible { outline: 3px solid #59694e; outline-offset: 1px; }
 #viewer { position: absolute; inset: 0; background: #000; display: flex; align-items: center; justify-content: center; }
 #viewer canvas { max-width: 100%; max-height: 100%; }
 #viewer .close { position: absolute; top: calc(12px + env(safe-area-inset-top)); right: 12px; }

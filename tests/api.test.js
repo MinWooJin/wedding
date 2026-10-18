@@ -13,13 +13,16 @@ test('전송이 지연되면 중단하고 재시도 가능한 오류를 반환�
   assert.equal(result.ok, false);
 });
 
-test('validateEntry: 닉네임 2~10, 메시지 1~100, characterId 0~9', () => {
+test('validateEntry: 닉네임 2~10, 메시지 1~100, characterId 0~29', () => {
   assert.equal(validateEntry({ nickname: '민우', characterId: 0, message: '축하해요' }).ok, true);
+  assert.equal(validateEntry({ nickname: '민우', characterId: 10, message: '축하해요' }).ok, true);
+  assert.equal(validateEntry({ nickname: '민우', characterId: 29, message: '축하해요' }).ok, true);
+  assert.equal(validateEntry({ nickname: '민우', characterId: -1, message: '축하해요' }).ok, false);
   assert.deepEqual(validateEntry({ nickname: '민우', characterId: 0, message: '  축하해요  ' }).value,
     { nickname: '민우', characterId: 0, message: '축하해요' });
   assert.match(validateEntry({ nickname: '민우', characterId: 0, message: '  ' }).error, /메시지/);
   assert.match(validateEntry({ nickname: '민우', characterId: 0, message: 'a'.repeat(101) }).error, /100자/);
-  assert.match(validateEntry({ nickname: '민우', characterId: 10, message: 'hi' }).error, /캐릭터/);
+  assert.match(validateEntry({ nickname: '민우', characterId: 30, message: 'hi' }).error, /캐릭터/);
   assert.match(validateEntry({ nickname: 'a', characterId: 0, message: 'hi' }).error, /닉네임/);
 });
 

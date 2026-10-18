@@ -184,3 +184,12 @@ test('자동 말풍선: 동시에 두 개까지, 실제 하객은 자기 메시�
     assert.equal(friend.character.bubble, `${[...message].slice(0, 30).join('')}…`);
   } finally { Math.random = random; }
 });
+
+
+test('30번째 캐릭터로 쓴 방명록 하객은 기존10번째 그림으로 바뀌지 않는다',()=>{
+  const frame={w:48,h:72},newSet={down:[frame],left:[frame],right:[frame],up:[frame]};
+  const hub=createHub({config:DEFAULT_CONFIG,profile:{nickname:'나'},assets:{objects,characters:{'preset-29':newSet}},data:{messages:[]}});
+  hub.setGuests([{n:'추가하객',c:29,m:'축하합니다',t:1}]);
+  const guest=hub.npcs.find(n=>n.entry?.n==='추가하객');
+  assert.ok(guest);assert.equal(guest.character.sprites,newSet);
+});

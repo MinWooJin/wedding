@@ -8,7 +8,7 @@ AI로 생성한 원본 이미지를 게임 규격 PNG로 변환하고 assets/man
   python tools/prepare_assets.py --skip-existing  # 기존 최종 PNG 유지, 새 파일만 변환
 
 입력 폴더 구조(raw/):
-  raw/characters/preset-0.png ... preset-9.png, groom.png, bride.png   정면 전신 1장(배경은 단색 또는 투명)
+  raw/characters/preset-0.png ... preset-29.png, groom.png, bride.png   정면 전신 1장(배경은 단색 또는 투명)
   raw/characters/<name>-sheet.png                                    선택: 3열×4행 걷기 시트(열: idle/걷기A/걷기B, 행: down/left/right/up)
   raw/tiles/G.png W.png P.png H.png F.png D.png K.png R.png S.png M.png 정사각 타일(이음새 없는 패턴 권장)
   raw/tiles/wedding/<name>.png                                      WEDDING_TILES의 이름 → assets/tiles/<ID>.png
@@ -32,7 +32,7 @@ OUT = ROOT / "assets"
 TILE = 32
 CHAR_W, CHAR_H = 48, 72
 
-CHARACTERS = [f"preset-{i}" for i in range(10)] + ["groom", "bride", "couple"]
+CHARACTERS = [f"preset-{i}" for i in range(30)] + ["groom", "bride", "couple"]
 TILES = list("GWPHFDKRSM")
 # 웨딩 타일: raw/tiles/wedding/<이름>.png → assets/tiles/<ID>.png
 WEDDING_TILES = {
@@ -143,8 +143,10 @@ def main():
     manifest_path = OUT / "manifest.json"
     if manifest_path.exists():
         previous = json.loads(manifest_path.read_text(encoding="utf-8"))
-        if "files" in previous:
-            manifest["files"] = previous["files"]
+        # Keep versioned/selectable/ceremony registrations from later art rounds.
+        manifest = previous
+        for category in ["characters", "tiles", "objects", "maps"]:
+            manifest.setdefault(category, [])
     for sub in ["characters", "tiles", "objects", "maps"]:
         (OUT / sub).mkdir(parents=True, exist_ok=True)
 
@@ -205,6 +207,8 @@ def main():
         manifest["maps"].append(sid)
         print("map", sid, f"{w}x{h}")
 
+    for category in ["characters", "tiles", "objects", "maps"]:
+        manifest[category] = list(dict.fromkeys(manifest[category]))
     (OUT / "manifest.json").write_text(json.dumps(manifest, ensure_ascii=False, indent=2), encoding="utf-8")
     print("manifest:", OUT / "manifest.json")
 

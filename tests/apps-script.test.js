@@ -2,6 +2,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
+import { PRESET_COUNT } from '../js/sprites/characters.js';
 
 const source = readFileSync(new URL('../apps-script/Code.gs', import.meta.url), 'utf8');
 
@@ -25,11 +26,11 @@ function makeApp({ token = '' } = {}) {
     Utilities: { formatDate: () => '20270109' },
   };
   const code = source.replace("const PUBLIC_TOKEN = '';", `const PUBLIC_TOKEN = ${JSON.stringify(token)};`);
-  const fn = new Function(...Object.keys(env), `${code}\nreturn { doGet, doPost };`);
+  const fn = new Function(...Object.keys(env), `${code}\nreturn { doGet, doPost, presetCount: PRESET_COUNT };`);
   const app = fn(...Object.values(env));
   const post = (body) => JSON.parse(app.doPost({ postData: { contents: JSON.stringify(body) } }).text);
   const get = (parameter) => JSON.parse(app.doGet(parameter ? { parameter } : undefined).text);
-  return { rows, cache, post, get };
+  return { rows, cache, post, get, presetCount: app.presetCount };
 }
 
 test('글 저장 → 목록 반환. 닉네임당 최신 1건, 메시지 있는 행 우선, 글 없는 사람·숨김 행 제외', () => {
@@ -75,12 +76,12 @@ test('도배 방지: 같은 기기는 1분 1건, 하루 10건. 다른 기기는 
   assert.equal(app.rows.filter((r) => r[3] === '').length, 1, '한 번만 기록');
 });
 
-test('검증: 닉네임 2~10, 메시지 1~100, 캐릭터 0~9, 잘못된 JSON, 기기 토큰 없으면 닉네임 기준 제한', () => {
+test('검증: 닉네임 2~10, 메시지 1~100, 캐릭터 0~29, 잘못된 JSON, 기기 토큰 없으면 닉네임 기준 제한', () => {
   const app = makeApp();
   assert.equal(app.post({ nickname: '민', characterId: 1, message: 'x' }).error, '닉네임은 2~10자');
   assert.equal(app.post({ nickname: '민우', characterId: 1, message: '' }).error, '메시지는 1~100자');
   assert.equal(app.post({ nickname: '민우', characterId: 1, message: 'x'.repeat(101) }).error, '메시지는 1~100자');
-  assert.equal(app.post({ nickname: '민우', characterId: 12, message: 'x' }).error, '캐릭터 오류');
+  assert.equal(app.post({ nickname: '민우', characterId: 30, message: 'x' }).error, '캐릭터 오류');
   assert.equal(app.post({ nickname: '민우', characterId: 1, message: 'x', guestId: 'bad id!' }).ok, true, '형식이 틀린 토큰은 무시');
   assert.equal(app.rows[1][4], '', '무시된 토큰은 저장하지 않는다');
   assert.equal(app.post({ nickname: '민우', characterId: 1, message: 'y' }).error, '1분에 한 번만 남길 수 있어요', '닉네임 기준 제한');
@@ -134,4 +135,14 @@ test('목록은 캐시되고 글이 들어오면 캐시가 지워진다', () => 
   app.post({ nickname: '민우', characterId: 1, message: 'x', guestId: 'guest-gggggggg' });
   assert.ok(!app.cache.has('list'));
   assert.equal(app.get().length, 1);
+});
+
+
+test('추가 캐릭터 10번·29번은 저장·조회하고 30번·음수·소수는 거절한다',()=>{
+  const app=makeApp();assert.equal(app.presetCount,PRESET_COUNT,'브라우저와 서버의 선택 개수가 같아야 한다');
+  for(const id of [10,29]){
+    assert.equal(app.post({nickname:'하객'+id,characterId:id,message:'축하합니다',guestId:'preset-guest-'+id}).ok,true);
+  }
+  assert.deepEqual(app.get().map(e=>e.c).sort((a,b)=>a-b),[10,29]);
+  for(const id of [-1,30,1.5])assert.equal(app.post({nickname:'오류하객',characterId:id,message:'축하합니다'}).error,'캐릭터 오류');
 });

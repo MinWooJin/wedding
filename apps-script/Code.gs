@@ -22,6 +22,7 @@
 //   - 목록(doGet)은 CACHE_SEC 동안 캐시해 시트 읽기를 줄인다. 글이 들어오면 캐시를 지운다.
 
 const SHEET_NAME = 'guestbook';
+const PRESET_COUNT = 30;       // 클라이언트와 동일: 캐릭터 ID 0~29
 const MAX_ROWS = 300;          // 목록으로 내려줄 최근 행 수(닉네임 중복 제거 전)
 const COOLDOWN_SEC = 60;       // 같은 기기의 글 간격
 const VISIT_SEC = 3600;        // 같은 기기의 입장 등록 간격
@@ -139,7 +140,7 @@ function doPost(e) {
   if (nickLen < 2 || nickLen > 10) return json_({ ok: false, error: '닉네임은 2~10자' });
   if (!isVisit && (msgLen < 1 || msgLen > 100)) return json_({ ok: false, error: '메시지는 1~100자' });
   if (isVisit && msgLen > 0) return json_({ ok: false, error: '잘못된 요청' });
-  if (!Number.isInteger(characterId) || characterId < 0 || characterId > 9) return json_({ ok: false, error: '캐릭터 오류' });
+  if (!Number.isInteger(characterId) || characterId < 0 || characterId >= PRESET_COUNT) return json_({ ok: false, error: '캐릭터 오류' });
 
   const cache = CacheService.getScriptCache();
   const who = guestId || `nick:${readCell_(nickname)}`; // 기기 토큰이 없으면 닉네임 기준으로라도 제한

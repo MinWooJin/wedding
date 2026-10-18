@@ -1,0 +1,250 @@
+{
+  "mode": "built-in image_gen",
+  "date": "2026-10-18",
+  "definitions": [
+    {
+      "id": 10,
+      "description": "young East Asian man, neat dark navy short side-part hair, sage green tailored blazer, ivory shirt, dark brown trousers, brown loafers",
+      "colors": {
+        "hair": "#242e3e",
+        "skin": "#f6d3b3",
+        "cloth": "#76896b",
+        "pants": "#554737"
+      }
+    },
+    {
+      "id": 11,
+      "description": "older East Asian man, silver gray neatly parted hair, fine round glasses, charcoal gray suit, ivory shirt, muted plum tie, black shoes",
+      "colors": {
+        "hair": "#a5a5a3",
+        "skin": "#e9c6a4",
+        "cloth": "#54555c",
+        "pants": "#393a43"
+      }
+    },
+    {
+      "id": 12,
+      "description": "young East Asian man, thick curly chestnut hair, muted teal knitted polo shirt, beige trousers, brown shoes",
+      "colors": {
+        "hair": "#65452f",
+        "skin": "#ddb28c",
+        "cloth": "#557e79",
+        "pants": "#ad9570"
+      }
+    },
+    {
+      "id": 13,
+      "description": "East Asian man, smooth black swept-back hair, camel waistcoat over ivory long sleeve shirt, deep olive trousers, neat leather shoes",
+      "colors": {
+        "hair": "#252521",
+        "skin": "#f1c49e",
+        "cloth": "#ad865e",
+        "pants": "#555c3f"
+      }
+    },
+    {
+      "id": 14,
+      "description": "young Black man with deep brown skin, short neatly cropped black curls, powder blue open collar shirt, charcoal trousers, black loafers",
+      "colors": {
+        "hair": "#282423",
+        "skin": "#885a40",
+        "cloth": "#8eafbf",
+        "pants": "#4c5055"
+      }
+    },
+    {
+      "id": 15,
+      "description": "young East Asian woman, chestnut chin-length softly curled bob, muted lilac knee-length dress with short sleeves, small earrings, low beige heels",
+      "colors": {
+        "hair": "#795137",
+        "skin": "#f6d3b3",
+        "cloth": "#aa8db3",
+        "pants": "#89718e"
+      }
+    },
+    {
+      "id": 16,
+      "description": "young East Asian woman, dark brown half-up braided long hair, mint green modest midi dress, fine cream collar, beige flats",
+      "colors": {
+        "hair": "#4e372c",
+        "skin": "#efc5a3",
+        "cloth": "#91ae9c",
+        "pants": "#708a75"
+      }
+    },
+    {
+      "id": 17,
+      "description": "East Asian woman, black cropped pixie haircut, midnight navy pantsuit over rose blouse, pointed black flats",
+      "colors": {
+        "hair": "#28282c",
+        "skin": "#efc3a7",
+        "cloth": "#39465a",
+        "pants": "#303d51"
+      }
+    },
+    {
+      "id": 18,
+      "description": "older East Asian woman, soft gray short waved bob, dusty rose tailored jacket and charcoal knee-length skirt, small pearl earrings, dark low heels",
+      "colors": {
+        "hair": "#93908d",
+        "skin": "#dfb995",
+        "cloth": "#b3838d",
+        "pants": "#55545a"
+      }
+    },
+    {
+      "id": 19,
+      "description": "young East Asian woman, long dark brown wavy hair with side part, peach short-sleeve midi dress with narrow belt, cream low heels",
+      "colors": {
+        "hair": "#47312b",
+        "skin": "#f4c9ab",
+        "cloth": "#d7a085",
+        "pants": "#a67862"
+      }
+    },
+    {
+      "id": 20,
+      "description": "East Asian man, wavy ash brown hair with off-center part, burgundy blazer over beige shirt, dark charcoal trousers, brown shoes",
+      "colors": {
+        "hair": "#6b5b50",
+        "skin": "#edc4a3",
+        "cloth": "#8e4b59",
+        "pants": "#42434b"
+      }
+    },
+    {
+      "id": 21,
+      "description": "middle-aged man, salt-and-pepper short hair and tiny neatly trimmed beard, dark navy waistcoat and ivory shirt, muted blue tie, slate trousers",
+      "colors": {
+        "hair": "#676563",
+        "skin": "#d9aa86",
+        "cloth": "#43576a",
+        "pants": "#55616b"
+      }
+    },
+    {
+      "id": 22,
+      "description": "East Asian man, neat light brown short fringe haircut, light tan linen jacket over muted olive shirt, cream trousers, tan loafers",
+      "colors": {
+        "hair": "#8b684a",
+        "skin": "#f2c6a4",
+        "cloth": "#b49d7e",
+        "pants": "#c3b497"
+      }
+    },
+    {
+      "id": 23,
+      "description": "young woman, golden blonde blunt bob and small round glasses, deep plum modest coat dress, pale collar, dark tights and brown flats",
+      "colors": {
+        "hair": "#bd9658",
+        "skin": "#f1ceb0",
+        "cloth": "#745268",
+        "pants": "#4a3c46"
+      }
+    },
+    {
+      "id": 24,
+      "description": "woman with medium brown skin, dark curly shoulder-length hair, terracotta midi dress, tiny gold earrings, dark low heels",
+      "colors": {
+        "hair": "#392b27",
+        "skin": "#b9825d",
+        "cloth": "#ba795f",
+        "pants": "#7e5143"
+      }
+    },
+    {
+      "id": 25,
+      "description": "East Asian woman, shiny black high ponytail with small cream ribbon, light blue blazer and matching trousers, ivory top, white flats",
+      "colors": {
+        "hair": "#27252a",
+        "skin": "#edc2a1",
+        "cloth": "#8eaebc",
+        "pants": "#7695a5"
+      }
+    },
+    {
+      "id": 26,
+      "description": "young East Asian man, black center-parted soft hair, rectangular glasses, light gray suit, ivory shirt, muted green necktie, brown shoes",
+      "colors": {
+        "hair": "#2e2c30",
+        "skin": "#f0c8aa",
+        "cloth": "#9eaaa5",
+        "pants": "#76837f"
+      }
+    },
+    {
+      "id": 27,
+      "description": "elderly East Asian woman, silver white hair in a low chignon, elegant muted sage and cream Korean hanbok as a wedding guest, simple long skirt and tiny pearl brooch, no bridal veil",
+      "colors": {
+        "hair": "#bdb8af",
+        "skin": "#e5c2a3",
+        "cloth": "#b4bea2",
+        "pants": "#d8c9b5"
+      }
+    },
+    {
+      "id": 28,
+      "description": "older East Asian man, warm gray swept-back hair, fine mustache and rectangular glasses, cream jacket over muted blue vest, dark slate trousers, black shoes",
+      "colors": {
+        "hair": "#8b8881",
+        "skin": "#d4a681",
+        "cloth": "#c7b99a",
+        "pants": "#505b65"
+      }
+    },
+    {
+      "id": 29,
+      "description": "East Asian woman, dark auburn shoulder-length hair tucked behind one ear, pale yellow blouse with bow collar and chocolate brown midi skirt, small earrings, beige heels",
+      "colors": {
+        "hair": "#724031",
+        "skin": "#ebbf9d",
+        "cloth": "#d8c593",
+        "pants": "#725844"
+      }
+    }
+  ],
+  "prompts": {
+    "10": "Use case: stylized-concept. ONE isolated full-body selectable wedding guest avatar for an existing Korean pixel RPG, NOT a sprite sheet. Identity: young East Asian man, neat dark navy short side-part hair, sage green tailored blazer, ivory shirt, dark brown trousers, brown loafers. Front view looking toward viewer, relaxed friendly expression, neutral standing with both hands at sides, full head and both feet visible. Match genuine low-resolution pixel game art: dark brown 1px outline, 2.8-head-tall adult chibi proportions, small readable facial features, broad clean pixel clusters, restrained 31-color muted palette, clear clothes shapes rather than tiny ornate textures. Designed for final 48x72 pixel canvas, character silhouette about30x62 pixels, centered feet bottom, equal scale to other game guests. Transparent background with a tiny solid-pixel contact shadow only under shoes. No scene, floor, furniture, props, lettering, labels, logos, watermark, frame, gradient or antialiasing. Do not make a bride/groom or bridal gown. Exactly ONE person.",
+    "11": "Use case: stylized-concept. ONE isolated full-body selectable wedding guest avatar for an existing Korean pixel RPG, NOT a sprite sheet. Identity: older East Asian man, silver gray neatly parted hair, fine round glasses, charcoal gray suit, ivory shirt, muted plum tie, black shoes. Front view looking toward viewer, relaxed friendly expression, neutral standing with both hands at sides, full head and both feet visible. Match genuine low-resolution pixel game art: dark brown 1px outline, 2.8-head-tall adult chibi proportions, small readable facial features, broad clean pixel clusters, restrained 31-color muted palette, clear clothes shapes rather than tiny ornate textures. Designed for final 48x72 pixel canvas, character silhouette about30x62 pixels, centered feet bottom, equal scale to other game guests. Transparent background with a tiny solid-pixel contact shadow only under shoes. No scene, floor, furniture, props, lettering, labels, logos, watermark, frame, gradient or antialiasing. Do not make a bride/groom or bridal gown. Exactly ONE person.",
+    "12": "Use case: stylized-concept. ONE isolated full-body selectable wedding guest avatar for an existing Korean pixel RPG, NOT a sprite sheet. Identity: young East Asian man, thick curly chestnut hair, muted teal knitted polo shirt, beige trousers, brown shoes. Front view looking toward viewer, relaxed friendly expression, neutral standing with both hands at sides, full head and both feet visible. Match genuine low-resolution pixel game art: dark brown 1px outline, 2.8-head-tall adult chibi proportions, small readable facial features, broad clean pixel clusters, restrained 31-color muted palette, clear clothes shapes rather than tiny ornate textures. Designed for final 48x72 pixel canvas, character silhouette about30x62 pixels, centered feet bottom, equal scale to other game guests. Transparent background with a tiny solid-pixel contact shadow only under shoes. No scene, floor, furniture, props, lettering, labels, logos, watermark, frame, gradient or antialiasing. Do not make a bride/groom or bridal gown. Exactly ONE person.",
+    "13": "Use case: stylized-concept. ONE isolated full-body selectable wedding guest avatar for an existing Korean pixel RPG, NOT a sprite sheet. Identity: East Asian man, smooth black swept-back hair, camel waistcoat over ivory long sleeve shirt, deep olive trousers, neat leather shoes. Front view looking toward viewer, relaxed friendly expression, neutral standing with both hands at sides, full head and both feet visible. Match genuine low-resolution pixel game art: dark brown 1px outline, 2.8-head-tall adult chibi proportions, small readable facial features, broad clean pixel clusters, restrained 31-color muted palette, clear clothes shapes rather than tiny ornate textures. Designed for final 48x72 pixel canvas, character silhouette about30x62 pixels, centered feet bottom, equal scale to other game guests. Transparent background with a tiny solid-pixel contact shadow only under shoes. No scene, floor, furniture, props, lettering, labels, logos, watermark, frame, gradient or antialiasing. Do not make a bride/groom or bridal gown. Exactly ONE person.",
+    "14": "Use case: stylized-concept. ONE isolated selectable pixel-art wedding guest. young Black man with deep brown skin, short neatly cropped black curls, powder blue open collar shirt, charcoal trousers, black loafers. Front-facing, neutral friendly standing, hands at sides, full head and both feet. Genuine low-res Korean pixel RPG avatar, VERY LARGE HEAD (40% of total character height), short compact torso and legs, 2.5 heads tall; NOT a long-legged fashion figure. Brown1px outlines, clear eyes and mouth, broad crisp pixel clusters, restrained31color palette. Intended final48x72 canvas, silhouette30~36px wide and62px tall. True transparent background, NO halo or glow, only tiny solid contact shadow. No scene, floor, props, lettering, labels, logos, grid, gradient or antialiasing. One person only, not a bride/groom.",
+    "15": "Use case: stylized-concept. ONE isolated selectable pixel-art wedding guest. young East Asian woman, chestnut chin-length softly curled bob, muted lilac knee-length dress with short sleeves, small earrings, low beige heels. Front-facing, neutral friendly standing, hands at sides, full head and both feet. Genuine low-res Korean pixel RPG avatar, VERY LARGE HEAD (40% of total character height), short compact torso and legs, 2.5 heads tall; NOT a long-legged fashion figure. Brown1px outlines, clear eyes and mouth, broad crisp pixel clusters, restrained31color palette. Intended final48x72 canvas, silhouette30~36px wide and62px tall. True transparent background, NO halo or glow, only tiny solid contact shadow. No scene, floor, props, lettering, labels, logos, grid, gradient or antialiasing. One person only, not a bride/groom.",
+    "16": "Use case: stylized-concept. ONE isolated selectable pixel-art wedding guest. young East Asian woman, dark brown half-up braided long hair, mint green modest midi dress, fine cream collar, beige flats. Front-facing, neutral friendly standing, hands at sides, full head and both feet. Genuine low-res Korean pixel RPG avatar, VERY LARGE HEAD (40% of total character height), short compact torso and legs, 2.5 heads tall; NOT a long-legged fashion figure. Brown1px outlines, clear eyes and mouth, broad crisp pixel clusters, restrained31color palette. Intended final48x72 canvas, silhouette30~36px wide and62px tall. True transparent background, NO halo or glow, only tiny solid contact shadow. No scene, floor, props, lettering, labels, logos, grid, gradient or antialiasing. One person only, not a bride/groom.",
+    "17": "Use case: stylized-concept. ONE isolated selectable pixel-art wedding guest. East Asian woman, black cropped pixie haircut, midnight navy pantsuit over rose blouse, pointed black flats. Front-facing, neutral friendly standing, hands at sides, full head and both feet. Genuine low-res Korean pixel RPG avatar, VERY LARGE HEAD (40% of total character height), short compact torso and legs, 2.5 heads tall; NOT a long-legged fashion figure. Brown1px outlines, clear eyes and mouth, broad crisp pixel clusters, restrained31color palette. Intended final48x72 canvas, silhouette30~36px wide and62px tall. True transparent background, NO halo or glow, only tiny solid contact shadow. No scene, floor, props, lettering, labels, logos, grid, gradient or antialiasing. One person only, not a bride/groom.",
+    "18": "Use case: stylized-concept. ONE full-body selectable guest for a Korean pixel-art wedding RPG. older East Asian woman, soft gray short waved bob, dusty rose tailored jacket and charcoal knee-length skirt, small pearl earrings, dark low heels. Front view, gently smiling, standing with hands at sides, full hair and both shoes visible. Cute compact adult avatar: head is40% of full height (2.5 heads tall), short torso and legs, never long fashion proportions. Genuine low-resolution broad pixel clusters, dark brown1px outlines, simple expressive face, muted31color palette, readable at final48x72px with62px silhouette and bottom foot anchor. TRUE transparent background, NO dark backdrop, halo or glow. Only tiny hard-pixel ground contact shadow. No other people, props, scene, text, numbers, grids, labels, logos, watermark, gradients or antialiasing. No bridal gown.",
+    "19": "Use case: stylized-concept. ONE full-body selectable guest for a Korean pixel-art wedding RPG. young East Asian woman, long dark brown wavy hair with side part, peach short-sleeve midi dress with narrow belt, cream low heels. Front view, gently smiling, standing with hands at sides, full hair and both shoes visible. Cute compact adult avatar: head is40% of full height (2.5 heads tall), short torso and legs, never long fashion proportions. Genuine low-resolution broad pixel clusters, dark brown1px outlines, simple expressive face, muted31color palette, readable at final48x72px with62px silhouette and bottom foot anchor. TRUE transparent background, NO dark backdrop, halo or glow. Only tiny hard-pixel ground contact shadow. No other people, props, scene, text, numbers, grids, labels, logos, watermark, gradients or antialiasing. No bridal gown.",
+    "20": "Use case: stylized-concept. ONE full-body selectable guest for a Korean pixel-art wedding RPG. East Asian man, wavy ash brown hair with off-center part, burgundy blazer over beige shirt, dark charcoal trousers, brown shoes. Front view, gently smiling, standing with hands at sides, full hair and both shoes visible. Cute compact adult avatar: head is40% of full height (2.5 heads tall), short torso and legs, never long fashion proportions. Genuine low-resolution broad pixel clusters, dark brown1px outlines, simple expressive face, muted31color palette, readable at final48x72px with62px silhouette and bottom foot anchor. TRUE transparent background, NO dark backdrop, halo or glow. Only tiny hard-pixel ground contact shadow. No other people, props, scene, text, numbers, grids, labels, logos, watermark, gradients or antialiasing. No bridal gown.",
+    "21": "Use case: stylized-concept. ONE full-body selectable guest for a Korean pixel-art wedding RPG. middle-aged man, salt-and-pepper short hair and tiny neatly trimmed beard, dark navy waistcoat and ivory shirt, muted blue tie, slate trousers. Front view, gently smiling, standing with hands at sides, full hair and both shoes visible. Cute compact adult avatar: head is40% of full height (2.5 heads tall), short torso and legs, never long fashion proportions. Genuine low-resolution broad pixel clusters, dark brown1px outlines, simple expressive face, muted31color palette, readable at final48x72px with62px silhouette and bottom foot anchor. TRUE transparent background, NO dark backdrop, halo or glow. Only tiny hard-pixel ground contact shadow. No other people, props, scene, text, numbers, grids, labels, logos, watermark, gradients or antialiasing. No bridal gown.",
+    "22": "Use case: stylized-concept. ONE isolated full-body guest avatar for a cozy Korean pixel-art wedding game: East Asian man, neat light brown short fringe haircut, light tan linen jacket over muted olive shirt, cream trousers, tan loafers. Front-facing, warm expression, relaxed hands at sides, entire head and feet inside image. Cute compact adult chibi proportions with head40% of body height, short legs and torso, 2.5heads tall. Broad deliberate pixel clusters, 1px dark brown outline, muted31color palette, no antialiasing, easy to read as48x72px sprite. Pure actual TRANSPARENT background, no black backdrop or halo/glow, only a tiny solid pixel shoe contact shadow. No other people, furniture, handbag, text, names, numbering, grid, logos or watermark. Not bridal.",
+    "23": "Use case: stylized-concept. ONE isolated full-body guest avatar for a cozy Korean pixel-art wedding game: young woman, golden blonde blunt bob and small round glasses, deep plum modest coat dress, pale collar, dark tights and brown flats. Front-facing, warm expression, relaxed hands at sides, entire head and feet inside image. Cute compact adult chibi proportions with head40% of body height, short legs and torso, 2.5heads tall. Broad deliberate pixel clusters, 1px dark brown outline, muted31color palette, no antialiasing, easy to read as48x72px sprite. Pure actual TRANSPARENT background, no black backdrop or halo/glow, only a tiny solid pixel shoe contact shadow. No other people, furniture, handbag, text, names, numbering, grid, logos or watermark. Not bridal.",
+    "24": "Use case: stylized-concept. ONE isolated full-body guest avatar for a cozy Korean pixel-art wedding game: woman with medium brown skin, dark curly shoulder-length hair, terracotta midi dress, tiny gold earrings, dark low heels. Front-facing, warm expression, relaxed hands at sides, entire head and feet inside image. Cute compact adult chibi proportions with head40% of body height, short legs and torso, 2.5heads tall. Broad deliberate pixel clusters, 1px dark brown outline, muted31color palette, no antialiasing, easy to read as48x72px sprite. Pure actual TRANSPARENT background, no black backdrop or halo/glow, only a tiny solid pixel shoe contact shadow. No other people, furniture, handbag, text, names, numbering, grid, logos or watermark. Not bridal.",
+    "25": "Use case: stylized-concept. ONE isolated full-body guest avatar for a cozy Korean pixel-art wedding game: East Asian woman, shiny black high ponytail with small cream ribbon, light blue blazer and matching trousers, ivory top, white flats. Front-facing, warm expression, relaxed hands at sides, entire head and feet inside image. Cute compact adult chibi proportions with head40% of body height, short legs and torso, 2.5heads tall. Broad deliberate pixel clusters, 1px dark brown outline, muted31color palette, no antialiasing, easy to read as48x72px sprite. Pure actual TRANSPARENT background, no black backdrop or halo/glow, only a tiny solid pixel shoe contact shadow. No other people, furniture, handbag, text, names, numbering, grid, logos or watermark. Not bridal.",
+    "26": "Use case: stylized-concept. ONE individual full-body selectable wedding guest pixel-art game avatar: young East Asian man, black center-parted soft hair, rectangular glasses, light gray suit, ivory shirt, muted green necktie, brown shoes. Straight front view, kind friendly face appropriate to described age, neutral upright pose, hands by sides, entire head and feet inside frame. Compact chibi adult proportions head40% of totalheight (2.5 heads tall), short torso and legs. Match a cute Korean wedding pixel guestbook: dark brown1px outline, large clear dark eyes, 31-color muted palette, broad crisp pixel clusters, no antialiasing or smooth gradients. Final48x72 game sprite with62px tall body. True transparent background, no halo/glow or backdrop, tiny hard contact shadow under shoes only. No extra person, held object, furniture, lettering, labels, numerals, logo, border, grid or watermark. Wedding GUEST, not a bride or groom; no veil or bridal bouquet.",
+    "27": "Use case: stylized-concept. ONE individual full-body selectable wedding guest pixel-art game avatar: elderly East Asian woman, silver white hair in a low chignon, elegant muted sage and cream Korean hanbok as a wedding guest, simple long skirt and tiny pearl brooch, no bridal veil. Straight front view, kind friendly face appropriate to described age, neutral upright pose, hands by sides, entire head and feet inside frame. Compact chibi adult proportions head40% of totalheight (2.5 heads tall), short torso and legs. Match a cute Korean wedding pixel guestbook: dark brown1px outline, large clear dark eyes, 31-color muted palette, broad crisp pixel clusters, no antialiasing or smooth gradients. Final48x72 game sprite with62px tall body. True transparent background, no halo/glow or backdrop, tiny hard contact shadow under shoes only. No extra person, held object, furniture, lettering, labels, numerals, logo, border, grid or watermark. Wedding GUEST, not a bride or groom; no veil or bridal bouquet.",
+    "28": "Use case: stylized-concept. ONE individual full-body selectable wedding guest pixel-art game avatar: older East Asian man, warm gray swept-back hair, fine mustache and rectangular glasses, cream jacket over muted blue vest, dark slate trousers, black shoes. Straight front view, kind friendly face appropriate to described age, neutral upright pose, hands by sides, entire head and feet inside frame. Compact chibi adult proportions head40% of totalheight (2.5 heads tall), short torso and legs. Match a cute Korean wedding pixel guestbook: dark brown1px outline, large clear dark eyes, 31-color muted palette, broad crisp pixel clusters, no antialiasing or smooth gradients. Final48x72 game sprite with62px tall body. True transparent background, no halo/glow or backdrop, tiny hard contact shadow under shoes only. No extra person, held object, furniture, lettering, labels, numerals, logo, border, grid or watermark. Wedding GUEST, not a bride or groom; no veil or bridal bouquet.",
+    "29": "Use case: stylized-concept. ONE individual full-body selectable wedding guest pixel-art game avatar: East Asian woman, dark auburn shoulder-length hair tucked behind one ear, pale yellow blouse with bow collar and chocolate brown midi skirt, small earrings, beige heels. Straight front view, kind friendly face appropriate to described age, neutral upright pose, hands by sides, entire head and feet inside frame. Compact chibi adult proportions head40% of totalheight (2.5 heads tall), short torso and legs. Match a cute Korean wedding pixel guestbook: dark brown1px outline, large clear dark eyes, 31-color muted palette, broad crisp pixel clusters, no antialiasing or smooth gradients. Final48x72 game sprite with62px tall body. True transparent background, no halo/glow or backdrop, tiny hard contact shadow under shoes only. No extra person, held object, furniture, lettering, labels, numerals, logo, border, grid or watermark. Wedding GUEST, not a bride or groom; no veil or bridal bouquet."
+  },
+  "generatedSources": {
+    "10": "C:/Users/alsdn/.codex/generated_images/01a14444-1937-7270-a423-d475ec6ab0bb/exec-d438c0ae-7046-4be5-88aa-6fc0751c23d5.png",
+    "11": "C:/Users/alsdn/.codex/generated_images/01a14444-1937-7270-a423-d475ec6ab0bb/exec-a6cde7ef-0782-4a80-8778-049bfdd652c5.png",
+    "12": "C:/Users/alsdn/.codex/generated_images/01a14444-1937-7270-a423-d475ec6ab0bb/exec-c634d3b0-f80d-4ca5-b4e3-44b246027a00.png",
+    "13": "C:/Users/alsdn/.codex/generated_images/01a14444-1937-7270-a423-d475ec6ab0bb/exec-5a644320-6586-4d89-b203-cc231cf44b73.png",
+    "14": "C:/Users/alsdn/.codex/generated_images/01a14444-1937-7270-a423-d475ec6ab0bb/exec-6c19de89-da10-45dd-a189-3fc9d4ea6419.png",
+    "15": "C:/Users/alsdn/.codex/generated_images/01a14444-1937-7270-a423-d475ec6ab0bb/exec-59c098c5-2c8c-4a34-a0ba-091a7a823d22.png",
+    "16": "C:/Users/alsdn/.codex/generated_images/01a14444-1937-7270-a423-d475ec6ab0bb/exec-1d86b5ed-f9db-4208-ba03-7588bb97afb4.png",
+    "17": "C:/Users/alsdn/.codex/generated_images/01a14444-1937-7270-a423-d475ec6ab0bb/exec-f53fe4b2-0482-4ad5-844b-0c926286907b.png",
+    "18": "C:/Users/alsdn/.codex/generated_images/01a14444-1937-7270-a423-d475ec6ab0bb/exec-fa18f731-e4af-4058-82eb-0243ea6c72fa.png",
+    "19": "C:/Users/alsdn/.codex/generated_images/01a14444-1937-7270-a423-d475ec6ab0bb/exec-33da53b1-e6f6-4e24-99b2-874e88fcd1c5.png",
+    "20": "C:/Users/alsdn/.codex/generated_images/01a14444-1937-7270-a423-d475ec6ab0bb/exec-36e12bee-5911-4510-86a1-16f44214989e.png",
+    "21": "C:/Users/alsdn/.codex/generated_images/01a14444-1937-7270-a423-d475ec6ab0bb/exec-d6c38e52-3c6b-4739-81fd-7c795a330248.png",
+    "22": "C:/Users/alsdn/.codex/generated_images/01a14444-1937-7270-a423-d475ec6ab0bb/exec-30a3a6fa-d02d-468c-a0f2-9746b3a3d2a8.png",
+    "23": "C:/Users/alsdn/.codex/generated_images/01a14444-1937-7270-a423-d475ec6ab0bb/exec-b5216325-9654-4bad-8cd3-49bb6315f3ca.png",
+    "24": "C:/Users/alsdn/.codex/generated_images/01a14444-1937-7270-a423-d475ec6ab0bb/exec-c713d80f-bee9-49a1-a4bb-4418dea304a6.png",
+    "25": "C:/Users/alsdn/.codex/generated_images/01a14444-1937-7270-a423-d475ec6ab0bb/exec-07cc8af1-daef-44ac-9f0a-93aa6febce8a.png",
+    "26": "C:/Users/alsdn/.codex/generated_images/01a14444-1937-7270-a423-d475ec6ab0bb/exec-0d220d72-5039-4f4d-b662-ddd8cc5b621d.png",
+    "27": "C:/Users/alsdn/.codex/generated_images/01a14444-1937-7270-a423-d475ec6ab0bb/exec-92c8da18-fdf7-4e7a-9ceb-b6920e77a549.png",
+    "28": "C:/Users/alsdn/.codex/generated_images/01a14444-1937-7270-a423-d475ec6ab0bb/exec-3637851c-0005-4cbf-b63b-6e109d3c4a53.png",
+    "29": "C:/Users/alsdn/.codex/generated_images/01a14444-1937-7270-a423-d475ec6ab0bb/exec-1d28a431-39ac-41bf-adc5-b01c65ae84eb.png"
+  }
+}
