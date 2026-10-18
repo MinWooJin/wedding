@@ -41,11 +41,12 @@ export class CeremonyScene extends Scene {
     super.enter(player, spawn, game);
     this.t = this.game.renderer?.reducedMotion ? END_T : 0; // 움직임 줄이기면 마지막 장면만
     this.mountPanel();
+    this.game.bgm?.play('march', { restart: true }); // 예식장에서는 결혼 행진곡
   }
 
-  leave() { this.panel?.remove(); this.panel = null; }
+  leave() { this.panel?.remove(); this.panel = null; this.game.bgm?.play('garden'); }
 
-  replay() { this.t = this.game.renderer?.reducedMotion ? END_T : 0; }
+  replay() { this.t = this.game.renderer?.reducedMotion ? END_T : 0; this.game.bgm?.play('march', { restart: true }); }
 
   /** 아래 안내 카드(DOM). 지도 API 대신 약도 그림을 보여 주고 길찾기는 지도 앱으로 넘긴다. */
   mountPanel() {
