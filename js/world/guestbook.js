@@ -19,11 +19,10 @@ const PATH_START = 5;
 const ROWS = [
   'H'.repeat(COLS),
   ...Array.from({ length: LAST - 1 }, (_, i) => rowAt(i + 1)),
-  'HHHHHNHHHHH',
+  'H'.repeat(COLS),
 ];
 // 우체통(64×96)과 두 사람을 돌길(5열, 가운데 x176)에 맞춰 대칭으로 놓는다. 반 칸 좌표라 우체통은 충돌 없이 두고 설 자리를 따로 준다.
 const MAILBOX = { tx: 4.5, ty: 2, solid: false, stand: { tx: 5, ty: 5 } };
-const EXIT = { tx: 5, ty: LAST };
 const SPAWN = { tx: 5, ty: LAST - 1 };
 const GROOM_POS = { tx: 3.5, ty: 4 }, BRIDE_POS = { tx: 6.5, ty: 4 }; // 우체통 양옆(x128·x224)
 const POST_COOLDOWN_MS = 60_000;
@@ -68,9 +67,9 @@ export class GuestbookScene extends Scene {
           '멀리서 보내 주신 마음도 오래 소중히 간직할게요.',
         ]),
       ],
-      entrances: [{ ...EXIT, to: 'hub', spawn: HUB_DOORS.guestbook.back }],
+      // 걸어서 나가는 문·매트는 없다(하단 "정원으로" 버튼). 이 항목은 그 버튼이 돌아갈 광장 자리만 알려 준다(화면 밖 좌표).
+      entrances: [{ tx: -9, ty: -9, to: 'hub', spawn: HUB_DOORS.guestbook.back }],
       objects: [
-        { id: 'door', sprite: 'door', floor: true, ...EXIT },
         // 배경 그림(assets.maps.guestbook)에 나무·장미·라벤더·버드배스·길·꽃띠가 들어 있으면 장식 오브젝트는 올리지 않는다.
         ...(game.assets?.maps?.guestbook ? [] : gardenDecor(game.assets)),
         { id: 'mailbox', sprite: game.assets?.objects?.['wedding-mailbox'] ? 'wedding-mailbox' : 'mailbox', label: '축하 편지 쓰기', ...MAILBOX, interact: () => this.openForm(game) },

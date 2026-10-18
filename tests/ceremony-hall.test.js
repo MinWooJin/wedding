@@ -2,7 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { sceneAt, along, SEATS, STAGE, END_T, HALL, guestPose } from '../js/world/ceremony-timeline.js';
-import { framesFromStrip, assetFilename } from '../js/assets.js';
+import { framesFromStrip, assetFilename, LANDMARK_SCALE } from '../js/assets.js';
 import { createHub, HUB_DOORS, HUB_SPAWN } from '../js/world/hub.js';
 import { createInfo } from '../js/world/info.js';
 import { ceremonyArt, CeremonyScene } from '../js/world/ceremony.js';
@@ -80,10 +80,12 @@ test('예식 그림이 모두 있으면 안내소는 예식 안내관, 하나라
 
 test('입구 랜드마크는 문·통로를 막지 않고 발 기준이 타일 바닥에 맞는다', () => {
   const objects = Object.fromEntries(manifest.objects.map((id) => { const d = png(`objects/${assetFilename(manifest, 'objects', id)}`); return [id, { w: d.w, h: d.h }]; }));
+  // 브라우저 로더처럼 광장 그림의 0.4배 판(폭 96 유지)을 함께 둔다
+  for (const id of Object.keys(objects)) if (id.startsWith('landmark-')) objects[`${id}-small`] = { w: objects[id].w, h: Math.round(objects[id].h * LANDMARK_SCALE) };
   const hub = createHub({ config: DEFAULT_CONFIG, profile: { nickname: '나' }, assets: { objects }, data: { messages: [] } });
   const lm = Object.fromEntries(['gallery', 'gifts', 'info'].map((id) => [id, hub.objects.find((o) => o.id === `sign-${id}`)]));
-  assert.deepEqual(Object.values(lm).map((o) => o.sprite), ['landmark-gallery', 'landmark-gifts', 'landmark-info']);
-  assert.deepEqual([lm.gallery.bottom, lm.gifts.bottom, lm.info.bottom], [672, 832, 832], '20행·25행 바닥(그림 아래 문구 자리)');
+  assert.deepEqual(Object.values(lm).map((o) => o.sprite), ['landmark-gallery-small', 'landmark-gifts-small', 'landmark-info-small']);
+  assert.deepEqual([lm.gallery.bottom, lm.gifts.bottom, lm.info.bottom], [672, 768, 768], '20행·23행 바닥(작아진 그림을 광장 가운데로 모음)');
   assert.deepEqual(['guestbook', 'gallery', 'gifts', 'info'].map((id) => hub.objects.find((o) => o.id === `sign-${id}`).caption), ['방명록', '갤러리', '마음 보내기', '예식장'], '상자 없는 문구');
   assert.ok(lm.gallery.bottom + 3 + 16 < lm.info.drawY, '위 줄 문구가 아래 줄 그림과 겹치지 않는다');
   assert.ok(Object.values(lm).every((o) => !o.label && o.interact && o.instant), '이름표 없이 그림을 누르면 바로 이동');
@@ -92,7 +94,7 @@ test('입구 랜드마크는 문·통로를 막지 않고 발 기준이 타일 �
   assert.equal(lm.gallery.tx - 6, 1, '위 줄은 왼쪽 1~3열·오른쪽 7~9열 칸');
   assert.deepEqual([lm.gifts.tx, lm.info.tx], [1, 7], '아래 줄도 같은 칸');
   for (const d of Object.values(HUB_DOORS)) {
-    assert.equal(hub.isSolidTile(d.door.tx, d.door.ty), false);
+    assert.equal(hub.isSolidTile(d.back.tx, d.back.ty), false, `${d.label}에서 돌아올 자리는 비어 있다`);
     assert.ok(findPath(hub.map.w, hub.map.h, (x, y) => hub.isSolidTile(x, y), HUB_SPAWN, d.back), `${d.label} 앞까지 걸어갈 수 있다`);
   }
   for (let ty = 18; ty <= 25; ty++) assert.equal(hub.isSolidTile(5, ty), false, '가운데 통로');

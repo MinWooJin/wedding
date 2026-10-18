@@ -9,9 +9,8 @@ import { formatDate } from '../config.js';
 const ROWS = [
   'KKKKKKKKKKK',
   ...Array.from({ length: 10 }, () => 'KMMMMMMMMMK'),
-  'KKKKKMKKKKK',
+  'KKKKKKKKKKK',
 ];
-const EXIT = { tx: 5, ty: 11 };
 
 function accountHtml(label, acc) {
   if (!acc || !acc.number) return '';
@@ -87,7 +86,7 @@ export function showGiftsNotice(game) {
   const text = game.config.gifts?.notice;
   if (!text) return;
   const { close } = showOverlay(game, {
-    title: '마음 전하는 곳',
+    title: '마음 보내기',
     html: `<p class="gifts-notice">${esc(text)}</p>`,
     buttons: [
       { label: '축하 남기기', primary: true, onClick: () => { close(true); game.openGuestbook?.(); return true; } },
@@ -111,9 +110,9 @@ export function createGifts(game) {
       '함께 마음을 나눠 주시는 것만으로도 참 감사해요.',
       decline ? '축의금은 정중히 사양해요. 따뜻한 축하만으로 충분해요.' : '보내 주신 축하를 소중히 간직할게요.',
     ])],
-    entrances: [{ ...EXIT, to: 'hub', spawn: HUB_DOORS.gifts.back }],
+    // 걸어서 나가는 문·매트는 없다(하단 "정원으로" 버튼). 이 항목은 그 버튼이 돌아갈 광장 자리만 알려 준다(화면 밖 좌표).
+    entrances: [{ tx: -9, ty: -9, to: 'hub', spawn: HUB_DOORS.gifts.back }],
     objects: [
-      { id: 'door', sprite: 'door', floor: true, ...EXIT },
       // 축의금을 사양하면 계좌 대신 두 사람의 편지(안내판)와 축하 우체통을 둔다
       ...(decline ? [
         { id: 'notice', sprite: 'welcome-board', label: '두 사람의 편지', tx: 2, ty: 2, interact: () => showGiftsNotice(game) },

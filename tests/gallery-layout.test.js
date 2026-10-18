@@ -7,7 +7,7 @@ test('사진 0장: 최소 복도, 액자 없음', () => {
   assert.equal(L.rows.length, 12, '이젤·두 사람·입구가 겹치지 않는 높이');
   assert.equal(L.rows[0], 'KKKKKKKKKKK');
   assert.equal(L.rows[1], 'KDDDDDDDDDK');
-  assert.equal(L.rows.at(-1), 'KKKKKDKKKKK');
+  assert.equal(L.rows.at(-1), 'KKKKKKKKKKK');
   assert.deepEqual(L.frames, []);
   assert.deepEqual(L.exit, { tx: 5, ty: 11 });
   assert.deepEqual(L.spawn, { tx: 5, ty: 10 });

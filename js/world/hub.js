@@ -22,6 +22,7 @@ const crossRow = 'HNNNNNNNNNH';
 const CROSS_A = GARDEN_ROWS + 1;   // 18 교차로
 const BLOCK_A = CROSS_A + 1;       // 19 문: 방명록/갤러리
 const CROSS_B = BLOCK_A + 3;       // 22 교차로
+export const GUIDE_TILE = { tx: 3, ty: CROSS_A }; // 버진로드가 광장과 만나는 곳의 왼쪽(잔디 쪽 장미 덤불에 가리지 않는 자리)
 const BLOCK_B = CROSS_B + 1;       // 23 문: 마음 전하기/예식 안내소
 export const HUB_ROWS = [
   'HHHHHHHHHHH',
@@ -97,8 +98,8 @@ function gardenEdges(assets, treeCols) {
  */
 export const ENTRANCE_SLOT = { w: 96, h: 112 };
 const SLOT_COLS = { left: 1, right: 7 };
-// 그림 아래에 문구가 들어가도록 아래 줄을 한 칸 내렸다(위 줄 바닥 20행, 아래 줄 바닥 25행).
-const SLOT_BOTTOM_ROW = { top: 20, bottom: 25 };
+// 그림을 0.4배로 줄인 뒤 아래 줄이 광장 끝에 붙어 보여 두 줄을 광장 가운데로 모았다(위 줄 바닥 20행, 아래 줄 바닥 23행).
+const SLOT_BOTTOM_ROW = { top: 20, bottom: 23 };
 const LANDMARKS = {
   guestbook: { sprite: 'landmark-guestbook', col: 'left', row: 'top', fallback: 'welcome-board', caption: '방명록' },
   gallery: { sprite: 'landmark-gallery', col: 'right', row: 'top', caption: '갤러리' },
@@ -218,11 +219,8 @@ export class HubScene extends Scene {
     }) : null;
     const hosts = joined ? [joined] : [groom, bride];
     const greet = (c) => () => c.say(pick(cfg.greetings));
-    // Keep the guide in the open gap between the two entrance signs, with the
-    // name below their captions rather than hidden behind the guestbook plaque.
-    const guidePos = standPos(5, CROSS_A);
-    guidePos.y += 8; // Leave a clear gap below the plaques for the name tag.
-    guidePos.x -= 8; // 갤러리 랜드마크(6~8열)가 커져서 왼쪽으로 조금 비켜 선다(웰컴보드와도 겹치지 않음).
+    // 안내인은 버진로드 끝 왼쪽(3열), 광장 첫 줄에 선다(길 한가운데를 막지 않게).
+    const guidePos = standPos(GUIDE_TILE.tx, GUIDE_TILE.ty);
     const guide = new Character({ sprites: characterSet(game.assets, 'preset-4', presetSprites(4)), name: '정원 안내인', ...guidePos });
     const guideNpc = { character: guide, solid: false, interact: () => showOverlay(game, {
       title: '작은 정원에 오신 걸 환영해요',

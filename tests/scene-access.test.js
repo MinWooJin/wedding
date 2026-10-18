@@ -35,6 +35,6 @@ test('실제 PNG 크기 기준으로 모든 상호작용 오브젝트와 입구�
       const target = o.stand ?? scene.standTileFor(o.tx, o.ty + Math.ceil(o.spr.h / 32) - 1, Math.ceil(o.spr.w / 32));
       assert.ok(pathTo(target), `${scene.id}/${o.id} 접근 불가`);
     }
-    for (const entrance of scene.entrances) assert.ok(pathTo(entrance), `${scene.id} 출입구 접근 불가`);
+    for (const entrance of scene.entrances.filter((e) => e.tx >= 0)) assert.ok(pathTo(entrance), `${scene.id} 출입구 접근 불가`);
   }
 });

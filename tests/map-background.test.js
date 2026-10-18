@@ -35,11 +35,9 @@ test('그려진 광장의 리셉션을 그대로 통과해 네 문까지 이동�
   assert.deepEqual([...sprites].sort(), ['landmark-gallery', 'landmark-gifts', 'landmark-guestbook', 'landmark-info'], '입구 광장에는 네 공간의 그림만(케이크·리셉션 소품·문 매트 없음)');
   assert.ok(hub.hosts.every((c) => c.y === CEREMONY.feetY && c.y >= 128 + 15 && c.y <= 164), '발이 단상 윗면(y128~164) 안');
   const leftSign = hub.objects.find((o) => o.id === 'sign-guestbook');
-  const rightSign = hub.objects.find((o) => o.id === 'sign-gallery');
-  const guideBounds = hub.guide.drawPos();
-  assert.ok(guideBounds.x > leftSign.tx * 32 + leftSign.spr.w, '안내인은 왼쪽 표지판 바깥');
-  assert.ok(guideBounds.x + guideBounds.w < rightSign.tx * 32, '오른쪽 표지판도 가리지 않는다');
-  assert.ok(hub.guide.y + 2 > leftSign.drawY, '이름은 표지판 캡션 아래에 표시');
+  const guideTx = Math.floor(hub.guide.x / 32);
+  assert.ok(guideTx === 3 || guideTx === 7, '안내인은 버진로드(4~6열) 바로 옆 잔디');
+  assert.ok(hub.guide.y < leftSign.bottom - 32, '광장 그림 줄보다 위(버진로드 끝)에 선다');
   assert.equal(hub.npcs.find((n) => n.character === hub.guide).solid, false, '안내인이 중앙 통행을 막지 않는다');
   for (const n of hub.guestMap.values()) {
     const { ty, tx } = n.wander.home;
@@ -66,7 +64,7 @@ test('배경 그림이 있으면 방명록 정원은 장식 오브젝트를 올�
   const bg = { width: 352, height: 448 };
   const scene = createGuestbook({ config: DEFAULT_CONFIG, profile: { nickname: '나' }, assets: { objects, maps: { guestbook: bg } }, data: { messages: [] } });
   assert.equal(scene.bgImage, bg);
-  assert.deepEqual([...new Set(scene.objects.map((o) => o.sprite))].sort(), ['door', 'wedding-mailbox']);
+  assert.deepEqual([...new Set(scene.objects.map((o) => o.sprite))].sort(), ['wedding-mailbox']);
   assert.equal(scene.npcs.length, 2, '두 사람은 그대로');
   scene.setEntries(Array.from({ length: 60 }, (_, i) => ({ n: `하객${i}`, c: 0, m: '축하해요', t: i })));
   const flowers = scene.objects.filter((o) => o.id.startsWith('flower'));

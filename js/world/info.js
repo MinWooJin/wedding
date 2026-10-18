@@ -11,7 +11,7 @@ import { CeremonyScene, ceremonyArt } from './ceremony.js';
 const ROWS = [
   'KKKKKKKKKKK',
   ...Array.from({ length: 10 }, () => 'KDDDDDDDDDK'),
-  'KKKKKDKKKKK',
+  'KKKKKKKKKKK',
 ];
 
 let shownOnce = false;
@@ -63,9 +63,9 @@ export function createInfo(game) {
       '멀리서 보내 주시는 축하도 감사히 간직할게요.',
       '캘린더에 날짜를 저장해 두셔도 좋아요.',
     ])],
-    entrances: [{ tx: 5, ty: 11, to: 'hub', spawn: HUB_DOORS.info.back }],
+    // 걸어서 나가는 문·매트는 없다(하단 "정원으로" 버튼). 이 항목은 그 버튼이 돌아갈 광장 자리만 알려 준다(화면 밖 좌표).
+    entrances: [{ tx: -9, ty: -9, to: 'hub', spawn: HUB_DOORS.info.back }],
     objects: [
-      { id: 'door', sprite: 'door', floor: true, tx: 5, ty: 11 },
       { id: 'board', sprite: 'board', label: '가족분 안내', tx: 1, ty: 1, interact: () => showOverlay(game, {
         title: '오시는 길', html: kv([['지하철', w.transport.subway], ['버스', w.transport.bus], ['주차', w.transport.parking]]) || '<p class="muted">준비 중</p>' }) },
       { id: 'map', sprite: 'mapframe', label: '지도', tx: 4, ty: 1, interact: () => showOverlay(game, {

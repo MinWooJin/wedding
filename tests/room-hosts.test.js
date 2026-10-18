@@ -38,7 +38,7 @@ test('네 공간의 신랑/신부는 서로 다른 대사를 말하고 통로를
     const point = scene.tileOf(npc.character.x, npc.character.y);
     assert.notEqual(point.tx, 5, '가운데 통로 밖에 배치');
     assert.ok(findPath(scene.map.w, scene.map.h, (x, y) => scene.isSolidTile(x, y), scene.spawn, point));
-    for (const door of scene.entrances) assert.ok(findPath(scene.map.w, scene.map.h, (x, y) => scene.isSolidTile(x, y), scene.spawn, door));
+    for (const door of scene.entrances.filter((e) => e.tx >= 0)) assert.ok(findPath(scene.map.w, scene.map.h, (x, y) => scene.isSolidTile(x, y), scene.spawn, door));
   }
   const gallery = createGallery(game(['a.jpg', 'b.jpg', 'c.jpg', 'd.jpg', 'e.jpg']));
   const npc = gallery.npcs[0]; npc.interact();

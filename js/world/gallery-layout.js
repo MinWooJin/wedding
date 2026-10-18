@@ -5,7 +5,7 @@ export function galleryLayout(n) {
   const h = Math.max(12, 1 + pairs * 4 + 2);
   const rows = ['KKKKKKKKKKK'];
   for (let y = 1; y < h - 1; y++) rows.push('KDDDDDDDDDK');
-  rows.push('KKKKKDKKKKK');
+  rows.push('KKKKKKKKKKK'); // 아래 벽도 막는다(나가기는 하단 "정원으로" 버튼)
   const frames = [];
   for (let i = 0; i < n; i++) {
     const ty = 1 + Math.floor(i / 2) * 4;

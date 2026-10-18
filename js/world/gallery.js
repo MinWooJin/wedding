@@ -35,7 +35,6 @@ export class GalleryScene extends Scene {
     }
     const images = files.map((f) => { const img = new Image(); img.decoding = 'async'; img.src = `gallery/${f}`; return img; });
     const objects = [
-      { id: 'door', sprite: 'door', floor: true, ...L.exit },
       ...L.frames.map((f) => ({
         id: `frame${f.index}`, sprite: 'frame', tx: f.tx, ty: f.ty, stand: f.stand,
         interact: () => openViewer(game, images, f.index),
@@ -57,7 +56,8 @@ export class GalleryScene extends Scene {
         '사진 속 이야기를 하나씩 들려드릴게요.',
         '마음에 드는 사진이 있으면 오래 보고 가세요.',
       ])],
-      entrances: [{ ...L.exit, to: 'hub', spawn: HUB_DOORS.gallery.back }],
+      // 걸어서 나가는 문·매트는 없다(하단 "정원으로" 버튼). 이 항목은 그 버튼이 돌아갈 광장 자리만 알려 준다(화면 밖 좌표).
+      entrances: [{ tx: -9, ty: -9, to: 'hub', spawn: HUB_DOORS.gallery.back }],
       objects,
     });
     this.frames = L.frames;
