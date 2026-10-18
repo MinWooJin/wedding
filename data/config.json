@@ -7,12 +7,24 @@
       {
         "role": "아버지",
         "name": "진영근",
-        "phone": ""
+        "phone": "",
+        "account": {
+          "bank": "",
+          "number": "",
+          "holder": "진영근",
+          "kakaopay": ""
+        }
       },
       {
         "role": "어머니",
         "name": "박순이",
-        "phone": ""
+        "phone": "",
+        "account": {
+          "bank": "",
+          "number": "",
+          "holder": "박순이",
+          "kakaopay": ""
+        }
       }
     ],
     "account": {
@@ -31,12 +43,24 @@
       {
         "role": "아버지",
         "name": "한성훈",
-        "phone": ""
+        "phone": "",
+        "account": {
+          "bank": "",
+          "number": "",
+          "holder": "한성훈",
+          "kakaopay": ""
+        }
       },
       {
         "role": "어머니",
         "name": "이주영",
-        "phone": ""
+        "phone": "",
+        "account": {
+          "bank": "",
+          "number": "",
+          "holder": "이주영",
+          "kakaopay": ""
+        }
       }
     ],
     "account": {
