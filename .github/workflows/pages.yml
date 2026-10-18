@@ -1,0 +1,65 @@
+# GitHub Pages 배포: 저장소 전체가 아니라 청첩장에 필요한 파일만 올린다.
+# 설정 → Pages → Source 를 "GitHub Actions" 로 두면 main 에 푸시할 때마다 자동 배포된다.
+# 제외: docs/, tests/, tools/, apps-script/, raw/, 작업 기록 이미지·JSON (저장소에는 남지만 사이트에는 없음)
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Collect site files
+        run: |
+          set -euo pipefail
+          mkdir -p _site
+          cp index.html .nojekyll _site/
+          cp -r common groom bride classic css js data gallery _site/
+          mkdir -p _site/assets
+          cp assets/manifest.json _site/assets/
+          cp -r assets/characters assets/tiles assets/objects assets/maps _site/assets/
+          # 비교·보고용 파일은 사이트에서 제외
+          find _site -name '*.md' -delete
+          find _site -name 'round*' -delete
+          echo "site size:" && du -sh _site && find _site -type f | wc -l
+      - name: Check referenced files exist
+        run: |
+          set -euo pipefail
+          node -e '
+            const fs = require("fs");
+            const m = JSON.parse(fs.readFileSync("_site/assets/manifest.json", "utf8"));
+            const file = (cat, n) => m.files?.[cat]?.[n] ?? `${n}.png`;
+            const tileFile = { Q: "X1", Y: "X2", V: "X3", Z: "X4" };
+            let missing = [];
+            for (const cat of ["characters", "objects", "maps"]) for (const n of m[cat] ?? []) if (!fs.existsSync(`_site/assets/${cat}/${file(cat, n)}`)) missing.push(`${cat}/${n}`);
+            for (const n of m.tiles ?? []) { const t = tileFile[n] ?? n; if (!fs.existsSync(`_site/assets/tiles/${file("tiles", t)}`)) missing.push(`tiles/${n}`); }
+            for (const p of ["_site/common/index.html", "_site/groom/index.html", "_site/bride/index.html", "_site/classic/app.js", "_site/data/config.json", "_site/js/main.js", "_site/css/style.css"]) if (!fs.existsSync(p)) missing.push(p);
+            if (missing.length) { console.error("missing:", missing); process.exit(1); }
+            console.log("all referenced files present");
+          '
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
