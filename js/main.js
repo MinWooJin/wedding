@@ -2,7 +2,7 @@ import { Game } from './game.js';
 import { loadConfig } from './config.js';
 import { loadProfile, saveProfile, getGuestId } from './state.js';
 import { loadAssets } from './assets.js';
-import { fetchMessages, postVisit } from './api.js';
+import { fetchMessages, postVisit, checkNickname } from './api.js';
 import { showIntro } from './ui/intro.js';
 import { createHud } from './ui/hud.js';
 import { createHub } from './world/hub.js';
@@ -28,8 +28,10 @@ document.title = `${config.groom.name} ♥ ${config.bride.name} 결혼합니다`
 let profile = loadProfile();
 await showCover(document.getElementById('intro'), config, assetsReady, !!profile);
 const [assets, gallery] = await Promise.all([assetsReady, galleryReady]);
+const guestId = getGuestId(); // 서버 도배 방지·닉네임 소유 확인용 기기 토큰
+const nicknameChecker = config.guestbookApi ? (nickname) => checkNickname(config.guestbookApi, nickname, guestId) : null;
 if (!profile) {
-  profile = await showIntro(document.getElementById('intro'), config, assets);
+  profile = await showIntro(document.getElementById('intro'), config, assets, null, { checkNickname: nicknameChecker });
   saveProfile(profile);
 }
 
@@ -45,7 +47,8 @@ const game = new Game({
   ui: {},
 });
 game.gallery = Array.isArray(gallery) ? gallery : [];
-game.guestId = getGuestId(); // 서버 도배 방지용 기기 토큰
+game.guestId = guestId;
+game.checkNickname = nicknameChecker;
 game.data = { messages: config.guestbookApi ? [] : readPreview() };
 game.openGuestbook = () => game.sceneById('guestbook').openForm(game);
 game.openMessages = () => game.sceneById('guestbook').openList();

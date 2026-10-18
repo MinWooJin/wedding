@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { validateEntry, fetchMessages, postMessage, postVisit } from '../js/api.js';
+import { validateEntry, fetchMessages, postMessage, postVisit, checkNickname } from '../js/api.js';
 
 test('상태 포함 조회는 정상 빈 목록과 실패를 구분한다', async () => {
   assert.deepEqual(await fetchMessages('u', { withStatus: true, fetchImpl: async () => ({ ok: true, json: async () => [] }) }), { ok: true, entries: [] });
@@ -39,6 +39,17 @@ test('postVisit: type=visit로 빈 메시지 POST, URL 없으면 호출 안 함'
   seen = null;
   assert.equal((await postVisit('', { nickname: '민우', characterId: 2 }, { fetchImpl: f })).ok, false);
   assert.equal(seen, null);
+});
+
+test('checkNickname: GET ?action=check, 결과 전달, 실패하면 ok:false(막지 않음)', async () => {
+  let url;
+  const ok = await checkNickname('https://x/exec', '민 우', 'guest-1234abcd', { fetchImpl: async (u) => { url = u; return { ok: true, json: async () => ({ ok: true, available: false }) }; } });
+  assert.deepEqual(ok, { ok: true, available: false });
+  const q = new URL(url).searchParams;
+  assert.deepEqual([q.get('action'), q.get('nickname'), q.get('guestId')], ['check', '민 우', 'guest-1234abcd']);
+  assert.deepEqual(await checkNickname('', '민우', 'g'), { ok: false });
+  assert.deepEqual(await checkNickname('https://x/exec', '민우', 'g', { fetchImpl: async () => { throw new Error('offline'); } }), { ok: false });
+  assert.deepEqual(await checkNickname('https://x/exec', '민우', 'g', { fetchImpl: async () => ({ ok: true, json: async () => ({ ok: false }) }) }), { ok: false });
 });
 
 test('postMessage/postVisit: 기기 토큰과 공개 토큰은 있을 때만 본문에 붙인다', async () => {

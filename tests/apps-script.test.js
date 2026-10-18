@@ -28,11 +28,11 @@ function makeApp({ token = '' } = {}) {
   const fn = new Function(...Object.keys(env), `${code}\nreturn { doGet, doPost };`);
   const app = fn(...Object.values(env));
   const post = (body) => JSON.parse(app.doPost({ postData: { contents: JSON.stringify(body) } }).text);
-  const get = () => JSON.parse(app.doGet().text);
+  const get = (parameter) => JSON.parse(app.doGet(parameter ? { parameter } : undefined).text);
   return { rows, cache, post, get };
 }
 
-test('글 저장 → 목록 반환. 닉네임당 최신 1건, 메시지 있는 행 우선, 숨김 행 제외', () => {
+test('글 저장 → 목록 반환. 닉네임당 최신 1건, 메시지 있는 행 우선, 글 없는 사람·숨김 행 제외', () => {
   const app = makeApp();
   assert.deepEqual(app.get(), []);
   assert.equal(app.post({ nickname: '민우', characterId: 1, message: '축하해', guestId: 'guest-aaaaaaaa' }).ok, true);
@@ -46,9 +46,10 @@ test('글 저장 → 목록 반환. 닉네임당 최신 1건, 메시지 있는 �
   assert.deepEqual(list.map((e) => [e.n, e.c, e.m]), [['새암', 2, '행복해'], ['민우', 3, '축하해']], '입장 기록은 캐릭터만 갱신');
   assert.ok(list.every((e) => Object.keys(e).sort().join() === 'c,m,n,t'), 'guestId·hidden은 내려주지 않는다');
   app.rows[1][5] = true; app.cache.clear();
-  assert.deepEqual(app.get().map((e) => [e.n, e.m]), [['새암', '행복해'], ['민우', '']], 'hidden 체크한 글은 빠지고, 입장 기록만 남은 사람은 메시지 없는 하객으로 남는다');
-  app.rows[2][5] = 'TRUE'; app.cache.clear();
-  assert.deepEqual(app.get().map((e) => e.n), ['새암'], '입장 행까지 숨기면 완전히 빠진다');
+  assert.deepEqual(app.get().map((e) => [e.n, e.m]), [['새암', '행복해']], 'hidden 체크한 글은 빠지고, 입장 기록만 남은 사람은 목록에 나오지 않는다');
+  app.cache.clear();
+  app.post({ type: 'visit', nickname: '구경꾼', characterId: 4, message: '', guestId: 'guest-hhhhhhhh' });
+  assert.deepEqual(app.get().map((e) => e.n), ['새암'], '입장만 한 사람은 광장·목록에 없다');
 });
 
 test('수식 주입: = + - @ 로 시작하는 글은 앞에 \' 를 붙여 저장하고 읽을 때 벗긴다', () => {
@@ -65,7 +66,7 @@ test('도배 방지: 같은 기기는 1분 1건, 하루 10건. 다른 기기는 
   const g = { guestId: 'guest-dddddddd' };
   assert.equal(app.post({ nickname: '민우', characterId: 1, message: '1', ...g }).ok, true);
   assert.equal(app.post({ nickname: '민우', characterId: 1, message: '2', ...g }).error, '1분에 한 번만 남길 수 있어요');
-  assert.equal(app.post({ nickname: '민우', characterId: 1, message: '2', guestId: 'guest-eeeeeeee' }).ok, true, '다른 기기');
+  assert.equal(app.post({ nickname: '수아', characterId: 1, message: '2', guestId: 'guest-eeeeeeee' }).ok, true, '다른 기기는 영향 없음');
   for (let i = 2; i <= 10; i++) { app.cache.delete('post:guest-dddddddd'); assert.equal(app.post({ nickname: '민우', characterId: 1, message: String(i), ...g }).ok, true); }
   app.cache.delete('post:guest-dddddddd');
   assert.match(app.post({ nickname: '민우', characterId: 1, message: '11', ...g }).error, /오늘은 더/);
@@ -84,6 +85,25 @@ test('검증: 닉네임 2~10, 메시지 1~100, 캐릭터 0~9, 잘못된 JSON, �
   assert.equal(app.rows[1][4], '', '무시된 토큰은 저장하지 않는다');
   assert.equal(app.post({ nickname: '민우', characterId: 1, message: 'y' }).error, '1분에 한 번만 남길 수 있어요', '닉네임 기준 제한');
   assert.equal(makeApp().post(undefined).error, '잘못된 요청', '본문이 JSON이 아니면 거절');
+});
+
+test('닉네임 중복: 처음 쓴 기기만 그 닉네임을 쓰고, 대소문자·공백이 달라도 같은 이름으로 본다', () => {
+  const app = makeApp();
+  const a = 'guest-aaaa1111', b = 'guest-bbbb2222';
+  assert.deepEqual(app.get({ action: 'check', nickname: 'Minu', guestId: b }), { ok: true, available: true }, '처음엔 사용 가능');
+  assert.equal(app.post({ type: 'visit', nickname: 'Minu', characterId: 1, message: '', guestId: a }).ok, true, '입장 기록으로 닉네임 확보');
+  assert.deepEqual(app.get({ action: 'check', nickname: ' minu ', guestId: b }), { ok: true, available: false }, '다른 기기에는 사용 중');
+  assert.deepEqual(app.get({ action: 'check', nickname: 'MINU', guestId: a }), { ok: true, available: true }, '내 기기는 계속 사용 가능');
+  assert.deepEqual(app.get({ action: 'check', nickname: 'Minu' }), { ok: true, available: false }, '기기 토큰 없이 확인하면 사용 중');
+  const r = app.post({ nickname: 'minu', characterId: 2, message: '축하', guestId: b });
+  assert.equal(r.code, 'nickname-taken');
+  assert.equal(app.rows.length, 2, '거절한 글은 저장하지 않는다');
+  assert.equal(app.post({ nickname: 'Minu', characterId: 2, message: '축하', guestId: a }).ok, true, '주인은 글을 남길 수 있다');
+  const check = app.get({ action: 'check', nickname: 'Minu', guestId: b });
+  assert.deepEqual(Object.keys(check).sort(), ['available', 'ok'], '누가 쓰는지는 알려주지 않는다');
+  app.rows.slice(1).forEach((row) => { row[5] = true; });
+  assert.deepEqual(app.get({ action: 'check', nickname: 'Minu', guestId: b }), { ok: true, available: true }, '숨김 처리한 행은 닉네임을 붙잡지 않는다');
+  assert.equal(app.get({ action: 'check', nickname: 'x' }).ok, false, '길이가 틀린 닉네임');
 });
 
 test('공개 토큰을 설정하면 일치하는 요청만 받는다', () => {

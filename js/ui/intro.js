@@ -5,8 +5,18 @@ import { esc, h } from './dom.js';
 import { characterSet } from '../assets.js';
 import { displayName } from '../config.js';
 
-/** 인트로 화면을 띄우고 {nickname, charId}를 resolve한다. */
-export function showIntro(root, config, assets = {}, current = null) {
+/** 정원에서 헷갈리는 이름(분위기용 하객, 두 사람 이름)은 닉네임으로 쓰지 않는다. */
+export function reservedNickname(nickname, config) {
+  const key = (s) => String(s || '').normalize('NFC').trim().toLowerCase();
+  const names = ['하객', '정원 안내인', config?.groom?.name, config?.groom?.shortName, config?.bride?.name, config?.bride?.shortName].filter(Boolean).map(key);
+  return names.includes(key(nickname));
+}
+
+/**
+ * 인트로 화면을 띄우고 {nickname, charId}를 resolve한다.
+ * checkNickname(nickname) → Promise<{ok, available}>가 있으면 다른 기기가 쓰는 닉네임인지 확인한다.
+ */
+export function showIntro(root, config, assets = {}, current = null, { checkNickname = null } = {}) {
   return new Promise((resolve) => {
     let charId = current?.charId ?? Math.floor(Math.random() * PRESET_COUNT);
     let frame = 0;
@@ -47,12 +57,22 @@ export function showIntro(root, config, assets = {}, current = null) {
     const timer = setInterval(() => { frame = frame ? 0 : 2; render(); }, 300);
     card.querySelector('#prev').onclick = () => { charId = (charId + PRESET_COUNT - 1) % PRESET_COUNT; render(); };
     card.querySelector('#next').onclick = () => { charId = (charId + 1) % PRESET_COUNT; render(); };
-    const go = () => {
+    const goButton = card.querySelector('#go');
+    let checking = false;
+    const go = async () => {
+      if (checking) return;
       const v = validateNickname(nick.value);
       if (!v.ok) { err.textContent = v.error; return; }
+      if (reservedNickname(v.value, config)) { err.textContent = '정원에서 쓰는 이름이라 다른 닉네임을 골라 주세요'; return; }
+      if (checkNickname && v.value !== current?.nickname) {
+        checking = true; goButton.disabled = true; err.textContent = '닉네임을 확인하고 있어요…';
+        const r = await checkNickname(v.value);
+        checking = false; goButton.disabled = false; err.textContent = '';
+        if (r.ok && !r.available) { err.textContent = '이미 다른 분이 쓰고 있는 닉네임이에요. 다른 닉네임을 골라 주세요'; nick.focus(); return; }
+      }
       finish({ nickname: v.value, charId });
     };
-    card.querySelector('#go').onclick = go;
+    goButton.onclick = go;
     if (current) {
       const cancel = h('<button class="btn">그대로 돌아가기</button>');
       cancel.onclick = () => finish(current);

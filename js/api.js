@@ -34,7 +34,28 @@ export async function fetchMessages(url, { fetchImpl = globalThis.fetch, timeout
   }
 }
 
-/** 입장만 한 하객도 광장에 남도록 닉네임·캐릭터를 등록한다(메시지 없음). 실패해도 조용히 넘어간다. */
+/**
+ * 닉네임을 다른 기기가 이미 쓰고 있는지 서버에 묻는다.
+ * @returns {Promise<{ok:boolean, available?:boolean}>} 네트워크 실패면 ok:false(이때는 막지 않고 글쓰기 때 서버가 다시 확인한다)
+ */
+export async function checkNickname(url, nickname, guestId, { fetchImpl = globalThis.fetch, timeoutMs = 5000 } = {}) {
+  if (!url) return { ok: false };
+  const ctrl = typeof AbortController === 'function' ? new AbortController() : null;
+  const timer = ctrl ? setTimeout(() => ctrl.abort(), timeoutMs) : null;
+  try {
+    const q = new URLSearchParams({ action: 'check', nickname, guestId: guestId || '' });
+    const res = await fetchImpl(`${url}${url.includes('?') ? '&' : '?'}${q}`, { signal: ctrl?.signal, cache: 'no-store' });
+    if (!res.ok) return { ok: false };
+    const data = await res.json();
+    return data && data.ok && typeof data.available === 'boolean' ? { ok: true, available: data.available } : { ok: false };
+  } catch {
+    return { ok: false };
+  } finally {
+    if (timer) clearTimeout(timer);
+  }
+}
+
+/** 입장 기록: 닉네임을 이 기기 것으로 확보하고 캐릭터를 갱신한다(메시지 없음, 광장에는 세우지 않는다). 실패해도 조용히 넘어간다. */
 export async function postVisit(url, { nickname, characterId }, { fetchImpl = globalThis.fetch, guestId, token } = {}) {
   if (!url) return { ok: false, error: 'no api' };
   return postMessage(url, { type: 'visit', nickname, characterId, message: '' }, { fetchImpl, guestId, token });

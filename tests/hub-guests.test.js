@@ -32,6 +32,18 @@ test('꽃 장식은 통과하되 하객20명의 기본 자리는 장식 바깥�
   assert.ok(guests.every(n=>!n.arrival),'꽃을 통과하며 모두 자기 자리에 도착한다');
 });
 
+test('방명록 글을 남긴 사람만 광장에 서고, 그 수만큼 분위기용 하객이 줄어든다', () => {
+  const entries = [
+    { t: 1, n: '글쓴이', c: 1, m: '축하해요' },
+    { t: 2, n: '구경꾼', c: 2, m: '' },
+    { t: 3, n: '또글쓴이', c: 3, m: '행복하세요' },
+  ];
+  const hub = createHub({ config: DEFAULT_CONFIG, profile: { nickname: '나' }, assets: {}, data: { messages: entries } });
+  const real = [...hub.guestMap.keys()].filter((k) => !k.startsWith('extra:'));
+  assert.deepEqual(real.sort(), ['글쓴이:1', '또글쓴이:3'], '입장만 한 사람은 서지 않는다');
+  assert.equal(hub.guestMap.size, MIN_CROWD, '글쓴이 2명 + 분위기용 18명');
+});
+
 test('여러 글과 방문 기록이 섞여도 한 하객을 한 번만 업데이트한다', () => {
   const entries = [
     { n: '하객', c: 1, m: '첫 글', t: 1 },

@@ -28,7 +28,7 @@ export function createHud(root, config, game) {
   let sceneId = 'hub';
   const navigate = (id) => { game.player.stop(); game.goTo(id, id === 'hub' ? HUB_SPAWN : null); };
   const changeProfile = async () => {
-    const profile = await showIntro(document.getElementById('intro'), config, game.assets, game.profile);
+    const profile = await showIntro(document.getElementById('intro'), config, game.assets, game.profile, { checkNickname: game.checkNickname });
     game.profile = profile; saveProfile(profile);
     game.player.name = profile.nickname;
     game.player.sprites = characterSet(game.assets, `preset-${profile.charId}`, presetSprites(profile.charId));

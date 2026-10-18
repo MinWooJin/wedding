@@ -272,7 +272,8 @@ export class HubScene extends Scene {
       reserved.add(`${d.back.tx},${d.back.ty}`);
     }
     const me = this.game?.profile?.nickname;
-    const others = withExtras(uniqueGuests(entries).filter((e) => e.n !== me).slice(0, MAX_GUESTS)); // 본인은 플레이어로 이미 있으므로 제외
+    // 방명록 글을 남긴 사람만 광장에 선다(입장만 한 기록은 세지 않는다). 그 수만큼 분위기용 하객이 줄어든다. 본인은 플레이어로 이미 있으므로 제외.
+    const others = withExtras(uniqueGuests(entries).filter((e) => e.m && e.n !== me).slice(0, MAX_GUESTS));
     const wanderReserved = new Set(reserved);
     const inZone = (tx, ty) => inGuestZone(tx, ty) && !wanderReserved.has(`${tx},${ty}`);
     const faceFront = () => 'down'; // 레퍼런스처럼 모두 정면(카메라)을 본다

@@ -490,3 +490,12 @@ Codex가 다음 작업 전에 읽을 문서다. 오늘 Claude가 바꾼 내용, 
 - `DROP_IN = { min: 60, max: 120, first: 25 }`: 접속 25초 뒤부터 60~120초마다 분위기용 하객(`entry.extra`) 한 명을 `reenter()`로 숨겼다가 아래 입구에서 다시 걸어 들어오게 한다. 화면 밖(`inView` 기준)에 있는 사람을 먼저 고르므로 사라지는 순간이 보이지 않는다. 도착지는 배회 중 위치가 아니라 원래 자리(`wander.home` + jitter)이며 `arrival.home`으로 전달한다. 군중 수는 늘지 않는다.
 - 루트 `index.html`은 즉시 이동 대신 **입구 페이지**: 정원 입장하기(`common/`) · 신랑측 청첩장 보기(`groom/`) · 신부측 청첩장 보기(`bride/`). 두 사람 픽셀 그림 + 날짜·장소. `noindex` 유지.
 - 테스트: `tests/ceremony.test.js`(첫 로딩 즉시 표시, 새 하객 행렬, 움직임 줄이기, 한 명씩 재입장), `tests/site-paths.test.js`(입구 링크 3개). README·설계서 표 갱신.
+
+## 39. Google 시트 연결·닉네임 중복 확인·글쓴이만 광장에 (Claude, 2026-10-18)
+
+- `config.guestbookApi`에 사용자의 Apps Script 웹 앱 URL 연결(공개 값). 실제 사이트에서 GET 200 `[]` 확인.
+- Apps Script v2(`apps-script/Code.gs`): 기기 토큰(guestId)당 글 1분 1건·하루 10건, 입장 1시간 1건, 선택형 `PUBLIC_TOKEN`, 수식 주입 방지, `hidden` 열, 목록 20초 캐시. **닉네임 소유**: 처음 쓴 기기만 그 닉네임 사용(NFC·trim·소문자 비교), 잠금 안에서 확인. `GET ?action=check&nickname=&guestId=` → `{ok, available}`(소유자 정보는 내려주지 않음). 숨김 행은 닉네임을 붙잡지 않음. **목록에는 글을 남긴 사람만**.
+- 클라이언트: `state.getGuestId()`(localStorage 임의 토큰), `api.checkNickname`, 인트로·캐릭터 바꾸기에서 중복·예약어(하객·정원 안내인·두 사람 이름) 확인. 서버 확인이 실패하면 막지 않고 글쓰기 때 서버가 다시 거절한다.
+- 광장: `setGuests`가 `e.m`이 있는 사람만 세운다. 그 수만큼 분위기용 하객이 준다(`withExtras`).
+- 테스트: `tests/apps-script.test.js`가 Code.gs를 가짜 Sheets/Cache/Lock 위에서 실행. 162개 통과.
+- **사용자 할 일:** Code.gs가 바뀔 때마다 Apps Script 편집기에 붙여넣고 "배포 관리 → 새 버전"으로 재배포(URL 유지). 재배포 전에는 중복 확인 요청이 예전 목록을 돌려받아 확인을 건너뛴다(사이트는 정상 동작).
