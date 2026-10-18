@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>10차 · 공간 랜드마크와 예식 장면 에셋 검토</title>
+<style>
+:root{color-scheme:light;font-family:system-ui,sans-serif;color:#38362f;background:#f0e9df}
+*{box-sizing:border-box}body{margin:24px}h1{font-size:25px}h2{font-size:20px;margin-top:40px}h3{font-size:17px}p{line-height:1.8}a{color:#a95670}button{font:inherit;min-height:44px;border:1px solid #cfc5b7;border-radius:10px;padding:10px 16px;background:#fffdf8;color:#59694e;cursor:pointer}button:focus-visible{outline:3px solid #a95670;outline-offset:3px}
+.note{max-width:900px}.board{max-width:100%;height:auto;image-rendering:pixelated}.layout{display:flex;align-items:flex-start;flex-wrap:wrap;gap:24px}.phone{width:390px;max-width:100%;padding:18px;background:#faf6ee;border:1px solid #dfdace;border-radius:20px}.phone h3{margin:0 0 16px}.scene,.hub{width:100%;height:auto;display:block;image-rendering:pixelated}.dialogue{margin:0;background:#302d2a;color:#fff7e8;padding:16px;min-height:84px;font-size:15px;line-height:1.75;border:3px double #c6b99a;border-radius:2px}.caption{font-size:14px;color:#736c62}.map{position:relative;margin-top:20px}.map img{width:100%;display:block;image-rendering:pixelated}.label{position:absolute;transform:translateX(-50%);padding:2px 4px;background:#fffdf8eb;border-radius:4px;font-size:12px;line-height:1.5;text-align:center;white-space:nowrap}.hotel{left:28%;top:80%;color:#a95670}.store{left:60%;top:82%}.station{left:66%;top:2%;color:#42744d}.street{left:38%;top:28%;background:transparent;color:#49443c}.motion{padding:18px;background:#faf6ee;border-radius:18px;max-width:440px}.actors{display:flex;align-items:flex-end;gap:10px;min-height:170px}.actors canvas{image-rendering:pixelated;background:#e8e2d4;border-radius:8px;width:96px;height:144px}.actors canvas:last-child{width:80px;height:96px}.row{display:flex;flex-wrap:wrap;align-items:center;gap:12px}.checks{font-size:14px;color:#59694e}footer{margin-top:32px;max-width:900px;font-size:14px;line-height:1.8}@media(max-width:450px){body{margin:12px}.phone{padding:18px}.actors{gap:6px}.actors canvas{width:84px;height:126px}.actors canvas:last-child{width:70px;height:84px}}
+</style>
+</head>
+<body>
+<h1>10차 에셋 검토</h1>
+<p class="note">새 그림과 배치 제안 모형입니다. 실제 앱 배치·충돌·예식 타임라인은 Claude 연결 전입니다. 모든 새 PNG는 별도 v1 파일이며 기존 그림은 보존했습니다.</p>
+<p><a href="../groom/">일반형 청첩장</a> · <a href="../common/">현재 픽셀 정원</a> · <a href="../assets/round10-report.json">규격·좌표·검증 기록</a></p>
+<p><a href="#ceremony">예식 모형으로</a> · <a href="#motion">모션 확인으로</a> · <a href="#map">약도로</a></p>
+<h2>입구 대표 그림 · 기존 표지판 비교</h2>
+<img class="board" src="../assets/round10-landmarks-comparison.png" width="816" height="268" alt="기존 표지판과 새 액자 이젤, 선물과 하트 봉투, 꽃장식 예식장 문 비교">
+<h2>390px 광장 아래쪽 제안</h2>
+<div class="phone"><h3>문과 케이크 자리를 유지한 모형</h3><img class="hub" src="round10-hub-proposal.png" width="352" height="352" alt="기존 네 문과 중앙 리셉션을 유지한 랜드마크 제안"><p class="caption">갤러리 중심 (240,668), 마음 전하기 (112,796), 예식 안내 (240,796). 미리보기 상단은 월드 y512입니다. 네 문·케이크와 새 그림의 불투명 픽셀이 겹치지 않습니다.</p></div>
+<h2 id="ceremony">예식 장면 · 3개 정지 모형</h2>
+<p class="note">각 그림은 배경 → 하객·두 사람 → 앞쪽 등받이·꽃 순서입니다. 대사 상자는 캔버스 아래 DOM에 두어 얼굴을 가리지 않습니다. 내부 해상도 352×288, 모형 카드 폭390px.</p>
+<div class="layout">
+<article class="phone"><h3>① 하객 착석</h3><img class="scene" src="round10-ceremony-seated.png" width="352" height="288" alt="예식 시작 전 뒷모습으로 앉은 하객들과 빈 단상"><p class="dialogue">민우 &amp; 새암 결혼식<br>지금부터 시작합니다!!</p><p class="caption">4줄 × 양쪽 4명. 머리와 뒷줄 등받이가 겹치지 않도록 실제 인물 높이26px, 등받이8px로 맞췄습니다.</p></article>
+<article class="phone"><h3>② 단상에서 마주 보기</h3><img class="scene" src="round10-ceremony-facing.png" width="352" height="288" alt="단상 윗면에서 오른쪽을 보는 신랑과 왼쪽을 보는 신부"><p class="dialogue">서로의 곁에서<br>같은 길을 걸어가겠습니다.</p><p class="caption">단상 윗면 y150~176. 두 사람 발 (154,168)·(198,168), 프레임4를 사용합니다. 프레임5는 맞절입니다.</p></article>
+<article class="phone"><h3>③ 행진 · 하객 박수</h3><img class="scene" src="round10-ceremony-march.png" width="352" height="288" alt="박수치는 하객 사이의 버진로드에서 정면을 보는 두 사람"><p class="dialogue">새로운 시작을 축하해 주세요.<br>와 주셔서 감사합니다 ♥</p><p class="caption">정면은 기존 신랑·신부 그림입니다. 실제 걷기·꽃잎 타임라인은 Claude가 연결합니다.</p></article>
+</div>
+<h2 id="motion">보행·맞절·박수 프레임 확인</h2>
+<div class="motion"><div class="actors"><canvas id="groom-motion" width="48" height="72" aria-label="신랑 보행 프레임"></canvas><canvas id="bride-motion" width="48" height="72" aria-label="신부 보행 프레임"></canvas><canvas id="guest-motion" width="40" height="48" aria-label="하객 박수 프레임"></canvas></div><div class="row"><button id="play" aria-pressed="false">보행·박수 재생</button><button id="bow">맞절 보기</button></div><p id="motion-status" role="status">그림을 불러오고 있어요.</p></div>
+<img class="board" src="../assets/round10-characters-comparison.png" width="1060" height="488" alt="신랑·신부 각각 0부터7까지, 하객6명의 착석·박수 프레임 전체">
+<h2 id="map">픽셀 약도 · 글자는 코드로</h2>
+<div class="phone"><div class="map"><img src="../assets/ceremony/map-v1.png" width="352" height="200" alt="을지로 남쪽, 남대문로 서쪽의 호텔과 백화점, 북쪽 지하철 입구를 단순화한 픽셀 약도"><span class="label station">을지로입구역 · 2호선</span><span class="label street">을지로</span><span class="label hotel">더그랜드롯데 서울<br>(롯데호텔 · 예식장)</span><span class="label store">롯데백화점</span></div><p class="caption">출구 번호는 넣지 않았습니다. 주변 위치를 설명하는 약도이며 실제 길찾기는 지도 앱에서 안내합니다.</p></div>
+<footer>자료: <a href="https://global.lotteshopping.com/eng/store/main?cstrCd=0001">롯데백화점 공식 위치 안내</a>의 상대 위치·도로 방향을 확인했습니다. 지도 이미지를 복사하거나 트레이싱하지 않았습니다. 호텔과 예식장은 같은 건물에 하트 핀으로 표시했습니다.<p class="checks">검증: 이진 알파 · 랜드마크48색 이하 · 프레임 발 기준 통일 · 앞쪽 레이어의 버진로드·32명 머리 영역 투명 · 네 입구·케이크 가림 없음</p></footer>
+<script src="round10-art-review.js"></script>
+</body></html>

@@ -25,7 +25,7 @@ const FILE_TO_TILE = Object.fromEntries(Object.entries(TILE_FILES).map(([k, v]) 
 export const OBJECT_IDS = ['arch', 'tree', 'sign', 'mailbox', 'frame', 'bench', 'chest', 'desk', 'board', 'phone', 'calendar', 'mapframe', 'flower', 'stone', 'door',
   'chair', 'bush', 'lantern', 'petal-pile', 'welcome-board', 'bush-white', 'platform', 'window', 'plant', 'wedding-mailbox', 'share-letter',
   'aisle-runner', 'aisle-flower-left', 'aisle-flower-right', 'party-table', 'ribbon-lantern', 'meadow-sprig', 'aisle-flower-airy-left', 'aisle-flower-airy-right', 'wedding-cake',
-  'planter-box', 'aisle-edge-left', 'aisle-edge-right', 'lavender', 'rose-bush-l', 'rose-bush-s', 'tree-green', 'birdbath'];
+  'planter-box', 'aisle-edge-left', 'aisle-edge-right', 'lavender', 'rose-bush-l', 'rose-bush-s', 'tree-green', 'birdbath', 'landmark-gallery', 'landmark-gifts', 'landmark-info'];
 export const SCENE_IDS = ['hub', 'info', 'gallery', 'guestbook', 'gifts'];
 /**
  * 광장 배경은 레퍼런스처럼 세 조각(위·반복·아래)을 세로로 이어 한 장으로 쓴다. y는 조각이 시작하는 월드 좌표.

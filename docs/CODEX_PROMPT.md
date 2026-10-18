@@ -1,3 +1,5 @@
+> **10차 제작 완료(2026-10-18): 1부 랜드마크3종 + 확정된2부 예식 안내관8종.** `docs/ROUND10_ASSET_HANDOFF_2026-10-18.md`와 HANDOFF41절을 먼저 읽는다. 앱 배치·연출은 아직 미연결이며 `/tools/round10-art-review.html`은 검토 모형이다.
+
 > **9차 요청(2026-10-18): 일반형 모바일 청첩장 `/groom/`·`/bride/` + 공용 `/classic/`.** 설계와 지시 전문은 `docs/CLASSIC_INVITATION_DESIGN.md` 4절. 픽셀 앱 파일은 수정 금지, `data/config.json`에는 `classic` 필드만 추가.
 
 # 에셋 작업 인수인계 프롬프트 (Codex / Claude)
@@ -830,3 +832,16 @@ D. 분위기용 하객 (선택, A~C 다음)
 - 검증: 세 레이어를 겹친 정지 모형 3장(하객 착석 / 신랑·신부 단상에서 마주 봄 / 행진)을 `tools/`에 만들고 390px 폭에서 얼굴이 대사 상자·등받이에 가리지 않는지 확인. `npm test` 통과.
 
 연출(코드, 참고): 0초 하객 착석 + 대사 "민우 & 새암 결혼식 지금부터 시작합니다!!" → 3초 신랑 입장(뒷모습으로 로드를 걸어 단상) → 8초 신부 입장(하객 박수) → 13초 서로 마주 보고 인사, 하트 → 17초 행진(정면으로 걸어 나옴, 꽃잎) → 23초 단상에 정면으로 서서 "와 주셔서 감사합니다 ♥" 대기 반복. "다시 보기", 탭하면 건너뛰기, 움직임 줄이기 설정이면 마지막 장면 정지.
+
+
+## 41. 10차 입구 랜드마크·예식 안내관 에셋 제작 완료 (Codex, 2026-10-18)
+
+- 10차 요청의 1부와 뒤에 확정된2부를 모두 제작했다. 파일 표·프레임 순서·좌표·연결 주의점은 `docs/ROUND10_ASSET_HANDOFF_2026-10-18.md`다. 실제 앱 배치·충돌·폴백·타임라인 코드는 Claude 담당으로 남겼다.
+- 랜드마크: `assets/objects/landmark-gallery-v1.png`96×112, `landmark-gifts-v1.png`96×96, `landmark-info-v1.png`96×112. 글자 없이 이진 알파·48색 이하·발 기준 맨 아랫줄이다. manifest 목록·files.objects와 js/assets.js OBJECT_IDS에 세 ID만 추가했다.
+- 예식 안내관: `assets/ceremony/`의 `ceremony-back-v1.png`, `ceremony-front-v1.png`352×288, `ceremony-petals-v1.png`32×8, `ceremony-heart-v1.png`16×16, `map-v1.png`352×200. 새 ceremony 범주·files.ceremony에 등록했다. 단상 윗면 y150~176, 권장 두 사람 발(154,168)/(198,168), 버진로드 x144~208이다.
+- 시트: `assets/characters/groom-ceremony-v1.png`·`bride-ceremony-v1.png`384×72(48×72 가로8칸), `guest-seated-v1.png`480×48(40×48 가로12칸). characters 목록에 ID를 등록하고 **manifest.ceremonySheets**에 파일 경로·프레임 크기·수를 둔다. 기존 정면/3×4 로더로 읽으면 잘리므로 CHARACTER_NAMES·일반 files.characters에는 섞지 않았다. Claude가 전용 시트 로더로 연결한다.
+- 보행0~3은 모두 높이64px·머리y8·발y72, 맞절5는 높이56px·발y72다. 하객은 person*2+pose, 실제 인물26px(y22~47)·발y48, 등받이8px로28px 좌석 간격에서 뒷줄 머리를 가리지 않는다. 효과8×8 원점과 모든 실제 bbox·해시는 `assets/round10-report.json`이다.
+- 제작은 내장 image_gen(키 사용 없음), 별도 생성12회(배경 편집1회 포함)다. 프롬프트·원본 경로 `assets/round10-prompts.json`, 선택 규격 보정 `.venv-assets/Scripts/python.exe tools/prepare_round10_assets.py`, 원본 `raw/round10-source/`(Git 제외). 기존 PNG는 덮어쓰지 않았다. 약도는 공식 롯데백화점 위치 안내에서 주변 도로 방향만 확인해 새로 그렸고 글자·출구 번호는 코드 라벨로 남겼다.
+- 검토 도구 `/tools/round10-art-review.html`: 기존 표지판 비교, 390px 광장 제안, 착석·마주 보기·행진3장, 보행·박수·맞절 재생, 약도. 세 정지 그림 `tools/round10-ceremony-{seated,facing,march}.png`, 광장 `tools/round10-hub-proposal.png`, 비교 보드 `assets/round10-{landmarks,characters}-comparison.png`다.
+- 제안 랜드마크 발 기준: 갤러리(240,668), 마음 전하기(112,796), 예식 안내(240,796). 기존 문19/23행과 새 랜드마크20/24행을 구별한다. 실제 PNG 알파로 네 문·케이크와 겹침이 없는지 검사했고, front 레이어의 버진로드·단상·하객32명 머리 영역도 투명하다.
+- `npm test`163개 통과, 보정 도구 좌표·팔레트·프레임 assertions 통과. 브라우저에서390px 카드/내부352px, 모바일390px 가로 넘침 없음·모든 이미지 로드·대사 상자 분리·재생/정지/맞절·콘솔 오류 없음을 확인했다. 화면 기록은 `docs/round10-{ceremony-review,mobile-390,motion-review,map-390}-2026-10-18.jpg`. 실앱 연결이 끝났다는 뜻이 아니며 Claude 연결 후 동선과 전체 연출을 재검증한다.

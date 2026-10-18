@@ -1,0 +1,623 @@
+{
+  "files": {
+    "assets/objects/landmark-gallery-v1.png": {
+      "size": [
+        96,
+        112
+      ],
+      "rgbaColors": 48,
+      "alpha": [
+        0,
+        255
+      ],
+      "bbox": [
+        16,
+        0,
+        80,
+        112
+      ],
+      "sha256": "5fb85fe84f6caedb6bc1ca711cce7d3995ca81cb001de90bac563ea19d87b13d"
+    },
+    "assets/objects/landmark-gifts-v1.png": {
+      "size": [
+        96,
+        96
+      ],
+      "rgbaColors": 48,
+      "alpha": [
+        0,
+        255
+      ],
+      "bbox": [
+        0,
+        1,
+        96,
+        96
+      ],
+      "sha256": "b157dbc688066582e78792129f39bcd6e0b39abd269d148b617e09a7232f7e6a"
+    },
+    "assets/objects/landmark-info-v1.png": {
+      "size": [
+        96,
+        112
+      ],
+      "rgbaColors": 46,
+      "alpha": [
+        0,
+        255
+      ],
+      "bbox": [
+        2,
+        0,
+        93,
+        112
+      ],
+      "sha256": "60130a5ed5633535dbe9921d626e37d1d001346b816a41886f27596c40d1010b"
+    },
+    "assets/characters/groom-ceremony-v1.png": {
+      "size": [
+        384,
+        72
+      ],
+      "rgbaColors": 38,
+      "alpha": [
+        0,
+        255
+      ],
+      "bbox": [
+        9,
+        8,
+        374,
+        72
+      ],
+      "sha256": "ecae776fe9bbe7dc7876ed13eda8b5b93a132d3c592c4aa412f2d51eb8529115",
+      "frameSize": [
+        48,
+        72
+      ],
+      "frames": [
+        {
+          "bbox": [
+            9,
+            8,
+            38,
+            72
+          ],
+          "sha256": "97abb2ffed8ad1581ce64f18b2d9534ab13666379cbd695fa5db49eab2eb634e"
+        },
+        {
+          "bbox": [
+            9,
+            8,
+            38,
+            72
+          ],
+          "sha256": "da18b74a11646fe69b8dbb08e16caba55eb2bc702a1320db266ee299489dbe61"
+        },
+        {
+          "bbox": [
+            9,
+            8,
+            38,
+            72
+          ],
+          "sha256": "2c88d6ba9ecce0b10301dd80083fd9d334a23557138f245a7ac8bc2d60653df9"
+        },
+        {
+          "bbox": [
+            9,
+            8,
+            38,
+            72
+          ],
+          "sha256": "183d6a7d061f5cfa17e7dc706184289455ce6b5382376315f8b82eb9c65081c4"
+        },
+        {
+          "bbox": [
+            8,
+            8,
+            40,
+            72
+          ],
+          "sha256": "6e7b4dbd530879b8e820ac03cec9706aa8c7c13bab319ccb3687baa15a233511"
+        },
+        {
+          "bbox": [
+            6,
+            16,
+            42,
+            72
+          ],
+          "sha256": "6341ae0ca6fadee9832e94fad555e449dc474cdfadfa1aee493a25f2000a43eb"
+        },
+        {
+          "bbox": [
+            6,
+            8,
+            42,
+            72
+          ],
+          "sha256": "e3c0552991ae0495988f0e9103d75dcb93bc2202abf40e59b3f566e7b15a2c43"
+        },
+        {
+          "bbox": [
+            9,
+            8,
+            38,
+            72
+          ],
+          "sha256": "bae2083d6dcd70c0d84ae487488660408f723da97885e5fcbba3814d59be91cf"
+        }
+      ]
+    },
+    "assets/characters/bride-ceremony-v1.png": {
+      "size": [
+        384,
+        72
+      ],
+      "rgbaColors": 42,
+      "alpha": [
+        0,
+        255
+      ],
+      "bbox": [
+        8,
+        8,
+        377,
+        72
+      ],
+      "sha256": "f78334e3a2563a256115e5354e506bc3568a6bcd38d9630ead0b571680b8568d",
+      "frameSize": [
+        48,
+        72
+      ],
+      "frames": [
+        {
+          "bbox": [
+            8,
+            8,
+            39,
+            72
+          ],
+          "sha256": "fafcaec625b125afcb334a6905794a2e9533a7b2a14d795df7881e15cb01a605"
+        },
+        {
+          "bbox": [
+            9,
+            8,
+            39,
+            72
+          ],
+          "sha256": "cf59ae59d37a66fccd48141044eff09b87b00ba085bfb260acaad350cadfa7e5"
+        },
+        {
+          "bbox": [
+            8,
+            8,
+            40,
+            72
+          ],
+          "sha256": "c7ee353e7be75761833b323bb0b392ea6a8e8d53a5842224c23b40f6a1cd6fc8"
+        },
+        {
+          "bbox": [
+            8,
+            8,
+            40,
+            72
+          ],
+          "sha256": "af630e0d98ee06b829a07a9d18d99f53a6cd00d53a834fe2dfdb50ac41c0cca4"
+        },
+        {
+          "bbox": [
+            7,
+            8,
+            41,
+            72
+          ],
+          "sha256": "7defc727feaa144d0743fdd190b9076a84e0b22e9d8157d7ecf88367b6765986"
+        },
+        {
+          "bbox": [
+            8,
+            16,
+            40,
+            72
+          ],
+          "sha256": "3e818b1645099b53ee455d96550e56f473bb625a328f72d033a2bbaeadbe8c56"
+        },
+        {
+          "bbox": [
+            7,
+            8,
+            41,
+            72
+          ],
+          "sha256": "e606556bfb768e2a1726b647ee6601d31c79c4eac788668346d8d7810a582e73"
+        },
+        {
+          "bbox": [
+            7,
+            8,
+            41,
+            72
+          ],
+          "sha256": "e0cb213d918513d6465ca36d0695235a162bffe323a1d4479bc2ed54ed95e5ea"
+        }
+      ]
+    },
+    "assets/characters/guest-seated-v1.png": {
+      "size": [
+        480,
+        48
+      ],
+      "rgbaColors": 48,
+      "alpha": [
+        0,
+        255
+      ],
+      "bbox": [
+        10,
+        22,
+        470,
+        48
+      ],
+      "sha256": "740fe6b8ef81559d40f901690f1c6fc95a2708017d6b1278b051a8bb1e76a5c1",
+      "frameSize": [
+        40,
+        48
+      ],
+      "frames": [
+        {
+          "bbox": [
+            10,
+            22,
+            29,
+            48
+          ],
+          "sha256": "a1bbb27ed504278353b3f03389499fdbed9839f28feba92f0bae2c4614205d8e"
+        },
+        {
+          "bbox": [
+            10,
+            22,
+            30,
+            48
+          ],
+          "sha256": "e7f515577159b9b0b2f14475cab2c345b76df9d50110aa21b6b1f530227ca912"
+        },
+        {
+          "bbox": [
+            10,
+            22,
+            30,
+            48
+          ],
+          "sha256": "cca4caeee0fd5cc7c51c0a8b7733f4ddb99e61ab639a8ce0daad9392ab1e9100"
+        },
+        {
+          "bbox": [
+            8,
+            22,
+            31,
+            48
+          ],
+          "sha256": "a465c530965395880c95afa438518a936534f4a64dccad2ad06cfcf6841586fe"
+        },
+        {
+          "bbox": [
+            10,
+            22,
+            29,
+            48
+          ],
+          "sha256": "698bc944cb0994c08eb9f05916fd5cd847edf769da7b4c0b37282220ecfe7f83"
+        },
+        {
+          "bbox": [
+            9,
+            22,
+            31,
+            48
+          ],
+          "sha256": "4edd692a27c7361a7672fb672301b12877adb0801b58896773bd5cd48ad61e63"
+        },
+        {
+          "bbox": [
+            10,
+            22,
+            29,
+            48
+          ],
+          "sha256": "c95a212d8e16ea15cbc9df5ccfa469645908b784b5ac62e8cb7c3e6f4b935b9f"
+        },
+        {
+          "bbox": [
+            9,
+            22,
+            31,
+            48
+          ],
+          "sha256": "b526c75f55c979fd949e95238cddb42ee8656c576e0868ea46f5d5f11a7b0d74"
+        },
+        {
+          "bbox": [
+            11,
+            22,
+            29,
+            48
+          ],
+          "sha256": "bea0bd4fcd60ec0b98e4d82beddd663b14f4970d2752dc233c7f4be6b6b42b26"
+        },
+        {
+          "bbox": [
+            8,
+            22,
+            31,
+            48
+          ],
+          "sha256": "8bc1fea90f8293f1298ffe79325a5fd85556253eea92db5cfe567ea6fd3cb67f"
+        },
+        {
+          "bbox": [
+            10,
+            22,
+            29,
+            48
+          ],
+          "sha256": "798fff930155b0f2e659eeb0c232b0caf0f2e8103147e742504fd9e1f88c31d3"
+        },
+        {
+          "bbox": [
+            10,
+            22,
+            30,
+            48
+          ],
+          "sha256": "2a3a3e3491f6026319a320e935c14146fb81b66c0d12b6cbca2af390fddfdb1b"
+        }
+      ]
+    },
+    "assets/ceremony/ceremony-back-v1.png": {
+      "size": [
+        352,
+        288
+      ],
+      "rgbaColors": 96,
+      "alpha": [
+        255
+      ],
+      "bbox": [
+        0,
+        0,
+        352,
+        288
+      ],
+      "sha256": "37833ab06f645172ff617912a46a6eca51e531904cb9d0c7c0d838edcd856806"
+    },
+    "assets/ceremony/ceremony-front-v1.png": {
+      "size": [
+        352,
+        288
+      ],
+      "rgbaColors": 36,
+      "alpha": [
+        0,
+        255
+      ],
+      "bbox": [
+        25,
+        188,
+        326,
+        287
+      ],
+      "sha256": "0d0c6318752b469fc0a909143119ece1b860d613161dad1ab4fa6b58ea38956f"
+    },
+    "assets/ceremony/ceremony-petals-v1.png": {
+      "size": [
+        32,
+        8
+      ],
+      "rgbaColors": 8,
+      "alpha": [
+        0,
+        255
+      ],
+      "bbox": [
+        1,
+        2,
+        30,
+        8
+      ],
+      "sha256": "8edf7442695a37f726f6e4a91467c9262a42c7a124abee5d3baa697d76311a67"
+    },
+    "assets/ceremony/ceremony-heart-v1.png": {
+      "size": [
+        16,
+        16
+      ],
+      "rgbaColors": 7,
+      "alpha": [
+        0,
+        255
+      ],
+      "bbox": [
+        0,
+        1,
+        15,
+        8
+      ],
+      "sha256": "547c70f9d87a98872763a48a8aad5da0dbd3603c54dafc71ec263f37a59c78df"
+    },
+    "assets/ceremony/map-v1.png": {
+      "size": [
+        352,
+        200
+      ],
+      "rgbaColors": 34,
+      "alpha": [
+        255
+      ],
+      "bbox": [
+        0,
+        0,
+        352,
+        200
+      ],
+      "sha256": "0f152977dcbf040ffab1c618566a63b80b83e44dc6daf47d42f2ee115b21abbd"
+    }
+  },
+  "seats": {
+    "x": [
+      32,
+      60,
+      88,
+      116,
+      236,
+      264,
+      292,
+      320
+    ],
+    "feetY": [
+      200,
+      228,
+      256,
+      284
+    ]
+  },
+  "stage": {
+    "rect": [
+      96,
+      150,
+      256,
+      176
+    ],
+    "groomFeet": [
+      154,
+      168
+    ],
+    "brideFeet": [
+      198,
+      168
+    ]
+  },
+  "aisle": [
+    144,
+    176,
+    208,
+    288
+  ],
+  "effects": {
+    "petals": {
+      "frameSize": [
+        8,
+        8
+      ],
+      "origins": [
+        [
+          0,
+          0
+        ],
+        [
+          8,
+          0
+        ],
+        [
+          16,
+          0
+        ],
+        [
+          24,
+          0
+        ]
+      ]
+    },
+    "heart": {
+      "frameSize": [
+        8,
+        8
+      ],
+      "origins": [
+        [
+          0,
+          0
+        ],
+        [
+          8,
+          0
+        ]
+      ],
+      "unusedTransparentRect": [
+        0,
+        8,
+        16,
+        16
+      ]
+    }
+  },
+  "landmarkProposal": {
+    "gallery": {
+      "centerX": 240,
+      "feetY": 668,
+      "rect": [
+        192,
+        556,
+        288,
+        668
+      ]
+    },
+    "gifts": {
+      "centerX": 112,
+      "feetY": 796,
+      "rect": [
+        64,
+        700,
+        160,
+        796
+      ]
+    },
+    "info": {
+      "centerX": 240,
+      "feetY": 796,
+      "rect": [
+        192,
+        684,
+        288,
+        796
+      ]
+    },
+    "doors": {
+      "x": [
+        48,
+        304
+      ],
+      "feetY": [
+        636,
+        764
+      ]
+    },
+    "cake": {
+      "centerX": 176,
+      "feetY": 636
+    },
+    "previewWorldTop": 512
+  },
+  "checks": {
+    "landmarksClearOfAllFourDoorsAndCake": [
+      "gallery",
+      "gifts",
+      "info"
+    ],
+    "foregroundClearOfAll32GuestHeads": true,
+    "frameBaseline": "exclusive bottom y72 / y48; last opaque row y71 / y47",
+    "seatedVisibleHeight": 26,
+    "seatedHeadLocalRect": [
+      10,
+      22,
+      30,
+      39
+    ],
+    "backrestHeight": 8,
+    "floorAisleStartsBelowStageFrontAtY": 184
+  }
+}

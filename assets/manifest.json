@@ -18,7 +18,10 @@
     "guest-extra-2",
     "guest-extra-3",
     "guest-extra-4",
-    "guest-extra-5"
+    "guest-extra-5",
+    "groom-ceremony",
+    "bride-ceremony",
+    "guest-seated"
   ],
   "tiles": [
     "G",
@@ -87,7 +90,10 @@
     "rose-bush-l",
     "rose-bush-s",
     "tree-green",
-    "birdbath"
+    "birdbath",
+    "landmark-gallery",
+    "landmark-gifts",
+    "landmark-info"
   ],
   "maps": [
     "hub-top",
@@ -132,7 +138,10 @@
       "rose-bush-l": "rose-bush-l-v4.png",
       "rose-bush-s": "rose-bush-s-v4.png",
       "tree-green": "tree-green-v4.png",
-      "birdbath": "birdbath-v4.png"
+      "birdbath": "birdbath-v4.png",
+      "landmark-gallery": "landmark-gallery-v1.png",
+      "landmark-gifts": "landmark-gifts-v1.png",
+      "landmark-info": "landmark-info-v1.png"
     },
     "tiles": {
       "G": "G-v5.png",
@@ -147,6 +156,40 @@
       "hub-repeat": "hub-repeat.png",
       "hub-bottom": "hub-bottom.png",
       "guestbook-bg": "guestbook-bg-v2.png"
+    },
+    "ceremony": {
+      "back": "ceremony-back-v1.png",
+      "front": "ceremony-front-v1.png",
+      "petals": "ceremony-petals-v1.png",
+      "heart": "ceremony-heart-v1.png",
+      "map": "map-v1.png"
+    }
+  },
+  "ceremony": [
+    "back",
+    "front",
+    "petals",
+    "heart",
+    "map"
+  ],
+  "ceremonySheets": {
+    "groom-ceremony": {
+      "file": "characters/groom-ceremony-v1.png",
+      "frameWidth": 48,
+      "frameHeight": 72,
+      "frames": 8
+    },
+    "bride-ceremony": {
+      "file": "characters/bride-ceremony-v1.png",
+      "frameWidth": 48,
+      "frameHeight": 72,
+      "frames": 8
+    },
+    "guest-seated": {
+      "file": "characters/guest-seated-v1.png",
+      "frameWidth": 40,
+      "frameHeight": 48,
+      "frames": 12
     }
   }
 }
