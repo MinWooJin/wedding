@@ -31,6 +31,7 @@ jobs:
           mkdir -p _site/assets
           cp assets/manifest.json _site/assets/
           cp -r assets/characters assets/tiles assets/objects assets/maps assets/ceremony _site/assets/
+          if [ -d assets/audio ]; then mkdir -p _site/assets/audio && cp assets/audio/*.mp3 _site/assets/audio/ 2>/dev/null || true; fi
           # 비교·보고용 파일은 사이트에서 제외
           find _site -name '*.md' -delete
           find _site -name 'round*' -delete

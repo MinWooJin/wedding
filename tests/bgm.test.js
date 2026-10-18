@@ -8,17 +8,20 @@ globalThis.setInterval = (...a) => { const t = realSetInterval(...a); t.unref?.(
 
 /** 노드에서 쓰는 가짜 AudioContext: 만든 소리와 볼륨 변화를 기록한다 */
 function fakeContext() {
-  const log = { notes: [], gains: [], stops: [], resumed: 0, suspended: 0 };
+  const log = { notes: [], gains: [], stops: [], sources: [], resumed: 0, suspended: 0 };
   const param = () => ({ value: 0, setValueAtTime() {}, linearRampToValueAtTime(v) { log.gains.push(v); }, setTargetAtTime() {}, cancelScheduledValues() {} });
   const ctx = {
     state: 'suspended', currentTime: 0, destination: {},
     createGain: () => ({ gain: param(), connect() {} }),
+    createBufferSource: () => ({ buffer: null, loop: false, connect() {}, start(t) { log.sources.push({ t, src: this }); }, stop() {} }),
+    decodeAudioData: (data) => Promise.resolve({ decoded: data }),
     createOscillator: () => ({ type: '', frequency: { value: 0 }, connect() {}, start(t) { log.notes.push(t); }, stop(t) { log.stops.push(t); } }),
     resume() { log.resumed++; ctx.state = 'running'; return Promise.resolve(); },
     suspend() { log.suspended++; ctx.state = 'suspended'; return Promise.resolve(); },
   };
   return { ctx, log };
 }
+const tick = () => new Promise((r) => setTimeout(r, 0));
 const memoryStorage = () => { const m = new Map(); return { getItem: (k) => m.get(k) ?? null, setItem: (k, v) => m.set(k, v) }; };
 
 test('음 높이와 밝은 캐논 한 바퀴(저음 8개 × 4회 = 64박, 96bpm)', () => {
@@ -102,15 +105,15 @@ test('예식장 결혼 행진곡: "빰 빰-빠-밤" 첫 동기와 길이', () =>
   assert.deepEqual(Object.keys(TRACKS), ['garden', 'march']);
 });
 
-test('곡 바꾸기: 예식장에 들어가면 행진곡으로, 지금 곡은 줄이며 멈추고 새 곡을 바로 예약', () => {
+test('곡 바꾸기(녹음 파일이 없을 때): 예식장에 들어가면 행진곡으로, 지금 곡은 줄이며 멈추고 합성 행진곡을 예약', async () => {
   const { ctx, log } = fakeContext();
-  const bgm = new Bgm({ createContext: () => ctx, storage: memoryStorage() });
+  const bgm = new Bgm({ createContext: () => ctx, storage: memoryStorage(), fetchImpl: async () => ({ ok: false, status: 404 }) });
   try {
     bgm.unlock(); bgm.start();
     assert.equal(bgm.track, 'garden');
     const before = log.notes.length;
     ctx.currentTime = 5;
-    bgm.play('march');
+    bgm.play('march'); await tick(); await tick();
     assert.equal(bgm.track, 'march');
     assert.ok(log.stops.some((t) => Math.abs(t - 5.65) < 1e-9), '정원 곡 소리를 멈춘다');
     assert.ok(log.notes.length - before >= marchEvents().filter((e) => e.kind !== 'tick' && e.kind !== 'crash').length, '행진곡 한 바퀴를 예약(타악 잡음 제외)');
@@ -118,7 +121,7 @@ test('곡 바꾸기: 예식장에 들어가면 행진곡으로, 지금 곡은 �
     const n = log.notes.length;
     bgm.play('march');
     assert.equal(log.notes.length, n, '같은 곡이면 다시 시작하지 않는다');
-    bgm.play('march', { restart: true });
+    bgm.play('march', { restart: true }); await tick(); await tick();
     assert.ok(log.notes.length > n, '다시 보기는 처음부터');
     bgm.play('garden');
     assert.equal(bgm.track, 'garden');
@@ -134,5 +137,44 @@ test('시작 전에 곡을 고르면 시작할 때 그 곡으로 튼다', () => 
     assert.equal(bgm.track, 'march');
     assert.ok(Math.abs(bgm.loopSeconds - MARCH_SECONDS) < 1e-9);
   } finally { clearInterval(bgm.timer); }
+});
+
+const okFetch = (calls) => async (url) => { calls.push(url); return { ok: true, arrayBuffer: async () => 'mp3-bytes' }; };
+
+test('예식장은 멘델스존 결혼행진곡 녹음을 반복 재생하고, 파일은 한 번만 받는다', async () => {
+  const { ctx, log } = fakeContext();
+  const calls = [];
+  const bgm = new Bgm({ createContext: () => ctx, storage: memoryStorage(), fetchImpl: okFetch(calls) });
+  try {
+    bgm.unlock(); bgm.start();
+    assert.equal(TRACKS.march.file, 'assets/audio/wedding-march.mp3');
+    bgm.play('march'); await tick(); await tick();
+    assert.equal(log.sources.length, 1, '녹음 한 줄기');
+    assert.equal(log.sources[0].src.loop, true, '끝나면 처음부터 반복');
+    bgm.play('garden'); bgm.play('march', { restart: true }); await tick(); await tick();
+    assert.deepEqual(calls, ['assets/audio/wedding-march.mp3'], '두 번째부터는 받아 둔 것을 쓴다');
+    assert.equal(log.sources.length, 2);
+  } finally { clearInterval(bgm.timer); }
+});
+
+test('녹음 파일을 못 읽으면 합성한 행진곡으로, 늦게 도착한 파일은 다른 곳으로 옮긴 뒤면 틀지 않는다', async () => {
+  const { ctx, log } = fakeContext();
+  const failing = new Bgm({ createContext: () => ctx, storage: memoryStorage(), fetchImpl: async () => ({ ok: false, status: 404 }) });
+  try {
+    failing.unlock(); failing.start();
+    const before = log.notes.length;
+    failing.play('march'); await tick(); await tick();
+    assert.ok(log.notes.length - before >= marchEvents().filter((e) => e.kind !== 'tick' && e.kind !== 'crash').length, '합성 행진곡으로 대신');
+  } finally { clearInterval(failing.timer); }
+  const b = fakeContext();
+  let release;
+  const slow = new Bgm({ createContext: () => b.ctx, storage: memoryStorage(), fetchImpl: () => new Promise((r) => { release = r; }) });
+  try {
+    slow.unlock(); slow.start();
+    slow.play('march');
+    slow.play('garden'); // 파일이 오기 전에 정원으로 돌아감
+    release({ ok: true, arrayBuffer: async () => 'late' }); await tick(); await tick(); await tick();
+    assert.equal(b.log.sources.length, 0, '정원에서 행진곡이 갑자기 나오지 않는다');
+  } finally { clearInterval(slow.timer); }
 });
 

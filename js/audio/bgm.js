@@ -119,7 +119,8 @@ export const MARCH_SECONDS = MARCH_PASSES * MARCH_BARS.length * 4 * 60 / MARCH_T
 /** 곡 목록: 정원은 밝은 캐논, 예식장은 결혼 행진곡 */
 export const TRACKS = {
   garden: { events: canonEvents, seconds: LOOP_SECONDS },
-  march: { events: marchEvents, seconds: MARCH_SECONDS },
+  // 예식장: 멘델스존 결혼행진곡 실제 연주 녹음(퍼블릭 도메인, assets/audio/README.md). 파일을 못 읽으면 합성한 바그너 행진곡으로.
+  march: { file: 'assets/audio/wedding-march.mp3', events: marchEvents, seconds: MARCH_SECONDS },
 };
 
 const PREF_KEY = 'pixel-wedding-bgm';
@@ -129,8 +130,10 @@ export class Bgm {
   /**
    * @param {{ createContext?: () => AudioContext, storage?: Storage, volume?: number }} o
    */
-  constructor({ createContext = () => new (globalThis.AudioContext || globalThis.webkitAudioContext)(), storage = safeStorage(), volume = 0.1 } = {}) {
+  constructor({ createContext = () => new (globalThis.AudioContext || globalThis.webkitAudioContext)(), storage = safeStorage(), volume = 0.1, fetchImpl = (u) => globalThis.fetch(u), fileVolume = 4 } = {}) {
     this.createContext = createContext; this.storage = storage; this.volume = volume;
+    // 녹음 파일은 합성음보다 조용하게 들리므로 버스에서 키운다(전체 볼륨 0.1 × 4 ≈ 0.4)
+    this.fetchImpl = fetchImpl; this.fileVolume = fileVolume; this.buffers = new Map(); this.playToken = 0;
     this.ctx = null; this.master = null; this.timer = null; this.nextLoop = 0; this.listeners = new Set();
     this.muted = readPref(storage) === 'off'; // 기본은 켬. 하객이 끈 적이 있으면 꺼진 채로 시작
     this.track = 'garden'; this.bus = null; this.voices = [];
@@ -146,15 +149,54 @@ export class Bgm {
     this.track = track;
     this.events = TRACKS[track].events(); this.loopSeconds = TRACKS[track].seconds;
     if (!this.ctx || !this.timer) return; // 아직 시작 전이면 시작할 때 이 곡으로
+    this.fadeOutCurrent();
+    this.beginTrack(0.7);
+  }
+
+  /** 지금 버스를 0.6초에 걸쳐 줄이고 아직 울릴 소리를 멈춘다 */
+  fadeOutCurrent() {
     const now = this.ctx.currentTime, old = this.bus, oldVoices = this.voices;
-    if (old) {
-      old.gain.setValueAtTime(old.gain.value, now);
-      old.gain.linearRampToValueAtTime(0, now + 0.6);
-      for (const v of oldVoices) { try { v.stop(now + 0.65); } catch {} }
-    }
+    this.playToken++; // 아직 불러오는 중인 녹음 파일이 늦게 도착해도 틀지 않게
+    if (!old) return;
+    old.gain.setValueAtTime(old.gain.value, now);
+    old.gain.linearRampToValueAtTime(0, now + 0.6);
+    for (const v of oldVoices) { try { v.stop(now + 0.65); } catch {} }
+  }
+
+  /** 현재 곡을 delay초 뒤부터. 녹음 파일 곡이면 불러와서 반복 재생, 실패하면 합성음으로 */
+  beginTrack(delay) {
     this.newBus();
-    this.nextLoop = now + 0.7;
-    this.schedule();
+    const file = TRACKS[this.track].file;
+    if (!file) { this.nextLoop = this.ctx.currentTime + delay; this.schedule(); return; }
+    this.nextLoop = Infinity; // 녹음 곡 동안 합성 예약은 쉰다
+    const token = this.playToken, bus = this.bus;
+    this.loadBuffer(file).then((buffer) => {
+      if (token !== this.playToken) return;
+      const src = this.ctx.createBufferSource();
+      src.buffer = buffer; src.loop = true;
+      bus.gain.setValueAtTime(this.fileVolume, this.ctx.currentTime);
+      src.connect(bus);
+      src.start(this.ctx.currentTime + 0.05);
+      src.endsAt = Infinity; this.voices.push(src);
+    }).catch(() => {
+      if (token !== this.playToken) return;
+      this.nextLoop = this.ctx.currentTime + 0.1; this.schedule(); // 파일이 없거나 못 읽으면 합성한 행진곡
+    });
+  }
+
+  /** 녹음 파일을 한 번만 받아 해독해 둔다 */
+  loadBuffer(url) {
+    if (!this.buffers.has(url)) {
+      const p = Promise.resolve(this.fetchImpl(url))
+        .then((r) => { if (!r.ok) throw new Error(`audio ${r.status}`); return r.arrayBuffer(); })
+        .then((data) => new Promise((resolve, reject) => {
+          const result = this.ctx.decodeAudioData(data, resolve, reject); // 옛 사파리는 콜백 방식
+          if (result?.then) result.then(resolve, reject);
+        }));
+      p.catch(() => this.buffers.delete(url)); // 실패하면 다음에 다시 시도
+      this.buffers.set(url, p);
+    }
+    return this.buffers.get(url);
   }
 
   newBus() {
@@ -179,10 +221,8 @@ export class Bgm {
   /** 정원이 시작될 때. 오디오가 깨어 있고 켬 상태면 재생한다. */
   start() {
     if (!this.ctx || this.timer) return;
-    this.newBus();
-    this.nextLoop = this.ctx.currentTime + 0.3;
     this.timer = setInterval(() => this.schedule(), 200);
-    this.schedule();
+    this.beginTrack(0.3);
     this.applyVolume(2);
   }
 
