@@ -32,7 +32,12 @@ export function showIntro(root, config, assets = {}, current = null, { checkNick
         </div>
         <p class="muted" id="count"></p>
         <p id="err" style="color:#c0392b;min-height:1.5em"></p>
-        <div class="row"><button class="btn primary" id="go">입장하기</button></div>
+        <div class="claim-box" id="claim" hidden>
+          <p><b id="claim-name"></b> 님은 이미 정원에 다녀가셨어요.<br>같은 분이세요?</p>
+          <div class="row"><button class="btn primary" id="claim-yes">네, 저예요</button><button class="btn" id="claim-no">다른 닉네임 쓸게요</button></div>
+          <p class="muted">다른 휴대폰이나 브라우저로 다시 오셨다면 "네, 저예요"를 눌러 주세요.</p>
+        </div>
+        <div class="row" id="main-row"><button class="btn primary" id="go">입장하기</button></div>
       </div>`);
     const cv = card.querySelector('canvas'), ctx = cv.getContext('2d');
     const count = card.querySelector('#count'), err = card.querySelector('#err'), nick = card.querySelector('#nick');
@@ -58,7 +63,12 @@ export function showIntro(root, config, assets = {}, current = null, { checkNick
     card.querySelector('#prev').onclick = () => { charId = (charId + PRESET_COUNT - 1) % PRESET_COUNT; render(); };
     card.querySelector('#next').onclick = () => { charId = (charId + 1) % PRESET_COUNT; render(); };
     const goButton = card.querySelector('#go');
-    let checking = false;
+    const claimBox = card.querySelector('#claim'), mainRow = card.querySelector('#main-row');
+    let checking = false, pending = null;
+    const showClaim = (show) => { claimBox.hidden = !show; mainRow.hidden = show; };
+    card.querySelector('#claim-yes').onclick = () => { if (pending) finish({ ...pending, claim: true }); };
+    card.querySelector('#claim-no').onclick = () => { pending = null; showClaim(false); nick.select(); nick.focus(); };
+    nick.addEventListener('input', () => { if (pending) { pending = null; showClaim(false); } });
     const go = async () => {
       if (checking) return;
       const v = validateNickname(nick.value);
@@ -68,7 +78,12 @@ export function showIntro(root, config, assets = {}, current = null, { checkNick
         checking = true; goButton.disabled = true; err.textContent = '닉네임을 확인하고 있어요…';
         const r = await checkNickname(v.value);
         checking = false; goButton.disabled = false; err.textContent = '';
-        if (r.ok && !r.available) { err.textContent = '이미 다른 분이 쓰고 있는 닉네임이에요. 다른 닉네임을 골라 주세요'; nick.focus(); return; }
+        if (r.ok && !r.available) { // 막지 않고 본인인지 묻는다(카카오톡 ↔ 사파리처럼 같은 사람이 다른 브라우저로 온 경우)
+          pending = { nickname: v.value, charId };
+          card.querySelector('#claim-name').textContent = v.value;
+          showClaim(true); card.querySelector('#claim-yes').focus();
+          return;
+        }
       }
       finish({ nickname: v.value, charId });
     };

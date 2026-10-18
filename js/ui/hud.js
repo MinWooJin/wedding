@@ -28,8 +28,11 @@ export function createHud(root, config, game) {
   let sceneId = 'hub';
   const navigate = (id) => { game.player.stop(); game.goTo(id, id === 'hub' ? HUB_SPAWN : null); };
   const changeProfile = async () => {
-    const profile = await showIntro(document.getElementById('intro'), config, game.assets, game.profile, { checkNickname: game.checkNickname });
+    const picked = await showIntro(document.getElementById('intro'), config, game.assets, game.profile, { checkNickname: game.checkNickname });
+    const profile = { nickname: picked.nickname, charId: picked.charId };
+    if (picked.claim) game.claimed = true;
     game.profile = profile; saveProfile(profile);
+    game.registerVisit?.(); // 새 닉네임을 이 브라우저 것으로 등록(본인 확인 포함)
     game.player.name = profile.nickname;
     game.player.sprites = characterSet(game.assets, `preset-${profile.charId}`, presetSprites(profile.charId));
     game.paused = false; game.onMessagesChanged?.();

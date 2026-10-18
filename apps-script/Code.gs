@@ -14,8 +14,10 @@
 //   - 기기 토큰(guestId)마다 글 1분 1건·하루 MAX_PER_DAY건, 입장 등록은 1시간 1건.
 //   - PUBLIC_TOKEN을 비워 두지 않으면 요청의 token과 같아야 받는다(config.json의 guestbookToken과 동일하게).
 //   - 셀이 = + - @ 로 시작하면 앞에 ' 를 붙여 수식으로 실행되지 않게 한다.
-//   - 닉네임은 처음 쓴 기기(guestId)의 것이다. 다른 기기가 같은 닉네임(대소문자·앞뒤 공백 무시)으로 쓰면 거절한다.
-//     입장 화면은 GET ?action=check&nickname=..&guestId=.. 로 미리 확인한다. hidden 처리한 행은 닉네임을 붙잡지 않는다.
+//   - 닉네임은 그 이름으로 기록을 남긴 기기(guestId)들의 것이다. 다른 기기가 같은 닉네임(대소문자·앞뒤 공백 무시)으로 쓰면 거절한다.
+//     입장 화면은 GET ?action=check&nickname=..&guestId=.. 로 미리 확인하고, 겹치면 "본인이세요?"를 묻는다.
+//     하객이 "네, 저예요"를 누르면 claim:true로 보내고, 그 기기도 같은 닉네임의 주인으로 추가된다
+//     (카카오톡 인앱 ↔ 사파리, 폰 ↔ PC처럼 같은 사람이 다른 브라우저로 오는 경우). hidden 처리한 행은 닉네임을 붙잡지 않는다.
 //   - 목록에는 방명록 글을 남긴 사람만 나온다(입장 기록은 닉네임 확보와 캐릭터 갱신에만 쓴다).
 //   - 목록(doGet)은 CACHE_SEC 동안 캐시해 시트 읽기를 줄인다. 글이 들어오면 캐시를 지운다.
 
@@ -64,23 +66,24 @@ function nickKey_(value) {
   return readCell_(value).normalize('NFC').trim().toLowerCase();
 }
 
-/** 이 닉네임을 처음 쓴 기기 토큰. 없거나(빈 토큰·숨김 행만 있음) 처음이면 null */
-function ownerOf_(nickname) {
+/** 이 닉네임으로 기록을 남긴 기기 토큰들(숨김 행·빈 토큰 제외) */
+function ownersOf_(nickname) {
   const key = nickKey_(nickname);
+  const owners = new Set();
   const sh = sheet_();
   const last = sh.getLastRow();
-  if (last < 2) return null;
+  if (last < 2) return owners;
   const rows = sh.getRange(2, 1, last - 1, HEADERS.length).getValues();
   for (const r of rows) {
     if (isHidden_(r[5]) || !String(r[4] || '')) continue;
-    if (nickKey_(r[1]) === key) return String(r[4]);
+    if (nickKey_(r[1]) === key) owners.add(String(r[4]));
   }
-  return null;
+  return owners;
 }
 
 function nicknameAvailable_(nickname, guestId) {
-  const owner = ownerOf_(nickname);
-  return !owner || (!!guestId && owner === guestId);
+  const owners = ownersOf_(nickname);
+  return owners.size === 0 || (!!guestId && owners.has(guestId));
 }
 
 /** 목록: 숨김 아닌 행 중 닉네임당 최신 1건(메시지가 있는 행 우선), 최신순. 메시지가 없는 사람은 빼고 내려준다. */
@@ -150,7 +153,9 @@ function doPost(e) {
   lock.waitLock(5000);
   try {
     // 잠금 안에서 확인해야 두 기기가 동시에 같은 닉네임을 잡지 못한다.
-    if (!nicknameAvailable_(nickname, guestId)) return json_({ ok: false, error: '이미 다른 분이 쓰고 있는 닉네임이에요. 메뉴 → 내 캐릭터 바꾸기에서 닉네임을 바꿔 주세요', code: 'nickname-taken' });
+    // claim: 하객이 "네, 저예요"로 확인한 요청. 기기 토큰이 있어야 하며, 기록되면 이 기기도 주인이 된다.
+    const claim = body.claim === true && !!guestId;
+    if (!claim && !nicknameAvailable_(nickname, guestId)) return json_({ ok: false, error: '이미 정원에 있는 닉네임이에요. 메뉴 → 내 캐릭터 바꾸기에서 본인 확인을 하거나 다른 닉네임을 골라 주세요', code: 'nickname-taken' });
     sheet_().appendRow([new Date(), nickname, characterId, message, guestId || '', false]);
     cache.put(key, '1', isVisit ? VISIT_SEC : COOLDOWN_SEC);
     if (!isVisit) cache.put(dayKey, String(today + 1), 60 * 60 * 26);

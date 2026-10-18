@@ -106,6 +106,21 @@ test('닉네임 중복: 처음 쓴 기기만 그 닉네임을 쓰고, 대소문�
   assert.equal(app.get({ action: 'check', nickname: 'x' }).ok, false, '길이가 틀린 닉네임');
 });
 
+test('본인 확인(claim): 같은 사람이 다른 브라우저로 오면 "네, 저예요"로 이어 쓰고, 그 브라우저도 주인이 된다', () => {
+  const app = makeApp();
+  const kakao = 'guest-kakao111', safari = 'guest-safari22', stranger = 'guest-strange3';
+  assert.equal(app.post({ nickname: '민지', characterId: 3, message: '축하해', guestId: kakao }).ok, true);
+  assert.equal(app.get({ action: 'check', nickname: '민지', guestId: safari }).available, false, '새 브라우저에서는 처음엔 사용 중');
+  assert.equal(app.post({ type: 'visit', nickname: '민지', characterId: 3, message: '', guestId: safari }).code, 'nickname-taken', '확인 없이는 거절');
+  assert.equal(app.post({ type: 'visit', nickname: '민지', characterId: 3, message: '', guestId: safari, claim: true }).ok, true, '본인 확인하면 통과');
+  assert.equal(app.get({ action: 'check', nickname: '민지', guestId: safari }).available, true, '이제 이 브라우저도 주인');
+  assert.equal(app.get({ action: 'check', nickname: '민지', guestId: kakao }).available, true, '원래 브라우저도 그대로');
+  assert.equal(app.get({ action: 'check', nickname: '민지', guestId: stranger }).available, false, '다른 사람에게는 여전히 사용 중');
+  assert.equal(app.post({ nickname: '민지', characterId: 3, message: 'x', claim: true }).code, 'nickname-taken', '기기 토큰 없는 claim은 무시');
+  app.cache.clear();
+  assert.deepEqual(app.get().map((e) => [e.n, e.m]), [['민지', '축하해']], '같은 닉네임은 광장·목록에 한 사람');
+});
+
 test('공개 토큰을 설정하면 일치하는 요청만 받는다', () => {
   const app = makeApp({ token: 'secret' });
   assert.equal(app.post({ nickname: '민우', characterId: 1, message: 'x', guestId: 'guest-ffffffff' }).error, '잘못된 요청');

@@ -35,6 +35,21 @@ jobs:
           find _site -name '*.md' -delete
           find _site -name 'round*' -delete
           echo "site size:" && du -sh _site && find _site -type f | wc -l
+      - name: Stamp module and stylesheet URLs with this deploy's version
+        # GitHub Pages는 JS를 10분 캐시한다. 배포 직후 다시 온 하객이 옛 모듈과 새 모듈을 섞어 받으면
+        # 새 파일이 옛 파일에 없는 함수를 import해 화면이 멈출 수 있다. 모든 상대 import·script·stylesheet 주소에
+        # 커밋 버전을 붙여 한 배포의 파일끼리만 맞물리게 한다.
+        run: |
+          set -euo pipefail
+          V="${GITHUB_SHA::8}"
+          find _site -type f -name '*.js' -print0 | xargs -0 sed -i -E \
+            -e "s#(from[[:space:]]*['\"])(\.{1,2}/[^'\"?]+\.js)(['\"])#\1\2?v=${V}\3#g" \
+            -e "s#(import[[:space:]]*\(['\"])(\.{1,2}/[^'\"?]+\.js)(['\"])#\1\2?v=${V}\3#g"
+          find _site -type f -name '*.html' -print0 | xargs -0 sed -i -E \
+            -e "s#(<script[^>]*src=\")([^\"h?][^\"?]*\.js)(\?[^\"]*)?\"#\1\2?v=${V}\"#g" \
+            -e "s#(<link[^>]*href=\")([^\"h?][^\"?]*\.css)(\?[^\"]*)?\"#\1\2?v=${V}\"#g"
+          echo "stamped v=${V}"; grep -c "?v=${V}" _site/js/main.js _site/common/index.html _site/groom/index.html
+          node --check _site/js/main.js
       - name: Check referenced files exist
         run: |
           set -euo pipefail

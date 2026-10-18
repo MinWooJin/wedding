@@ -148,7 +148,7 @@ export class GuestbookScene extends Scene {
           if (!v.ok) { err.textContent = v.error; return true; }
           err.textContent = url ? '마음을 전하고 있어요…' : '이 기기에 저장하고 있어요…';
           if (url) {
-            const result = await postMessage(url, v.value, { guestId: game.guestId, token: game.config.guestbookToken });
+            const result = await postMessage(url, v.value, { guestId: game.guestId, token: game.config.guestbookToken, claim: game.claimed });
             if (!result.ok) { err.textContent = result.error; return true; }
             lastPostAt = Date.now();
           }

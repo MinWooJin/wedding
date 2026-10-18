@@ -29,9 +29,12 @@ let profile = loadProfile();
 await showCover(document.getElementById('intro'), config, assetsReady, !!profile);
 const [assets, gallery] = await Promise.all([assetsReady, galleryReady]);
 const guestId = getGuestId(); // 서버 도배 방지·닉네임 소유 확인용 기기 토큰
+let claimed = false; // 같은 닉네임이 이미 있을 때 하객이 "네, 저예요"로 확인했는지(이번 방문 동안)
 const nicknameChecker = config.guestbookApi ? (nickname) => checkNickname(config.guestbookApi, nickname, guestId) : null;
 if (!profile) {
   profile = await showIntro(document.getElementById('intro'), config, assets, null, { checkNickname: nicknameChecker });
+  claimed = !!profile.claim;
+  profile = { nickname: profile.nickname, charId: profile.charId };
   saveProfile(profile);
 }
 
@@ -48,6 +51,7 @@ const game = new Game({
 });
 game.gallery = Array.isArray(gallery) ? gallery : [];
 game.guestId = guestId;
+game.claimed = claimed;
 game.checkNickname = nicknameChecker;
 game.data = { messages: config.guestbookApi ? [] : readPreview() };
 game.openGuestbook = () => game.sceneById('guestbook').openForm(game);
@@ -68,11 +72,14 @@ async function refreshMessages() {
 
 /** 한 번 입장한 하객은 광장에 남는다: 세션당 한 번 닉네임·캐릭터를 등록 */
 async function registerVisit() {
-  const key = `pixel-wedding-visited:${profile.nickname}:${profile.charId}`;
+  const { nickname, charId } = game.profile;
+  const key = `pixel-wedding-visited:${nickname}:${charId}`;
   try { if (sessionStorage.getItem(key)) return; } catch {}
-  const r = await postVisit(config.guestbookApi, { nickname: profile.nickname, characterId: profile.charId }, { guestId: game.guestId, token: config.guestbookToken });
+  // 본인 확인(claim)한 입장 기록이 저장되면 이 브라우저도 그 닉네임의 주인이 된다.
+  const r = await postVisit(config.guestbookApi, { nickname, characterId: charId }, { guestId: game.guestId, token: config.guestbookToken, claim: game.claimed });
   if (r.ok) { try { sessionStorage.setItem(key, '1'); } catch {} }
 }
+game.registerVisit = registerVisit;
 registerVisit(); refreshMessages();
 setInterval(refreshMessages, 60_000);
 document.addEventListener('visibilitychange', () => { if (!document.hidden) refreshMessages(); });

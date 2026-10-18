@@ -56,19 +56,20 @@ export async function checkNickname(url, nickname, guestId, { fetchImpl = global
 }
 
 /** 입장 기록: 닉네임을 이 기기 것으로 확보하고 캐릭터를 갱신한다(메시지 없음, 광장에는 세우지 않는다). 실패해도 조용히 넘어간다. */
-export async function postVisit(url, { nickname, characterId }, { fetchImpl = globalThis.fetch, guestId, token } = {}) {
+export async function postVisit(url, { nickname, characterId }, { fetchImpl = globalThis.fetch, guestId, token, claim = false } = {}) {
   if (!url) return { ok: false, error: 'no api' };
-  return postMessage(url, { type: 'visit', nickname, characterId, message: '' }, { fetchImpl, guestId, token });
+  return postMessage(url, { type: 'visit', nickname, characterId, message: '' }, { fetchImpl, guestId, token, claim });
 }
 
 /**
  * Apps Script는 text/plain POST면 CORS 프리플라이트 없이 받는다.
  * guestId(기기 토큰)와 token(설정의 공개 토큰)은 있을 때만 본문에 붙인다.
  */
-export async function postMessage(url, entry, { fetchImpl = globalThis.fetch, timeoutMs = 10000, guestId, token } = {}) {
+export async function postMessage(url, entry, { fetchImpl = globalThis.fetch, timeoutMs = 10000, guestId, token, claim = false } = {}) {
   const ctrl = new AbortController();
   const timer = setTimeout(() => ctrl.abort(), timeoutMs);
-  const body = { ...entry, ...(guestId ? { guestId } : {}), ...(token ? { token } : {}) };
+  // claim: 같은 닉네임이 이미 있을 때 하객이 "네, 저예요"로 본인임을 확인한 경우에만 붙인다.
+  const body = { ...entry, ...(guestId ? { guestId } : {}), ...(token ? { token } : {}), ...(claim && guestId ? { claim: true } : {}) };
   try {
     const res = await fetchImpl(url, {
       method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(body), signal: ctrl.signal,

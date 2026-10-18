@@ -61,6 +61,10 @@ test('postMessage/postVisit: 기기 토큰과 공개 토큰은 있을 때만 본
   assert.deepEqual(bodies[0], { nickname: '민우', characterId: 1, message: 'hi', guestId: 'abcdef1234567890', token: 'T' });
   assert.deepEqual(bodies[1], { type: 'visit', nickname: '민우', characterId: 1, message: '', guestId: 'abcdef1234567890' });
   assert.deepEqual(bodies[2], { nickname: '민우', characterId: 1, message: 'hi' });
+  await postVisit('https://x/exec', { nickname: '민우', characterId: 1 }, { fetchImpl: f, guestId: 'abcdef1234567890', claim: true });
+  await postVisit('https://x/exec', { nickname: '민우', characterId: 1 }, { fetchImpl: f, claim: true });
+  assert.equal(bodies[3].claim, true, '본인 확인은 기기 토큰과 함께');
+  assert.equal('claim' in bodies[4], false, '기기 토큰이 없으면 claim을 보내지 않는다');
 });
 
 test('postMessage: text/plain JSON POST, 응답 ok 전달', async () => {

@@ -209,3 +209,8 @@ label { display: block; font-size: 13px; font-weight: 600; margin: 12px 0 6px; }
   .fab { min-height: 44px; }
   .fab-menu { width: 44px; height: 44px; }
 }
+/* 입장 화면: 같은 닉네임이 이미 있을 때 본인 확인 */
+.claim-box { margin: 4px 0 8px; padding: 14px 14px 10px; border-radius: 14px; background: #f5e5e9; text-align: left; }
+.claim-box p { margin: 0 0 10px; font-size: 15px; line-height: 1.6; }
+.claim-box .muted { margin: 8px 0 0; font-size: 13px; }
+.claim-box .row { display: flex; gap: 8px; flex-wrap: wrap; }
