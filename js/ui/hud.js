@@ -18,13 +18,13 @@ export const SPACES = {
 };
 
 /**
- * 지도 위에는 작은 이름 칩과 메뉴 버튼, 광장은 "축하 남기기"·각 방은 "정원으로"를 둔다.
+ * 지도 위에는 작은 이름 칩과 메뉴 버튼, 각 방은 "정원으로"를 둔다. 축하 쓰기는 방명록 우체통과 메뉴에서만(중복을 줄임).
  * 공간 설명·이동·메시지 보기·내 위치·캐릭터 바꾸기·공유는 모두 메뉴 팝업 안에 있다. 공간에 들어오면 이름을 토스트로 한 번 알린다.
  */
 export function createHud(root, config, game) {
   root.innerHTML = `<div class="garden-header"><strong>${esc(displayName(config.groom))}<i> ♥ </i>${esc(displayName(config.bride))}</strong><span class="date-chip">${esc(ddayLabel(config.wedding.date))}</span></div>
     <button class="sound-toggle" aria-pressed="false" aria-label="배경음악 끄기"></button>
-    <nav class="garden-dock" aria-label="정원 메뉴"><button class="fab fab-write" data-action="write"><span aria-hidden="true">✉</span>축하 남기기</button><button class="fab fab-return" data-action="exit" aria-label="정원으로 돌아가기" hidden><span class="return-arrow" aria-hidden="true">←</span><span>정원으로</span></button><button class="fab fab-menu menu-button" aria-label="메뉴 열기">☰</button></nav>`;
+    <nav class="garden-dock" aria-label="정원 메뉴"><button class="fab fab-return" data-action="exit" aria-label="정원으로 돌아가기" hidden><span class="return-arrow" aria-hidden="true">←</span><span>정원으로</span></button><button class="fab fab-menu menu-button" aria-label="메뉴 열기">☰</button></nav>`;
   root.hidden = false;
   let sceneId = 'hub';
   const navigate = (id) => { game.player.stop(); game.goTo(id, id === 'hub' ? HUB_SPAWN : null); };
@@ -56,7 +56,8 @@ export function createHud(root, config, game) {
         <div class="space-grid">${Object.entries(SPACES).map(([id, sp]) => `<button class="space-tile" data-space="${id}" ${id === sceneId ? 'aria-current="page"' : ''}><span>${sp.icon}</span><strong>${sp.name}</strong></button>`).join('')}</div>
         <div class="menu-actions">${actions.map(([id, label]) => `<button class="text-button" data-menu="${id}">${esc(label)}</button>`).join('')}</div>
         ${config.classicUrl ? `<a class="classic-link" href="${esc(config.classicUrl)}">일반 청첩장 보기 →</a>` : ''}`,
-      buttons: [{ label: '내 캐릭터 바꾸기', onClick: () => { close(true); game.paused = true; changeProfile(); return true; } }, { label: '소식 나누기', onClick: () => { close(true); showShare(game); return true; } }, { label: '닫기' }],
+      // 광장 아래 "축하 남기기" 버튼을 없앤 대신 메뉴 맨 위 버튼으로(방명록 우체통과 함께 축하를 쓰는 두 곳)
+      buttons: [{ label: '✉ 축하 남기기', primary: true, onClick: () => { close(true); game.openGuestbook(); return true; } }, { label: '내 캐릭터 바꾸기', onClick: () => { close(true); game.paused = true; changeProfile(); return true; } }, { label: '소식 나누기', onClick: () => { close(true); showShare(game); return true; } }, { label: '닫기' }],
     });
     card.querySelectorAll('[data-space]').forEach((b) => { b.onclick = () => { close(); if (b.dataset.space !== sceneId) navigate(b.dataset.space); }; });
     const run = {
@@ -77,9 +78,7 @@ export function createHud(root, config, game) {
   };
   if (game.bgm) { showSound(game.bgm.muted); game.bgm.onChange(showSound); sound.onclick = () => game.bgm.toggle(); }
   else sound.hidden = true;
-  root.querySelector('[data-action="write"]').onclick = () => game.openGuestbook();
   const returnButton = root.querySelector('[data-action="exit"]');
-  const writeButton = root.querySelector('[data-action="write"]');
   returnButton.onclick = () => {
     const exit = game.scene?.entrances.find((e) => e.to === 'hub');
     game.player.stop();
@@ -89,7 +88,6 @@ export function createHud(root, config, game) {
   return { onScene(id) {
     sceneId = id;
     returnButton.hidden = id === 'hub';
-    writeButton.hidden = id !== 'hub';
     const s = SPACES[id]; toast(`${s.icon} ${s.name}`, 1800);
   }, refresh, openMenu };
 }

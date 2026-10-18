@@ -167,7 +167,7 @@ label { display: block; font-size: 13px; font-weight: 600; margin: 12px 0 6px; }
 .cover-classic { display: block; color: #6a705a; font-size: 13px; padding: 8px; }
 .cover .cover-footnote { font-size: 12px; line-height: 1.6; margin-top: 18px; }
 .boot-message { font-size: 13px; color: #716b61; text-align: center; }
-/* 지도 위 상시 UI는 레퍼런스처럼 최소: 왼쪽 위 이름 칩, 아래 "축하 남기기"와 둥근 메뉴 버튼. */
+/* 지도 위 상시 UI는 레퍼런스처럼 최소: 왼쪽 위 이름 칩, 아래 둥근 메뉴 버튼(방에서는 왼쪽에 "정원으로"). 축하 쓰기는 방명록·메뉴에서. */
 .garden-header { position: absolute; top: calc(10px + env(safe-area-inset-top)); left: 12px; height: 36px; display: inline-flex; align-items: center; gap: 8px; padding: 0 10px 0 12px; border: 1px solid #fff9; background: #fffcf3e6; border-radius: 999px; box-shadow: 0 4px 14px #3a422614; pointer-events: auto; }
 .garden-header strong { font: 700 15px var(--name-font); letter-spacing: .02em; }
 .garden-header i { font-size: 11px; color: #ae6b7d; font-style: normal; }
@@ -175,7 +175,7 @@ label { display: block; font-size: 13px; font-weight: 600; margin: 12px 0 6px; }
 .garden-dock { position: absolute; bottom: calc(14px + env(safe-area-inset-bottom)); left: 14px; right: 14px; display: flex; justify-content: space-between; align-items: flex-end; pointer-events: none; }
 .fab { pointer-events: auto; border: 1px solid #dedfcf; border-radius: 999px; min-height: 52px; background: #fffcf5; color: #5c644c; font: 600 14px var(--font); display: inline-flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 14px #353d2522; cursor: pointer; }
 .fab span { font-size: 18px; line-height: 1; }
-.fab-write { padding: 0 20px 0 16px; background: #a95670; color: #fff; border-color: #a95670; }
+.fab-menu { margin-left: auto; } /* "정원으로"가 숨은 광장에서도 메뉴는 오른쪽 */
 .fab-return { gap: 10px; padding: 8px 16px 8px 10px; border-radius: 16px; background: var(--paper); color: #3e5138; border-color: #b8c2a8; box-shadow: 0 4px 12px #34452b24, inset 0 1px 0 #fff; }
 .fab-return span { font-size: 15px; font-weight: 650; }
 .fab-return .return-arrow { width: 30px; height: 30px; display: inline-flex; align-items: center; justify-content: center; border-radius: 10px; background: #e9eedf; color: #506548; font-size: 20px; }

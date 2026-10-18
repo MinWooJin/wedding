@@ -89,8 +89,7 @@ export function showGiftsNotice(game) {
     title: '마음 보내기',
     html: `<p class="gifts-notice">${esc(text)}</p>`,
     buttons: [
-      { label: '축하 남기기', primary: true, onClick: () => { close(true); game.openGuestbook?.(); return true; } },
-      { label: '계좌 보기', onClick: () => { close(true); showGiftAccounts(game); return true; } },
+      { label: '계좌 보기', primary: true, onClick: () => { close(true); showGiftAccounts(game); return true; } },
       { label: '닫기' },
     ],
   });
@@ -113,10 +112,10 @@ export function createGifts(game) {
     // 걸어서 나가는 문·매트는 없다(하단 "정원으로" 버튼). 이 항목은 그 버튼이 돌아갈 광장 자리만 알려 준다(화면 밖 좌표).
     entrances: [{ tx: -9, ty: -9, to: 'hub', spawn: HUB_DOORS.gifts.back }],
     objects: [
-      // 축의금을 사양하면 계좌 대신 두 사람의 편지(안내판)와 축하 우체통을 둔다
+      // 축의금을 사양하면 계좌 대신 두 사람의 편지(안내판)를 두 사람 위 가운데에 둔다.
+      // 축하 쓰기는 방명록 정원과 메뉴에서만 한다(여기 우체통은 중복이라 뺐다).
       ...(decline ? [
-        { id: 'notice', sprite: 'welcome-board', label: '두 사람의 편지', tx: 2, ty: 2, interact: () => showGiftsNotice(game) },
-        { id: 'post', sprite: game.assets?.objects?.['wedding-mailbox'] ? 'wedding-mailbox' : 'mailbox', label: '축하 남기기', tx: 7, ty: 1, interact: () => game.openGuestbook?.() },
+        { id: 'notice', sprite: 'welcome-board', label: '두 사람의 편지', tx: 4.5, ty: 1, solid: false, instant: true, stand: { tx: 3, ty: 3 }, interact: () => showGiftsNotice(game) },
       ] : [
         { id: 'groom-chest', sprite: 'chest', label: '신랑측 마음', tx: 2, ty: 3, interact: () => showAccounts(game, '신랑', cfg.groom) },
         { id: 'bride-chest', sprite: 'chest', label: '신부측 마음', tx: 7, ty: 3, interact: () => showAccounts(game, '신부', cfg.bride) },
