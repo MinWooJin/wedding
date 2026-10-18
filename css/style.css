@@ -244,3 +244,7 @@ label { display: block; font-size: 13px; font-weight: 600; margin: 12px 0 6px; }
 .ceremony-transport div { display: flex; gap: 10px; padding: 4px 0; }
 .ceremony-transport dt { flex: none; width: 48px; font-weight: 650; color: #95576a; }
 .ceremony-transport dd { margin: 0; }
+/* 메시지 목록: 내가 남긴 축하를 맨 위에 따로 */
+.my-messages { margin: 0 0 14px; padding: 4px 14px 2px; border-radius: 14px; background: #f5e5e9; }
+.my-messages h3 { margin: 10px 0 0; font-size: 14px; color: #84556a; }
+.my-messages .message-item:last-child { border-bottom: 0; }

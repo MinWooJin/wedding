@@ -166,6 +166,11 @@ export async function loadAssets(base = 'assets') {
       if (img) out.ceremonySheets[id] = framesFromStrip(img, sheet.frameWidth, sheet.frameHeight, sheet.frames);
     }));
   }
+  await Promise.all(jobs.splice(0)); // 아래 대체 그림이 objects를 쓰므로 먼저 기다린다
+  if (!out.objects['landmark-guestbook'] && out.objects['welcome-board']?.canvas) {
+    const board = out.objects['welcome-board'].canvas, scale = 96 / board.width;
+    out.objects['landmark-guestbook'] = imgSprite(toCanvas(board, 0, 0, board.width, board.height, 96, Math.round(board.height * scale)));
+  }
   const pieces = {};
   for (const id of pick(manifest.maps, MAP_IDS)) jobs.push(imageFor('maps', id).then((img) => { if (img) (SCENE_IDS.includes(id) ? out.maps : pieces)[id] = img; }));
   await Promise.all(jobs);

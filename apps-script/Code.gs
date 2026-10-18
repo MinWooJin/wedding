@@ -6,7 +6,8 @@
 //      코드를 고친 뒤에는 배포 → 배포 관리 → 연필 → 버전 "새 버전" 으로 다시 배포해야 반영된다.
 //
 // 시트 'guestbook' 1행 헤더: timestamp | nickname | characterId | message | guestId | hidden
-//   - message가 비어 있는 행은 "입장만 한 하객"(type: visit). 같은 닉네임은 가장 최근 행 하나만 내려준다.
+//   - message가 비어 있는 행은 "입장만 한 하객"(type: visit). 목록에는 글 행만 **모두** 내려준다(글 하나 = 방명록 정원의 꽃 하나).
+//     같은 사람의 여러 글은 캐릭터 번호를 그 사람의 가장 최근 값(입장 기록 포함)으로 맞춰 광장에는 한 사람으로 선다.
 //   - hidden 열에 TRUE(체크)를 넣으면 그 행은 목록에서 빠진다(지우지 않고 가리기).
 //
 // 보안 장치 (docs/DEPLOY.md 2절):
@@ -87,26 +88,22 @@ function nicknameAvailable_(nickname, guestId) {
   return owners.size === 0 || (!!guestId && owners.has(guestId));
 }
 
-/** 목록: 숨김 아닌 행 중 닉네임당 최신 1건(메시지가 있는 행 우선), 최신순. 메시지가 없는 사람은 빼고 내려준다. */
+/** 목록: 숨김 아닌 글 행 전부(최근 MAX_ROWS행 안), 최신순. 캐릭터는 그 사람의 가장 최근 값으로 맞춘다. */
 function listEntries_() {
   const sh = sheet_();
   const last = sh.getLastRow();
   if (last < 2) return [];
   const from = Math.max(2, last - MAX_ROWS + 1);
   const rows = sh.getRange(from, 1, last - from + 1, HEADERS.length).getValues();
-  const byNick = new Map();
-  for (const r of rows) {
+  const latestChar = new Map(), out = [];
+  for (const r of rows) { // 시트는 시간순이라 뒤에 나온 값이 최신
     const nickname = readCell_(r[1]).trim();
     if (!nickname || isHidden_(r[5])) continue;
-    const e = { t: new Date(r[0]).getTime(), n: nickname, c: Number(r[2]) || 0, m: readCell_(r[3]) };
-    const prev = byNick.get(e.n);
-    // 메시지가 있는 행을 우선 보존하고, 입장 기록만 새로 오면 캐릭터·시각만 갱신한다.
-    if (!prev) byNick.set(e.n, e);
-    else if (e.m) byNick.set(e.n, e);
-    else if (!prev.m) byNick.set(e.n, e);
-    else byNick.set(e.n, { ...prev, c: e.c, t: e.t });
+    latestChar.set(nickname, Number(r[2]) || 0);
+    const m = readCell_(r[3]);
+    if (m) out.push({ t: new Date(r[0]).getTime(), n: nickname, m });
   }
-  return [...byNick.values()].filter((e) => e.m).sort((a, b) => b.t - a.t);
+  return out.map((e) => ({ t: e.t, n: e.n, c: latestChar.get(e.n), m: e.m })).sort((a, b) => b.t - a.t);
 }
 
 function doGet(e) {

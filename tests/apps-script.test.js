@@ -53,6 +53,20 @@ test('글 저장 → 목록 반환. 닉네임당 최신 1건, 메시지 있는 �
   assert.deepEqual(app.get().map((e) => e.n), ['새암'], '입장만 한 사람은 광장·목록에 없다');
 });
 
+test('같은 사람이 여러 번 쓰면 글을 모두 내려준다(글 하나 = 꽃 하나). 캐릭터는 그 사람의 가장 최근 값', () => {
+  const app = makeApp();
+  const g = 'guest-many1111';
+  for (const [i, m] of ['첫 글', '둘째 글', '셋째 글'].entries()) {
+    app.cache.delete(`post:${g}`);
+    assert.equal(app.post({ nickname: '민지', characterId: i, message: m, guestId: g }).ok, true);
+  }
+  app.rows.slice(1).forEach((row, i) => { row[0] = new Date(Date.UTC(2027, 0, 1, 0, i)); });
+  app.cache.clear();
+  const list = app.get();
+  assert.deepEqual(list.map((e) => e.m), ['셋째 글', '둘째 글', '첫 글']);
+  assert.ok(list.every((e) => e.c === 2), '모든 글의 캐릭터는 최신 값으로');
+});
+
 test('수식 주입: = + - @ 로 시작하는 글은 앞에 \' 를 붙여 저장하고 읽을 때 벗긴다', () => {
   const app = makeApp();
   assert.equal(app.post({ nickname: '=SUM(1)', characterId: 0, message: '+1 축하', guestId: 'guest-cccccccc' }).ok, true);

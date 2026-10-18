@@ -84,7 +84,11 @@ test('입구 랜드마크는 문·통로를 막지 않고 발 기준이 타일 �
   const lm = Object.fromEntries(['gallery', 'gifts', 'info'].map((id) => [id, hub.objects.find((o) => o.id === `sign-${id}`)]));
   assert.deepEqual(Object.values(lm).map((o) => o.sprite), ['landmark-gallery', 'landmark-gifts', 'landmark-info']);
   assert.deepEqual([lm.gallery.bottom, lm.gifts.bottom, lm.info.bottom], [672, 800, 800], '20행·24행 바닥');
-  assert.ok(Object.values(lm).every((o) => o.label && o.interact), '이름표와 누르면 이동');
+  assert.ok(Object.values(lm).every((o) => !o.label && o.interact && o.instant), '이름표 없이 그림을 누르면 바로 이동');
+  const gb = hub.objects.find((o) => o.id === 'sign-guestbook');
+  assert.equal(gb.bottom, 672, '방명록도 위 줄 바닥에 맞춘다');
+  assert.equal(lm.gallery.tx - 6, 1, '위 줄은 왼쪽 1~3열·오른쪽 7~9열 칸');
+  assert.deepEqual([lm.gifts.tx, lm.info.tx], [1, 7], '아래 줄도 같은 칸');
   for (const d of Object.values(HUB_DOORS)) {
     assert.equal(hub.isSolidTile(d.door.tx, d.door.ty), false);
     assert.ok(findPath(hub.map.w, hub.map.h, (x, y) => hub.isSolidTile(x, y), HUB_SPAWN, d.back), `${d.label} 앞까지 걸어갈 수 있다`);

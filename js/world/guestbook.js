@@ -89,6 +89,8 @@ export class GuestbookScene extends Scene {
       for (let ty = 0; ty <= LAST; ty++) { this.reserved.add(`0,${ty}`); this.reserved.add(`${COLS - 1},${ty}`); }
       for (let ty = 0; ty <= 3; ty++) for (const tx of [1, 2, 8, 9]) this.reserved.add(`${tx},${ty}`);
       for (let ty = LAST - 3; ty <= LAST; ty++) for (const tx of [1, 9]) this.reserved.add(`${tx},${ty}`);
+      // 돌길 양옆(4·6열)은 그림 속 꽃띠라 메시지 꽃이 묻혀 보이지 않는다. 잔디 위에만 피운다.
+      for (let ty = 0; ty <= LAST; ty++) { this.reserved.add(`4,${ty}`); this.reserved.add(`6,${ty}`); }
     }
     this.baseObjects = this.objects.slice();
     this.setEntries(game.data?.messages ?? []);
@@ -99,21 +101,37 @@ export class GuestbookScene extends Scene {
     const entries = allEntries.filter((e) => e.m); // 입장만 한 하객(메시지 없음)은 꽃을 피우지 않는다
     this.entries = entries;
     const tiles = pickTiles(freeTiles(ROWS, this.reserved), Math.min(entries.length, 40), 7);
-    const flowers = tiles.map((t, i) => this.makeObject({
-      id: `flower${i}`, sprite: 'flower', tx: t.tx, ty: t.ty, solid: false,
-      interact: () => showOverlay(this.game, { title: `${entries[i].n}님의 메시지`, html: `<p>${esc(entries[i].m)}</p>` }),
-    }));
+    const me = this.game?.profile?.nickname;
+    const heart = this.game?.assets?.ceremony?.heart;
+    const flowers = tiles.map((t, i) => {
+      const mine = !!me && entries[i].n === me;
+      const o = this.makeObject({
+        id: `flower${i}`, sprite: 'flower', tx: t.tx, ty: t.ty, solid: false,
+        interact: () => showOverlay(this.game, { title: `${entries[i].n}님의 메시지`, html: `<p>${esc(entries[i].m)}</p>` }),
+      });
+      // 배경 그림에도 꽃이 많아서, 메시지 꽃 위에는 작은 하트(내 글은 하트, 다른 분 글은 반짝이)를 띄워 구별한다.
+      if (heart) o.drawContent = (r) => {
+        const bob = r.reducedMotion ? 0 : Math.round(Math.sin(Date.now() / 450 + i) * 1.5);
+        r.drawCrop?.(heart, mine ? 0 : 8, 0, 8, 8, o.tx * 32 + 12, o.drawY - 9 + bob);
+      };
+      return o;
+    });
     this.objects = [...this.baseObjects, ...flowers];
     this.rebuildSolid();
   }
 
+  /** 메시지 목록. 내가 쓴 글이 있으면 맨 위에 "내가 남긴 축하"로 따로 모아 보여 준다. */
   openList() {
     const snapshot = this.game.data.messages;
     const entries = snapshot.map((entry, index) => ({ ...entry, sourceIndex: index })).filter((e) => e.m).sort((a, b) => b.t - a.t);
+    const me = this.game.profile?.nickname;
+    const mine = entries.filter((e) => e.n === me), others = entries.filter((e) => e.n !== me);
+    const item = (e, own = false) => `<article class="message-item${own ? ' mine' : ''}"><strong>${esc(e.n)}</strong><p>${esc(e.m)}</p><small>${esc(new Date(e.t).toLocaleDateString('ko-KR'))}</small>${!this.game.config.guestbookApi ? `<button class="text-button preview-delete" data-index="${e.sourceIndex}">이 미리보기 지우기</button>` : ''}</article>`;
     const { card, close } = showOverlay(this.game, {
       title: `정원에 도착한 마음 · ${entries.length}`,
       html: `${!this.game.config.guestbookApi ? '<p class="preview-notice">이 기기에 저장한 미리보기예요. 다른 사람에게 공개되지 않아요.</p>' : ''}
-        <div class="message-list">${entries.length ? entries.map((e) => `<article class="message-item"><strong>${esc(e.n)}</strong><p>${esc(e.m)}</p><small>${esc(new Date(e.t).toLocaleDateString('ko-KR'))}</small>${!this.game.config.guestbookApi ? `<button class="text-button preview-delete" data-index="${e.sourceIndex}">이 미리보기 지우기</button>` : ''}</article>`).join('') : '<div class="empty-state"><span>❀</span><h3>첫 번째 꽃을 기다리고 있어요</h3><p>따뜻한 한마디가 정원의 첫 꽃이 됩니다.</p></div>'}</div>`,
+        ${mine.length ? `<section class="my-messages" aria-label="내가 남긴 축하"><h3>내가 남긴 축하 · ${mine.length}</h3>${mine.map((e) => item(e, true)).join('')}</section>` : ''}
+        <div class="message-list">${entries.length ? (others.length ? others.map((e) => item(e)).join('') : '<p class="muted">아직 다른 분의 축하는 없어요.</p>') : '<div class="empty-state"><span>❀</span><h3>첫 번째 꽃을 기다리고 있어요</h3><p>따뜻한 한마디가 정원의 첫 꽃이 됩니다.</p></div>'}</div>`,
       buttons: [{ label: '축하 남기기', primary: true, onClick: () => { close(true); this.openForm(this.game); return true; } }, { label: '닫기' }],
     });
     card.querySelectorAll('.preview-delete').forEach((button) => {
@@ -158,7 +176,8 @@ export class GuestbookScene extends Scene {
           game.data.messages = entries.slice(0, url ? Infinity : 100);
           submitted = true; game.onMessagesChanged?.();
           game.player.say(url ? '축하를 전했어요 ♡' : '내 기기에 꽃이 피었어요 ♡');
-          toast(url ? '마음을 전했어요. 메시지 보기에서 확인해 주세요.' : '이 기기에만 저장했어요. 메시지 보기에서 확인해 주세요.');
+          toast(url ? '마음을 전했어요. 방명록 정원에 꽃이 피었어요.' : '이 기기에만 저장했어요.');
+          setTimeout(() => this.openList(), 0); // 보낸 뒤 바로 내가 남긴 축하를 맨 위에서 보여 준다
           return false;
         } },
       ],

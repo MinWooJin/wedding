@@ -89,22 +89,34 @@ function gardenEdges(assets, treeCols) {
 }
 
 /**
- * 입구 랜드마크(코덱스 10차). 발 기준이 타일 바닥에 맞도록 놓는다: 갤러리 6~8열·20행, 마음 전하기 2~4열·24행, 예식 안내 6~8열·24행.
- * 충돌은 그림 맨 아랫줄만이라 문(1·9열)과 가운데 5열 통로는 그대로 열려 있다.
+ * 입구 광장의 네 공간 그림. 같은 크기의 칸(96×112, 3칸 폭)에 2×2로 좌우 대칭 배치하고, 줄마다 바닥을 맞춘다.
+ *   왼쪽 위 방명록 · 오른쪽 위 갤러리(바닥 20행) / 왼쪽 아래 마음 전하기 · 오른쪽 아래 예식 안내(바닥 24행)
+ * 가운데 4~6열은 통로로 비운다. 충돌은 그림 맨 아랫줄만. 이름표는 그리지 않는다(그림이 곧 입구).
+ * 그림이 없으면 예전 표지판(이름표 있음)으로 돌아간다.
  */
+export const ENTRANCE_SLOT = { w: 96, h: 112 };
+const SLOT_COLS = { left: 1, right: 7 };
+const SLOT_BOTTOM_ROW = { top: 20, bottom: 24 };
 const LANDMARKS = {
-  gallery: { sprite: 'landmark-gallery', tx: 6, ty: 17 },
-  gifts: { sprite: 'landmark-gifts', tx: 2, ty: 22 },
-  info: { sprite: 'landmark-info', tx: 6, ty: 21 },
+  guestbook: { sprite: 'landmark-guestbook', col: 'left', row: 'top', fallback: 'welcome-board' },
+  gallery: { sprite: 'landmark-gallery', col: 'right', row: 'top' },
+  gifts: { sprite: 'landmark-gifts', col: 'left', row: 'bottom' },
+  info: { sprite: 'landmark-info', col: 'right', row: 'bottom' },
 };
+/** 칸 안에 그림을 가운데·바닥 맞춤으로 놓을 타일 좌표 */
+function slotPlace(spr, slot) {
+  const rows = Math.ceil(spr.h / 32);
+  // 칸보다 좁은 그림(임시 웰컴보드 64px)은 가운데에 가깝게 두되 타일 단위로 맞춘다(반 칸 좌표는 충돌·경로 계산을 깨뜨린다).
+  return { tx: SLOT_COLS[slot.col] + Math.round((ENTRANCE_SLOT.w - spr.w) / 64), ty: SLOT_BOTTOM_ROW[slot.row] + 1 - rows };
+}
 
 /** 각 방으로 가는 문 위치와, 그 방에서 돌아올 때 설 자리 */
 export const HUB_DOORS = {
-  // sign은 64×64(2×2칸)라 문 옆 두 칸을 차지한다
-  guestbook: { door: { tx: 1, ty: BLOCK_A }, sign: { tx: 2, ty: BLOCK_A }, back: { tx: 1, ty: CROSS_A }, label: '방명록 정원' },
-  gallery:   { door: { tx: 9, ty: BLOCK_A }, sign: { tx: 7, ty: BLOCK_A }, back: { tx: 9, ty: CROSS_A }, label: '갤러리관' },
-  gifts:     { door: { tx: 1, ty: BLOCK_B }, sign: { tx: 2, ty: BLOCK_B }, back: { tx: 1, ty: CROSS_B }, label: '마음 전하는 곳' },
-  info:      { door: { tx: 9, ty: BLOCK_B }, sign: { tx: 7, ty: BLOCK_B }, back: { tx: 9, ty: CROSS_B }, label: '예식 안내소' },
+  // sign은 그림이 없을 때 쓰는 64×64 표지판 자리. back은 그 공간에서 돌아올 때 서는 자리(그림 옆 가운데 통로).
+  guestbook: { door: { tx: 1, ty: BLOCK_A }, sign: { tx: 2, ty: BLOCK_A }, back: { tx: 4, ty: 21 }, label: '방명록 정원' },
+  gallery:   { door: { tx: 9, ty: BLOCK_A }, sign: { tx: 7, ty: BLOCK_A }, back: { tx: 6, ty: 21 }, label: '갤러리관' },
+  gifts:     { door: { tx: 1, ty: BLOCK_B }, sign: { tx: 2, ty: BLOCK_B }, back: { tx: 4, ty: 25 }, label: '마음 전하는 곳' },
+  info:      { door: { tx: 9, ty: BLOCK_B }, sign: { tx: 7, ty: BLOCK_B }, back: { tx: 6, ty: 25 }, label: '예식 안내소' },
 };
 
 /**
@@ -234,10 +246,11 @@ export class HubScene extends Scene {
     // 걸어서 밟는 입구도 없다. 방명록 보드·갤러리 액자·선물·예식장 문을 누르면 바로 그 공간으로 넘어간다.
     const entrances = [];
     for (const [id, d] of Object.entries(HUB_DOORS)) {
-      // 갤러리관·마음 전하는 곳·예식 안내소는 표지판 대신 공간을 보여 주는 큰 그림(랜드마크). 그림이 없으면 표지판.
-      const landmark = LANDMARKS[id] && has(game.assets, LANDMARKS[id].sprite) ? LANDMARKS[id] : null;
-      const sprite = landmark ? landmark.sprite : id === 'guestbook' ? 'welcome-board' : 'sign';
-      objects.push({ id: `sign-${id}`, sprite, label: d.label, ...(landmark ? { tx: landmark.tx, ty: landmark.ty } : d.sign), instant: true, interact: (g) => g.goTo(id) });
+      // 공간을 보여 주는 그림을 같은 칸에 놓는다. 그림이 하나도 없으면(코드 그림만 있을 때) 예전 표지판+이름표.
+      const slot = LANDMARKS[id];
+      const art = [slot.sprite, slot.fallback].find((s) => s && has(game.assets, s));
+      if (art) objects.push({ id: `sign-${id}`, sprite: art, ...slotPlace(game.assets.objects[art], slot), instant: true, interact: (g) => g.goTo(id), name: d.label });
+      else objects.push({ id: `sign-${id}`, sprite: id === 'guestbook' ? 'welcome-board' : 'sign', label: d.label, ...d.sign, instant: true, interact: (g) => g.goTo(id) });
     }
 
     super({
