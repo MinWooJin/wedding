@@ -57,7 +57,9 @@ export function composeMap(images, pieces, create = (w, h) => Object.assign(docu
 function loadImage(src) {
   return new Promise((resolve) => {
     const img = new Image();
-    const timer = setTimeout(() => resolve(null), 6000);
+    // 그림 150장을 한꺼번에 받으므로 느린 망에서는 한 장이 6초를 넘기기도 한다. 너무 짧게 잡으면
+    // 버전 파일을 포기하고 없는 기본 파일(404)로 넘어가 그림이 빠진다. 서버 오류는 onerror가 바로 잡는다.
+    const timer = setTimeout(() => resolve(null), 20000);
     img.onload = () => { clearTimeout(timer); resolve(img); };
     img.onerror = () => { clearTimeout(timer); resolve(null); };
     img.src = src;
