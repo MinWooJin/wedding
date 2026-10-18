@@ -11,10 +11,10 @@ import { toast } from './toast.js';
 
 export const SPACES = {
   hub: { icon: '⌂', name: '두 사람의 정원', text: '두 사람을 만나고, 따뜻한 축하를 꽃으로 남겨 주세요.' },
-  guestbook: { icon: '✉', name: '축하가 피어나는 정원', text: '우체통을 누르면 편지를 쓸 수 있어요. 꽃에는 하객의 마음이 담겨요.' },
-  gallery: { icon: '▧', name: '우리의 순간들', text: '사진 속 두 사람의 이야기를 천천히 만나 보세요.' },
-  info: { icon: '♧', name: '결혼 소식', text: '예식 소식과 가족분들을 위한 안내를 모았어요.' },
-  gifts: { icon: '♥', name: '마음 전하는 곳', text: '보내주시는 축하의 마음만 감사히 받을게요.' },
+  guestbook: { icon: '✉', name: '방명록', text: '우체통을 누르면 편지를 쓸 수 있어요. 꽃에는 하객의 마음이 담겨요.' },
+  gallery: { icon: '▧', name: '갤러리', text: '사진 속 두 사람의 이야기를 천천히 만나 보세요.' },
+  info: { icon: '♧', name: '예식장', text: '예식 소식과 가족분들을 위한 안내를 모았어요.' },
+  gifts: { icon: '♥', name: '마음 보내기', text: '보내주시는 축하의 마음만 감사히 받을게요.' },
 };
 
 /**
