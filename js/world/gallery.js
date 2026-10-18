@@ -41,18 +41,19 @@ export class GalleryScene extends Scene {
         interact: () => openViewer(game, images, f.index),
       })),
     ];
-    if (files.length === 0) objects.push({ id: 'empty', sprite: 'welcome-board', label: '우리의 사진을 기다려 주세요', tx: 4, ty: 4, interact: () => toast('사진은 마지막 준비 단계에서 채워질 예정이에요 📷') });
+    // 사진이 없을 때 안내 이젤: 방 가운데 축(x176)에 맞추고(반 칸 좌표라 충돌 없이), 설 자리는 아래 가운데
+    if (files.length === 0) objects.push({ id: 'empty', sprite: 'welcome-board', label: '우리의 사진을 기다려 주세요', tx: 4.5, ty: 3, solid: false, stand: { tx: 5, ty: 5 }, interact: () => toast('사진은 마지막 준비 단계에서 채워질 예정이에요 📷') });
     if (game.assets?.objects?.window) objects.push({ id: 'winL', sprite: 'window', tx: 2, ty: -1 }, { id: 'winR', sprite: 'window', tx: 7, ty: -1 });
 
     if (game.assets?.objects?.plant) objects.push({ id: 'plantL', sprite: 'plant', tx: 1, ty: L.exit.ty - 3 }, { id: 'plantR', sprite: 'plant', tx: 9, ty: L.exit.ty - 3 });
 
     super({
       id: 'gallery', rows: L.rows, bg: '#f6efe7', spawn: L.spawn, assets,
-      // 두 사람이 입구 양옆에서 맞이한다(방명록 정원 우체통 양옆처럼). 들어온 하객·이름표와 겹치지 않는다
-      npcs: [makeHostNpc(game, 'groom', { tx: 3, ty: L.spawn.ty - 1 }, [
+      // 두 사람이 방 한가운데 통로에 단상처럼 나란히 선다(액자·이젤 앞이 아닌 빈 바닥)
+      npcs: [makeHostNpc(game, 'groom', { tx: 4.45, ty: L.hostRow }, [
         files.length ? '액자를 누르면 사진을 크게 볼 수 있어요.' : '우리의 사진은 조금 더 준비하고 있어요. 완성되면 이곳에 담아둘게요.',
         '함께한 순간들을 천천히 둘러봐 주세요.',
-      ]), makeHostNpc(game, 'bride', { tx: 7, ty: L.spawn.ty - 1 }, [
+      ]), makeHostNpc(game, 'bride', { tx: 5.55, ty: L.hostRow }, [
         '사진 속 이야기를 하나씩 들려드릴게요.',
         '마음에 드는 사진이 있으면 오래 보고 가세요.',
       ])],

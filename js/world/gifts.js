@@ -104,10 +104,10 @@ export function createGifts(game) {
   const decline = !!cfg.gifts?.declineMoney;
   return new Scene({
     id: 'gifts', rows: ROWS, bg: '#f6efe7', spawn: { tx: 5, ty: 10 }, assets: game.assets,
-    npcs: [makeHostNpc(game, 'groom', { tx: 3, ty: 9 }, [
+    npcs: [makeHostNpc(game, 'groom', { tx: 4.45, ty: 4 }, [
       '와 주셔서 고마워요. 마음만으로도 큰 선물이에요.',
       '소식 나누기로 다른 분들께도 전해 주세요.',
-    ]), makeHostNpc(game, 'bride', { tx: 7, ty: 9 }, [
+    ]), makeHostNpc(game, 'bride', { tx: 5.55, ty: 4 }, [
       '함께 마음을 나눠 주시는 것만으로도 참 감사해요.',
       decline ? '축의금은 정중히 사양해요. 따뜻한 축하만으로 충분해요.' : '보내 주신 축하를 소중히 간직할게요.',
     ])],
@@ -122,7 +122,8 @@ export function createGifts(game) {
         { id: 'groom-chest', sprite: 'chest', label: '신랑측 마음', tx: 2, ty: 3, interact: () => showAccounts(game, '신랑', cfg.groom) },
         { id: 'bride-chest', sprite: 'chest', label: '신부측 마음', tx: 7, ty: 3, interact: () => showAccounts(game, '신부', cfg.bride) },
       ]),
-      { id: 'share', sprite: game.assets?.objects?.['share-letter'] ? 'share-letter' : 'welcome-board', label: '소식 나누기', tx: 4, ty: 6, interact: () => showShare(game) },
+      // 소식 나누기 편지는 두 사람 아래로 내려 가운데 축(x176)에 맞춘다. 설 자리는 입구 쪽 가운데
+      { id: 'share', sprite: game.assets?.objects?.['share-letter'] ? 'share-letter' : 'welcome-board', label: '소식 나누기', tx: 4.5, ty: 7, solid: false, stand: { tx: 5, ty: 10 }, interact: () => showShare(game) },
       ...(game.assets?.objects?.plant ? [{ id: 'plantL', sprite: 'plant', tx: 1, ty: 8 }, { id: 'plantR', sprite: 'plant', tx: 9, ty: 8 }] : []),
       { id: 'lanternL', sprite: 'lantern', tx: 1, ty: 1 }, { id: 'lanternR', sprite: 'lantern', tx: 9, ty: 1 },
     ],
