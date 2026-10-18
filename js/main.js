@@ -1,6 +1,6 @@
 import { Game } from './game.js';
 import { loadConfig } from './config.js';
-import { loadProfile, saveProfile } from './state.js';
+import { loadProfile, saveProfile, getGuestId } from './state.js';
 import { loadAssets } from './assets.js';
 import { fetchMessages, postVisit } from './api.js';
 import { showIntro } from './ui/intro.js';
@@ -45,6 +45,7 @@ const game = new Game({
   ui: {},
 });
 game.gallery = Array.isArray(gallery) ? gallery : [];
+game.guestId = getGuestId(); // 서버 도배 방지용 기기 토큰
 game.data = { messages: config.guestbookApi ? [] : readPreview() };
 game.openGuestbook = () => game.sceneById('guestbook').openForm(game);
 game.openMessages = () => game.sceneById('guestbook').openList();
@@ -66,7 +67,7 @@ async function refreshMessages() {
 async function registerVisit() {
   const key = `pixel-wedding-visited:${profile.nickname}:${profile.charId}`;
   try { if (sessionStorage.getItem(key)) return; } catch {}
-  const r = await postVisit(config.guestbookApi, { nickname: profile.nickname, characterId: profile.charId });
+  const r = await postVisit(config.guestbookApi, { nickname: profile.nickname, characterId: profile.charId }, { guestId: game.guestId, token: config.guestbookToken });
   if (r.ok) { try { sessionStorage.setItem(key, '1'); } catch {} }
 }
 registerVisit(); refreshMessages();

@@ -35,18 +35,22 @@ export async function fetchMessages(url, { fetchImpl = globalThis.fetch, timeout
 }
 
 /** 입장만 한 하객도 광장에 남도록 닉네임·캐릭터를 등록한다(메시지 없음). 실패해도 조용히 넘어간다. */
-export async function postVisit(url, { nickname, characterId }, { fetchImpl = globalThis.fetch } = {}) {
+export async function postVisit(url, { nickname, characterId }, { fetchImpl = globalThis.fetch, guestId, token } = {}) {
   if (!url) return { ok: false, error: 'no api' };
-  return postMessage(url, { type: 'visit', nickname, characterId, message: '' }, { fetchImpl });
+  return postMessage(url, { type: 'visit', nickname, characterId, message: '' }, { fetchImpl, guestId, token });
 }
 
-/** Apps Script는 text/plain POST면 CORS 프리플라이트 없이 받는다 */
-export async function postMessage(url, entry, { fetchImpl = globalThis.fetch, timeoutMs = 10000 } = {}) {
+/**
+ * Apps Script는 text/plain POST면 CORS 프리플라이트 없이 받는다.
+ * guestId(기기 토큰)와 token(설정의 공개 토큰)은 있을 때만 본문에 붙인다.
+ */
+export async function postMessage(url, entry, { fetchImpl = globalThis.fetch, timeoutMs = 10000, guestId, token } = {}) {
   const ctrl = new AbortController();
   const timer = setTimeout(() => ctrl.abort(), timeoutMs);
+  const body = { ...entry, ...(guestId ? { guestId } : {}), ...(token ? { token } : {}) };
   try {
     const res = await fetchImpl(url, {
-      method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(entry), signal: ctrl.signal,
+      method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(body), signal: ctrl.signal,
     });
     if (!res.ok) return { ok: false, error: '잠시 후 다시 시도해 주세요' };
     const data = await res.json();

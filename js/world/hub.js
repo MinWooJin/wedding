@@ -348,7 +348,8 @@ export class HubScene extends Scene {
         const leg2 = findPath(this.map.w, this.map.h, blocked, via, homeTile) ?? [];
         const points = [...leg1, ...leg2].map((t) => standPos(t.tx, t.ty));
         points.push(home);
-        c.followPath(points, () => { n.arrival = null; c.speed = GUEST_SPEED; c.dir = 'down'; c.alpha = 1; });
+        // 걸음은 목표 0.5px 안에서 멈추므로 도착하면 원래 자리(흩뜨린 위치)에 정확히 맞춘다.
+        c.followPath(points, () => { n.arrival = null; c.x = home.x; c.y = home.y; c.speed = GUEST_SPEED; c.dir = 'down'; c.alpha = 1; });
       }
       else if (c.alpha < 1) c.alpha = Math.min(1, c.alpha + dt / ARRIVAL.fade);
     }

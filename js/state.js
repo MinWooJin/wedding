@@ -1,6 +1,21 @@
 import { PRESET_COUNT } from './sprites/characters.js';
 
 const KEY = 'pixel-wedding-profile';
+const GUEST_KEY = 'pixel-wedding-guest';
+
+/** 기기마다 한 번 만들어 두는 임의 토큰. 서버가 도배를 막는 기준이며 개인정보가 아니다. */
+export function getGuestId(storage = safeStorage()) {
+  try {
+    const saved = storage?.getItem(GUEST_KEY);
+    if (saved && /^[A-Za-z0-9_-]{8,64}$/.test(saved)) return saved;
+  } catch {}
+  const bytes = new Uint8Array(16);
+  if (globalThis.crypto?.getRandomValues) globalThis.crypto.getRandomValues(bytes);
+  else for (let i = 0; i < bytes.length; i++) bytes[i] = Math.floor(Math.random() * 256);
+  const id = Array.from(bytes, (b) => b.toString(16).padStart(2, '0')).join('');
+  try { storage?.setItem(GUEST_KEY, id); } catch {}
+  return id;
+}
 
 export function validateNickname(raw) {
   const n = (raw ?? '').toString().trim();

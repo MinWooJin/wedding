@@ -41,6 +41,17 @@ test('postVisit: type=visit로 빈 메시지 POST, URL 없으면 호출 안 함'
   assert.equal(seen, null);
 });
 
+test('postMessage/postVisit: 기기 토큰과 공개 토큰은 있을 때만 본문에 붙인다', async () => {
+  const bodies = [];
+  const f = async (u, o) => { bodies.push(JSON.parse(o.body)); return { ok: true, json: async () => ({ ok: true }) }; };
+  await postMessage('https://x/exec', { nickname: '민우', characterId: 1, message: 'hi' }, { fetchImpl: f, guestId: 'abcdef1234567890', token: 'T' });
+  await postVisit('https://x/exec', { nickname: '민우', characterId: 1 }, { fetchImpl: f, guestId: 'abcdef1234567890' });
+  await postMessage('https://x/exec', { nickname: '민우', characterId: 1, message: 'hi' }, { fetchImpl: f });
+  assert.deepEqual(bodies[0], { nickname: '민우', characterId: 1, message: 'hi', guestId: 'abcdef1234567890', token: 'T' });
+  assert.deepEqual(bodies[1], { type: 'visit', nickname: '민우', characterId: 1, message: '', guestId: 'abcdef1234567890' });
+  assert.deepEqual(bodies[2], { nickname: '민우', characterId: 1, message: 'hi' });
+});
+
 test('postMessage: text/plain JSON POST, 응답 ok 전달', async () => {
   let seen;
   const f = async (url, init) => { seen = { url, init }; return { ok: true, json: async () => ({ ok: true }) }; };
