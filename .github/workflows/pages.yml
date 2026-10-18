@@ -30,7 +30,7 @@ jobs:
           cp -r common groom bride classic css js data gallery _site/
           mkdir -p _site/assets
           cp assets/manifest.json _site/assets/
-          cp -r assets/characters assets/tiles assets/objects assets/maps _site/assets/
+          cp -r assets/characters assets/tiles assets/objects assets/maps assets/ceremony _site/assets/
           # 비교·보고용 파일은 사이트에서 제외
           find _site -name '*.md' -delete
           find _site -name 'round*' -delete
@@ -59,7 +59,12 @@ jobs:
             const file = (cat, n) => m.files?.[cat]?.[n] ?? `${n}.png`;
             const tileFile = { Q: "X1", Y: "X2", V: "X3", Z: "X4" };
             let missing = [];
-            for (const cat of ["characters", "objects", "maps"]) for (const n of m[cat] ?? []) if (!fs.existsSync(`_site/assets/${cat}/${file(cat, n)}`)) missing.push(`${cat}/${n}`);
+            const sheets = m.ceremonySheets ?? {};
+            for (const cat of ["characters", "objects", "maps", "ceremony"]) for (const n of m[cat] ?? []) {
+              if (cat === "characters" && sheets[n]) continue; // 예식 전용 가로 시트는 아래에서 따로 확인
+              if (!fs.existsSync(`_site/assets/${cat}/${file(cat, n)}`)) missing.push(`${cat}/${n}`);
+            }
+            for (const [n, sh] of Object.entries(sheets)) if (!fs.existsSync(`_site/assets/${sh.file}`)) missing.push(`ceremonySheets/${n}`);
             for (const n of m.tiles ?? []) { const t = tileFile[n] ?? n; if (!fs.existsSync(`_site/assets/tiles/${file("tiles", t)}`)) missing.push(`tiles/${n}`); }
             for (const p of ["_site/common/index.html", "_site/groom/index.html", "_site/bride/index.html", "_site/classic/app.js", "_site/data/config.json", "_site/js/main.js", "_site/css/style.css"]) if (!fs.existsSync(p)) missing.push(p);
             if (missing.length) { console.error("missing:", missing); process.exit(1); }
