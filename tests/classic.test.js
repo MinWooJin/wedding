@@ -16,8 +16,7 @@ test('일반형 참조 파일과 공유 그림이 존재한다',()=>{
   for(const file of ['groom/index.html','bride/index.html','classic/app.js','classic/app.css','classic/model.js']){
     const source=read(file),base=dirname(resolve(root,file));
     for(const [,value] of source.matchAll(/(?:src|href)=["'](\.\.\/[^"']+)["']/g)){
-      if(value==='../common/')continue; // Explicit phase-2 dependency owned by Claude.
-      assert.ok(existsSync(resolve(base,value)),`${file}: ${value}`);
+      assert.ok(existsSync(resolve(base,value.split(/[?#]/)[0])),`${file}: ${value}`);
     }
   }
   for(const [file,size] of [['garden-preview.png',[352,240]],['og-groom.png',[1200,630]],['og-bride.png',[1200,630]]]){
