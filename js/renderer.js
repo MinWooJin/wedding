@@ -197,6 +197,14 @@ export class Renderer {
     this.ctx.drawImage(img, sx, sy, sw, sh, Math.round(x - this.cam.x), Math.round(y - this.cam.y), sw, sh);
   }
 
+  /** 사진(실사)을 월드 좌표 (x,y)에 w×h로 부드럽게 그린다. 픽셀 그림과 달리 계단 현상 없이 */
+  drawPhoto(c, x, y, w, h) {
+    const ctx = this.ctx;
+    ctx.save(); ctx.imageSmoothingEnabled = true; ctx.imageSmoothingQuality = 'high';
+    ctx.drawImage(c, Math.round(x - this.cam.x), Math.round(y - this.cam.y), w, h);
+    ctx.restore();
+  }
+
   /** 미리 그려둔 캔버스/이미지(썸네일, 맵 배경 등)를 월드 좌표에 그린다 */
   drawCanvas(c, x, y) {
     this.ctx.drawImage(c, Math.round(x - this.cam.x), Math.round(y - this.cam.y));

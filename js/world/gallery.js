@@ -3,21 +3,42 @@ import { HUB_DOORS } from './hub.js';
 import { galleryLayout } from './gallery-layout.js';
 import { openViewer } from '../ui/viewer.js';
 import { toast } from '../ui/toast.js';
-import { TILE, spriteCanvas } from '../renderer.js';
-import { objectSprite } from '../sprites/objects.js';
+import { TILE } from '../renderer.js';
 import { makeHostNpc } from './host-npc.js';
 
-// frame 스프라이트(64×64) 안쪽 사진 영역(액자 PNG의 테두리 안쪽)
-const THUMB_X = 27, THUMB_Y = 28, THUMB_W = 45, THUMB_H = 42;
+/**
+ * 세로 사진 액자(96×112, 3칸×4행). 예전 액자 그림은 안쪽 구멍이 22×19px밖에 안 돼 사진이 테두리를 덮고 작게 보였다.
+ * 나무 테두리와 금빛 안쪽 선을 코드로 그리고, 그 안(3:4, 72×96)에 사진을 꽉 채운다.
+ */
+export const FRAME_W = 96, FRAME_H = 112;
+export const PHOTO = { x: 12, y: 8, w: 72, h: 96 };
+const THUMB_SCALE = 3; // 화면 배율(2~3배)에서도 또렷하게: 사진은 3배 해상도로 줄여 두고 부드럽게 그린다
 
-/** 이미지를 썸네일 캔버스로(cover 크롭) */
+function frameCanvas() {
+  const c = document.createElement('canvas'); c.width = FRAME_W; c.height = FRAME_H;
+  const ctx = c.getContext('2d');
+  const fill = (color, x, y, w, h) => { if (!ctx.fillRect) return; ctx.fillStyle = color; ctx.fillRect(x, y, w, h); };
+  const { x, y, w, h } = PHOTO;
+  fill('rgba(60,40,24,.22)', x - 4, y - 4, w + 10, h + 10);   // 벽에 드리운 그림자(오른쪽 아래)
+  fill('#5a3d27', x - 6, y - 6, w + 12, h + 12);               // 바깥 어두운 테
+  fill('#9a6b42', x - 5, y - 5, w + 10, h + 10);               // 나무
+  fill('#c08d5a', x - 5, y - 5, w + 10, 1); fill('#c08d5a', x - 5, y - 5, 1, h + 10); // 위·왼쪽 빛
+  fill('#e6c77d', x - 2, y - 2, w + 4, h + 4);                 // 금빛 안쪽 선
+  fill('#4a3322', x - 1, y - 1, w + 2, h + 2);
+  fill('#efe6d8', x, y, w, h);                                  // 사진이 오기 전 바탕
+  for (const [cx, cy] of [[x - 5, y - 5], [x + w + 3, y - 5], [x - 5, y + h + 3], [x + w + 3, y + h + 3]]) fill('#e6c77d', cx, cy, 2, 2); // 모서리 장식
+  return c;
+}
+
+/** 이미지를 액자 안 크기(3배 해상도)로 cover 크롭 */
 function makeThumb(img) {
   const c = document.createElement('canvas');
-  c.width = THUMB_W; c.height = THUMB_H;
+  c.width = PHOTO.w * THUMB_SCALE; c.height = PHOTO.h * THUMB_SCALE;
   const ctx = c.getContext('2d');
-  const s = Math.max(THUMB_W / img.naturalWidth, THUMB_H / img.naturalHeight);
+  ctx.imageSmoothingEnabled = true; ctx.imageSmoothingQuality = 'high';
+  const s = Math.max(c.width / img.naturalWidth, c.height / img.naturalHeight);
   const w = img.naturalWidth * s, h = img.naturalHeight * s;
-  ctx.drawImage(img, (THUMB_W - w) / 2, (THUMB_H - h) / 2, w, h);
+  ctx.drawImage(img, (c.width - w) / 2, (c.height - h) / 2, w, h);
   return c;
 }
 
@@ -25,14 +46,7 @@ export class GalleryScene extends Scene {
   /** @param files gallery/manifest.json의 파일명 배열 */
   constructor(game, files) {
     const L = galleryLayout(files.length);
-    let assets = game.assets;
-    const originalFrame = assets?.objects?.frame ?? objectSprite('frame');
-    if (originalFrame) {
-      const canvas = document.createElement('canvas'); canvas.width = 96; canvas.height = 96;
-      const ctx = canvas.getContext('2d'); ctx.imageSmoothingEnabled = false;
-      ctx.drawImage(spriteCanvas(originalFrame), 0, 0, 96, 96);
-      assets = { ...assets, objects: { ...assets.objects, frame: { w: 96, h: 96, canvas } } };
-    }
+    const assets = { ...game.assets, objects: { ...game.assets?.objects, frame: { w: FRAME_W, h: FRAME_H, canvas: frameCanvas() } } };
     const images = files.map((f) => { const img = new Image(); img.decoding = 'async'; img.src = `gallery/${f}`; return img; });
     const objects = [
       ...L.frames.map((f) => ({
@@ -65,7 +79,12 @@ export class GalleryScene extends Scene {
     this.thumbs = new Array(files.length).fill(null);
     this.objects.forEach((o) => {
       const f = L.frames.find((entry) => `frame${entry.index}` === o.id);
-      if (f) o.drawContent = (r) => { const thumb = this.thumbs[f.index]; if (thumb) r.drawCanvas(thumb, f.tx * TILE + THUMB_X, o.drawY + THUMB_Y); };
+      if (f) o.drawContent = (r) => {
+        const thumb = this.thumbs[f.index];
+        if (!thumb) return;
+        if (r.drawPhoto) r.drawPhoto(thumb, f.tx * TILE + PHOTO.x, o.drawY + PHOTO.y, PHOTO.w, PHOTO.h);
+        else r.drawCanvas(thumb, f.tx * TILE + PHOTO.x, o.drawY + PHOTO.y);
+      };
     });
     images.forEach((img, i) => {
       img.addEventListener('load', () => { this.thumbs[i] = makeThumb(img); }, { once: true });
