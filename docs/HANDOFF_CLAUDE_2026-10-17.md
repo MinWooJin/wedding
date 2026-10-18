@@ -568,3 +568,14 @@ Codex가 다음 작업 전에 읽을 문서다. 오늘 Claude가 바꾼 내용, 
   - 방명록 정원: 돌길 양옆(4·6열)에는 꽃을 피우지 않고, 메시지 꽃 위에 작은 하트(내 글)·반짝이(다른 분 글)를 띄운다(예식관 하트 시트 재사용).
 - **내 축하 목록**: 메시지 목록 맨 위에 "내가 남긴 축하 · N"을 따로 모으고, 축하를 보내면 목록을 바로 열어 보여 준다.
 - 테스트 174개 통과. API를 비운 사본으로 확인.
+
+
+## 47. 11차 방명록 입구·선물 높이 맞춤 완료 (Codex, 2026-10-18)
+
+- 11차의 방명록 필수 항목과 선물 선택 항목을 모두 제작·연결했다. 상세 기록은 `docs/ROUND11_ASSET_HANDOFF_2026-10-18.md`.
+- 방명록 `assets/objects/landmark-guestbook-v1.png`: 96×112 RGBA·46색·이진 알파. 글자 없는 크림 웰컴보드+하트·편지가 꽂힌 세이지 우체통·꽃바구니. 임시 64px 웰컴보드 확대본을 대체한다.
+- 선물 `assets/objects/landmark-gifts-v2.png`: 96×112 RGBA·48색·이진 알파. 하트 꽃 화환을 높인 새 그림이다. 기존 선물 v1·갤러리 v1·예식 안내 v1은 보존했다. 두 새 그림은 폭96·바닥y112다.
+- manifest.objects/files.objects와 js/assets.js OBJECT_IDS에 `landmark-guestbook` 등록, 선물 files 매핑만 v2로 변경. hub.js 등 배치·충돌·이름표·동선 코드는 수정하지 않았다. 46절의 2×2 칸과 즉시 이동 동작에 이미 연결된다.
+- 내장 image_gen 2회(API 키 사용 없음). 프롬프트·참조·원본 경로 `assets/round11-prompts.json`, 규격·알파·해시 `assets/round11-report.json`, 선택 규격 변환 `tools/prepare_round11_assets.py`, 원본 `raw/round11-source/`(Git 제외).
+- 비교 `assets/round11-landmarks-comparison.png`(96×112 칸2×2), `round11-landmarks-comparison-3x.png`. `/tools/round11-art-review.html`은 실제 loadAssets/createHub/Renderer/Scene.onTap으로 광장을 그리되 API와 저장소를 사용하지 않는다.
+- 브라우저4/4종96×112 로드·새 방명록v1 선택·네 입구 이동 요청·콘솔 오류 없음·390/320px 가로 넘침 없음·그림 잘림/안내인 가림 없음을 확인했다. 화면 `docs/round11-landmarks-390-2026-10-18.png`. 테스트174개 통과. 운영 API·Google 배포는 변경하지 않았고 원격 게시하지 않았다.

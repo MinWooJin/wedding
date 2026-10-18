@@ -113,7 +113,8 @@
     "birdbath",
     "landmark-gallery",
     "landmark-gifts",
-    "landmark-info"
+    "landmark-info",
+    "landmark-guestbook"
   ],
   "maps": [
     "hub-top",
@@ -180,8 +181,9 @@
       "tree-green": "tree-green-v4.png",
       "birdbath": "birdbath-v4.png",
       "landmark-gallery": "landmark-gallery-v1.png",
-      "landmark-gifts": "landmark-gifts-v1.png",
-      "landmark-info": "landmark-info-v1.png"
+      "landmark-gifts": "landmark-gifts-v2.png",
+      "landmark-info": "landmark-info-v1.png",
+      "landmark-guestbook": "landmark-guestbook-v1.png"
     },
     "tiles": {
       "G": "G-v5.png",

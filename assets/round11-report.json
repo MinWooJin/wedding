@@ -1,0 +1,65 @@
+{
+  "size": [
+    96,
+    112
+  ],
+  "files": {
+    "landmark-guestbook-v1.png": {
+      "mode": "RGBA",
+      "size": [
+        96,
+        112
+      ],
+      "bbox": [
+        0,
+        0,
+        96,
+        112
+      ],
+      "rgbaColors": 46,
+      "alpha": [
+        0,
+        255
+      ],
+      "sha256": "5b7108b9bc2dc77d32247956e793cca73736bb644e3358d758b7fe1c70e442c5",
+      "sourceSha256": "66bda9c551c20d859c1bc211ea1815b3042b499fef2ce43d15ef27f54d258ad1",
+      "sourceCrop": [
+        14,
+        14,
+        1137,
+        1265
+      ]
+    },
+    "landmark-gifts-v2.png": {
+      "mode": "RGBA",
+      "size": [
+        96,
+        112
+      ],
+      "bbox": [
+        0,
+        0,
+        96,
+        112
+      ],
+      "rgbaColors": 48,
+      "alpha": [
+        0,
+        255
+      ],
+      "sha256": "fcb6641e89b51125ee92b3dce478b66f61e8f042214059b2cbfbc0be0244fe13",
+      "sourceSha256": "b836d2a2467585881551407aec341b266a974f9570fcd51e6d3d88174893c8ae",
+      "sourceCrop": [
+        40,
+        36,
+        1181,
+        1286
+      ]
+    }
+  },
+  "preserved": {
+    "landmark-gallery-v1.png": "5fb85fe84f6caedb6bc1ca711cce7d3995ca81cb001de90bac563ea19d87b13d",
+    "landmark-info-v1.png": "60130a5ed5633535dbe9921d626e37d1d001346b816a41886f27596c40d1010b",
+    "landmark-gifts-v1.png": "b157dbc688066582e78792129f39bcd6e0b39abd269d148b617e09a7232f7e6a"
+  }
+}

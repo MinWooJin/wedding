@@ -1,0 +1,22 @@
+{
+  "date": "2026-10-18",
+  "mode": "built-in image_gen, no API key",
+  "prompts": {
+    "guestbook": "Use case: stylized-concept. Production sprite for a Korean pixel wedding garden game. Create ONE NEW guestbook entrance landmark, logical canvas 96x112 pixels, actual transparent RGBA background. Input images are STYLE REFERENCES ONLY: gallery easel and cream floral wedding doorway; do not copy their subjects. Subject: a tall walnut wooden easel holding a large warm cream WELCOME BOARD, absolutely NO WORDS OR LETTERS, only a single small rose heart in the center and sparse ivory/blush flower trim at the two corners. Beside the easel on the right is a clearly readable small sage-green wedding mailbox with an envelope sticking out of its open slot; the envelope has a tiny rose heart seal. At the easel's lower left sits one low wicker basket of ivory and blush flowers with sage leaves. Cohesive SINGLE grouping, not a sheet. Fill 88 to 94 logical pixels of width and almost full 108 pixels of height, feet/base and subtle brown ground shadow at canvas bottom, complete object with transparent margin at top and sides. Slightly top-down front view like reference sprites. Match reference dark walnut 1px outlines, warm cream/gold/rose/sage colors, simple readable broad pixel clusters at native 96x112 resolution, limited palette maximum48colors, no blur, no gradients, no antialiasing, no tiny noisy textures. NO background lawn or scenery, no UI, no border around canvas, no people, no writing, no watermark. Actual transparency outside object. Keep mailbox and basket large enough to read at mobile scale.",
+    "gifts": "Use case: precise-object-edit. Edit the supplied transparent pixel-art wedding gift landmark, keep the identity and arrangement: cream and dusty rose wrapped gift boxes, gold ribbons, sage foliage and cream flowers, open-center heart shaped floral wreath rising above gifts, warm walnut outline and subtle bottom ground shadow. Deliver a revised taller variant for a 96x112 logical pixel transparent canvas (old was96x96). Make the heart wreath 16 logical pixels taller upward so the overall sprite fills the full112px height; leave gift pile at same lower baseline and same width; do not just stretch the entire image vertically. Whole silhouette 88 to96px wide, with complete wreath top and complete base/shadow, no clipping. Match existing warm16bit RPG sprite: crisp distinct square pixels and broad simple clusters, 1px dark brown edges, maximum48colors, actual transparent background, binary alpha, no blurred outlines, no gradients, no noisy photo texture. No writing, letters, people, ground lawn or scenery, no border around canvas. One standalone object only. Keep the heart wreath legible as an open heart behind the gifts, tall enough to have same visual height as a112px wedding doorway."
+  },
+  "sources": {
+    "guestbook": "C:/Users/alsdn/.codex/generated_images/01a14444-1937-7270-a423-d475ec6ab0bb/exec-ee2d2ab1-01cc-4c5c-86a2-1a7ebb7572f4.png",
+    "gifts": "C:/Users/alsdn/.codex/generated_images/01a14444-1937-7270-a423-d475ec6ab0bb/exec-c274e431-9716-4fa1-8c84-936e31eec9ef.png"
+  },
+  "references": {
+    "guestbook": [
+      "assets/objects/landmark-gallery-v1.png",
+      "assets/objects/landmark-info-v1.png"
+    ],
+    "gifts": [
+      "assets/objects/landmark-gifts-v1.png"
+    ]
+  },
+  "normalization": "Only requested delivery format: alpha threshold200, tight crop, nearest resize96x112,47 visible RGB colors plus transparent. No drawing or semantic edits in conversion."
+}

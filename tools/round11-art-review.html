@@ -1,0 +1,14 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>11차 · 네 공간 입구 그림 검토</title>
+<style>
+*{box-sizing:border-box}body{margin:0;padding:18px;font:16px/1.7 system-ui,sans-serif;color:#514635;background:#f6efdf}main{max-width:920px;margin:auto}h1{font-size:24px}h2{font-size:19px}a{color:#8d5262}.row{display:flex;gap:24px;align-items:start;flex-wrap:wrap}.phone{width:390px;max-width:100%;padding:18px;border:1px solid #d6c7b4;border-radius:18px;background:#fffbf3}canvas{display:block;width:100%;height:auto;image-rendering:pixelated;touch-action:manipulation}.board{width:256px;max-width:100%;height:auto;image-rendering:pixelated}#status,#action{font-size:14px}button{min-height:44px;padding:8px 14px;font:inherit;background:#fff8e8;border:1px solid #b5a58f;border-radius:8px;cursor:pointer}button:focus-visible{outline:3px solid #8d5262}small{display:block}
+</style></head><body><main>
+<h1>11차 · 네 공간 입구 그림</h1>
+<p>방명록과 마음 전하기를 96×112로 제작했습니다. 기존 배치·그림자·터치 동작은 유지합니다. 아래 광장은 실제 에셋 로더와 광장 장면을 사용하는 정지 검토 화면이며, 방명록 API와 저장소에 기록하지 않습니다.</p>
+<p id="status" role="status">그림을 불러오고 있어요.</p>
+<div class="row"><section class="phone"><h2>현재 광장 · 입구 영역</h2><canvas id="hub" width="352" height="352" aria-label="실제 광장 네 입구 배치"></canvas><p id="action" role="status">그림을 누르면 해당 입구 동작을 확인합니다.</p><div id="links" aria-label="입구 동작 확인"></div><small>검토 화면에서는 이동 요청만 표시합니다.</small></section>
+<section><h2>96×112 칸 · 2×2 비교</h2><img class="board" src="../assets/round11-landmarks-comparison.png" width="256" height="300" alt="왼쪽 위 방명록, 오른쪽 위 갤러리, 왼쪽 아래 마음 전하기, 오른쪽 아래 예식 안내"><p><a href="../assets/round11-landmarks-comparison-3x.png">3배 확대</a> · <a href="../assets/round11-report.json">규격 기록</a></p></section></div>
+<p><a href="../common/">실제 픽셀 정원</a></p>
+<script type="module" src="round11-art-review.js"></script>
+</main></body></html>
