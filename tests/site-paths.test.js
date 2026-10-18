@@ -6,12 +6,15 @@ import { fileURLToPath } from 'node:url';
 const root = fileURLToPath(new URL('../', import.meta.url));
 const read = (file) => readFileSync(root + file, 'utf8');
 
-test('루트는 픽셀 게스트북(/common/)으로 바로 보낸다', () => {
+test('루트는 픽셀 정원·신랑측·신부측 세 입구를 고르는 페이지다', () => {
   const html = read('index.html');
-  assert.match(html, /http-equiv="refresh" content="0; url=common\/"/);
-  assert.match(html, /location\.replace\('common\/'/);
+  for (const [href, label] of [['common/', '정원 입장하기'], ['groom/', '신랑측 청첩장 보기'], ['bride/', '신부측 청첩장 보기']]) {
+    assert.ok(html.includes(`href="${href}"`), `${href} 링크`);
+    assert.ok(html.includes(label), label);
+  }
   assert.match(html, /name="robots" content="noindex"/);
-  assert.doesNotMatch(html, /js\/main\.js/, '루트에서는 게임을 띄우지 않는다');
+  assert.doesNotMatch(html, /js\/main\.js|http-equiv="refresh"/, '루트에서는 게임을 띄우거나 자동 이동하지 않는다');
+  assert.ok(existsSync(root + 'assets/characters/couple.png'), '입구 페이지의 두 사람 그림');
 });
 
 test('/common/은 루트의 코드·그림·설정을 base로 가리키는 픽셀 앱 페이지다', () => {

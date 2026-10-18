@@ -173,7 +173,9 @@ export function uniqueGuests(entries) {
 }
 
 /** 입장 행렬: 하객이 아래 교차로에서 반투명하게 나타나 버진로드를 따라 걸어와 자기 자리로 흩어진다. */
-export const ARRIVAL = { gap: 0.35, firstDelay: 0.6, fade: 0.6, speed: 80, from: { tx: 5, ty: CROSS_A } };
+export const ARRIVAL = { gap: 0.35, fade: 0.6, speed: 80, from: { tx: 5, ty: CROSS_A } };
+/** 가끔 한 명씩 들어오기: 60~120초마다 분위기용 하객 한 명이 (가능하면 화면 밖에서) 사라졌다가 아래 입구로 다시 걸어 들어온다. 군중 수는 늘지 않는다. */
+export const DROP_IN = { min: 60, max: 120, first: 25 };
 /** 자동 말풍선: 2.2~3.8초마다 화면 안의 하객 한 명이 축하를 말한다. 동시에 최대 2개. */
 export const CHATTER = { min: 2.2, max: 3.8, maxBubbles: 2, hostChance: 0.15, seconds: 3.4 };
 const GUEST_SPEED = 48;
@@ -238,6 +240,7 @@ export class HubScene extends Scene {
     this.guide = guide;
     this.baseNpcs = this.npcs.slice();
     this.chatterT = CHATTER.min;
+    this.dropInT = DROP_IN.first;
     this.setGuests(game.data?.messages ?? []);
   }
 
@@ -292,9 +295,9 @@ export class HubScene extends Scene {
       ...retained.map((entry) => ({ entry, ...previous.get(guestKey(entry)).wander.home })),
       ...guestPlacements(others.filter((entry) => !previous.has(guestKey(entry))), homeReserved, this.painted),
     ];
-    // 처음 정원을 열 때는 잠깐 뒤에 행렬을 시작하고, 이후 새로 생긴 하객은 바로 걸어 들어온다.
+    // 처음 정원을 열 때는 하객이 이미 자리에 흩어져 있다(레퍼런스의 로딩 직후 모습). 그 뒤 새로 생긴 하객만 입장 행렬로 걸어 들어온다.
     let order = 0;
-    const delay0 = previous.size === 0 ? ARRIVAL.firstDelay : 0;
+    const firstLoad = previous.size === 0;
     const guests = placements.map(({ tx, ty, entry }) => {
       const key = guestKey(entry);
       if (previous.has(key)) { const n = previous.get(key); n.entry = entry; this.guestMap.set(key, n); return n; }
@@ -313,10 +316,8 @@ export class HubScene extends Scene {
         entry, character: c, solid: false, // 돌아다니므로 플레이어가 지나갈 수 있다
         wander: { home: { tx, ty }, radius: 1, roam: true, allow: inZone, faceDir: faceFront, jitter, timer: 1 + Math.random() * 6 },
         interact: () => { c.stop(); c.say(npc.entry.m ? short(npc.entry.m, 40) : pick(EXTRA_LINES), 4); },
-        arrival: { delay: delay0 + order * ARRIVAL.gap },
       };
-      order++;
-      c.hidden = true; c.alpha = 0;
+      if (!firstLoad) { npc.arrival = { delay: order * ARRIVAL.gap }; order++; c.hidden = true; c.alpha = 0; }
       this.guestMap.set(key, npc); return npc;
     });
     this.npcs = [...this.baseNpcs, ...guests];
@@ -335,7 +336,7 @@ export class HubScene extends Scene {
         a.started = true;
         // 움직임 줄이기 설정이면 걷지 않고 제자리에 나타나기만 한다.
         if (reduced) { c.hidden = false; c.alpha = 1; n.arrival = null; continue; }
-        const home = { x: c.x, y: c.y };
+        const home = a.home ?? { x: c.x, y: c.y };
         const homeTile = n.wander.home;
         const start = standPos(ARRIVAL.from.tx, ARRIVAL.from.ty);
         c.x = start.x + Math.round(hash01(`${n.character.name}${homeTile.tx},${homeTile.ty}`) * 8); c.y = start.y;
@@ -375,8 +376,35 @@ export class HubScene extends Scene {
     n.character.say(n.entry.m ? short(n.entry.m) : pick(lines.length ? lines : EXTRA_LINES), CHATTER.seconds);
   }
 
+  /** 화면(카메라) 안에 있는지. game이 없으면 모두 보이는 것으로 본다. */
+  inView(c, game) {
+    if (!game?.cam) return true;
+    const top = game.cam.y, bottom = game.cam.y + (game.cameraView?.height ?? 600);
+    return c.y - 80 < bottom && c.y > top;
+  }
+
+  /** 분위기용 하객 한 명을 입구에서 다시 걸어 들어오게 한다. 화면 밖에 있는 사람을 먼저 고른다. */
+  updateDropIns(dt, game) {
+    this.dropInT -= dt;
+    if (this.dropInT > 0) return;
+    this.dropInT = DROP_IN.min + Math.random() * (DROP_IN.max - DROP_IN.min);
+    const extras = [...this.guestMap.values()].filter((n) => n.entry.extra !== undefined && !n.arrival && !n.character.bubble);
+    if (!extras.length) return;
+    const hidden = extras.filter((n) => !this.inView(n.character, game));
+    this.reenter(pick(hidden.length ? hidden : extras));
+  }
+
+  /** 하객을 숨기고 입장 행렬에 다시 넣는다. 도착지는 배회 중인 현재 위치가 아니라 원래 자리(흩뜨린 위치). */
+  reenter(n) {
+    const c = n.character, home = standPos(n.wander.home.tx, n.wander.home.ty), j = n.wander.jitter ?? { x: 0, y: 0 };
+    c.stop(); n.wander.target = null;
+    n.arrival = { delay: 0, home: { x: home.x + j.x, y: home.y + j.y } };
+    c.hidden = true; c.alpha = 0;
+  }
+
   update(dt, game) {
     this.updateArrivals(dt, !!game?.renderer?.reducedMotion);
+    this.updateDropIns(dt, game);
     this.updateChatter(dt, game);
     super.update(dt, game);
   }
