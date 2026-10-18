@@ -103,4 +103,11 @@ test('웨딩 사진 저장 막기: 화면이 뒤로 가거나 포커스를 잃�
   doc.fire('contextmenu', event(true)); doc.fire('dragstart', event(true));
   doc.fire('contextmenu', event(false));
   assert.equal(prevented, 2, '사진에서만 막고 다른 곳(주소 복사 등)은 그대로');
+  const touches = (photo, n) => ({ touches: Array.from({ length: n }, () => ({ target: { closest: () => (photo ? {} : null) } })), preventDefault: () => { prevented++; } });
+  doc.fire('touchmove', touches(true, 2));
+  assert.equal(prevented, 3, '사진 위 두 손가락 확대는 막는다');
+  doc.fire('touchmove', touches(true, 1)); doc.fire('touchmove', touches(false, 2));
+  assert.equal(prevented, 3, '한 손가락 스크롤과 글자 부분 확대는 그대로');
+  doc.fire('gesturestart', event(true));
+  assert.equal(prevented, 4, 'iOS 핀치(gesture)도 막는다');
 });

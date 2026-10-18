@@ -136,6 +136,11 @@ export function guardPhotos(doc = document, win = window) {
   const isPhoto = (t) => t?.closest?.('.cover-photo,.thumbnail,.viewer');
   doc.addEventListener('contextmenu', (e) => { if (isPhoto(e.target)) e.preventDefault(); });
   doc.addEventListener('dragstart', (e) => { if (isPhoto(e.target)) e.preventDefault(); });
+  // 사진 위에서 두 손가락 확대(핀치)를 막는다. 글자 부분은 그대로 확대할 수 있게 둔다(어르신 하객 배려).
+  const pinchOnPhoto = (e) => e.touches?.length > 1 && [...e.touches].some((t) => isPhoto(t.target));
+  for (const type of ['touchstart', 'touchmove']) doc.addEventListener(type, (e) => { if (pinchOnPhoto(e)) e.preventDefault(); }, { passive: false });
+  // iOS 사파리는 핀치를 gesture 이벤트로도 보낸다
+  for (const type of ['gesturestart', 'gesturechange']) doc.addEventListener(type, (e) => { if (isPhoto(e.target)) e.preventDefault(); }, { passive: false });
   // 데스크톱 PrintScreen 키: 잠깐 가린다(이미 찍힌 화면은 되돌릴 수 없지만 연속 캡처를 어렵게)
   doc.addEventListener('keyup', (e) => { if (e.key === 'PrintScreen') { veil(true); setTimeout(() => veil(doc.hidden), 1500); } });
 }

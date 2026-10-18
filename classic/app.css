@@ -63,6 +63,8 @@ p{margin:0 0 12px}
 .thumbnail img{width:100%;height:100%;object-fit:cover;display:block}
 /* 웨딩 사진: 길게 눌러 저장·선택·끌기 막기, 화면이 뒤로 가거나 포커스를 잃으면 가리기(app.js guardPhotos) */
 .cover-photo,.thumbnail img,.viewer img{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none;-webkit-user-drag:none}
+/* 사진 위에서는 핀치·두 번 탭 확대 없이 스크롤만(app.js가 iOS 핀치도 막는다) */
+.cover-photo,.thumbnail,.viewer{touch-action:pan-y}
 .photos-veiled .cover-photo,.photos-veiled .thumbnail img,.photos-veiled .viewer img{visibility:hidden}
 .empty{padding:28px 18px;text-align:center;border:1px solid var(--line);border-radius:18px;background:#f5f0e6}
 .venue-title{font-size:20px;font-weight:600;line-height:1.5}
