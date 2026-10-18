@@ -10,6 +10,7 @@
   --surface: #f5f3eb;
   --sage: #4f6249;
   --border: #ddd5c5;
+  --name-font: 'Gowun Batang', 'Nanum Myeongjo', serif; /* 두 사람 이름: 단정한 명조(고운바탕) */
   --font: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, system-ui, 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
 }
 * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -153,7 +154,7 @@ label { display: block; font-size: 13px; font-weight: 600; margin: 12px 0 6px; }
 .cover-groom { width: 48px; height: 72px; left: calc(50% - 43px); bottom: 16px; }
 .cover-bride { width: 48px; height: 72px; left: calc(50% - 8px); bottom: 16px; }
 .cover-couple { width: 96px; height: 72px; left: 50%; bottom: 16px; transform: translateX(-50%); }
-.cover h1 { font-size: 34px; font-weight: 500; margin: 7px 0 16px; letter-spacing: .08em; }
+.cover h1 { font: 700 36px/1.3 var(--name-font); margin: 7px 0 16px; letter-spacing: .06em; }
 .cover h1 span { color: #ad7b79; font: italic 30px Georgia,serif; }
 .cover-date { font-size: 14px; margin: 0 0 5px; }
 .cover .muted { font-size: 13px; margin: 0; }
@@ -168,7 +169,7 @@ label { display: block; font-size: 13px; font-weight: 600; margin: 12px 0 6px; }
 .boot-message { font-size: 13px; color: #716b61; text-align: center; }
 /* 지도 위 상시 UI는 레퍼런스처럼 최소: 왼쪽 위 이름 칩, 아래 "축하 남기기"와 둥근 메뉴 버튼. */
 .garden-header { position: absolute; top: calc(10px + env(safe-area-inset-top)); left: 12px; height: 36px; display: inline-flex; align-items: center; gap: 8px; padding: 0 10px 0 12px; border: 1px solid #fff9; background: #fffcf3e6; border-radius: 999px; box-shadow: 0 4px 14px #3a422614; pointer-events: auto; }
-.garden-header strong { font-size: 14px; }
+.garden-header strong { font: 700 15px var(--name-font); letter-spacing: .02em; }
 .garden-header i { font-size: 11px; color: #ae6b7d; font-style: normal; }
 .date-chip { color: #94516a; background: #f4e5e9; border-radius: 999px; padding: 3px 8px; font-size: 11px; font-weight: 700; }
 .garden-dock { position: absolute; bottom: calc(14px + env(safe-area-inset-bottom)); left: 14px; right: 14px; display: flex; justify-content: space-between; align-items: flex-end; pointer-events: none; }
@@ -251,3 +252,7 @@ label { display: block; font-size: 13px; font-weight: 600; margin: 12px 0 6px; }
 .my-messages { margin: 0 0 14px; padding: 4px 14px 2px; border-radius: 14px; background: #f5e5e9; }
 .my-messages h3 { margin: 10px 0 0; font-size: 14px; color: #84556a; }
 .my-messages .message-item:last-child { border-bottom: 0; }
+/* 배경음악 버튼: 오른쪽 위, 이름 칩과 같은 높이 */
+.sound-toggle { position: absolute; top: calc(10px + env(safe-area-inset-top)); right: 12px; width: 44px; height: 44px; margin-top: -4px; display: inline-flex; align-items: center; justify-content: center; padding: 0; border: 1px solid #fff9; border-radius: 999px; background: #fffcf3e6; color: #a95670; box-shadow: 0 4px 14px #3a422614; pointer-events: auto; cursor: pointer; }
+.sound-toggle.muted { color: #8a8f78; }
+.sound-toggle:focus-visible { outline: 3px solid #697b50; outline-offset: 2px; }

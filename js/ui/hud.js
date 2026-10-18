@@ -23,6 +23,7 @@ export const SPACES = {
  */
 export function createHud(root, config, game) {
   root.innerHTML = `<div class="garden-header"><strong>${esc(displayName(config.groom))}<i> ♥ </i>${esc(displayName(config.bride))}</strong><span class="date-chip">${esc(ddayLabel(config.wedding.date))}</span></div>
+    <button class="sound-toggle" aria-pressed="false" aria-label="배경음악 끄기"></button>
     <nav class="garden-dock" aria-label="정원 메뉴"><button class="fab fab-write" data-action="write"><span aria-hidden="true">✉</span>축하 남기기</button><button class="fab fab-return" data-action="exit" aria-label="정원으로 돌아가기" hidden><span class="return-arrow" aria-hidden="true">←</span><span>정원으로</span></button><button class="fab fab-menu menu-button" aria-label="메뉴 열기">☰</button></nav>`;
   root.hidden = false;
   let sceneId = 'hub';
@@ -65,6 +66,17 @@ export function createHud(root, config, game) {
     card.querySelectorAll('[data-menu]').forEach((b) => { b.onclick = () => { close(true); run[b.dataset.menu]?.(); }; });
   };
   root.querySelector('.menu-button').onclick = openMenu;
+  // 배경음악 켜기/끄기(오른쪽 위). 켠 상태·끈 상태를 아이콘과 읽어 주는 이름으로 함께 알린다.
+  const sound = root.querySelector('.sound-toggle');
+  const ON = '<svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z" fill="currentColor"/><path d="M16 8.5a5 5 0 0 1 0 7M18.5 6a8.5 8.5 0 0 1 0 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>', OFF = '<svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z" fill="currentColor"/><path d="M16.5 9.5l5 5m0-5l-5 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>';
+  const showSound = (muted) => {
+    sound.innerHTML = muted ? OFF : ON;
+    sound.setAttribute('aria-pressed', String(muted));
+    sound.setAttribute('aria-label', muted ? '배경음악 켜기' : '배경음악 끄기');
+    sound.classList.toggle('muted', muted);
+  };
+  if (game.bgm) { showSound(game.bgm.muted); game.bgm.onChange(showSound); sound.onclick = () => game.bgm.toggle(); }
+  else sound.hidden = true;
   root.querySelector('[data-action="write"]').onclick = () => game.openGuestbook();
   const returnButton = root.querySelector('[data-action="exit"]');
   const writeButton = root.querySelector('[data-action="write"]');

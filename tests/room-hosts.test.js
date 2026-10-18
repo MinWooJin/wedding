@@ -26,7 +26,8 @@ test('네 공간의 신랑/신부는 서로 다른 대사를 말하고 통로를
     const g = game();
     const scene = create(g);
     // 방명록 정원에는 두 사람이 우체통 양옆에 함께 선다. 다른 방은 한 사람씩.
-    assert.equal(scene.npcs.length, scene.id === 'guestbook' ? 2 : 1);
+    assert.equal(scene.npcs.length, 2, '모든 방에 신랑·신부가 함께');
+    assert.deepEqual(scene.npcs.map((n) => n.character.name).sort(), [g.config.groom.shortName, g.config.bride.shortName].sort());
     const npc = scene.npcs.find((n) => n.character.name === g.config[role].shortName);
     assert.equal(npc.character.name, g.config[role].shortName);
     assert.equal(npc.solid, false);

@@ -83,7 +83,9 @@ test('입구 랜드마크는 문·통로를 막지 않고 발 기준이 타일 �
   const hub = createHub({ config: DEFAULT_CONFIG, profile: { nickname: '나' }, assets: { objects }, data: { messages: [] } });
   const lm = Object.fromEntries(['gallery', 'gifts', 'info'].map((id) => [id, hub.objects.find((o) => o.id === `sign-${id}`)]));
   assert.deepEqual(Object.values(lm).map((o) => o.sprite), ['landmark-gallery', 'landmark-gifts', 'landmark-info']);
-  assert.deepEqual([lm.gallery.bottom, lm.gifts.bottom, lm.info.bottom], [672, 800, 800], '20행·24행 바닥');
+  assert.deepEqual([lm.gallery.bottom, lm.gifts.bottom, lm.info.bottom], [672, 832, 832], '20행·25행 바닥(그림 아래 문구 자리)');
+  assert.deepEqual(['guestbook', 'gallery', 'gifts', 'info'].map((id) => hub.objects.find((o) => o.id === `sign-${id}`).caption), ['방명록', '갤러리', '마음 보내기', '예식장'], '상자 없는 문구');
+  assert.ok(lm.gallery.bottom + 3 + 16 < lm.info.drawY, '위 줄 문구가 아래 줄 그림과 겹치지 않는다');
   assert.ok(Object.values(lm).every((o) => !o.label && o.interact && o.instant), '이름표 없이 그림을 누르면 바로 이동');
   const gb = hub.objects.find((o) => o.id === 'sign-guestbook');
   assert.equal(gb.bottom, 672, '방명록도 위 줄 바닥에 맞춘다');

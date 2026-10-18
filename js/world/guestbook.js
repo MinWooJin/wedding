@@ -21,10 +21,11 @@ const ROWS = [
   ...Array.from({ length: LAST - 1 }, (_, i) => rowAt(i + 1)),
   'HHHHHNHHHHH',
 ];
-const MAILBOX = { tx: 4, ty: 2 }; // 64×96: 4~5열, 2~4행
+// 우체통(64×96)과 두 사람을 돌길(5열, 가운데 x176)에 맞춰 대칭으로 놓는다. 반 칸 좌표라 우체통은 충돌 없이 두고 설 자리를 따로 준다.
+const MAILBOX = { tx: 4.5, ty: 2, solid: false, stand: { tx: 5, ty: 5 } };
 const EXIT = { tx: 5, ty: LAST };
 const SPAWN = { tx: 5, ty: LAST - 1 };
-const GROOM_POS = { tx: 3, ty: 4 }, BRIDE_POS = { tx: 6, ty: 4 }; // 우체통 양옆
+const GROOM_POS = { tx: 3.5, ty: 4 }, BRIDE_POS = { tx: 6.5, ty: 4 }; // 우체통 양옆(x128·x224)
 const POST_COOLDOWN_MS = 60_000;
 let lastPostAt = 0;
 
@@ -80,7 +81,12 @@ export class GuestbookScene extends Scene {
     this.reserved = new Set();
     for (let ty = 0; ty <= LAST; ty++) this.reserved.add(`5,${ty}`);
     for (const t of [`4,${LAST - 1}`, `6,${LAST - 1}`, '4,5', '6,5']) this.reserved.add(t);
-    for (const pos of [GROOM_POS, BRIDE_POS]) for (let dy = -2; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) this.reserved.add(`${pos.tx + dx},${pos.ty + dy}`);
+    // 두 사람 주변(얼굴·이름표)과 우체통 자리에는 꽃을 피우지 않는다(반 칸 좌표라 실제로 걸치는 타일을 계산)
+    for (const pos of [GROOM_POS, BRIDE_POS]) {
+      const x = pos.tx * 32 + 16;
+      for (let ty = pos.ty - 2; ty <= pos.ty + 1; ty++) for (let tx = Math.floor((x - 40) / 32); tx <= Math.floor((x + 39) / 32); tx++) this.reserved.add(`${tx},${ty}`);
+    }
+    for (let ty = 1; ty <= 4; ty++) for (let tx = 4; tx <= 6; tx++) this.reserved.add(`${tx},${ty}`);
     for (const o of this.objects) {
       if (o.floor) continue;
       for (let y = -1; y < Math.ceil(o.spr.h / 32); y++) for (let x = 0; x < Math.ceil(o.spr.w / 32); x++) this.reserved.add(`${o.tx + x},${o.ty + y}`);

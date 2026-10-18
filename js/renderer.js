@@ -22,7 +22,7 @@ export function computeViewport(cssW, cssH, dpr = 1) {
 }
 
 /** 이름표·말풍선·문 이름표 글씨(내부 px). 화면 배율이 곱해져 390폭에서 약 13·16·13px. */
-export const TEXT = { name: 12, bubble: 14, bubbleLine: 18, label: 13 };
+export const TEXT = { name: 12, bubble: 14, bubbleLine: 18, label: 13, caption: 14 };
 
 /** A shared warm paper surface for map labels, exits and speech bubbles. */
 function paperBox(ctx, x, y, w, h, radius = 5) {
@@ -230,6 +230,20 @@ export class Renderer {
   drawPlayerMarker(x, y) {
     const ctx = this.ctx; ctx.save(); ctx.fillStyle = '#fff5b5';
     ctx.fillRect(Math.round(x - this.cam.x - 7), Math.round(y - this.cam.y + 1), 14, 2); ctx.restore();
+  }
+
+  /** 그림 아래 문구: 상자 없이 크림색 글씨 + 진갈색 외곽선(광장 입구 그림 이름) */
+  drawCaption(text, cx, topY) {
+    const ctx = this.ctx;
+    ctx.save();
+    ctx.font = `bold ${TEXT.caption}px Galmuri11, Galmuri9, sans-serif`;
+    ctx.textBaseline = 'top'; ctx.textAlign = 'center';
+    const x = Math.round(cx - this.cam.x), y = Math.round(topY - this.cam.y);
+    ctx.lineJoin = 'round'; ctx.lineWidth = 4; ctx.strokeStyle = 'rgba(70,48,36,.92)';
+    ctx.strokeText(text, x, y);
+    ctx.fillStyle = '#fff8ea';
+    ctx.fillText(text, x, y);
+    ctx.restore();
   }
 
   /** 발밑에 상자 없는 흰 글씨 + 어두운 외곽선(레퍼런스). 머리 위보다 겹친 얼굴을 덜 가린다. 플레이어는 연노랑. */

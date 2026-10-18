@@ -96,12 +96,13 @@ function gardenEdges(assets, treeCols) {
  */
 export const ENTRANCE_SLOT = { w: 96, h: 112 };
 const SLOT_COLS = { left: 1, right: 7 };
-const SLOT_BOTTOM_ROW = { top: 20, bottom: 24 };
+// 그림 아래에 문구가 들어가도록 아래 줄을 한 칸 내렸다(위 줄 바닥 20행, 아래 줄 바닥 25행).
+const SLOT_BOTTOM_ROW = { top: 20, bottom: 25 };
 const LANDMARKS = {
-  guestbook: { sprite: 'landmark-guestbook', col: 'left', row: 'top', fallback: 'welcome-board' },
-  gallery: { sprite: 'landmark-gallery', col: 'right', row: 'top' },
-  gifts: { sprite: 'landmark-gifts', col: 'left', row: 'bottom' },
-  info: { sprite: 'landmark-info', col: 'right', row: 'bottom' },
+  guestbook: { sprite: 'landmark-guestbook', col: 'left', row: 'top', fallback: 'welcome-board', caption: '방명록' },
+  gallery: { sprite: 'landmark-gallery', col: 'right', row: 'top', caption: '갤러리' },
+  gifts: { sprite: 'landmark-gifts', col: 'left', row: 'bottom', caption: '마음 보내기' },
+  info: { sprite: 'landmark-info', col: 'right', row: 'bottom', caption: '예식장' },
 };
 /** 칸 안에 그림을 가운데·바닥 맞춤으로 놓을 타일 좌표 */
 function slotPlace(spr, slot) {
@@ -115,8 +116,8 @@ export const HUB_DOORS = {
   // sign은 그림이 없을 때 쓰는 64×64 표지판 자리. back은 그 공간에서 돌아올 때 서는 자리(그림 옆 가운데 통로).
   guestbook: { door: { tx: 1, ty: BLOCK_A }, sign: { tx: 2, ty: BLOCK_A }, back: { tx: 4, ty: 21 }, label: '방명록 정원' },
   gallery:   { door: { tx: 9, ty: BLOCK_A }, sign: { tx: 7, ty: BLOCK_A }, back: { tx: 6, ty: 21 }, label: '갤러리관' },
-  gifts:     { door: { tx: 1, ty: BLOCK_B }, sign: { tx: 2, ty: BLOCK_B }, back: { tx: 4, ty: 25 }, label: '마음 전하는 곳' },
-  info:      { door: { tx: 9, ty: BLOCK_B }, sign: { tx: 7, ty: BLOCK_B }, back: { tx: 6, ty: 25 }, label: '예식 안내소' },
+  gifts:     { door: { tx: 1, ty: BLOCK_B }, sign: { tx: 2, ty: BLOCK_B }, back: { tx: 4, ty: 23 }, label: '마음 전하는 곳' },
+  info:      { door: { tx: 9, ty: BLOCK_B }, sign: { tx: 7, ty: BLOCK_B }, back: { tx: 6, ty: 23 }, label: '예식 안내소' },
 };
 
 /**
@@ -249,7 +250,7 @@ export class HubScene extends Scene {
       // 공간을 보여 주는 그림을 같은 칸에 놓는다. 그림이 하나도 없으면(코드 그림만 있을 때) 예전 표지판+이름표.
       const slot = LANDMARKS[id];
       const art = [slot.sprite, slot.fallback].find((s) => s && has(game.assets, s));
-      if (art) objects.push({ id: `sign-${id}`, sprite: art, ...slotPlace(game.assets.objects[art], slot), instant: true, interact: (g) => g.goTo(id), name: d.label });
+      if (art) objects.push({ id: `sign-${id}`, sprite: art, ...slotPlace(game.assets.objects[art], slot), instant: true, interact: (g) => g.goTo(id), name: d.label, caption: slot.caption });
       else objects.push({ id: `sign-${id}`, sprite: id === 'guestbook' ? 'welcome-board' : 'sign', label: d.label, ...d.sign, instant: true, interact: (g) => g.goTo(id) });
     }
 

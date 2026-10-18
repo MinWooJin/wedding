@@ -48,9 +48,13 @@ export class GalleryScene extends Scene {
 
     super({
       id: 'gallery', rows: L.rows, bg: '#f6efe7', spawn: L.spawn, assets,
-      npcs: [makeHostNpc(game, 'groom', files.length ? { tx: 4, ty: 4 } : { tx: 7, ty: 6 }, [
+      // 두 사람이 입구 양옆에서 맞이한다(방명록 정원 우체통 양옆처럼). 들어온 하객·이름표와 겹치지 않는다
+      npcs: [makeHostNpc(game, 'groom', { tx: 3, ty: L.spawn.ty - 1 }, [
         files.length ? '액자를 누르면 사진을 크게 볼 수 있어요.' : '우리의 사진은 조금 더 준비하고 있어요. 완성되면 이곳에 담아둘게요.',
         '함께한 순간들을 천천히 둘러봐 주세요.',
+      ]), makeHostNpc(game, 'bride', { tx: 7, ty: L.spawn.ty - 1 }, [
+        '사진 속 이야기를 하나씩 들려드릴게요.',
+        '마음에 드는 사진이 있으면 오래 보고 가세요.',
       ])],
       entrances: [{ ...L.exit, to: 'hub', spawn: HUB_DOORS.gallery.back }],
       objects,

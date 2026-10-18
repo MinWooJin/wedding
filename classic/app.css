@@ -33,7 +33,7 @@ p{margin:0 0 12px}
 .cover-fallback{aspect-ratio:4/5;border:1px solid var(--line);border-radius:160px 160px 18px 18px;background:radial-gradient(ellipse at 50% 40%,#f2e4df,#f5f0e4 70%);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:30px}
 .cover-fallback img{width:144px;height:108px;object-fit:contain;image-rendering:pixelated}
 .cover-fallback span{font-size:12px;letter-spacing:.22em;color:#92746c}
-.cover h1{font-size:29px;font-weight:500;letter-spacing:.035em;margin:26px 0 14px;line-height:1.5}
+.cover h1{font:700 30px/1.5 'Gowun Batang','Nanum Myeongjo',serif;letter-spacing:.035em;margin:26px 0 14px}
 .cover h1 span{color:#aa7b80;font-size:21px;margin:0 7px}
 .cover time{display:block;color:#655e54}
 .cover-venue{margin-top:8px}

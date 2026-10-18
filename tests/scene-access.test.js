@@ -31,7 +31,8 @@ test('실제 PNG 크기 기준으로 모든 상호작용 오브젝트와 입구�
     const scene = create(game);
     const pathTo = (target) => findPath(scene.map.w, scene.map.h, (x, y) => scene.isSolidTile(x, y), scene.spawn, target);
     for (const o of scene.objects.filter((o) => o.interact)) {
-      const target = scene.standTileFor(o.tx, o.ty + Math.ceil(o.spr.h / 32) - 1, Math.ceil(o.spr.w / 32));
+      // 게임과 같은 규칙: 설 자리를 따로 정한 오브젝트(반 칸에 놓인 방명록 우체통 등)는 그 자리로 간다
+      const target = o.stand ?? scene.standTileFor(o.tx, o.ty + Math.ceil(o.spr.h / 32) - 1, Math.ceil(o.spr.w / 32));
       assert.ok(pathTo(target), `${scene.id}/${o.id} 접근 불가`);
     }
     for (const entrance of scene.entrances) assert.ok(pathTo(entrance), `${scene.id} 출입구 접근 불가`);

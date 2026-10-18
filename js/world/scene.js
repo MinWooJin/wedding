@@ -320,7 +320,8 @@ export class Scene {
     for (const it of items) it.draw();
     r.drawPlayerMarker?.(player.x, player.y);
     for (const o of this.objects) if (o.label) r.drawLabel?.(o.label, o.tx * TILE + o.spr.w / 2, o.drawY - 6);
-    for (const e of this.entrances) if (e.to === 'hub') r.drawExit?.((e.tx + .5) * TILE, e.ty * TILE);
+    // 상자 없는 문구(광장 입구 그림 아래). 방의 "정원으로" 표지는 하단 버튼이 있어 그리지 않는다(문 앞 매트를 눌러도 나간다).
+    for (const o of this.objects) if (o.caption) r.drawCaption?.(o.caption, o.tx * TILE + o.spr.w / 2, o.bottom + 3);
     for (const c of chars) if (c.bubble) { const p = c.drawPos(); r.drawBubble(c.bubble, p.x + p.w / 2, p.y - 16); }
   }
 }

@@ -11,12 +11,19 @@ import { createGallery } from './world/gallery.js';
 import { createGuestbook } from './world/guestbook.js';
 import { createGifts } from './world/gifts.js';
 import { showCover } from './ui/cover.js';
+import { Bgm } from './audio/bgm.js';
 import { readPreview } from './guestbook-store.js';
 
 async function loadManifest() {
   try { const r = await fetch('gallery/manifest.json', { cache: 'no-cache' }); return r.ok ? await r.json() : []; }
   catch { return []; }
 }
+
+// 배경음악: 브라우저는 첫 터치 전에 소리를 못 낸다. 표지의 "정원에 입장하기" 같은 첫 터치에서 오디오를 깨운다.
+const bgm = new Bgm();
+const unlockAudio = () => { bgm.unlock(); };
+document.addEventListener('pointerdown', unlockAudio, { capture: true, once: true });
+document.addEventListener('keydown', unlockAudio, { capture: true, once: true });
 
 const canvas = document.getElementById('game');
 const frame = document.getElementById('frame');
@@ -56,6 +63,7 @@ game.checkNickname = nicknameChecker;
 game.data = { messages: config.guestbookApi ? [] : readPreview() };
 game.openGuestbook = () => game.sceneById('guestbook').openForm(game);
 game.openMessages = () => game.sceneById('guestbook').openList();
+game.bgm = bgm;
 game.ui.hud = createHud(document.getElementById('hud'), config, game);
 game.onMessagesChanged = () => {
   game.scenes.hub?.setGuests(game.data.messages);
@@ -63,6 +71,8 @@ game.onMessagesChanged = () => {
   game.ui.hud?.refresh?.();
 };
 game.start('hub');
+bgm.start(); // 깨어 있지 않으면(첫 터치 전) 아무 일도 하지 않고, 소리 버튼을 누르면 그때 시작한다
+document.addEventListener('visibilitychange', () => bgm.setVisible(!document.hidden));
 
 async function refreshMessages() {
   if (!config.guestbookApi) return;

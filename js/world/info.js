@@ -56,9 +56,12 @@ export function createInfo(game) {
   return new Scene({
     id: 'info', rows: ROWS, bg: '#f6efe7', assets: game.assets,
     spawn: { tx: 5, ty: 10 },
-    npcs: [makeHostNpc(game, 'groom', { tx: 7, ty: 8 }, [
+    npcs: [makeHostNpc(game, 'groom', { tx: 6.9, ty: 8 }, [
       '예식 소식과 가족분들을 위한 안내를 모아 두었어요.',
       '위 안내판에서 오시는 길과 날짜를 확인해 주세요.',
+    ]), makeHostNpc(game, 'bride', { tx: 8, ty: 8 }, [
+      '멀리서 보내 주시는 축하도 감사히 간직할게요.',
+      '캘린더에 날짜를 저장해 두셔도 좋아요.',
     ])],
     entrances: [{ tx: 5, ty: 11, to: 'hub', spawn: HUB_DOORS.info.back }],
     objects: [
