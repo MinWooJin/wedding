@@ -6,6 +6,7 @@ import { characterSet, EXTRA_GUEST_COUNT } from '../assets.js';
 import { freeTiles, pickTiles } from './guest-layout.js';
 import { findPath } from './movement.js';
 import { displayName } from '../config.js';
+import { PetalField, petalSheet } from './petals.js';
 
 // 11열 × 27행(352×864px). 레퍼런스(Pixel Guestbook)처럼: 종·커튼 아치 아래 계단 단상의 두 사람,
 // 그 아래로 버진로드와 길 가장자리 꽃띠, 양옆 잔디에 하객이 무리 지어 서고 가장자리는 나무·덤불·라벤더가 감싼다.
@@ -249,7 +250,9 @@ export class HubScene extends Scene {
     for (const [id, d] of Object.entries(HUB_DOORS)) {
       // 공간을 보여 주는 그림을 같은 칸에 놓는다. 그림이 하나도 없으면(코드 그림만 있을 때) 예전 표지판+이름표.
       const slot = LANDMARKS[id];
-      const art = [slot.sprite, slot.fallback].find((s) => s && has(game.assets, s));
+      const found = [slot.sprite, slot.fallback].find((s) => s && has(game.assets, s));
+      // 광장 그림은 0.75배로 줄인 판(칸 폭 96에 가운데 맞춤, assets.js)을 쓴다. 없으면 원래 크기.
+      const art = found && has(game.assets, `${found}-small`) ? `${found}-small` : found;
       if (art) objects.push({ id: `sign-${id}`, sprite: art, ...slotPlace(game.assets.objects[art], slot), instant: true, interact: (g) => g.goTo(id), name: d.label, caption: slot.caption });
       else objects.push({ id: `sign-${id}`, sprite: id === 'guestbook' ? 'welcome-board' : 'sign', label: d.label, ...d.sign, instant: true, interact: (g) => g.goTo(id) });
     }
@@ -260,6 +263,7 @@ export class HubScene extends Scene {
     });
     this.game = game;
     this.painted = painted;
+    this.petals = new PetalField();
     this.hosts = hosts;
     this.guide = guide;
     this.baseNpcs = this.npcs.slice();
@@ -432,8 +436,12 @@ export class HubScene extends Scene {
     this.updateArrivals(dt, !!game?.renderer?.reducedMotion);
     this.updateDropIns(dt, game);
     this.updateChatter(dt, game);
+    this.petals.update(dt, game?.renderer?.view);
     super.update(dt, game);
   }
+
+  /** 정원 위로 분홍 벚꽃잎이 흩날린다 */
+  drawWeather(r) { this.petals.draw(r, petalSheet()); }
 }
 
 export function createHub(game) { return new HubScene(game); }

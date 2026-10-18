@@ -318,6 +318,7 @@ export class Scene {
     }
     items.sort((a, b) => a.y - b.y);
     for (const it of items) it.draw();
+    this.drawWeather?.(r); // 흩날리는 꽃잎 등: 사람·그림 위, 문구·말풍선 아래
     r.drawPlayerMarker?.(player.x, player.y);
     for (const o of this.objects) if (o.label) r.drawLabel?.(o.label, o.tx * TILE + o.spr.w / 2, o.drawY - 6);
     // 상자 없는 문구(광장 입구 그림 아래). 방의 "정원으로" 표지는 하단 버튼이 있어 그리지 않는다(문 앞 매트를 눌러도 나간다).
