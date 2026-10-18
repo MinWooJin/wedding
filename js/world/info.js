@@ -6,6 +6,7 @@ import { esc, copyText } from '../ui/dom.js';
 import { formatDate, familyLine } from '../config.js';
 import { buildIcs } from '../ics.js';
 import { makeHostNpc } from './host-npc.js';
+import { CeremonyScene, ceremonyArt } from './ceremony.js';
 
 const ROWS = [
   'KKKKKKKKKKK',
@@ -15,7 +16,7 @@ const ROWS = [
 
 let shownOnce = false;
 
-function infoHtml(cfg) {
+export function infoHtml(cfg) {
   const w = cfg.wedding;
   const notice = w.notice
     ? `<p class="notice">${esc(w.notice).split('\n').join('<br>')}</p>`
@@ -24,7 +25,7 @@ function infoHtml(cfg) {
   return family + kv([['일시', formatDate(w.date)], ['장소', [w.venue, w.hall].filter(Boolean).join(' ')], ['주소', w.address]]) + notice;
 }
 
-function contactsHtml(cfg) {
+export function contactsHtml(cfg) {
   const line = (label, name, phone) => phone
     ? `<p><b>${esc(label)}</b> ${esc(name)} <a class="btn" href="tel:${esc(phone)}">전화</a> <a class="btn" href="sms:${esc(phone)}">문자</a></p>`
     : '';
@@ -36,7 +37,7 @@ function contactsHtml(cfg) {
   ].join('') || '<p class="muted">연락처가 아직 등록되지 않았어요.</p>';
 }
 
-function downloadIcs(cfg) {
+export function downloadIcs(cfg) {
   const blob = new Blob([buildIcs(cfg)], { type: 'text/calendar;charset=utf-8' });
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob); a.download = 'wedding.ics';
@@ -45,6 +46,9 @@ function downloadIcs(cfg) {
 }
 
 export function createInfo(game) {
+  // 예식 장면 그림이 모두 있으면 예식 안내관(장면 재생 + 약도 카드), 없으면 예전 안내소 방.
+  const art = ceremonyArt(game.assets);
+  if (art) return new CeremonyScene(game, art, { infoHtml, contactsHtml, downloadIcs });
   const cfg = game.config, w = cfg.wedding;
   const mapButtons = [['카카오맵', w.map.kakao], ['네이버지도', w.map.naver], ['티맵', w.map.tmap]]
     .filter(([, u]) => u).map(([l, u]) => `<a class="btn" target="_blank" rel="noopener" href="${esc(u)}">${esc(l)}</a>`).join(' ');

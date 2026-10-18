@@ -36,6 +36,15 @@ export const MAP_PIECES = {
   guestbook: [{ id: 'guestbook-bg', y: 0 }],
 };
 const MAP_IDS = [...SCENE_IDS, ...Object.values(MAP_PIECES).flat().map((p) => p.id)];
+/** 예식 안내관 그림(assets/ceremony/)과 가로 프레임 시트(manifest.ceremonySheets) */
+export const CEREMONY_IDS = ['back', 'front', 'petals', 'heart', 'map'];
+export const CEREMONY_SHEETS = ['groom-ceremony', 'bride-ceremony', 'guest-seated'];
+
+/** 가로로 이어 붙인 프레임 시트 → 프레임 스프라이트 배열(크기 그대로 자른다) */
+export function framesFromStrip(img, frameWidth, frameHeight, frames, cut = (sx) => toCanvas(img, sx, 0, frameWidth, frameHeight, frameWidth, frameHeight)) {
+  const count = Math.min(frames, Math.floor(img.width / frameWidth));
+  return Array.from({ length: count }, (_, i) => imgSprite(cut(i * frameWidth)));
+}
 
 /**
  * 조각 그림들을 한 캔버스에 이어 붙인다. 조각이 하나라도 빠지면 null(타일 그리기로 폴백).
@@ -110,7 +119,7 @@ export function assetFilename(manifest, category, name) {
  * tools/prepare_assets.py가 자동으로 만들어 준다. manifest가 없으면 아무것도 로드하지 않는다(코드 그림 폴백).
  */
 export async function loadAssets(base = 'assets') {
-  const out = { characters: {}, tiles: {}, objects: {}, maps: {}, urls: {} };
+  const out = { characters: {}, tiles: {}, objects: {}, maps: {}, urls: {}, ceremony: {}, ceremonySheets: {} };
   let manifest;
   try {
     const res = await fetch(`${base}/manifest.json`, { cache: 'no-cache' });
@@ -149,6 +158,14 @@ export async function loadAssets(base = 'assets') {
     const w = Math.max(TILE, Math.round(img.width / TILE) * TILE), h = Math.max(TILE, img.height);
     out.objects[id] = imgSprite(toCanvas(img, 0, 0, img.width, img.height, w, h));
   }));
+  for (const id of pick(manifest.ceremony, CEREMONY_IDS)) jobs.push(imageFor('ceremony', id).then((img) => { if (img) out.ceremony[id] = img; }));
+  for (const id of CEREMONY_SHEETS) {
+    const sheet = manifest.ceremonySheets?.[id];
+    if (!sheet || !/^characters\/[a-zA-Z0-9_-]+\.png$/.test(sheet.file ?? '')) continue;
+    jobs.push(loadImage(`${base}/${sheet.file}`).then((img) => {
+      if (img) out.ceremonySheets[id] = framesFromStrip(img, sheet.frameWidth, sheet.frameHeight, sheet.frames);
+    }));
+  }
   const pieces = {};
   for (const id of pick(manifest.maps, MAP_IDS)) jobs.push(imageFor('maps', id).then((img) => { if (img) (SCENE_IDS.includes(id) ? out.maps : pieces)[id] = img; }));
   await Promise.all(jobs);

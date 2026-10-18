@@ -32,7 +32,7 @@ test('그려진 광장의 리셉션을 그대로 통과해 네 문까지 이동�
   const hub = createHub({ config: DEFAULT_CONFIG, profile: { nickname: '나' }, assets: { objects, maps: { hub: hubBg } }, data: { messages: [] } });
   assert.equal(hub.bgImage, hubBg);
   const sprites = new Set(hub.objects.map((o) => o.sprite));
-  assert.deepEqual([...sprites].sort(), ['door', 'party-table', 'ribbon-lantern', 'sign', 'wedding-cake', 'welcome-board']);
+  assert.deepEqual([...sprites].sort(), ['door', 'landmark-gallery', 'landmark-gifts', 'landmark-info', 'party-table', 'ribbon-lantern', 'wedding-cake', 'welcome-board'], '세 입구는 표지판 대신 랜드마크');
   assert.ok(hub.hosts.every((c) => c.y === CEREMONY.feetY && c.y >= 128 + 15 && c.y <= 164), '발이 단상 윗면(y128~164) 안');
   const leftSign = hub.objects.find((o) => o.id === 'sign-guestbook');
   const rightSign = hub.objects.find((o) => o.id === 'sign-gallery');

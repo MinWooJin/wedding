@@ -192,6 +192,11 @@ export class Renderer {
     this.ctx.drawImage(spriteCanvas(spr), sx, sy - lift);
   }
 
+  /** 이미지의 일부(sx,sy,sw,sh)를 월드 좌표 (x,y)에 원래 크기로 그린다. 꽃잎·하트처럼 한 장에 여러 칸이 있는 효과용 */
+  drawCrop(img, sx, sy, sw, sh, x, y) {
+    this.ctx.drawImage(img, sx, sy, sw, sh, Math.round(x - this.cam.x), Math.round(y - this.cam.y), sw, sh);
+  }
+
   /** 미리 그려둔 캔버스/이미지(썸네일, 맵 배경 등)를 월드 좌표에 그린다 */
   drawCanvas(c, x, y) {
     this.ctx.drawImage(c, Math.round(x - this.cam.x), Math.round(y - this.cam.y));

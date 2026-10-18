@@ -26,13 +26,15 @@ export function showIntro(root, config, assets = {}, current = null, { checkNick
         <p>픽셀 가든에 오신 걸 환영해요!<br>닉네임을 정하고 캐릭터를 골라주세요.</p>
         <label for="nick">정원에서 사용할 이름</label><input id="nick" maxlength="10" placeholder="닉네임 (2~10자)" autocomplete="nickname">
         <div class="picker">
-          <button class="btn" id="prev" aria-label="이전 캐릭터">◀</button>
-          <canvas width="48" height="72"></canvas>
-          <button class="btn" id="next" aria-label="다음 캐릭터">▶</button>
+          <canvas width="48" height="72" aria-hidden="true"></canvas>
+          <div class="picker-side">
+            <p class="picker-title">내 캐릭터</p>
+            <p class="muted" id="count"></p>
+            <div class="picker-steps"><button class="btn" id="prev" aria-label="이전 캐릭터">◀</button><button class="btn" id="next" aria-label="다음 캐릭터">▶</button></div>
+          </div>
         </div>
-        <p class="muted" id="count"></p>
-        <button class="btn picker-all" id="show-characters" aria-expanded="false" aria-controls="character-grid">${PRESET_COUNT}종 한눈에 보기</button>
-        <div class="character-grid" id="character-grid" role="group" aria-label="캐릭터 목록" hidden></div>
+        <p class="picker-hint">아래에서 마음에 드는 하객을 눌러 고르세요.</p>
+        <div class="character-grid" id="character-grid" role="radiogroup" aria-label="캐릭터 ${PRESET_COUNT}종"></div>
         <p id="err" style="color:#c0392b;min-height:1.5em"></p>
         <div class="claim-box" id="claim" hidden>
           <p><b id="claim-name"></b> 님은 이미 정원에 다녀가셨어요.<br>같은 분이세요?</p>
@@ -43,10 +45,9 @@ export function showIntro(root, config, assets = {}, current = null, { checkNick
       </div>`);
     const cv = card.querySelector('canvas'), ctx = cv.getContext('2d');
     const count = card.querySelector('#count'), err = card.querySelector('#err'), nick = card.querySelector('#nick');
-    const grid = card.querySelector('#character-grid'), showCharacters = card.querySelector('#show-characters');
+    // 30종을 좌우로 넘기면 너무 오래 걸려서 전체 격자를 처음부터 보여 준다(얼굴·상반신만 크게). 좌우 버튼은 보조 조작.
+    const grid = card.querySelector('#character-grid');
     let selectedButton;
-    const closeGrid = () => { grid.hidden = true; showCharacters.setAttribute('aria-expanded','false'); };
-    showCharacters.onclick = () => { grid.hidden = !grid.hidden; showCharacters.setAttribute('aria-expanded',String(!grid.hidden)); };
     const hud = document.getElementById('hud'), previousFocus = document.activeElement;
     hud.inert = true;
     const finish = (profile) => {
@@ -66,22 +67,33 @@ export function showIntro(root, config, assets = {}, current = null, { checkNick
       count.textContent = `캐릭터 ${charId + 1} / ${PRESET_COUNT}`;
       const nextButton = grid.children[charId];
       if (nextButton && nextButton !== selectedButton) {
-        selectedButton?.setAttribute('aria-pressed','false');
-        nextButton.setAttribute('aria-pressed','true'); selectedButton = nextButton;
+        if (selectedButton) { selectedButton.setAttribute('aria-checked','false'); selectedButton.tabIndex = -1; }
+        nextButton.setAttribute('aria-checked','true'); nextButton.tabIndex = 0; selectedButton = nextButton;
       }
     };
     for (let id = 0; id < PRESET_COUNT; id++) {
-      const button = h(`<button class="character-option" type="button" aria-label="캐릭터 ${id + 1} 선택" aria-pressed="false"><canvas width="48" height="72" aria-hidden="true"></canvas><span>${id + 1}</span></button>`);
+      const button = h(`<button class="character-option" type="button" role="radio" aria-label="캐릭터 ${id + 1}" aria-checked="false" tabindex="-1"><canvas width="40" height="40" aria-hidden="true"></canvas></button>`);
       const sprite = characterSet(assets,`preset-${id}`,presetSprites(id)).down[0];
       const canvas = button.querySelector('canvas'), context = canvas.getContext('2d');
-      canvas.width = sprite.w; canvas.height = sprite.h; context.imageSmoothingEnabled = false;
-      context.drawImage(spriteCanvas(sprite),0,0);
-      button.onclick = () => { charId = id; frame = 0; render(); closeGrid(); showCharacters.focus({preventScroll:true}); };
+      context.imageSmoothingEnabled = false;
+      // 격자에서는 머리와 어깨만 크게(48×72 그림의 위쪽 가운데 40×40) 보여 얼굴로 고르기 쉽게 한다.
+      const crop = Math.round(sprite.w * 0.84), sx = Math.round((sprite.w - crop) / 2), sy = Math.round(sprite.h * 0.06);
+      context.drawImage(spriteCanvas(sprite), sx, sy, crop, crop, 0, 0, 40, 40);
+      button.onclick = () => { charId = id; frame = 0; render(); };
       grid.appendChild(button);
     }
     const timer = setInterval(() => { frame = frame ? 0 : 2; render(); }, 300);
     card.querySelector('#prev').onclick = () => { charId = (charId + PRESET_COUNT - 1) % PRESET_COUNT; render(); };
     card.querySelector('#next').onclick = () => { charId = (charId + 1) % PRESET_COUNT; render(); };
+    // 격자 안에서는 화살표로 고를 수 있다(라디오 그룹 관례). 위/아래는 한 줄만큼 이동.
+    grid.addEventListener('keydown', (e) => {
+      const cols = getComputedStyle(grid).gridTemplateColumns.split(' ').length || 6;
+      const step = { ArrowLeft: -1, ArrowRight: 1, ArrowUp: -cols, ArrowDown: cols }[e.key];
+      if (!step) return;
+      e.preventDefault();
+      charId = Math.min(PRESET_COUNT - 1, Math.max(0, charId + step)); frame = 0; render();
+      grid.children[charId]?.focus();
+    });
     const goButton = card.querySelector('#go');
     const claimBox = card.querySelector('#claim'), mainRow = card.querySelector('#main-row');
     let checking = false, pending = null;
@@ -117,7 +129,7 @@ export function showIntro(root, config, assets = {}, current = null, { checkNick
     card.addEventListener('keydown', (e) => {
       if (e.key === 'Escape' && current) finish(current);
       if (e.key !== 'Tab') return;
-      const nodes = [...card.querySelectorAll('input,button')], first = nodes[0], last = nodes[nodes.length - 1];
+      const nodes = [...card.querySelectorAll('input,button')].filter((n) => n.tabIndex >= 0 && !n.closest('[hidden]')), first = nodes[0], last = nodes[nodes.length - 1];
       if (e.shiftKey && (document.activeElement === first || document.activeElement === card)) { e.preventDefault(); last.focus(); }
       else if (!e.shiftKey && (document.activeElement === last || document.activeElement === card)) { e.preventDefault(); first.focus(); }
     });

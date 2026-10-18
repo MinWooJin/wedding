@@ -89,6 +89,16 @@ function gardenEdges(assets, treeCols) {
     .map(([sprite, tx, ty]) => ({ id: `edge-${sprite}-${tx}-${ty}`, sprite, tx, ty }));
 }
 
+/**
+ * 입구 랜드마크(코덱스 10차). 발 기준이 타일 바닥에 맞도록 놓는다: 갤러리 6~8열·20행, 마음 전하기 2~4열·24행, 예식 안내 6~8열·24행.
+ * 충돌은 그림 맨 아랫줄만이라 문(1·9열)과 가운데 5열 통로는 그대로 열려 있다.
+ */
+const LANDMARKS = {
+  gallery: { sprite: 'landmark-gallery', tx: 6, ty: 17 },
+  gifts: { sprite: 'landmark-gifts', tx: 2, ty: 22 },
+  info: { sprite: 'landmark-info', tx: 6, ty: 21 },
+};
+
 /** 각 방으로 가는 문 위치와, 그 방에서 돌아올 때 설 자리 */
 export const HUB_DOORS = {
   // sign은 64×64(2×2칸)라 문 옆 두 칸을 차지한다
@@ -199,6 +209,7 @@ export class HubScene extends Scene {
     // name below their captions rather than hidden behind the guestbook plaque.
     const guidePos = standPos(5, CROSS_A);
     guidePos.y += 8; // Leave a clear gap below the plaques for the name tag.
+    guidePos.x -= 8; // 갤러리 랜드마크(6~8열)가 커져서 왼쪽으로 조금 비켜 선다(웰컴보드와도 겹치지 않음).
     const guide = new Character({ sprites: characterSet(game.assets, 'preset-4', presetSprites(4)), name: '정원 안내인', ...guidePos });
     const guideNpc = { character: guide, solid: false, interact: () => showOverlay(game, {
       title: '작은 정원에 오신 걸 환영해요',
@@ -226,7 +237,10 @@ export class HubScene extends Scene {
     const entrances = [];
     for (const [id, d] of Object.entries(HUB_DOORS)) {
       objects.push({ id: `door-${id}`, sprite: 'door', floor: true, ...d.door });
-      objects.push({ id: `sign-${id}`, sprite: id === 'guestbook' ? 'welcome-board' : 'sign', label: d.label, ...d.sign, interact: (g) => g.goTo(id) });
+      // 갤러리관·마음 전하는 곳·예식 안내소는 표지판 대신 공간을 보여 주는 큰 그림(랜드마크). 그림이 없으면 표지판.
+      const landmark = LANDMARKS[id] && has(game.assets, LANDMARKS[id].sprite) ? LANDMARKS[id] : null;
+      const sprite = landmark ? landmark.sprite : id === 'guestbook' ? 'welcome-board' : 'sign';
+      objects.push({ id: `sign-${id}`, sprite, label: d.label, ...(landmark ? { tx: landmark.tx, ty: landmark.ty } : d.sign), interact: (g) => g.goTo(id) });
       entrances.push({ ...d.door, to: id, spawn: null }); // spawn null → 해당 씬의 기본 spawn
     }
 

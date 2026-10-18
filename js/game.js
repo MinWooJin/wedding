@@ -108,7 +108,9 @@ export class Game {
   }
 
   switchNow(id, spawn) {
-    this.scene = this.sceneById(id);
+    const next = this.sceneById(id);
+    if (this.scene && this.scene !== next) this.scene.leave?.(this); // 예식 안내관의 DOM 카드 등 정리
+    this.scene = next;
     // 352px 캔버스 옆의 모바일 여백에도 같은 잔디를 이어 색 띠가 생기지 않게 한다.
     const groundUrl = this.scene.groundTile && this.assets.urls?.[`tiles/${this.scene.groundTile}`];
     this.frame.style.background = this.scene.groundTile ? (groundUrl ? `#7d985e url("${groundUrl}") repeat` : '#7d985e') : '';

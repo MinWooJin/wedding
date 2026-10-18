@@ -98,18 +98,24 @@ input::placeholder, textarea::placeholder { color: #888477; }
   background: rgba(42, 38, 34, .92); color: #fff; padding: 10px 16px; border-radius: 999px; font-size: 13px;
   box-shadow: 0 6px 20px rgba(0, 0, 0, .18);
 }
-.picker { display: flex; align-items: center; justify-content: center; gap: 14px; margin: 14px 0 6px; }
+.picker { display: flex; align-items: center; justify-content: center; gap: 16px; margin: 14px 0 4px; }
 .picker canvas {
-  width: 96px; height: 144px; image-rendering: pixelated;
+  width: 72px; height: 108px; image-rendering: pixelated;
   background: linear-gradient(180deg, #e9f2dc, #d7e8c6); border-radius: 16px;
 }
-.picker .btn { width: 44px; height: 44px; padding: 0; display: inline-flex; align-items: center; justify-content: center; }
-.picker-all { display: block; width: 100%; margin: 10px 0; }
-.character-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(44px, 1fr)); gap: 6px; max-height: 248px; overflow-y: auto; padding: 8px; margin: 10px 0; border: 1px solid var(--border); border-radius: 14px; background: #f5f0e6; }
-.character-option { min-width: 44px; min-height: 76px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; padding: 4px 0; border: 1px solid transparent; border-radius: 10px; background: #fffdf8; color: #59694e; font: inherit; cursor: pointer; }
-.character-option canvas { display: block; width: 32px; height: 48px; image-rendering: pixelated; }
-.character-option span { font-size: 13px; line-height: 1.3; }
-.character-option[aria-pressed="true"] { border-color: #a95670; background: #f5e5e9; box-shadow: inset 0 0 0 1px #a95670; }
+.picker-side { display: flex; flex-direction: column; gap: 4px; }
+.picker-title { margin: 0; font-size: 15px; font-weight: 650; }
+.picker-side .muted { margin: 0; font-size: 13px; }
+.picker-steps { display: flex; gap: 8px; margin-top: 4px; }
+.picker-steps .btn { width: 44px; height: 44px; padding: 0; display: inline-flex; align-items: center; justify-content: center; }
+.picker-hint { margin: 10px 0 6px; font-size: 13px; color: var(--muted); }
+/* 30종을 처음부터 격자로: 390폭 6열×5줄(칸 약 45px), 좁은 화면 5열×6줄(칸 약 40px) */
+.character-grid { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 4px; padding: 6px; margin: 0 0 6px; border: 1px solid var(--border); border-radius: 14px; background: #f5f0e6; }
+@media (max-width: 359px) { .character-grid { grid-template-columns: repeat(5, minmax(0, 1fr)); } }
+.character-option { min-width: 0; min-height: 40px; aspect-ratio: 1; display: flex; align-items: center; justify-content: center; padding: 2px; border: 2px solid transparent; border-radius: 12px; background: #fffdf8; cursor: pointer; }
+.character-option canvas { display: block; width: 100%; height: auto; max-width: 48px; image-rendering: pixelated; }
+.character-option[aria-checked="true"] { border-color: #a95670; background: #f5e5e9; }
+.character-option:focus-visible { outline: 3px solid #697b50; outline-offset: 1px; }
 .character-option:focus-visible { outline: 3px solid #59694e; outline-offset: 1px; }
 #viewer { position: absolute; inset: 0; background: #000; display: flex; align-items: center; justify-content: center; }
 #viewer canvas { max-width: 100%; max-height: 100%; }
@@ -221,3 +227,20 @@ label { display: block; font-size: 13px; font-weight: 600; margin: 12px 0 6px; }
 .claim-box p { margin: 0 0 10px; font-size: 15px; line-height: 1.6; }
 .claim-box .muted { margin: 8px 0 0; font-size: 13px; }
 .claim-box .row { display: flex; gap: 8px; flex-wrap: wrap; }
+/* 예식 안내관: 장면 캔버스 바로 아래부터 하단 버튼 위까지 안내 카드(스크롤) */
+.ceremony-panel { position: absolute; left: 0; right: 0; bottom: calc(76px + env(safe-area-inset-bottom)); z-index: 1; overflow-y: auto; overscroll-behavior: contain; padding: 0 14px 12px; background: linear-gradient(#faf6ee, #f6efe4); -webkit-overflow-scrolling: touch; }
+.ceremony-line { position: sticky; top: 0; z-index: 1; margin: 0 -14px 10px; padding: 12px 18px; background: #26211c; color: #fff8e8; font: 15px/1.5 Galmuri11, var(--font); border-top: 3px solid #e9dcc2; border-bottom: 3px solid #e9dcc2; min-height: 48px; }
+.ceremony-line::before { content: '▸ '; color: #e8b9c5; }
+.ceremony-card { max-width: 440px; margin: 0 auto; }
+.ceremony-date { margin: 4px 0 2px; font-size: 17px; font-weight: 650; text-align: center; }
+.ceremony-venue { margin: 0 0 12px; font-size: 15px; color: var(--muted); text-align: center; }
+.ceremony-map { position: relative; margin: 0 0 10px; border-radius: 14px; overflow: hidden; border: 1px solid #e3dccd; }
+.ceremony-map img { display: block; width: 100%; height: auto; image-rendering: pixelated; }
+.map-label { position: absolute; transform: translate(-50%, 0); padding: 2px 7px; border-radius: 8px; background: #fffcf5ee; color: #3f3a35; font-size: 11px; font-weight: 650; white-space: nowrap; box-shadow: 0 1px 4px #0002; }
+.ceremony-address { margin: 0 0 8px; font-size: 15px; text-align: center; }
+.ceremony-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin: 8px 0 12px; }
+.ceremony-actions .btn { min-height: 44px; font-size: 14px; }
+.ceremony-transport { margin: 0 0 8px; padding: 12px 14px; border-radius: 14px; background: #fffcf5; border: 1px solid #e3dccd; font-size: 14px; }
+.ceremony-transport div { display: flex; gap: 10px; padding: 4px 0; }
+.ceremony-transport dt { flex: none; width: 48px; font-weight: 650; color: #95576a; }
+.ceremony-transport dd { margin: 0; }
