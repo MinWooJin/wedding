@@ -54,7 +54,7 @@ test('계좌와 연락처는 선택한 측만, 본인·아버지·어머니 순�
   assert.equal(JSON.stringify(sideContacts(cfg,'groom')).includes('2222'),false);
   assert.equal(sideContacts(cfg,'groom')[0].tel,'01011111111');
   assert.equal(sideContacts(cfg,'groom')[1].tel,'');
-  assert.equal(familyLine(cfg.groom),'아버지 · 어머니의 아들 신랑');
+  assert.equal(familyLine(cfg.groom),'아버지 · 어머니 의 아들 신랑');
   assert.equal(familyLine({name:'신부',parents:[]}), '신부');
 });
 test('정적 하위 경로 공유 링크를 유지하고 외부·상위 경로 사진을 거절한다',()=>{

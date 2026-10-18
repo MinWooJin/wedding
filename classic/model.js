@@ -37,7 +37,7 @@ const parentOrder = (p) => /아버지|father/i.test(role(p)) ? 0 : /어머니|mo
 export const orderedParents = (person) => [...(person?.parents || [])].sort((a,b)=>parentOrder(a)-parentOrder(b));
 export function familyLine(person) {
   const parents = orderedParents(person).map((p)=>p.name).filter(Boolean).join(' · ');
-  return parents ? `${parents}의 ${person.relation||''} ${person.name||''}` : person.name || '';
+  return parents ? `${parents} 의 ${person.relation||''} ${person.name||''}` : person.name || '';
 }
 export function sideAccounts(config, side) {
   const person = config[validSide(side)] || {}, label = SIDE_NAMES[validSide(side)];
