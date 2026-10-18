@@ -61,6 +61,9 @@ p{margin:0 0 12px}
 .gallery{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
 .thumbnail{padding:0;border:0;background:#ede6dc;aspect-ratio:1;overflow:hidden;border-radius:9px;min-width:0;min-height:44px}
 .thumbnail img{width:100%;height:100%;object-fit:cover;display:block}
+/* 웨딩 사진: 길게 눌러 저장·선택·끌기 막기, 화면이 뒤로 가거나 포커스를 잃으면 가리기(app.js guardPhotos) */
+.cover-photo,.thumbnail img,.viewer img{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none;-webkit-user-drag:none}
+.photos-veiled .cover-photo,.photos-veiled .thumbnail img,.photos-veiled .viewer img{visibility:hidden}
 .empty{padding:28px 18px;text-align:center;border:1px solid var(--line);border-radius:18px;background:#f5f0e6}
 .venue-title{font-size:20px;font-weight:600;line-height:1.5}
 .address{margin:16px 0 20px}

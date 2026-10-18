@@ -53,7 +53,7 @@ export function renderInvitation(root, config, photos = [], side = document.docu
     <footer class="footer" aria-label="청첩장 맺음말"><p>${esc(groom.name)} · ${esc(bride.name)}</p><p>${calendarFor(w.date)?`${calendarFor(w.date).year}.${String(calendarFor(w.date).month).padStart(2,'0')}.${String(calendarFor(w.date).day).padStart(2,'0')}`:'함께해 주셔서 감사합니다'}</p></footer></main>`;
   root.querySelectorAll('[data-copy]').forEach((b)=>{b.onclick=async()=>toast(await copyText(b.dataset.copy)?'복사했어요':'복사하지 못했어요. 다시 시도해 주세요.');});
   root.querySelectorAll('[data-photo]').forEach((b)=>{b.onclick=()=>openViewer(photos,Number(b.dataset.photo),root);});
-  root.querySelectorAll('.thumbnail img').forEach((img)=>{img.oncontextmenu=(e)=>e.preventDefault();img.ondragstart=(e)=>e.preventDefault();});
+  root.querySelectorAll('.cover-photo,.thumbnail img').forEach((img)=>{img.draggable=false;img.oncontextmenu=(e)=>e.preventDefault();img.ondragstart=(e)=>e.preventDefault();});
   root.querySelector('[data-kakao]')?.addEventListener('click',async()=>{
     try { await loadKakao(config.kakaoJsKey); window.Kakao.Share.sendDefault({objectType:'feed',content:{title:`${name} 결혼합니다`,description:`${date} · ${w.venue||''} ${w.hall||''}`,imageUrl:urls.image,link:{mobileWebUrl:urls.page,webUrl:urls.page}},buttons:[{title:'청첩장 보기',link:{mobileWebUrl:urls.page,webUrl:urls.page}}]}); }
     catch { toast('공유를 열지 못했어요. 링크 복사를 이용해 주세요.'); }
@@ -121,11 +121,31 @@ export async function loadInvitationData(fetcher = fetch) {
   const failed=!(value?.groom && value?.bride && value?.wedding);
   return { config:failed?FALLBACK:value, failed, photos:galleryResult.status==='fulfilled' && Array.isArray(galleryResult.value)?galleryResult.value.map(photoPath).filter(Boolean):[] };
 }
+/**
+ * 웨딩 사진 저장 막기. 길게 누르기·우클릭·끌어 저장을 막고, 화면이 뒤로 가거나(앱 전환 미리보기) 창이 포커스를 잃으면
+ * 사진을 가린다(데스크톱 캡처 도구가 뜰 때 등). 휴대폰 OS의 스크린샷 자체는 웹 페이지가 막을 수 없다.
+ */
+export function guardPhotos(doc = document, win = window) {
+  const root = doc.documentElement;
+  const veil = (on) => root.classList.toggle('photos-veiled', on);
+  doc.addEventListener('visibilitychange', () => veil(doc.hidden));
+  win.addEventListener('blur', () => veil(true));
+  win.addEventListener('focus', () => veil(false));
+  win.addEventListener('pagehide', () => veil(true));
+  win.addEventListener('pageshow', () => veil(doc.hidden));
+  const isPhoto = (t) => t?.closest?.('.cover-photo,.thumbnail,.viewer');
+  doc.addEventListener('contextmenu', (e) => { if (isPhoto(e.target)) e.preventDefault(); });
+  doc.addEventListener('dragstart', (e) => { if (isPhoto(e.target)) e.preventDefault(); });
+  // 데스크톱 PrintScreen 키: 잠깐 가린다(이미 찍힌 화면은 되돌릴 수 없지만 연속 캡처를 어렵게)
+  doc.addEventListener('keyup', (e) => { if (e.key === 'PrintScreen') { veil(true); setTimeout(() => veil(doc.hidden), 1500); } });
+}
+
 async function start() {
   const root=document.getElementById('invitation');if(!root)return;
   const {config,photos,failed}=await loadInvitationData();
   if(failed){const status=document.getElementById('load-status');status.textContent='청첩장을 준비 중입니다. 정보를 불러오지 못했어요.';const retry=document.createElement('button');retry.className='btn';retry.textContent='다시 불러오기';retry.onclick=()=>location.reload();status.appendChild(retry);}
   renderInvitation(root,config,photos);
+  guardPhotos();
   document.getElementById('load-status')?.removeAttribute('aria-busy');
 }
 if(typeof document!=='undefined')start();

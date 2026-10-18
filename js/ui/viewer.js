@@ -40,9 +40,12 @@ export function openViewer(game, images, index) {
     draw();
   };
   const onHide = () => { if (document.hidden) close(); };
+  // 창이 포커스를 잃으면(데스크톱 캡처 도구 등) 사진을 가린다
+  const veil = () => v.classList.add('veiled'), unveil = () => v.classList.remove('veiled');
 
   const close = () => {
     document.removeEventListener('visibilitychange', onHide);
+    window.removeEventListener('blur', veil); window.removeEventListener('focus', unveil);
     window.removeEventListener('resize', draw);
     root.hidden = true; root.innerHTML = ''; game.paused = false;
   };
@@ -53,6 +56,7 @@ export function openViewer(game, images, index) {
   cv.addEventListener('pointerup', onUp);
   v.querySelector('.close').onclick = close;
   document.addEventListener('visibilitychange', onHide);
+  window.addEventListener('blur', veil); window.addEventListener('focus', unveil);
   window.addEventListener('resize', draw);
 
   root.appendChild(v); root.hidden = false; game.paused = true;

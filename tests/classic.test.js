@@ -84,3 +84,23 @@ test('복사는 Clipboard API 거절 시 기존 copy 명령으로 폴백하고 �
     if(doc)Object.defineProperty(globalThis,'document',doc);else delete globalThis.document;
   }
 });
+
+test('웨딩 사진 저장 막기: 화면이 뒤로 가거나 포커스를 잃으면 가리고, 사진 위 우클릭·끌기는 막는다', async () => {
+  const { guardPhotos } = await import('../classic/app.js');
+  const on = (t) => { const m = {}; t.addEventListener = (k, f) => { (m[k] ??= []).push(f); }; t.fire = (k, e = {}) => (m[k] ?? []).forEach((f) => f(e)); return t; };
+  const classes = new Set();
+  const doc = on({ hidden: false, documentElement: { classList: { toggle: (c, v) => (v ? classes.add(c) : classes.delete(c)) } } });
+  const win = on({});
+  guardPhotos(doc, win);
+  doc.hidden = true; doc.fire('visibilitychange');
+  assert.ok(classes.has('photos-veiled'), '앱 전환 화면에서 가린다');
+  doc.hidden = false; doc.fire('visibilitychange');
+  assert.ok(!classes.has('photos-veiled'));
+  win.fire('blur'); assert.ok(classes.has('photos-veiled'), '포커스를 잃으면 가린다');
+  win.fire('focus'); assert.ok(!classes.has('photos-veiled'));
+  let prevented = 0;
+  const event = (photo) => ({ target: { closest: () => (photo ? {} : null) }, preventDefault: () => { prevented++; } });
+  doc.fire('contextmenu', event(true)); doc.fire('dragstart', event(true));
+  doc.fire('contextmenu', event(false));
+  assert.equal(prevented, 2, '사진에서만 막고 다른 곳(주소 복사 등)은 그대로');
+});
