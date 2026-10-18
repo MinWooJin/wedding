@@ -59,10 +59,11 @@ export const LOOP_SECONDS = VOICES.length * BASS.length * 2 * BEAT;
 
 /**
  * 예식장 BGM: 바그너 '로엔그린' 중 결혼 행진곡(신부 입장곡, 1850년, 퍼블릭 도메인 작품)을 직접 편곡.
- * 다장조, 느린 행진(72bpm). 선율은 "빰 빰-빠-밤" 동기, 화음은 오르간 같은 지속음 + 종소리.
+ * 다장조, 경쾌한 행진(104bpm). 선율은 "빰 빰-빠-밤" 동기, 반주는 "쿵-짝" 행진 저음 + 엇박 화음 + 가벼운 박자.
+ * 두 번째 반복은 선율을 한 옥타브 올리고 종소리를 겹쳐 더 화려하게 끝난다.
  * 한 프레이즈 = [못갖춘마디 1박][4박]. 시간은 박 단위로 적고 아래에서 초로 바꾼다.
  */
-export const MARCH_TEMPO = 72;
+export const MARCH_TEMPO = 104; // 신나는 행진(처음 72에서 올림)
 const MARCH_PHRASES = [
   // [선율(음, 박)], 화음(프레이즈 앞·뒤 2박씩)
   { lead: [['G4', 1], ['C5', 1.5], ['C5', 0.5], ['C5', 2]], chords: [['C4', 'E4', 'G4'], ['C4', 'E4', 'G4']], bass: ['C3', 'C3'] },
@@ -75,23 +76,35 @@ const MARCH_PHRASES = [
   { lead: [['C5', 1.5], ['B4', 0.5], ['C5', 3]], chords: [['B3', 'D4', 'G4'], ['C4', 'E4', 'G4']], bass: ['G2', 'C3'] },
 ];
 
-/** 결혼 행진곡 한 바퀴(프레이즈 8개 × 5박 = 40박) */
+const MARCH_PASSES = 2;
+const upOctave = (n) => n.replace(/\d$/, (d) => String(Number(d) + 1));
+
+/** 결혼 행진곡 한 바퀴(프레이즈 8개 × 5박 × 2회 = 80박) */
 export function marchEvents() {
   const beat = 60 / MARCH_TEMPO, out = [];
-  MARCH_PHRASES.forEach((ph, i) => {
-    const base = i * 5 * beat;
-    let t = base;
-    for (const [n, b] of ph.lead) { out.push({ t, dur: b * beat * 0.92, f: freq(n), kind: 'lead', vol: 0.32 }); t += b * beat; }
-    ph.chords.forEach((ch, k) => {
-      const at = base + (k ? 2.5 : 0) * beat, len = (k ? 2.5 : 2.5) * beat;
-      ch.forEach((n) => out.push({ t: at, dur: len * 0.96, f: freq(n), kind: 'organ', vol: 0.12 }));
-      out.push({ t: at, dur: len * 0.96, f: freq(ph.bass[k]), kind: 'bass', vol: 0.4 });
-      out.push({ t: at, dur: beat * 2.2, f: freq(ch[2].replace(/\d$/, (d) => String(Number(d) + 1))), kind: 'bell', vol: 0.16 });
+  for (let pass = 0; pass < MARCH_PASSES; pass++) {
+    MARCH_PHRASES.forEach((ph, i) => {
+      const base = (pass * MARCH_PHRASES.length + i) * 5 * beat;
+      // 선율: 짧게 끊어 또렷하게. 두 번째 반복은 한 옥타브 위 + 종소리 겹침
+      let t = base;
+      for (const [n, b] of ph.lead) {
+        const note = pass ? upOctave(n) : n;
+        out.push({ t, dur: b * beat * 0.82, f: freq(note), kind: 'lead', vol: 0.3 });
+        if (pass) out.push({ t, dur: b * beat * 1.1, f: freq(upOctave(note)), kind: 'bell', vol: 0.12 });
+        t += b * beat;
+      }
+      // 반주: 박마다 "쿵"(근음·옥타브 번갈아), 엇박마다 "짝"(짧은 화음) + 가벼운 박자
+      for (let b = 0; b < 5; b++) {
+        const k = b < 3 ? 0 : 1, at = base + b * beat, root = ph.bass[k];
+        out.push({ t: at, dur: beat * 0.45, f: freq(b % 2 ? upOctave(root) : root), kind: 'bass', vol: 0.45 });
+        ph.chords[k].forEach((n) => out.push({ t: at + beat / 2, dur: beat * 0.3, f: freq(n), kind: 'organ', vol: 0.1 }));
+        out.push({ t: at + beat / 2, dur: 0.05, f: 0, kind: 'tick', vol: 0.09 });
+      }
     });
-  });
+  }
   return out;
 }
-export const MARCH_SECONDS = MARCH_PHRASES.length * 5 * 60 / MARCH_TEMPO;
+export const MARCH_SECONDS = MARCH_PASSES * MARCH_PHRASES.length * 5 * 60 / MARCH_TEMPO;
 
 /** 곡 목록: 정원은 밝은 캐논, 예식장은 결혼 행진곡 */
 export const TRACKS = {

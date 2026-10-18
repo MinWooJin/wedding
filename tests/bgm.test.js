@@ -88,7 +88,12 @@ test('예식장 결혼 행진곡: "빰 빰-빠-밤" 첫 동기와 길이', () =>
   const near = (a, b) => Math.abs(a - b) < 1e-6;
   assert.ok(['G4', 'C5', 'C5', 'C5'].every((n, i) => near(lead[i].f, freq(n))), '솔-도-도-도');
   assert.ok(near(lead[1].dur / lead[2].dur, 3), '점음표 리듬(1.5박 : 0.5박)');
-  assert.ok(Math.abs(MARCH_SECONDS - 40 * 60 / MARCH_TEMPO) < 1e-9);
+  assert.ok(Math.abs(MARCH_SECONDS - 80 * 60 / MARCH_TEMPO) < 1e-9, '8프레이즈 × 2회');
+  assert.ok(MARCH_TEMPO >= 100, '신나는 빠르기');
+  assert.equal(ev.filter((e) => e.kind === 'bass').length, 8 * 5 * 2, '박마다 쿵');
+  assert.equal(ev.filter((e) => e.kind === 'tick').length, 8 * 5 * 2, '엇박마다 짝');
+  const second = lead.slice(lead.length / 2);
+  assert.ok(second.every((e, i) => Math.abs(e.f / lead[i].f - 2) < 1e-6), '두 번째 반복은 선율이 한 옥타브 위');
   assert.ok(ev.every((e) => e.t >= 0 && e.t < MARCH_SECONDS));
   assert.deepEqual(Object.keys(TRACKS), ['garden', 'march']);
 });
@@ -104,7 +109,7 @@ test('곡 바꾸기: 예식장에 들어가면 행진곡으로, 지금 곡은 �
     bgm.play('march');
     assert.equal(bgm.track, 'march');
     assert.ok(log.stops.some((t) => Math.abs(t - 5.65) < 1e-9), '정원 곡 소리를 멈춘다');
-    assert.ok(log.notes.length - before >= marchEvents().length, '행진곡 한 바퀴를 예약');
+    assert.ok(log.notes.length - before >= marchEvents().filter((e) => e.kind !== 'tick').length, '행진곡 한 바퀴를 예약(박자 잡음 제외)');
     assert.ok(Math.abs(bgm.loopSeconds - MARCH_SECONDS) < 1e-9);
     const n = log.notes.length;
     bgm.play('march');
