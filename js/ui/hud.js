@@ -38,7 +38,6 @@ export function createHud(root, config, game) {
     game.player.sprites = characterSet(game.assets, `preset-${profile.charId}`, presetSprites(profile.charId));
     game.paused = false; game.onMessagesChanged?.();
   };
-  const walkGuide = () => showOverlay(game, { title: '정원 산책 안내', html: '<p>빈 곳을 짧게 누르면 캐릭터가 걸어가요. 화면을 끌면 정원을 둘러볼 수 있어요.</p><p>아래쪽 방명록 보드·갤러리 액자·선물·예식장 문을 누르면 바로 그 공간으로 들어가요. 꽃과 사람도 눌러 보세요.</p><p>걷기 대신 메뉴로 바로 이동해도 좋아요.</p>' });
 
   const openMenu = () => {
     const s = SPACES[sceneId];
@@ -46,7 +45,7 @@ export function createHud(root, config, game) {
     const status = sceneId === 'gallery' && !game.gallery.length ? '사진은 마지막 준비 단계에서 채워질 예정이에요.'
       : count ? `지금까지 ${count}개의 축하가 피어났어요.` : '아직 피어난 축하가 없어요. 첫 번째 꽃을 남겨 주세요.';
     const actions = [
-      ['messages', '❀ 메시지 보기'], ['locate', '↗ 내 위치로'], ['guide', '? 산책 안내'],
+      ['messages', '❀ 메시지 보기'], ['locate', '↗ 내 위치로'],
       ...(sceneId === 'gifts' ? (config.gifts?.declineMoney ? [['letter', '♥ 두 사람의 편지']] : [['groom', '신랑측 마음'], ['bride', '신부측 마음']]) : []),
     ];
     const { card, close } = showOverlay(game, {
@@ -57,11 +56,11 @@ export function createHud(root, config, game) {
         <div class="menu-actions">${actions.map(([id, label]) => `<button class="text-button" data-menu="${id}">${esc(label)}</button>`).join('')}</div>
         ${config.classicUrl ? `<a class="classic-link" href="${esc(config.classicUrl)}">일반 청첩장 보기 →</a>` : ''}`,
       // 광장 아래 "축하 남기기" 버튼을 없앤 대신 메뉴 맨 위 버튼으로(방명록 우체통과 함께 축하를 쓰는 두 곳)
-      buttons: [{ label: '✉ 축하 남기기', primary: true, onClick: () => { close(true); game.openGuestbook(); return true; } }, { label: '내 캐릭터 바꾸기', onClick: () => { close(true); game.paused = true; changeProfile(); return true; } }, { label: '소식 나누기', onClick: () => { close(true); showShare(game); return true; } }, { label: '닫기' }],
+      buttons: [{ label: '축하 남기기', icon: '✉', primary: true, onClick: () => { close(true); game.openGuestbook(); return true; } }, { label: '내 캐릭터 바꾸기', onClick: () => { close(true); game.paused = true; changeProfile(); return true; } }, { label: '소식 나누기', onClick: () => { close(true); showShare(game); return true; } }, { label: '닫기' }],
     });
     card.querySelectorAll('[data-space]').forEach((b) => { b.onclick = () => { close(); if (b.dataset.space !== sceneId) navigate(b.dataset.space); }; });
     const run = {
-      messages: () => game.openMessages(), locate: () => { game.follow = true; }, guide: walkGuide,
+      messages: () => game.openMessages(), locate: () => { game.follow = true; },
       letter: () => showGiftsNotice(game), groom: () => showAccounts(game, '신랑', config.groom), bride: () => showAccounts(game, '신부', config.bride),
     };
     card.querySelectorAll('[data-menu]').forEach((b) => { b.onclick = () => { close(true); run[b.dataset.menu]?.(); }; });

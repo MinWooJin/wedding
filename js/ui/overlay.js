@@ -1,7 +1,7 @@
 import { esc, h } from './dom.js';
 
 /**
- * 팝업 카드. buttons: [{label, primary?, onClick?(card) => boolean|Promise<boolean>}]
+ * 팝업 카드. buttons: [{label, primary?, icon?, onClick?(card) => boolean|Promise<boolean>}] — icon이 있으면 윗줄 아이콘·아랫줄 글자
  * onClick이 true를 돌려주면 닫지 않는다(검증 실패 등). 열려 있는 동안 game.paused = true.
  */
 const active = new WeakMap();
@@ -36,7 +36,9 @@ export function showOverlay(game, { title = '', html = '', buttons = [{ label: '
   };
   const row = card.querySelector('.dialog-actions');
   for (const b of buttons) {
-    const btn = h(`<button class="btn${b.primary ? ' primary' : ''}">${esc(b.label)}</button>`);
+    const btn = h(b.icon
+      ? `<button class="btn stacked${b.primary ? ' primary' : ''}"><span class="btn-icon" aria-hidden="true">${esc(b.icon)}</span><span>${esc(b.label)}</span></button>`
+      : `<button class="btn${b.primary ? ' primary' : ''}">${esc(b.label)}</button>`);
     btn.onclick = async () => {
       if (busy) return;
       busy = true; card.setAttribute('aria-busy', 'true');
