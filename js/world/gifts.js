@@ -89,7 +89,7 @@ export function showGiftsNotice(game) {
     title: '마음 보내기',
     html: `<p class="gifts-notice">${esc(text)}</p>`,
     buttons: [
-      { label: '계좌 보기', primary: true, onClick: () => { close(true); showGiftAccounts(game); return true; } },
+      { label: '계좌 보기', onClick: () => { close(true); showGiftAccounts(game); return true; } },
       { label: '닫기' },
     ],
   });
