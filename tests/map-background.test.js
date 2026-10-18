@@ -32,7 +32,7 @@ test('그려진 광장의 리셉션을 그대로 통과해 네 문까지 이동�
   const hub = createHub({ config: DEFAULT_CONFIG, profile: { nickname: '나' }, assets: { objects, maps: { hub: hubBg } }, data: { messages: [] } });
   assert.equal(hub.bgImage, hubBg);
   const sprites = new Set(hub.objects.map((o) => o.sprite));
-  assert.deepEqual([...sprites].sort(), ['door', 'landmark-gallery', 'landmark-gifts', 'landmark-info', 'party-table', 'ribbon-lantern', 'wedding-cake', 'welcome-board'], '세 입구는 표지판 대신 랜드마크');
+  assert.deepEqual([...sprites].sort(), ['landmark-gallery', 'landmark-gifts', 'landmark-info', 'welcome-board'], '입구 광장에는 네 공간의 그림만(케이크·리셉션 소품·문 매트 없음)');
   assert.ok(hub.hosts.every((c) => c.y === CEREMONY.feetY && c.y >= 128 + 15 && c.y <= 164), '발이 단상 윗면(y128~164) 안');
   const leftSign = hub.objects.find((o) => o.id === 'sign-guestbook');
   const rightSign = hub.objects.find((o) => o.id === 'sign-gallery');
@@ -45,12 +45,7 @@ test('그려진 광장의 리셉션을 그대로 통과해 네 문까지 이동�
     const { ty, tx } = n.wander.home;
     assert.ok(ty >= 6, `하객은 단상·화분 아래(${tx},${ty})`);
   }
-  for (const e of hub.entrances) assert.ok(findPath(hub.map.w, hub.map.h, (x, y) => hub.isSolidTile(x, y), hub.spawn, e), '문 접근');
-  for (const prop of hub.objects.filter((o) => ['party-table', 'ribbon-lantern', 'wedding-cake'].includes(o.sprite))) {
-    assert.equal(prop.solid, false, '리셉션 소품은 위치를 유지하고 통행을 허용한다');
-    const foot = prop.ty + Math.ceil(prop.spr.h / 32) - 1;
-    assert.equal(hub.isSolidTile(prop.tx, foot), false);
-  }
+  assert.equal(hub.entrances.length, 0, '걸어서 밟는 입구 없음. 그림을 누르면 이동');
   // 출입구까지 우회 경로가 있는 것만으로는 부족하다. 중앙을 직진할 수 있어야 한다.
   for (let row = 18; row <= 25; row++) {
     assert.equal(hub.isSolidTile(5, row), false, `중앙 통로 ${row}행`);
@@ -62,7 +57,7 @@ test('그려진 광장의 리셉션을 그대로 통과해 네 문까지 이동�
     hub.updateArrivals(.05, false);
     for (const n of crowd) n.character.update(.05, hub.blockedStatic());
   }
-  assert.ok(crowd.every((n) => !n.arrival), '리셉션이 있어도 스무 명 모두 자기 자리에 도착한다');
+  assert.ok(crowd.every((n) => !n.arrival), '스무 명 모두 자기 자리에 도착한다');
   const plain = createHub({ config: DEFAULT_CONFIG, profile: { nickname: '나' }, assets: { objects }, data: { messages: [] } });
   assert.ok(plain.objects.some((o) => o.sprite === 'arch'), '배경이 없으면 예전처럼 장식 오브젝트');
 });

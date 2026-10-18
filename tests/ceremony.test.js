@@ -51,8 +51,7 @@ test('버진로드는 단상 밑에서 끝까지 이어지고 양쪽 꽃띠는 �
   const meadow = hub.objects.filter((o) => o.sprite === 'meadow-sprig');
   assert.ok(meadow.length >= 6 && meadow.every((o) => o.floor && !o.solid && (o.tx < 3 || o.tx > 7)), '작은 들꽃은 바깥 잔디의 비충돌 바닥');
   assert.equal(hub.objects.some((o) => o.sprite === 'party-table'), false, '리셉션 테이블은 치워 하객 자리를 넓힌다');
-  const cake = hub.objects.find((o) => o.sprite === 'wedding-cake');
-  assert.ok(cake.ty >= HUB_DOORS.guestbook.door.ty && !cake.solid, '케이크는 아래 입구 광장의 지나갈 수 있는 장식');
+  assert.equal(hub.objects.some((o) => ['wedding-cake', 'door'].includes(o.sprite)), false, '입구 광장 가운데 케이크와 문 앞 매트는 치웠다');
   for (const door of Object.values(HUB_DOORS)) {
     const path = findPath(hub.map.w, hub.map.h, (x, y) => hub.isSolidTile(x, y), HUB_SPAWN, door.back);
     assert.ok(path.length > 0, `${door.label} 접근 가능`);
@@ -93,7 +92,10 @@ test('하객은 길 양옆에서 시작하고, 단상 앞 몇 줄을 뺀 버진�
 test('새 꽃/버진로드 PNG가 없으면 기존 모래길로 표시하고 기능을 유지한다', () => {
   const hub = createHub({ config: DEFAULT_CONFIG, profile: { nickname: '나' }, assets: {}, data: { messages: [] } });
   assert.equal(hub.objects.some((o) => o.sprite.startsWith('aisle-')), false);
-  assert.equal(hub.entrances.length, 4);
+  assert.equal(hub.entrances.length, 0, '걸어서 밟는 입구는 없다');
+  const signs = hub.objects.filter((o) => o.id.startsWith('sign-'));
+  assert.equal(signs.length, 4, '네 공간은 그림(그림이 없으면 표지판)을 눌러 들어간다');
+  assert.ok(signs.every((o) => o.instant && o.interact));
   assert.equal(hub.guestMap.size, 20);
 });
 

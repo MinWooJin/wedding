@@ -93,3 +93,17 @@ test('입구 랜드마크는 문·통로를 막지 않고 발 기준이 타일 �
   const plain = createHub({ config: DEFAULT_CONFIG, profile: { nickname: '나' }, assets: {}, data: { messages: [] } });
   assert.equal(plain.objects.find((o) => o.id === 'sign-gallery').sprite, 'sign', '그림이 없으면 표지판');
 });
+
+test('광장 입구 그림을 누르면 걸어가지 않고 바로 그 공간으로 넘어간다', () => {
+  const objects = Object.fromEntries(manifest.objects.map((id) => { const d = png(`objects/${assetFilename(manifest, 'objects', id)}`); return [id, { w: d.w, h: d.h }]; }));
+  const hub = createHub({ config: DEFAULT_CONFIG, profile: { nickname: '나' }, assets: { objects }, data: { messages: [] } });
+  const went = [];
+  const player = { x: 176, y: 252, stop() { this.stopped = true; }, followPath() { this.walked = true; } };
+  const game = { player, goTo: (id) => went.push(id) };
+  for (const id of ['guestbook', 'gallery', 'gifts', 'info']) {
+    const o = hub.objects.find((x) => x.id === `sign-${id}`);
+    hub.onTap(o.tx * 32 + o.spr.w / 2, o.drawY + o.spr.h / 2, game);
+  }
+  assert.deepEqual(went, ['guestbook', 'gallery', 'gifts', 'info']);
+  assert.equal(player.walked, undefined, '먼저 걸어가지 않는다');
+});

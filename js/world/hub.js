@@ -6,7 +6,6 @@ import { characterSet, EXTRA_GUEST_COUNT } from '../assets.js';
 import { freeTiles, pickTiles } from './guest-layout.js';
 import { findPath } from './movement.js';
 import { displayName } from '../config.js';
-import { WEDDING_RECEPTION } from './wedding-decor.js';
 
 // 11열 × 27행(352×864px). 레퍼런스(Pixel Guestbook)처럼: 종·커튼 아치 아래 계단 단상의 두 사람,
 // 그 아래로 버진로드와 길 가장자리 꽃띠, 양옆 잔디에 하객이 무리 지어 서고 가장자리는 나무·덤불·라벤더가 감싼다.
@@ -231,17 +230,14 @@ export class HubScene extends Scene {
       // 계단 단상(160×64, 3~7열): 바닥 장식이라 두 사람 발밑에 깔리고 충돌 없음.
       ...(has(game.assets, 'platform') ? [{ id: 'platform', sprite: 'platform', tx: 3, ty: CEREMONY.stageTy, floor: true }] : []),
     ];
-    // 리셉션은 표지판 사이에 모으되, 가운데 통로를 막지 않는 통행 가능한 장식으로 둔다.
-    if (painted) objects.push(...WEDDING_RECEPTION.filter((o) => has(game.assets, o.sprite)));
-    else if (has(game.assets, 'wedding-cake')) objects.push({ id: 'cake-display', sprite: 'wedding-cake', tx: 4.5, ty: BLOCK_A, solid: false });
+    // 입구 광장은 네 공간의 그림만 둔다(사용자 결정: 가운데 케이크·테이블 같은 리셉션 소품과 문 앞 매트는 치움).
+    // 걸어서 밟는 입구도 없다. 방명록 보드·갤러리 액자·선물·예식장 문을 누르면 바로 그 공간으로 넘어간다.
     const entrances = [];
     for (const [id, d] of Object.entries(HUB_DOORS)) {
-      objects.push({ id: `door-${id}`, sprite: 'door', floor: true, ...d.door });
       // 갤러리관·마음 전하는 곳·예식 안내소는 표지판 대신 공간을 보여 주는 큰 그림(랜드마크). 그림이 없으면 표지판.
       const landmark = LANDMARKS[id] && has(game.assets, LANDMARKS[id].sprite) ? LANDMARKS[id] : null;
       const sprite = landmark ? landmark.sprite : id === 'guestbook' ? 'welcome-board' : 'sign';
-      objects.push({ id: `sign-${id}`, sprite, label: d.label, ...(landmark ? { tx: landmark.tx, ty: landmark.ty } : d.sign), interact: (g) => g.goTo(id) });
-      entrances.push({ ...d.door, to: id, spawn: null }); // spawn null → 해당 씬의 기본 spawn
+      objects.push({ id: `sign-${id}`, sprite, label: d.label, ...(landmark ? { tx: landmark.tx, ty: landmark.ty } : d.sign), instant: true, interact: (g) => g.goTo(id) });
     }
 
     super({

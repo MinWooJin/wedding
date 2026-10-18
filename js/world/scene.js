@@ -216,6 +216,8 @@ export class Scene {
     let obj = this.hitObject(wx, wy);
     if (npc && obj) { if (!obj.floor && obj.bottom >= npc.character.y) npc = null; else obj = null; }
     const target = npc ?? obj;
+    // instant: 걸어가지 않고 누르는 즉시 실행(광장 입구 그림처럼 버튼 역할을 하는 것)
+    if (target?.interact && target.instant) { player.stop(); this.pending = null; this.destination = null; target.interact(game); return; }
     if (exit && !target?.interact) {
       this.pending = null;
       this.destination = null;

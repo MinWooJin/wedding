@@ -552,3 +552,9 @@ Codex가 다음 작업 전에 읽을 문서다. 오늘 Claude가 바꾼 내용, 
   - 로더: `manifest.ceremony` → `assets.ceremony`(이미지), `manifest.ceremonySheets` → `assets.ceremonySheets`(가로 시트를 프레임 배열로, `framesFromStrip`). `Renderer.drawCrop` 추가(효과 시트).
 - **캐릭터 선택(`intro.js`)**: 30종 격자를 처음부터 보여 준다(390폭 6열×5줄, 360 미만 5열). 칸에는 머리·어깨를 크게 잘라 보여 얼굴로 고른다. 위에 큰 미리보기와 보조 ◀▶. 격자는 라디오 그룹(화살표 키 이동, 선택한 칸만 Tab 대상). '30종 한눈에 보기' 토글은 없앰.
 - **사용자 할 일:** 코덱스 42절대로 `Code.gs`(캐릭터 0~29 허용)를 Apps Script에 붙여넣고 "배포 관리 → 새 버전". 안 하면 10~29번 캐릭터의 입장·글쓰기를 서버가 거절한다.
+
+## 45. 입구 광장 정리 (Claude, 2026-10-18)
+
+- 사용자 결정: 입구 광장 가운데 리셉션 소품(케이크·테이블·리본 조명, `WEDDING_RECEPTION`)과 문 앞 매트(`door` 바닥 오브젝트)를 치웠다. 광장에는 네 공간의 그림(방명록 웰컴보드, 갤러리 액자, 선물, 예식장 문)만 남는다.
+- 걸어서 밟는 입구(`entrances`)를 없앴다. 네 그림은 `instant: true`라 누르는 즉시 그 공간으로 넘어간다(`Scene.onTap`에서 걷기 전에 처리). 방에서 돌아올 때는 기존처럼 `HUB_DOORS.*.back` 자리에 선다.
+- `wedding-decor.js`의 `WEDDING_RECEPTION` 목록은 남아 있으나 광장에서 쓰지 않는다. 테스트 172개 통과.

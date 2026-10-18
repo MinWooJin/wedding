@@ -37,7 +37,7 @@ export function createHud(root, config, game) {
     game.player.sprites = characterSet(game.assets, `preset-${profile.charId}`, presetSprites(profile.charId));
     game.paused = false; game.onMessagesChanged?.();
   };
-  const walkGuide = () => showOverlay(game, { title: '정원 산책 안내', html: '<p>빈 곳을 짧게 누르면 캐릭터가 걸어가요. 화면을 끌면 정원을 둘러볼 수 있어요.</p><p>이름이 적힌 표지판은 공간 입구예요. 꽃과 사람도 눌러 보세요.</p><p>걷기 대신 메뉴로 바로 이동해도 좋아요.</p>' });
+  const walkGuide = () => showOverlay(game, { title: '정원 산책 안내', html: '<p>빈 곳을 짧게 누르면 캐릭터가 걸어가요. 화면을 끌면 정원을 둘러볼 수 있어요.</p><p>아래쪽 방명록 보드·갤러리 액자·선물·예식장 문을 누르면 바로 그 공간으로 들어가요. 꽃과 사람도 눌러 보세요.</p><p>걷기 대신 메뉴로 바로 이동해도 좋아요.</p>' });
 
   const openMenu = () => {
     const s = SPACES[sceneId];
