@@ -757,3 +757,18 @@ D. 분위기용 하객 (선택, A~C 다음)
 | hub-repeat / `assets/maps/hub-repeat.png` | 352×288 | (0, 0, 352, 288) | 52 |
 | hub-bottom / `assets/maps/hub-bottom.png` | 352×320 | (0, 0, 352, 320) | 56 |
 | guestbook-bg / `assets/maps/guestbook-bg.png` | 352×448 | (0, 0, 352, 448) | 57 |
+
+
+## 9차 작업 완료 — 일반형 모바일 청첩장 (Codex, 2026-10-18)
+
+- `docs/CLASSIC_INVITATION_DESIGN.md`의 1단계를 구현했다. `/groom/`과 `/bride/`는 같은 디자인·내용이며 `data-side`, 제목·OG 메타만 다른 HTML을 사용한다. 표지 → 초대 글·가족 예식 안내 → 가족·해당 측 전화 → 서울 기준 달력·D-day → 갤러리 → 오시는 길 → 해당 측 계좌 → 정원 안내 → 공유 → 맺음말 순서다.
+- 신규 파일: `groom/index.html`, `bride/index.html`, `classic/app.css`, `classic/app.js`, 순수 함수 `classic/model.js`, `tests/classic.test.js`. 설정은 `data/config.json`에 `classic.invitation`, `classic.coverPhoto`만 추가했다. 기존 설정 값을 JSON 비교해 보존했고, 기존 `index.html`, `js/`, `css/`, `assets/`, 기존 테스트는 수정하지 않았다.
+- 크림·장미색·Pretendard, 최대480px, 본문16px, 44px 이상 터치 영역, 구역64px 여백, 모션 줄이기를 적용했다. 첫 화면의 빈 상태 박스가 화면 전체를 차지하던 문제를 실제 브라우저에서 발견해 제거했고, 정원 그림 비율·지도 버튼 간격·320px 달력 크기도 보정했다.
+- 부모님 성함은 양측 모두 소개한다. 전화와 계좌는 선택한 측만 DOM에 넣는다. 본인 → 아버지 → 어머니 순서이고 빈 전화번호는 아이콘을, 빈 계좌번호는 해당 줄을 생략한다. 계좌는 처음에는 접힌 상태다. 일반형 계좌 안내는 픽셀 앱의 `gifts.declineMoney`와 독립이다.
+- 갤러리는 lazy 썸네일3열, 전체 화면 뷰어, 스와이프, 이전·다음, Esc·화살표, 포커스 가두기·복귀, 배경 스크롤 잠금, 우클릭·드래그·모바일 길게 누르기 억제를 구현했다. 실사진은 넣지 않았다. 사진이 없으면 안내 문구, 설정 로딩 실패 시 준비 중 메시지·재시도 버튼과 전체 뼈대를 표시한다.
+- 복사는 Clipboard API → execCommand 폴백과2초 토스트다. 지도·카카오페이는 유효한 HTTP(S) 링크가 있을 때만 표시한다. 공유 키가 없으면 카카오 버튼을 숨긴다. 요청된 Kakao SDK2.7.4는 클릭할 때만 동적으로 로드하며8초 타임아웃을 두었다. 공식 CDN 파일의 SHA-384를 직접 확인해 SRI를 등록했다. `siteUrl`과 상대 경로는 GitHub Pages 하위 경로와 `/groom/index.html` 직접 접근도 처리한다. 최상위 await·추가 CDN 라이브러리는 없다.
+- 그림: `classic/img/garden-preview.png`(352×240, 불투명), `og-groom.png`, `og-bride.png`(각1200×630). 기존 정원 조각·벚꽃·아치·팔짱 커플·하객을 허용된 합성 방식으로 구성했다. 재생성은 `.venv-assets/Scripts/python.exe tools/prepare_classic_art.py`이며 기존 픽셀 자산은 덮어쓰지 않는다. 표지 사진은 `classic.coverPhoto`에 gallery 폴더 기준 파일명을 넣고, 비어 있으면 manifest 첫 사진, 그것도 없으면 커플 그림을 표시한다.
+- 검증: `npm test`148개 통과(기존140 + 신규8), 두 JS 구문 검사 통과. HTML 동일성, 참조 파일·그림 치수, 실패 시 폴백, 달력·서울 날짜 경계, 측별 필터·혼주 문구, 하위 경로 URL, 복사 실패 시 폴백을 검사했다. 실제 브라우저에서 신랑·신부 양측을390×844/320×568로 확인했고9개 section+footer 모두 존재하며 가로 넘침이 없다. Windows 브라우저 세로 스크롤바15px를 뺀 본문 폭은375/305px다. 계좌 열기·닫기, 사진 넘김, Tab 순환, Esc 닫기·원래 썸네일 포커스 복귀를 확인했다.
+- 확인 주소: `/tools/classic-review.html`(네 모바일 프레임과 그림), `/tools/classic-gallery-review.html`(실사진이 아닌 합성 그림으로 뷰어·준비 중 뼈대 검토). 화면 기록은 `docs/classic-groom-390-2026-10-18.jpg`, `classic-groom-320-2026-10-18.jpg`, `classic-bride-390-2026-10-18.jpg`, `classic-bride-320-2026-10-18.jpg`, `classic-calendar-390-2026-10-18.jpg`, `classic-garden-390-2026-10-18.jpg`, `classic-viewer-2026-10-18.jpg`다.
+- **Claude 다음 단계:** 현재 픽셀 앱은 루트에 그대로 있고 `/common/`은 아직 없다. 일반형의 `../common/` 정원 입장 링크는 설계대로 준비했으나, 실제 연결은 Claude가 픽셀 앱 경로 이동·루트 즉시 이동 페이지를 만드는2단계에서 마무리해야 한다. 이동 후 기존 자산·data·gallery 상대 경로와 정원 진입을 재검증한다. 이 항목은 참조 파일 테스트의 의도적인 예외다.
+- **데이터·배포 단계:** 방명록 API·실사진·실계좌·전화·카카오 키·공개 siteUrl 입력은 기존 방침대로 마지막에 한다. 실기기 iOS15/카카오톡/삼성 인터넷의 터치 스와이프·복사·공유와 실제 발송은 아직 검증하지 않았다. 공개 주소 확정 후 정적 HTML의 OG image를 크롤러가 읽는지도 확인하고 필요하면 절대 공개 URL로 바꾼다. 로컬 커밋만 하며 push/원격 게시를 하지 않는다.

@@ -1,0 +1,6 @@
+<!doctype html><html lang="ko" data-side="groom"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>일반형 청첩장 · 사진 뷰어 검토</title><link rel="stylesheet" href="../classic/app.css"><body><p class="status">검토용 가상 데이터입니다. 실제 사진·계좌가 아닙니다. <a href="classic-review.html">화면 비교로 돌아가기</a> <button class="btn" id="show-fallback">준비 중 화면 확인</button></p><div id="review-root"></div><script type="module">
+import { renderInvitation, FALLBACK } from '../classic/app.js';
+const config={groom:{name:'신랑',relation:'아들',parents:[],account:{}},bride:{name:'신부',relation:'딸',parents:[],account:{}},wedding:{date:'2027-01-09T11:30:00+09:00',venue:'예식 장소',hall:'예식홀',notice:'가족과 함께하는 작은 결혼식입니다.',map:{},transport:{}},classic:{}};
+renderInvitation(document.getElementById('review-root'),config,['../classic/img/garden-preview.png','../classic/img/og-groom.png','../classic/img/og-bride.png'],'groom');
+document.getElementById('show-fallback').onclick=()=>renderInvitation(document.getElementById('review-root'),FALLBACK,[],'groom');
+</script></body></html>
