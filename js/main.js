@@ -2,7 +2,7 @@ import { Game } from './game.js';
 import { loadConfig } from './config.js';
 import { loadProfile, saveProfile, getGuestId } from './state.js';
 import { loadAssets } from './assets.js';
-import { fetchMessages, postVisit, checkNickname } from './api.js';
+import { fetchMessages, postVisit, checkNickname, visibleEntries } from './api.js';
 import { showIntro } from './ui/intro.js';
 import { createHud } from './ui/hud.js';
 import { createHub } from './world/hub.js';
@@ -60,12 +60,13 @@ game.gallery = Array.isArray(gallery) ? gallery : [];
 game.guestId = guestId;
 game.claimed = claimed;
 game.checkNickname = nicknameChecker;
-game.data = { messages: config.guestbookApi ? [] : readPreview() };
+game.data = { messages: config.guestbookApi ? [] : visibleEntries(readPreview()) };
 game.openGuestbook = () => game.sceneById('guestbook').openForm(game);
 game.openMessages = () => game.sceneById('guestbook').openList();
 game.bgm = bgm;
 game.ui.hud = createHud(document.getElementById('hud'), config, game);
 game.onMessagesChanged = () => {
+  game.data.messages = visibleEntries(game.data.messages); // 방금 "test"로 남긴 글도 화면에는 보이지 않게
   game.scenes.hub?.setGuests(game.data.messages);
   game.scenes.guestbook?.setEntries(game.data.messages);
   game.ui.hud?.refresh?.();

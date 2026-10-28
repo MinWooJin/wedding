@@ -84,3 +84,16 @@ test('postMessage: text/plain JSON POST, 응답 ok 전달', async () => {
   assert.equal(net.ok, false);
   assert.match(net.error, /잠시 후/);
 });
+
+test('닉네임 "test"는 시험용: 불러온 방명록에서 빠진다(대소문자·공백 무시, 비슷한 닉네임은 그대로)', async () => {
+  const { fetchMessages, isHiddenNickname, visibleEntries } = await import('../js/api.js');
+  const rows = [
+    { t: 1, n: 'test', c: 0, m: '시험' }, { t: 2, n: ' TEST ', c: 1, m: '' }, { t: 3, n: 'Test', c: 2, m: '시험2' },
+    { t: 4, n: '테스트', c: 3, m: '축하해요' }, { t: 5, n: 'tester', c: 4, m: '축하' }, { t: 6, n: '민지', c: 5, m: '행복하세요' },
+  ];
+  const entries = await fetchMessages('https://example.test/exec', { fetchImpl: async () => ({ ok: true, json: async () => rows }) });
+  assert.deepEqual(entries.map((e) => e.n), ['테스트', 'tester', '민지']);
+  assert.equal(isHiddenNickname('tEsT'), true);
+  assert.equal(isHiddenNickname('test2'), false);
+  assert.deepEqual(visibleEntries(null), []);
+});

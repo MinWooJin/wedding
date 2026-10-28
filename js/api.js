@@ -15,6 +15,11 @@ export function validateEntry({ nickname, characterId, message }) {
 
 const isEntry = (e) => e && typeof e.n === 'string' && typeof e.m === 'string' && Number.isInteger(e.c);
 
+/** 시험용 닉네임: 시트에는 남지만 꽃·하객·메시지 목록·개수 어디에도 보이지 않는다(대소문자·앞뒤 공백 무시) */
+export const HIDDEN_NICKNAMES = ['test'];
+export const isHiddenNickname = (n) => typeof n === 'string' && HIDDEN_NICKNAMES.includes(n.trim().toLowerCase());
+export const visibleEntries = (entries) => (Array.isArray(entries) ? entries.filter((e) => !isHiddenNickname(e?.n)) : []);
+
 /** @returns {Promise<{t:number,n:string,c:number,m:string}[]>} 실패 시 [] */
 export async function fetchMessages(url, { fetchImpl = globalThis.fetch, timeoutMs = 5000, withStatus = false } = {}) {
   const finish = (ok, entries = []) => withStatus ? { ok, entries } : entries;
@@ -25,7 +30,7 @@ export async function fetchMessages(url, { fetchImpl = globalThis.fetch, timeout
     const res = await fetchImpl(url, { signal: ctrl?.signal, cache: 'no-store' });
     if (!res.ok) return finish(false);
     const data = await res.json();
-    return Array.isArray(data) ? finish(true, data.filter(isEntry)) : finish(false);
+    return Array.isArray(data) ? finish(true, visibleEntries(data.filter(isEntry))) : finish(false);
   } catch (e) {
     console.warn('방명록 불러오기 실패', e);
     return finish(false);
