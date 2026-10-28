@@ -31,18 +31,20 @@ export function showIntro(root, config, assets = {}, current = null, { checkNick
             <p class="picker-title">내 캐릭터</p>
             <p class="muted" id="count"></p>
             <div class="picker-steps"><button class="btn" id="prev" aria-label="이전 캐릭터">◀</button><button class="btn" id="next" aria-label="다음 캐릭터">▶</button></div>
-            <!-- 휴대폰에서 스크롤 없이 보이도록 입장 버튼을 캐릭터 옆에 둔다(캐릭터 격자는 그 아래) -->
-            <div class="picker-go" id="main-row"><button class="btn primary" id="go">입장하기</button></div>
           </div>
-        </div>
-        <p id="err" class="intro-error" role="status"></p>
-        <div class="claim-box" id="claim" hidden>
-          <p><b id="claim-name"></b> 님은 이미 정원에 다녀가셨어요.<br>같은 분이세요?</p>
-          <div class="row"><button class="btn primary" id="claim-yes">네, 저예요</button><button class="btn" id="claim-no">다른 닉네임 쓸게요</button></div>
-          <p class="muted">다른 휴대폰이나 브라우저로 다시 오셨다면 "네, 저예요"를 눌러 주세요.</p>
         </div>
         <p class="picker-hint">아래에서 마음에 드는 하객을 눌러 고르세요.</p>
         <div class="character-grid" id="character-grid" role="radiogroup" aria-label="캐릭터 ${PRESET_COUNT}종"></div>
+        <!-- 카드 아래에 붙어 있는 입장 영역: 휴대폰에서 격자를 스크롤하지 않아도 항상 보인다 -->
+        <div class="intro-footer">
+          <p id="err" class="intro-error" role="status"></p>
+          <div class="claim-box" id="claim" hidden>
+            <p><b id="claim-name"></b> 님은 이미 정원에 다녀가셨어요.<br>같은 분이세요?</p>
+            <div class="row"><button class="btn primary" id="claim-yes">네, 저예요</button><button class="btn" id="claim-no">다른 닉네임 쓸게요</button></div>
+            <p class="muted">다른 휴대폰이나 브라우저로 다시 오셨다면 "네, 저예요"를 눌러 주세요.</p>
+          </div>
+          <div class="row intro-go" id="main-row"><button class="btn primary" id="go">입장하기</button></div>
+        </div>
       </div>`);
     const cv = card.querySelector('canvas'), ctx = cv.getContext('2d');
     const count = card.querySelector('#count'), err = card.querySelector('#err'), nick = card.querySelector('#nick');

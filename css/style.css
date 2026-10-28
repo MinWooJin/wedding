@@ -112,10 +112,11 @@ input::placeholder, textarea::placeholder { color: #888477; }
 .picker-side .muted { margin: 0; font-size: 13px; }
 .picker-steps { display: flex; gap: 8px; margin-top: 4px; }
 .picker-steps .btn { width: 44px; height: 44px; padding: 0; display: inline-flex; align-items: center; justify-content: center; }
-/* 입장 버튼: 캐릭터 미리보기 오른쪽(◀▶ 아래). 내 캐릭터 바꾸기에서는 "그대로 돌아가기"가 그 아래에 붙는다 */
-.picker-go { display: flex; flex-direction: column; gap: 6px; margin-top: 8px; }
-.picker-go .btn { width: 100%; min-height: 44px; padding: 0 16px; }
-.intro-error { color: #c0392b; margin: 6px 0 0; min-height: 0; font-size: 13px; }
+/* 입장 영역: 카드(스크롤 상자) 아래에 붙어 항상 보인다. 격자가 그 뒤로 지나가도록 종이색 바탕과 옅은 그림자 */
+.intro-footer { position: sticky; bottom: -20px; margin: 10px -22px -20px; padding: 10px 22px calc(14px + env(safe-area-inset-bottom)); background: var(--paper); border-top: 1px solid var(--border); box-shadow: 0 -8px 16px -12px #342d2440; border-radius: 0 0 22px 22px; z-index: 1; }
+.intro-footer .intro-go { margin-top: 0; }
+.intro-footer .intro-go .btn { flex: 1; min-height: 48px; }
+.intro-error { color: #c0392b; margin: 0 0 8px; min-height: 0; font-size: 13px; }
 .intro-error:empty { display: none; }
 .picker-hint { margin: 10px 0 6px; font-size: 13px; color: var(--muted); }
 /* 30종을 처음부터 격자로: 390폭 6열×5줄(칸 약 45px), 좁은 화면 5열×6줄(칸 약 40px) */
