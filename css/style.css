@@ -112,6 +112,11 @@ input::placeholder, textarea::placeholder { color: #888477; }
 .picker-side .muted { margin: 0; font-size: 13px; }
 .picker-steps { display: flex; gap: 8px; margin-top: 4px; }
 .picker-steps .btn { width: 44px; height: 44px; padding: 0; display: inline-flex; align-items: center; justify-content: center; }
+/* 입장 버튼: 캐릭터 미리보기 오른쪽(◀▶ 아래). 내 캐릭터 바꾸기에서는 "그대로 돌아가기"가 그 아래에 붙는다 */
+.picker-go { display: flex; flex-direction: column; gap: 6px; margin-top: 8px; }
+.picker-go .btn { width: 100%; min-height: 44px; padding: 0 16px; }
+.intro-error { color: #c0392b; margin: 6px 0 0; min-height: 0; font-size: 13px; }
+.intro-error:empty { display: none; }
 .picker-hint { margin: 10px 0 6px; font-size: 13px; color: var(--muted); }
 /* 30종을 처음부터 격자로: 390폭 6열×5줄(칸 약 45px), 좁은 화면 5열×6줄(칸 약 40px) */
 .character-grid { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 4px; padding: 6px; margin: 0 0 6px; border: 1px solid var(--border); border-radius: 14px; background: #f5f0e6; }
