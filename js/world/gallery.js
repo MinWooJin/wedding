@@ -58,7 +58,8 @@ export class GalleryScene extends Scene {
     if (files.length === 0) objects.push({ id: 'empty', sprite: 'welcome-board', label: '우리의 사진을 기다려 주세요', tx: 4.5, ty: 3, solid: false, stand: { tx: 5, ty: 5 }, interact: () => toast('사진은 마지막 준비 단계에서 채워질 예정이에요 📷') });
     if (game.assets?.objects?.window) objects.push({ id: 'winL', sprite: 'window', tx: 2, ty: -1 }, { id: 'winR', sprite: 'window', tx: 7, ty: -1 });
 
-    if (game.assets?.objects?.plant) objects.push({ id: 'plantL', sprite: 'plant', tx: 1, ty: L.exit.ty - 3 }, { id: 'plantR', sprite: 'plant', tx: 9, ty: L.exit.ty - 3 });
+    // 화분(32×64)은 맨 아래 바닥 양끝에. 사진이 많아 액자가 아래까지 내려와도 액자 모서리를 가리지 않게 출구 쪽 두 줄을 쓴다
+    if (game.assets?.objects?.plant) objects.push({ id: 'plantL', sprite: 'plant', tx: 1, ty: L.exit.ty - 2 }, { id: 'plantR', sprite: 'plant', tx: 9, ty: L.exit.ty - 2 });
 
     super({
       id: 'gallery', rows: L.rows, bg: '#f6efe7', spawn: L.spawn, assets,
