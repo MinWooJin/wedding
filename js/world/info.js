@@ -29,11 +29,10 @@ export function contactsHtml(cfg) {
   const line = (label, name, phone) => phone
     ? `<p><b>${esc(label)}</b> ${esc(name)} <a class="btn" href="tel:${esc(phone)}">전화</a> <a class="btn" href="sms:${esc(phone)}">문자</a></p>`
     : '';
+  // 정원에는 신랑·신부 본인 연락처만. 부모님 연락처는 신랑측·신부측 청첩장에서 안내한다.
   return [
     line('신랑', cfg.groom.name, cfg.groom.phone),
-    ...cfg.groom.parents.map((p) => line(`신랑 ${p.role}`, p.name, p.phone)),
     line('신부', cfg.bride.name, cfg.bride.phone),
-    ...cfg.bride.parents.map((p) => line(`신부 ${p.role}`, p.name, p.phone)),
   ].join('') || '<p class="muted">연락처가 아직 등록되지 않았어요.</p>';
 }
 

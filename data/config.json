@@ -7,7 +7,7 @@
       {
         "role": "아버지",
         "name": "진영근",
-        "phone": "",
+        "phone": "010-5180-9058",
         "account": {
           "bank": "",
           "number": "",
@@ -18,18 +18,18 @@
       {
         "role": "어머니",
         "name": "박순이",
-        "phone": "",
+        "phone": "010-9995-6263",
         "account": {
-          "bank": "",
-          "number": "",
+          "bank": "우체국",
+          "number": "40006902073128",
           "holder": "박순이",
           "kakaopay": ""
         }
       }
     ],
     "account": {
-      "bank": "카카오뱅크",
-      "number": "3333-00-0000000",
+      "bank": "신한은행",
+      "number": "110450332764",
       "holder": "진민우",
       "kakaopay": ""
     },
@@ -43,10 +43,10 @@
       {
         "role": "아버지",
         "name": "한성훈",
-        "phone": "",
+        "phone": "010-3627-0971",
         "account": {
-          "bank": "",
-          "number": "",
+          "bank": "국민은행",
+          "number": "82170101111042",
           "holder": "한성훈",
           "kakaopay": ""
         }
@@ -54,18 +54,18 @@
       {
         "role": "어머니",
         "name": "이주영",
-        "phone": "",
+        "phone": "010-5034-0971",
         "account": {
-          "bank": "",
-          "number": "",
+          "bank": "신한은행",
+          "number": "110107231623",
           "holder": "이주영",
           "kakaopay": ""
         }
       }
     ],
     "account": {
-      "bank": "국민은행",
-      "number": "000000-00-000000",
+      "bank": "카카오뱅크",
+      "number": "3333132288956",
       "holder": "한새암",
       "kakaopay": ""
     },

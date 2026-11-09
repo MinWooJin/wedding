@@ -19,11 +19,9 @@ function accountHtml(label, acc) {
     ${acc.kakaopay ? `<a class="btn" target="_blank" rel="noopener" href="${esc(acc.kakaopay)}">카카오페이</a>` : ''}</p>`;
 }
 
+/** 정원에는 신랑·신부 본인 계좌만. 부모님 계좌는 신랑측·신부측 청첩장에서 안내한다. */
 function personAccountsHtml(side, person) {
-  return [
-    accountHtml(side, person.account),
-    ...(person.parents ?? []).map((p) => accountHtml(`${side} ${p.role}`, p.account)),
-  ].join('') || '<p class="muted">계좌 정보가 아직 없어요.</p>';
+  return accountHtml(side, person.account) || '<p class="muted">계좌 정보가 아직 없어요.</p>';
 }
 
 function bindAccountCopy(card) {
