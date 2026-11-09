@@ -12,11 +12,13 @@ const ROWS = [
   'KKKKKKKKKKK',
 ];
 
+/** 계좌 한 줄: 왼쪽에 "신랑 · 예금주"와 은행·계좌번호, 오른쪽 끝에 작은 복사 버튼 */
 function accountHtml(label, acc) {
   if (!acc || !acc.number) return '';
-  return `<p><b>${esc(label)}</b> ${esc(acc.bank)} ${esc(acc.number)} (${esc(acc.holder)})
-    <button class="btn copy" data-num="${esc(acc.number)}">복사</button>
-    ${acc.kakaopay ? `<a class="btn" target="_blank" rel="noopener" href="${esc(acc.kakaopay)}">카카오페이</a>` : ''}</p>`;
+  return `<div class="account-row">
+    <div class="account-info"><span class="account-who">${esc(label)} · ${esc(acc.holder)}</span><strong>${esc(acc.bank)} ${esc(acc.number)}</strong></div>
+    <div class="account-actions"><button class="btn copy" data-num="${esc(acc.number)}" aria-label="${esc(label)} 계좌번호 복사">복사</button>${acc.kakaopay ? `<a class="btn" target="_blank" rel="noopener" href="${esc(acc.kakaopay)}">카카오페이</a>` : ''}</div>
+  </div>`;
 }
 
 /** 정원에는 신랑·신부 본인 계좌만. 부모님 계좌는 신랑측·신부측 청첩장에서 안내한다. */
@@ -38,8 +40,7 @@ export function showAccounts(game, side, person) {
 function showGiftAccounts(game) {
   const { card, close } = showOverlay(game, {
     title: '계좌 안내',
-    html: [['신랑', game.config.groom], ['신부', game.config.bride]]
-      .map(([side, person]) => `<section class="account-group"><h3>${side}측</h3>${personAccountsHtml(side, person)}</section>`).join(''),
+    html: `<div class="account-list">${[['신랑', game.config.groom], ['신부', game.config.bride]].map(([side, person]) => personAccountsHtml(side, person)).join('')}</div>`,
     buttons: [{ label: '이전으로', onClick: () => { close(true); showGiftsNotice(game); return true; } }, { label: '닫기' }],
   });
   bindAccountCopy(card);

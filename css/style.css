@@ -210,10 +210,14 @@ label { display: block; font-size: 13px; font-weight: 600; margin: 12px 0 6px; }
 .share-preview p:last-child { font-size: 13px; color: #75665e; }
 .share-url { font-size: 16px; color: #59654e; background: #f4f5ec; }
 .card .share-help { margin-top: 8px; }
-.account-group + .account-group { margin-top: 18px; padding-top: 18px; border-top: 1px solid var(--border); }
-.account-group h3 { margin: 0 0 8px; color: var(--sage); font-size: 15px; font-weight: 650; }
-.account-group p { overflow-wrap: anywhere; }
-.account-group .copy { margin: 6px 0 6px 4px; }
+/* 계좌 안내(정원): 한 줄 카드. 왼쪽 누구·예금주 + 계좌번호, 오른쪽 복사 버튼 */
+.account-list { display: grid; gap: 10px; }
+.account-row { display: flex; align-items: center; gap: 12px; padding: 12px 14px; border: 1px solid var(--border); border-radius: 14px; background: #fffdf8; }
+.account-info { flex: 1; min-width: 0; display: flex; flex-direction: column; line-height: 1.45; }
+.account-who { font-size: 12px; color: var(--muted); }
+.account-info strong { font-size: 15px; font-weight: 650; overflow-wrap: anywhere; }
+.account-actions { display: flex; gap: 6px; flex: none; }
+.account-actions .btn { min-height: 36px; padding: 0 12px; font-size: 13px; }
 .message-item { padding: 15px 0; border-bottom: 1px solid #e8e5da; overflow-wrap: anywhere; }
 .message-item strong { font-size: 13px; color: #84556a; }
 .message-item p { white-space: pre-wrap; font-size: 14px; margin: 8px 0; }
