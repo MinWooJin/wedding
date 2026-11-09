@@ -132,6 +132,12 @@ input::placeholder, textarea::placeholder { color: #888477; }
 #viewer.veiled canvas { visibility: hidden; } /* 포커스를 잃으면 사진을 가린다(viewer.js) */
 #viewer .close { position: absolute; top: calc(12px + env(safe-area-inset-top)); right: 12px; }
 #viewer .counter { position: absolute; bottom: calc(16px + env(safe-area-inset-bottom)); color: #fff; font-size: 13px; }
+/* 사진 넘기기 버튼: 양옆 가운데, 사진 위에 반투명 원 */
+#viewer .viewer-nav { position: absolute; top: 50%; transform: translateY(-50%); width: 48px; height: 48px; border-radius: 50%; border: 1px solid #fff6; background: #1f1d1acc; color: #fff; font: 400 30px/1 var(--font); display: inline-flex; align-items: center; justify-content: center; padding: 0 0 4px; cursor: pointer; }
+#viewer .viewer-nav.prev { left: 12px; }
+#viewer .viewer-nav.next { right: 12px; }
+#viewer .viewer-nav[hidden] { display: none; }
+#viewer.veiled .viewer-nav { visibility: hidden; }
 [hidden] { display: none !important; }
 
 /* Garden v2: scene content and actions stay available outside the canvas. */

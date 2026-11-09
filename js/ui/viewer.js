@@ -7,7 +7,10 @@ import { h } from './dom.js';
 export function openViewer(game, images, index) {
   const root = document.getElementById('overlay');
   root.innerHTML = '';
-  const v = h(`<div id="viewer"><canvas></canvas><button class="btn ghost close">닫기</button><div class="counter"></div></div>`);
+  // 이전·다음 버튼으로 닫지 않고 바로 넘겨 본다(좌우로 밀기·방향키도 된다). 마지막 다음은 첫 사진으로.
+  const v = h(`<div id="viewer"><canvas></canvas><button class="btn ghost close">닫기</button>
+    <button class="viewer-nav prev" aria-label="이전 사진">‹</button><button class="viewer-nav next" aria-label="다음 사진">›</button>
+    <div class="counter" aria-live="polite"></div></div>`);
   const cv = v.querySelector('canvas'), ctx = cv.getContext('2d'), counter = v.querySelector('.counter');
   let i = index;
 
@@ -39,12 +42,19 @@ export function openViewer(game, images, index) {
     else return;
     draw();
   };
+  const step = (d) => { i = (i + d + images.length) % images.length; draw(); };
+  const onKey = (e) => {
+    if (e.key === 'ArrowRight') step(1);
+    else if (e.key === 'ArrowLeft') step(-1);
+    else if (e.key === 'Escape') close();
+  };
   const onHide = () => { if (document.hidden) close(); };
   // 창이 포커스를 잃으면(데스크톱 캡처 도구 등) 사진을 가린다
   const veil = () => v.classList.add('veiled'), unveil = () => v.classList.remove('veiled');
 
   const close = () => {
     document.removeEventListener('visibilitychange', onHide);
+    document.removeEventListener('keydown', onKey);
     window.removeEventListener('blur', veil); window.removeEventListener('focus', unveil);
     window.removeEventListener('resize', draw);
     root.hidden = true; root.innerHTML = ''; game.paused = false;
@@ -55,6 +65,10 @@ export function openViewer(game, images, index) {
   cv.addEventListener('pointerdown', onDown);
   cv.addEventListener('pointerup', onUp);
   v.querySelector('.close').onclick = close;
+  v.querySelector('.prev').onclick = () => step(-1);
+  v.querySelector('.next').onclick = () => step(1);
+  if (images.length < 2) v.querySelectorAll('.viewer-nav').forEach((b) => { b.hidden = true; });
+  document.addEventListener('keydown', onKey);
   document.addEventListener('visibilitychange', onHide);
   window.addEventListener('blur', veil); window.addEventListener('focus', unveil);
   window.addEventListener('resize', draw);
@@ -62,5 +76,5 @@ export function openViewer(game, images, index) {
   root.appendChild(v); root.hidden = false; game.paused = true;
   draw();
   for (const img of images) if (img && !img.naturalWidth) img.addEventListener('load', draw, { once: true });
-  return { close, next: () => { i = (i + 1) % images.length; draw(); }, index: () => i };
+  return { close, next: () => step(1), prev: () => step(-1), index: () => i };
 }
