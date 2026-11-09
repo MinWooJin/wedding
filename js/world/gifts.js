@@ -124,6 +124,10 @@ export function createGifts(game) {
       ...(game.assets?.objects?.plant ? [{ id: 'plantL', sprite: 'plant', tx: 1, ty: 8 }, { id: 'plantR', sprite: 'plant', tx: 9, ty: 8 }] : []),
       { id: 'lanternL', sprite: 'lantern', tx: 1, ty: 1 }, { id: 'lanternR', sprite: 'lantern', tx: 9, ty: 1 },
     ],
-    onEnter: (g) => { if (decline && !giftsShown) { giftsShown = true; showGiftsNotice(g); } },
+    // 두 사람의 편지: 메뉴로 들어오면 매번, 광장 그림으로 걸어 들어오면 처음 한 번만
+    onEnter: (g) => {
+      const fromMenu = g.viaMenu === 'gifts'; g.viaMenu = null;
+      if (decline && (fromMenu || !giftsShown)) { giftsShown = true; showGiftsNotice(g); }
+    },
   });
 }

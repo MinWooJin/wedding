@@ -27,7 +27,8 @@ export function createHud(root, config, game) {
     <nav class="garden-dock" aria-label="정원 메뉴"><button class="fab fab-return" data-action="exit" aria-label="정원으로 돌아가기" hidden><span class="return-arrow" aria-hidden="true">←</span><span>정원으로</span></button><button class="fab fab-menu menu-button" aria-label="메뉴 열기">☰</button></nav>`;
   root.hidden = false;
   let sceneId = 'hub';
-  const navigate = (id) => { game.player.stop(); game.goTo(id, id === 'hub' ? HUB_SPAWN : null); };
+  // 메뉴로 이동한 곳을 기억해 둔다(마음 보내기는 메뉴로 오면 매번 두 사람의 편지를 연다)
+  const navigate = (id) => { game.player.stop(); game.viaMenu = id; game.goTo(id, id === 'hub' ? HUB_SPAWN : null); };
   const changeProfile = async () => {
     const picked = await showIntro(document.getElementById('intro'), config, game.assets, game.profile, { checkNickname: game.checkNickname });
     const profile = { nickname: picked.nickname, charId: picked.charId };
@@ -58,7 +59,11 @@ export function createHud(root, config, game) {
       // 광장 아래 "축하 남기기" 버튼을 없앤 대신 메뉴 맨 위 버튼으로(방명록 우체통과 함께 축하를 쓰는 두 곳)
       buttons: [{ label: '축하 남기기', icon: '✉', primary: true, onClick: () => { close(true); game.openGuestbook(); return true; } }, { label: '내 캐릭터 바꾸기', onClick: () => { close(true); game.paused = true; changeProfile(); return true; } }, { label: '소식 나누기', onClick: () => { close(true); showShare(game); return true; } }, { label: '닫기' }],
     });
-    card.querySelectorAll('[data-space]').forEach((b) => { b.onclick = () => { close(); if (b.dataset.space !== sceneId) navigate(b.dataset.space); }; });
+    card.querySelectorAll('[data-space]').forEach((b) => { b.onclick = () => {
+      close();
+      if (b.dataset.space !== sceneId) navigate(b.dataset.space);
+      else if (sceneId === 'gifts' && config.gifts?.declineMoney) showGiftsNotice(game); // 이미 마음 보내기에 있어도 편지를 다시 연다
+    }; });
     const run = {
       messages: () => game.openMessages(), locate: () => { game.follow = true; },
       letter: () => showGiftsNotice(game), groom: () => showAccounts(game, '신랑', config.groom), bride: () => showAccounts(game, '신부', config.bride),
