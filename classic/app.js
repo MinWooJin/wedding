@@ -12,6 +12,14 @@ function toast(text) {
   clearTimeout(toastTimer); el.textContent = text; el.hidden = false;
   toastTimer = setTimeout(()=>{el.hidden=true;},2000);
 }
+/** 갤러리 열 수: 마지막 줄이 비지 않게 고른다(8장은 4열 2줄, 4장은 2열 2줄, 6·9장은 3열) */
+export function galleryColumns(n) {
+  if (n <= 3) return Math.max(1, n);
+  if (n % 3 === 0) return 3;
+  if (n % 4 === 0) return n === 4 ? 2 : 4;
+  if (n % 2 === 0) return 2;
+  return 3;
+}
 function calendarHtml(iso) {
   const c = calendarFor(iso);
   if (!c) return '<p class="empty">예식 일정을 준비하고 있어요.</p>';
@@ -37,7 +45,7 @@ export function renderInvitation(root, config, photos = [], side = document.docu
     ${section('invitation','INVITATION','소중한 분들을 초대합니다',`<p class="invitation-copy">${esc(config.classic?.invitation || DEFAULT_INVITATION)}</p>${w.notice?`<p class="notice">${esc(w.notice)}</p>`:''}`)}
     ${section('family','OUR FAMILIES','함께하는 가족',`<div class="family-lines">${[groom,bride].map((p)=>`<p>${esc(orderedParents(p).map((parent)=>parent.name).filter(Boolean).join(' · '))}${p.parents?.some((parent)=>parent.name)?` 의 ${esc(p.relation||'')}`:''}<strong>${esc(p.name)}</strong></p>`).join('')}</div><div class="card contacts"><h3>${SIDE_NAMES[side]}측 연락하기</h3>${contacts.map((p)=>`<div class="contact-row"><span class="role">${esc(p.label)}</span><span class="name">${esc(p.name)}</span>${p.tel?`<a class="call" href="tel:${esc(p.tel)}" aria-label="${esc(p.name)}에게 전화">${PHONE_ICON}</a>`:''}</div>`).join('')}</div>`)}
     ${section('calendar','SAVE THE DATE','우리의 결혼식',calendarHtml(w.date))}
-    ${section('gallery','OUR MOMENTS','우리의 순간들',photos.length?`<div class="gallery">${photos.map((src,i)=>`<button class="thumbnail" data-photo="${i}" aria-label="웨딩 사진 ${i+1} 크게 보기"><img src="${esc(src)}" alt="두 사람의 웨딩 사진 ${i+1}" loading="lazy" draggable="false"></button>`).join('')}</div>`:'<p class="empty">사진은 곧 채워질 예정이에요.</p>')}
+    ${section('gallery','OUR MOMENTS','우리의 순간들',photos.length?`<div class="gallery" style="--cols:${galleryColumns(photos.length)}">${photos.map((src,i)=>`<button class="thumbnail" data-photo="${i}" aria-label="웨딩 사진 ${i+1} 크게 보기"><img src="${esc(src)}" alt="두 사람의 웨딩 사진 ${i+1}" loading="lazy" draggable="false"></button>`).join('')}</div>`:'<p class="empty">사진은 곧 채워질 예정이에요.</p>')}
     ${section('location','LOCATION','오시는 길',`<div class="card"><p class="venue-title">${esc(w.venue||'예식 장소를 준비하고 있어요')}</p><p>${esc(w.hall||'')}</p>${w.address?`<p class="address">${esc(w.address)}</p><div class="actions"><button class="btn" data-copy="${esc(w.address)}">주소 복사</button></div>`:''}<div class="actions map-actions">${external(w.map?.kakao,'카카오맵')}${external(w.map?.naver,'네이버지도')}${external(w.map?.tmap,'티맵')}</div>${transport.length?`<dl class="transport">${transport.map(([k,v])=>`<div><dt>${k}</dt><dd>${esc(v)}</dd></div>`).join('')}</dl>`:''}</div>`)}
     ${section('accounts','WITH GRATITUDE','마음 전하실 곳',accountHtml(config,side))}
     ${section('garden','OUR LITTLE GARDEN','축하가 피어나는 정원',`<p class="garden-copy">두 사람의 작은 픽셀 정원에서<br>축하 한마디를 남겨 주세요.</p><img class="garden-preview" src="../classic/img/garden-preview.png" width="352" height="240" loading="lazy" alt="벚꽃과 꽃 아치 아래 두 사람이 서 있는 픽셀 웨딩 정원"><a class="btn primary garden-link" href="../common/">정원 입장하기 →</a>`)}

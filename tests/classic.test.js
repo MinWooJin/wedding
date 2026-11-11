@@ -112,3 +112,8 @@ test('웨딩 사진 저장 막기: 화면이 뒤로 가거나 포커스를 잃�
   doc.fire('gesturestart', event(true));
   assert.equal(prevented, 4, 'iOS 핀치(gesture)도 막는다');
 });
+
+test('갤러리 열 수: 마지막 줄이 비지 않게(8장 4열, 6장 3열, 4장 2열, 3장 이하 한 줄)', async () => {
+  const { galleryColumns } = await import('../classic/app.js');
+  assert.deepEqual([1, 2, 3, 4, 6, 8, 9, 10, 12].map(galleryColumns), [1, 2, 3, 2, 3, 4, 3, 2, 3]);
+});
