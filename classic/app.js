@@ -55,7 +55,7 @@ export function renderInvitation(root, config, photos = [], side = document.docu
   root.querySelectorAll('[data-photo]').forEach((b)=>{b.onclick=()=>openViewer(photos,Number(b.dataset.photo),root);});
   root.querySelectorAll('.cover-photo,.thumbnail img').forEach((img)=>{img.draggable=false;img.oncontextmenu=(e)=>e.preventDefault();img.ondragstart=(e)=>e.preventDefault();});
   root.querySelector('[data-kakao]')?.addEventListener('click',async()=>{
-    try { await loadKakao(config.kakaoJsKey); window.Kakao.Share.sendDefault({objectType:'feed',content:{title:`${name} 결혼합니다`,description:`${date} · ${w.venue||''} ${w.hall||''}`,imageUrl:urls.image,link:{mobileWebUrl:urls.page,webUrl:urls.page}},buttons:[{title:'청첩장 보기',link:{mobileWebUrl:urls.page,webUrl:urls.page}}]}); }
+    try { await loadKakao(config.kakaoJsKey); window.Kakao.Share.sendDefault({objectType:'feed',content:{title:`${name} 결혼합니다 · ${SIDE_NAMES[side]}측`,description:`${date} · ${w.venue||''} ${w.hall||''}`,imageUrl:urls.image,link:{mobileWebUrl:urls.page,webUrl:urls.page}},buttons:[{title:'청첩장 보기',link:{mobileWebUrl:urls.page,webUrl:urls.page}}]}); }
     catch { toast('공유를 열지 못했어요. 링크 복사를 이용해 주세요.'); }
   });
   const coverImage = root.querySelector('.cover-photo');
