@@ -207,7 +207,6 @@ label { display: block; font-size: 13px; font-weight: 600; margin: 12px 0 6px; }
 .space-tile strong { font: 600 13px var(--font); }
 .space-tile[aria-current] { background: #f5e6eb; border-color: #bd8196; color: #82465c; }
 .classic-link { color: #6c7557; font-size: 13px; }
-.preview-notice { padding: 10px 12px; border-radius: 10px; background: #edf1e5; color: #51603f; font-size: 12px; line-height: 1.6; margin-bottom: 14px !important; }
 .message-count { text-align: right; }
 .form-error { color: #a13f51; min-height: 24px; font-size: 12px; }
 .share-preview { border: 1px solid #e3d4ca; border-radius: 14px; padding: 20px 14px; margin-bottom: 20px; text-align: center; background: #f7eee8; }

@@ -1,4 +1,5 @@
 import { DEFAULT_INVITATION, SIDE_NAMES, validSide, escapeHtml as esc, calendarFor, dayLabel, formatWeddingDate, orderedParents, sideContacts, sideAccounts, photoPath, safeLink, shareUrls } from './model.js';
+import { copyText } from '../js/ui/dom.js';
 
 export const FALLBACK = { groom:{name:'신랑',parents:[]}, bride:{name:'신부',parents:[]}, wedding:{date:'',venue:'예식 장소를 준비하고 있어요',map:{},transport:{}}, classic:{} };
 const PHONE_ICON = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3h4l2 5-3 2c2 3 3 4 6 6l2-3 5 2v4c0 2-2 2-3 2C10 20 4 14 3 6c0-1 0-3 2-3Z"/></svg>';
@@ -10,15 +11,6 @@ function toast(text) {
   if (!el) { el = document.createElement('div'); el.id = 'classic-toast'; el.className = 'toast'; el.setAttribute('role','status'); el.setAttribute('aria-live','polite'); document.body.appendChild(el); }
   clearTimeout(toastTimer); el.textContent = text; el.hidden = false;
   toastTimer = setTimeout(()=>{el.hidden=true;},2000);
-}
-export async function copyText(text) {
-  try { await navigator.clipboard.writeText(text); return true; } catch { /* In-app browsers may require the legacy copy path. */ }
-  const previous = document.activeElement, area = document.createElement('textarea');
-  area.value = text; area.setAttribute('readonly',''); area.style.cssText = 'position:fixed;left:0;top:0;opacity:0;font-size:16px';
-  document.body.appendChild(area); area.focus(); area.select(); area.setSelectionRange(0,area.value.length);
-  let ok = false;
-  try { ok = document.execCommand('copy'); } catch { /* Return the failure to the user. */ }
-  area.remove(); previous?.focus({preventScroll:true}); return ok;
 }
 function calendarHtml(iso) {
   const c = calendarFor(iso);

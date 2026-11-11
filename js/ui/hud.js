@@ -52,7 +52,6 @@ export function createHud(root, config, game) {
     const { card, close } = showOverlay(game, {
       title: `${s.icon} ${s.name}`,
       html: `<p class="muted">${esc(s.text)}</p><p class="menu-status">${esc(status)}</p>
-        ${!game.config.guestbookApi ? '<p class="preview-notice">기기 저장 미리보기 · 다른 사람에게 공개되지 않아요</p>' : ''}
         <div class="space-grid">${Object.entries(SPACES).map(([id, sp]) => `<button class="space-tile" data-space="${id}" ${id === sceneId ? 'aria-current="page"' : ''}><span>${sp.icon}</span><strong>${sp.name}</strong></button>`).join('')}</div>
         <div class="menu-actions">${actions.map(([id, label]) => `<button class="text-button" data-menu="${id}">${esc(label)}</button>`).join('')}</div>
         ${config.classicUrl ? `<a class="classic-link" href="${esc(config.classicUrl)}">일반 청첩장 보기 →</a>` : ''}`,

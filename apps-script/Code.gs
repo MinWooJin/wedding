@@ -12,7 +12,7 @@
 //
 // 보안 장치 (docs/DEPLOY.md 2절):
 //   - 시트는 비공개. 웹 앱은 닉네임·캐릭터·메시지·시각만 내려준다.
-//   - 기기 토큰(guestId)마다 글 1분 1건·하루 MAX_PER_DAY건, 입장 등록은 1시간 1건.
+//   - 기기 토큰(guestId)마다 글 1분 1건·하루 MAX_PER_DAY건, 입장 등록은 같은 닉네임·캐릭터로 1시간 1건.
 //   - PUBLIC_TOKEN을 비워 두지 않으면 요청의 token과 같아야 받는다(config.json의 guestbookToken과 동일하게).
 //   - 셀이 = + - @ 로 시작하면 앞에 ' 를 붙여 수식으로 실행되지 않게 한다.
 //   - 닉네임은 그 이름으로 기록을 남긴 기기(guestId)들의 것이다. 다른 기기가 같은 닉네임(대소문자·앞뒤 공백 무시)으로 쓰면 거절한다.
@@ -25,7 +25,7 @@
 
 const SHEET_NAME = 'guestbook';
 const PRESET_COUNT = 30;       // 클라이언트와 동일: 캐릭터 ID 0~29
-const MAX_ROWS = 300;          // 목록으로 내려줄 최근 행 수(닉네임 중복 제거 전)
+const MAX_ROWS = 300;          // 목록으로 내려줄 최근 글 수(입장 기록 행은 세지 않는다)
 const COOLDOWN_SEC = 60;       // 같은 기기의 글 간격
 const VISIT_SEC = 3600;        // 같은 기기의 입장 등록 간격
 const MAX_PER_DAY = 10;        // 같은 기기의 하루 글 수
@@ -89,13 +89,13 @@ function nicknameAvailable_(nickname, guestId) {
   return owners.size === 0 || (!!guestId && owners.has(guestId));
 }
 
-/** 목록: 숨김 아닌 글 행 전부(최근 MAX_ROWS행 안), 최신순. 캐릭터는 그 사람의 가장 최근 값으로 맞춘다. */
+/** 목록: 숨김 아닌 글 중 최근 MAX_ROWS개, 최신순. 캐릭터는 그 사람의 가장 최근 값으로 맞춘다.
+ *  입장 기록 행이 쌓여도 예전 글이 밀려나지 않게 시트 전체를 읽고 글만 자른다. */
 function listEntries_() {
   const sh = sheet_();
   const last = sh.getLastRow();
   if (last < 2) return [];
-  const from = Math.max(2, last - MAX_ROWS + 1);
-  const rows = sh.getRange(from, 1, last - from + 1, HEADERS.length).getValues();
+  const rows = sh.getRange(2, 1, last - 1, HEADERS.length).getValues();
   const latestChar = new Map(), out = [];
   for (const r of rows) { // 시트는 시간순이라 뒤에 나온 값이 최신
     const nickname = readCell_(r[1]).trim();
@@ -104,7 +104,7 @@ function listEntries_() {
     const m = readCell_(r[3]);
     if (m) out.push({ t: new Date(r[0]).getTime(), n: nickname, m });
   }
-  return out.map((e) => ({ t: e.t, n: e.n, c: latestChar.get(e.n), m: e.m })).sort((a, b) => b.t - a.t);
+  return out.map((e) => ({ t: e.t, n: e.n, c: latestChar.get(e.n), m: e.m })).sort((a, b) => b.t - a.t).slice(0, MAX_ROWS);
 }
 
 /** 입장한 사람들: 숨김 아닌 모든 행의 고유 닉네임(대소문자·공백 무시)과 가장 최근 캐릭터 */
@@ -166,7 +166,8 @@ function doPost(e) {
 
   const cache = CacheService.getScriptCache();
   const who = guestId || `nick:${readCell_(nickname)}`; // 기기 토큰이 없으면 닉네임 기준으로라도 제한
-  const key = (isVisit ? 'visit:' : 'post:') + who;
+  // 입장 등록은 닉네임·캐릭터까지 같을 때만 1시간 생략한다(입장 직후 닉네임 오타를 고치거나 캐릭터를 바꾸면 바로 기록)
+  const key = isVisit ? `visit:${who}:${nickKey_(nickname)}:${characterId}` : `post:${who}`;
   if (cache.get(key)) return json_(isVisit ? { ok: true } : { ok: false, error: '1분에 한 번만 남길 수 있어요' });
   const dayKey = `day:${who}:${Utilities.formatDate(new Date(), 'Asia/Seoul', 'yyyyMMdd')}`;
   const today = Number(cache.get(dayKey) || 0);

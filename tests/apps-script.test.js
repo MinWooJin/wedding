@@ -172,3 +172,26 @@ test('visitors: 입장만 한 사람도 포함, 닉네임당 1명·최신 캐릭
   assert.deepEqual(app.get({ action: 'visitors' }), [{ n: 'alice', c: 5 }, { n: '새암친구', c: 2 }]);
   assert.equal(JSON.stringify(app.get({ action: 'visitors' })).includes('guest-'), false);
 });
+
+test('목록: 입장 기록이 많이 쌓여도 예전 글이 빠지지 않고, 글은 최근 300개만', () => {
+  const app = makeApp();
+  app.post({ nickname: '첫축하', characterId: 1, message: '가장 먼저 축하해요', guestId: 'guest-aaaaaaaa' });
+  for (let i = 0; i < 400; i++) app.rows.push([new Date(), `방문${i}`, 1, '', `guest-v${String(i).padStart(7, '0')}`, false]);
+  app.cache.clear();
+  assert.equal(app.get().some((e) => e.n === '첫축하'), true);
+  for (let i = 0; i < 310; i++) app.rows.push([new Date(Date.UTC(2027, 0, 1) + i * 1000), `글쓴이${i}`, 1, `축하 ${i}`, `guest-w${String(i).padStart(7, '0')}`, false]);
+  app.cache.clear();
+  const list = app.get();
+  assert.equal(list.length, 300);
+  assert.equal(list[0].n, '글쓴이309');
+});
+
+test('입장 등록: 같은 기기라도 닉네임이나 캐릭터를 바꾸면 1시간 안이어도 기록한다', () => {
+  const app = makeApp();
+  const g = { guestId: 'guest-ffffffff' };
+  app.post({ type: 'visit', nickname: '새암친구', characterId: 1, message: '', ...g });
+  app.post({ type: 'visit', nickname: '새암친구', characterId: 1, message: '', ...g });
+  app.post({ type: 'visit', nickname: '새암친구', characterId: 4, message: '', ...g });
+  app.post({ type: 'visit', nickname: '새암동기', characterId: 4, message: '', ...g });
+  assert.deepEqual(app.rows.slice(1).map((r) => `${r[1]}:${r[2]}`), ['새암친구:1', '새암친구:4', '새암동기:4']);
+});

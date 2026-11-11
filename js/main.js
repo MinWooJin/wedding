@@ -13,7 +13,6 @@ import { createGuestbook } from './world/guestbook.js';
 import { createGifts } from './world/gifts.js';
 import { showCover } from './ui/cover.js';
 import { Bgm } from './audio/bgm.js';
-import { readPreview } from './guestbook-store.js';
 
 async function loadManifest() {
   try { const r = await fetch('gallery/manifest.json', { cache: 'no-cache' }); return r.ok ? await r.json() : []; }
@@ -64,7 +63,7 @@ game.gallery = Array.isArray(gallery) ? gallery : [];
 game.guestId = guestId;
 game.claimed = claimed;
 game.checkNickname = nicknameChecker;
-game.data = { messages: config.guestbookApi ? [] : visibleEntries(readPreview()) };
+game.data = { messages: [] };
 game.openGuestbook = () => game.sceneById('guestbook').openForm(game);
 game.openMessages = () => game.sceneById('guestbook').openList();
 game.bgm = bgm;

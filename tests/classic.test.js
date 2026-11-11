@@ -4,7 +4,8 @@ import { readFileSync, existsSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { calendarFor, daysUntil, dayLabel, familyLine, sideAccounts, sideContacts, photoPath, safeLink, shareUrls } from '../classic/model.js';
-import { loadInvitationData, copyText } from '../classic/app.js';
+import { loadInvitationData } from '../classic/app.js';
+import { copyText } from '../js/ui/dom.js';
 
 const root = fileURLToPath(new URL('../',import.meta.url));
 const read = (name)=>readFileSync(resolve(root,name),'utf8');
