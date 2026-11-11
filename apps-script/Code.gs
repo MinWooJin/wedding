@@ -20,6 +20,7 @@
 //     하객이 "네, 저예요"를 누르면 claim:true로 보내고, 그 기기도 같은 닉네임의 주인으로 추가된다
 //     (카카오톡 인앱 ↔ 사파리, 폰 ↔ PC처럼 같은 사람이 다른 브라우저로 오는 경우). hidden 처리한 행은 닉네임을 붙잡지 않는다.
 //   - 목록에는 방명록 글을 남긴 사람만 나온다(입장 기록은 닉네임 확보와 캐릭터 갱신에만 쓴다).
+//   - GET ?action=visitors 는 입장 기록을 포함한 닉네임과 최신 캐릭터만 [{n,c}]로 준다("전에 입장했어요"에서 닉네임을 잊었을 때 고르는 목록).
 //   - 목록(doGet)은 CACHE_SEC 동안 캐시해 시트 읽기를 줄인다. 글이 들어오면 캐시를 지운다.
 
 const SHEET_NAME = 'guestbook';
@@ -106,6 +107,23 @@ function listEntries_() {
   return out.map((e) => ({ t: e.t, n: e.n, c: latestChar.get(e.n), m: e.m })).sort((a, b) => b.t - a.t);
 }
 
+/** 입장한 사람들: 숨김 아닌 모든 행의 고유 닉네임(대소문자·공백 무시)과 가장 최근 캐릭터 */
+function listVisitors_() {
+  const sh = sheet_();
+  const last = sh.getLastRow();
+  if (last < 2) return [];
+  const rows = sh.getRange(2, 1, last - 1, HEADERS.length).getValues();
+  const byKey = new Map();
+  for (const r of rows) { // 시트는 시간순이라 뒤에 나온 값이 최신
+    const nickname = readCell_(r[1]).trim();
+    if (!nickname || isHidden_(r[5])) continue;
+    const key = nickKey_(nickname);
+    byKey.delete(key); // 다시 넣어 최근 방문 순서를 유지한다
+    byKey.set(key, { n: nickname, c: Number(r[2]) || 0 });
+  }
+  return [...byKey.values()].reverse();
+}
+
 function doGet(e) {
   const p = (e && e.parameter) || {};
   if (p.action === 'check') { // 닉네임 사용 가능 여부만 알려준다(누가 쓰는지는 알려주지 않는다)
@@ -116,6 +134,13 @@ function doGet(e) {
     return json_({ ok: true, available: nicknameAvailable_(nickname, guestId) });
   }
   const cache = CacheService.getScriptCache();
+  if (p.action === 'visitors') {
+    const hit = cache.get('visitors');
+    if (hit) return ContentService.createTextOutput(hit).setMimeType(ContentService.MimeType.JSON);
+    const out = JSON.stringify(listVisitors_());
+    if (out.length < 90000) cache.put('visitors', out, CACHE_SEC);
+    return ContentService.createTextOutput(out).setMimeType(ContentService.MimeType.JSON);
+  }
   const cached = cache.get('list');
   if (cached) return ContentService.createTextOutput(cached).setMimeType(ContentService.MimeType.JSON);
   const text = JSON.stringify(listEntries_());
@@ -157,7 +182,7 @@ function doPost(e) {
     sheet_().appendRow([new Date(), nickname, characterId, message, guestId || '', false]);
     cache.put(key, '1', isVisit ? VISIT_SEC : COOLDOWN_SEC);
     if (!isVisit) cache.put(dayKey, String(today + 1), 60 * 60 * 26);
-    cache.remove('list');
+    cache.remove('list'); cache.remove('visitors');
   } finally { lock.releaseLock(); }
   return json_({ ok: true });
 }

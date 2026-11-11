@@ -2,8 +2,9 @@ import { Game } from './game.js';
 import { loadConfig } from './config.js';
 import { loadProfile, saveProfile, getGuestId } from './state.js';
 import { loadAssets } from './assets.js';
-import { fetchMessages, postVisit, checkNickname, visibleEntries } from './api.js';
+import { fetchMessages, fetchVisitors, postVisit, checkNickname, visibleEntries } from './api.js';
 import { showIntro } from './ui/intro.js';
+import { showReturning } from './ui/returning.js';
 import { createHud } from './ui/hud.js';
 import { createHub } from './world/hub.js';
 import { createInfo } from './world/info.js';
@@ -33,13 +34,16 @@ const config = await loadConfig();
 document.title = `${config.groom.name} ♥ ${config.bride.name} 결혼합니다`;
 
 let profile = loadProfile();
-await showCover(document.getElementById('intro'), config, assetsReady, !!profile);
+const coverChoice = await showCover(document.getElementById('intro'), config, assetsReady, profile?.nickname);
+if (coverChoice === 'switch') profile = null;
 const [assets, gallery] = await Promise.all([assetsReady, galleryReady]);
 const guestId = getGuestId(); // 서버 도배 방지·닉네임 소유 확인용 기기 토큰
 let claimed = false; // 같은 닉네임이 이미 있을 때 하객이 "네, 저예요"로 확인했는지(이번 방문 동안)
 const nicknameChecker = config.guestbookApi ? (nickname) => checkNickname(config.guestbookApi, nickname, guestId) : null;
 if (!profile) {
-  profile = await showIntro(document.getElementById('intro'), config, assets, null, { checkNickname: nicknameChecker });
+  // 방명록 서버가 있으면 먼저 "전에 오신 적 있나요?"를 묻는다(다른 브라우저로 다시 온 하객이 같은 이름으로 들어오도록)
+  if (config.guestbookApi) profile = await showReturning(document.getElementById('intro'), config, assets, { loadVisitors: () => fetchVisitors(config.guestbookApi) });
+  profile ??= await showIntro(document.getElementById('intro'), config, assets, null, { checkNickname: nicknameChecker });
   claimed = !!profile.claim;
   profile = { nickname: profile.nickname, charId: profile.charId };
   saveProfile(profile);

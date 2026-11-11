@@ -160,3 +160,15 @@ test('추가 캐릭터 10번·29번은 저장·조회하고 30번·음수·소�
   assert.deepEqual(app.get().map(e=>e.c).sort((a,b)=>a-b),[10,29]);
   for(const id of [-1,30,1.5])assert.equal(app.post({nickname:'오류하객',characterId:id,message:'축하합니다'}).error,'캐릭터 오류');
 });
+
+test('visitors: 입장만 한 사람도 포함, 닉네임당 1명·최신 캐릭터, 숨김 제외, 최근 방문순', () => {
+  const app = makeApp();
+  assert.deepEqual(app.get({ action: 'visitors' }), []);
+  app.post({ type: 'visit', nickname: 'Alice', characterId: 1, message: '', guestId: 'guest-aaaaaaaa' });
+  app.post({ type: 'visit', nickname: '새암친구', characterId: 2, message: '', guestId: 'guest-bbbbbbbb' });
+  app.post({ nickname: 'alice ', characterId: 5, message: '축하해', guestId: 'guest-aaaaaaaa' });
+  app.rows.push([new Date(), '가린사람', 3, '', 'guest-cccccccc', true]);
+  app.cache.clear();
+  assert.deepEqual(app.get({ action: 'visitors' }), [{ n: 'alice', c: 5 }, { n: '새암친구', c: 2 }]);
+  assert.equal(JSON.stringify(app.get({ action: 'visitors' })).includes('guest-'), false);
+});

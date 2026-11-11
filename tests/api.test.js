@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { validateEntry, fetchMessages, postMessage, postVisit, checkNickname } from '../js/api.js';
+import { validateEntry, fetchMessages, postMessage, postVisit, checkNickname, fetchVisitors } from '../js/api.js';
 
 test('상태 포함 조회는 정상 빈 목록과 실패를 구분한다', async () => {
   assert.deepEqual(await fetchMessages('u', { withStatus: true, fetchImpl: async () => ({ ok: true, json: async () => [] }) }), { ok: true, entries: [] });
@@ -96,4 +96,13 @@ test('닉네임 "test"는 시험용: 불러온 방명록에서 빠진다(대소�
   assert.equal(isHiddenNickname('tEsT'), true);
   assert.equal(isHiddenNickname('test2'), false);
   assert.deepEqual(visibleEntries(null), []);
+});
+
+test('fetchVisitors: action=visitors로 묻고 잘못된 항목·시험용 닉네임은 거른다, 실패하면 ok:false', async () => {
+  let asked;
+  const ok = await fetchVisitors('https://x/exec', { fetchImpl: async (u) => { asked = u; return { ok: true, json: async () => [{ n: '새암친구', c: 2 }, { n: 'test', c: 1 }, { n: 'a', c: 1 }, { n: '민우친구', c: 999 }, null] }; } });
+  assert.equal(asked, 'https://x/exec?action=visitors');
+  assert.deepEqual(ok, { ok: true, visitors: [{ n: '새암친구', c: 2 }] });
+  assert.equal((await fetchVisitors('https://x/exec', { fetchImpl: async () => { throw new Error('offline'); } })).ok, false);
+  assert.equal((await fetchVisitors('')).ok, false);
 });

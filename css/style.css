@@ -248,6 +248,18 @@ label { display: block; font-size: 13px; font-weight: 600; margin: 12px 0 6px; }
 .claim-box p { margin: 0 0 10px; font-size: 15px; line-height: 1.6; }
 .claim-box .muted { margin: 8px 0 0; font-size: 13px; }
 .claim-box .row { display: flex; gap: 8px; flex-wrap: wrap; }
+/* 다시 입장: "전에 오신 적 있나요?" → 닉네임 입력 / 잊었으면 목록에서 고르기 */
+.returning-actions { display: flex; flex-direction: column; gap: 8px; margin-top: 14px; }
+.returning-actions .btn { width: 100%; min-height: 48px; }
+.visitor-list { list-style: none; margin: 10px 0 0; padding: 6px; max-height: min(46vh, 360px); overflow: auto; overscroll-behavior: contain; border: 1px solid var(--border); border-radius: 14px; background: #f5f0e6; }
+.visitor-list li.muted { padding: 12px 8px; text-align: center; }
+.visitor { display: flex; align-items: center; gap: 10px; width: 100%; min-height: 48px; padding: 4px 10px 4px 4px; margin: 0 0 4px; border: 0; border-radius: 12px; background: #fffdf8; color: inherit; font: inherit; font-size: 15px; text-align: left; cursor: pointer; }
+.visitor canvas, .returning-confirm canvas { width: 40px; height: 40px; flex: none; image-rendering: pixelated; border-radius: 10px; background: #e9f2dc; }
+.visitor:focus-visible { outline: 3px solid #59694e; outline-offset: 1px; }
+.returning-confirm { display: flex; align-items: center; gap: 12px; }
+.returning-confirm p { margin: 0; }
+.returning-confirm p b { margin-right: 2px; color: inherit; font-size: 17px; }
+.cover-switch { display: block; margin: -6px auto 6px; padding: 8px 12px; border: 0; background: none; color: #6a705a; font: inherit; font-size: 13px; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
 /* 예식 안내관: 장면 캔버스 바로 아래부터 하단 버튼 위까지 안내 카드(스크롤) */
 /* 카드 배경은 화면 맨 아래까지 이어 하단 버튼("정원으로"·메뉴)이 카드 위에 놓이게 하고, 마지막 내용은 버튼에 가리지 않도록 아래 여백을 둔다 */
 .ceremony-panel { position: absolute; left: 0; right: 0; bottom: 0; z-index: 1; overflow-y: auto; overscroll-behavior: contain; padding: 0 14px calc(92px + env(safe-area-inset-bottom)); background: linear-gradient(#faf6ee, #f6efe4); -webkit-overflow-scrolling: touch; }

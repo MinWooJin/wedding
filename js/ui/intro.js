@@ -12,6 +12,15 @@ export function reservedNickname(nickname, config) {
   return names.includes(key(nickname));
 }
 
+/** 캐릭터의 머리와 어깨만 크게(48×72 그림의 위쪽 가운데) 40×40 캔버스에 그린다. 얼굴로 고르기 쉽게 한다. */
+export function drawFace(canvas, assets, id) {
+  const sprite = characterSet(assets, `preset-${id}`, presetSprites(id)).down[0];
+  const context = canvas.getContext('2d');
+  context.imageSmoothingEnabled = false;
+  const crop = Math.round(sprite.w * 0.84), sx = Math.round((sprite.w - crop) / 2), sy = Math.round(sprite.h * 0.06);
+  context.drawImage(spriteCanvas(sprite), sx, sy, crop, crop, 0, 0, 40, 40);
+}
+
 /**
  * 인트로 화면을 띄우고 {nickname, charId}를 resolve한다.
  * checkNickname(nickname) → Promise<{ok, available}>가 있으면 다른 기기가 쓰는 닉네임인지 확인한다.
@@ -76,12 +85,7 @@ export function showIntro(root, config, assets = {}, current = null, { checkNick
     };
     for (let id = 0; id < PRESET_COUNT; id++) {
       const button = h(`<button class="character-option" type="button" role="radio" aria-label="캐릭터 ${id + 1}" aria-checked="false" tabindex="-1"><canvas width="40" height="40" aria-hidden="true"></canvas></button>`);
-      const sprite = characterSet(assets,`preset-${id}`,presetSprites(id)).down[0];
-      const canvas = button.querySelector('canvas'), context = canvas.getContext('2d');
-      context.imageSmoothingEnabled = false;
-      // 격자에서는 머리와 어깨만 크게(48×72 그림의 위쪽 가운데 40×40) 보여 얼굴로 고르기 쉽게 한다.
-      const crop = Math.round(sprite.w * 0.84), sx = Math.round((sprite.w - crop) / 2), sy = Math.round(sprite.h * 0.06);
-      context.drawImage(spriteCanvas(sprite), sx, sy, crop, crop, 0, 0, 40, 40);
+      drawFace(button.querySelector('canvas'), assets, id);
       button.onclick = () => { charId = id; frame = 0; render(); };
       grid.appendChild(button);
     }

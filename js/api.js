@@ -39,6 +39,25 @@ export async function fetchMessages(url, { fetchImpl = globalThis.fetch, timeout
   }
 }
 
+/** 입장했던 사람들 [{n, c}] (닉네임을 잊은 하객이 고르는 목록). 실패하면 ok:false */
+export async function fetchVisitors(url, { fetchImpl = globalThis.fetch, timeoutMs = 5000 } = {}) {
+  if (!url) return { ok: false, visitors: [] };
+  const ctrl = typeof AbortController === 'function' ? new AbortController() : null;
+  const timer = ctrl ? setTimeout(() => ctrl.abort(), timeoutMs) : null;
+  try {
+    const res = await fetchImpl(`${url}${url.includes('?') ? '&' : '?'}action=visitors`, { signal: ctrl?.signal, cache: 'no-store' });
+    if (!res.ok) return { ok: false, visitors: [] };
+    const data = await res.json();
+    if (!Array.isArray(data)) return { ok: false, visitors: [] };
+    const visitors = data.filter((v) => v && validateNickname(v.n).ok && Number.isInteger(v.c) && v.c >= 0 && v.c < PRESET_COUNT && !isHiddenNickname(v.n));
+    return { ok: true, visitors };
+  } catch {
+    return { ok: false, visitors: [] };
+  } finally {
+    if (timer) clearTimeout(timer);
+  }
+}
+
 /**
  * 닉네임을 다른 기기가 이미 쓰고 있는지 서버에 묻는다.
  * @returns {Promise<{ok:boolean, available?:boolean}>} 네트워크 실패면 ok:false(이때는 막지 않고 글쓰기 때 서버가 다시 확인한다)

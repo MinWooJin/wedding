@@ -1,7 +1,8 @@
 import { esc, h } from './dom.js';
 import { displayName, formatDate } from '../config.js';
 
-export function showCover(root, config, assetsReady, returning = false) {
+/** returningName이 있으면 그 이름으로 다시 입장하는 버튼과 "다른 이름으로 입장" 링크를 보인다. 링크를 누르면 'switch'로 resolve. */
+export function showCover(root, config, assetsReady, returningName = '') {
   return new Promise((resolve) => {
     const card = h(`<section class="cover" aria-labelledby="cover-title">
       <p class="eyebrow">A LITTLE GARDEN, FULL OF LOVE</p>
@@ -19,6 +20,7 @@ export function showCover(root, config, assetsReady, returning = false) {
       <p class="cover-letter">작은 정원에 우리의 소식을 담았어요.<br>따뜻한 축하 한마디를 꽃으로 남겨 주세요.</p>
       ${config.wedding.notice ? `<p class="cover-notice">${esc(config.wedding.notice)}</p>` : ''}
       <button class="btn primary cover-enter" disabled>정원을 준비하고 있어요…</button>
+      ${returningName ? '<button class="cover-switch" type="button">다른 이름으로 입장 →</button>' : ''}
       ${config.classicUrl ? `<a class="cover-classic" href="${esc(config.classicUrl)}">청첩장만 볼게요 →</a>` : ''}
       <p class="muted cover-footnote">캐릭터와 함께 걷고, 마음을 남기는 픽셀 방명록</p>
     </section>`);
@@ -44,8 +46,11 @@ export function showCover(root, config, assetsReady, returning = false) {
         if (url) card.querySelector(`.cover-${name}`).src = url;
       }
       button.disabled = false;
-      button.textContent = returning ? '정원에 다시 입장하기 →' : '정원에 입장하기 →';
+      button.textContent = returningName ? `${returningName} 님으로 다시 입장하기 →` : '정원에 입장하기 →';
     }).catch(() => { button.disabled = false; button.textContent = '정원에 입장하기 →'; });
-    button.onclick = () => { root.hidden = true; root.replaceChildren(); resolve(); };
+    const leave = (value) => { root.hidden = true; root.replaceChildren(); resolve(value); };
+    button.onclick = () => leave();
+    const switchButton = card.querySelector('.cover-switch');
+    if (switchButton) switchButton.onclick = () => leave('switch');
   });
 }
